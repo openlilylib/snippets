@@ -30,9 +30,9 @@ Guidelines
 
 Version statement in your snippet is absolutely necessary.
 
-Please format LilyPond code using Frescobaldi's "Format" tool.
+Please use spaces for indenting LilyPond code.  If possible, the easiest way to have minimum problems with indentation is to use Frescobaldi's "Format" tool, if you can.
 
-A snippet can consist of more than one file - enclose them in a directory in such cases.
+A snippet can consist of more than one file - enclose them in a directory in such cases.  We encourage you to add a README.md file with a description in such folders.
 
 A png file showing the output of the snippet is a welcome addition.  Unfortunately, this cannot be added using github's web interface (we'll add instructions later).
 
