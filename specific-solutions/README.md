@@ -1,0 +1,1 @@
+Are you answering an email from lilypond-user with some code that took some time to write, but you don't think it would be useful in other situations as it's too specific?  Add it here.  It may likely not be usable to other people, but could be an inspiration.  Or it could be made more generic later.

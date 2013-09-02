@@ -1,0 +1,1 @@
+Snippets that don't fit the other directories go here.
