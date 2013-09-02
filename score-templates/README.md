@@ -1,1 +1,0 @@
-Here is the place for examples showing how to structure your files, especially in a bigger project.

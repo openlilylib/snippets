@@ -51,7 +51,7 @@ Every time you make some changes in your snippets, please post updates to the re
 Snippet categories
 ==================
 
-* score-templates
+* templates
 * simple-examples (just explaining things that are already in the documentation)
 * custom-engravers (a place for scheme engravers)
 * specific-solutions (code solving a very specific user problem)
