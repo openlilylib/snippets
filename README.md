@@ -2,7 +2,7 @@ What's this?
 ============
 
 A place to store useful pieces of LilyPond code.
-As of 2013-09-02, [LSR](http://lsr.dsi.unimi.it/) accepts snippets for LilyPond version 2.14.2, while the current LilyPond version is 2.17.25.  Until LSR will be upgraded (noone knows when this will happen), i suggest to put all pieces of useful lily code here, just to make sure they won't get lost.
+As of 2013-09-02, the [Lilypond Snippet Repository](http://lsr.dsi.unimi.it/) accepts snippets for LilyPond version 2.14.2, while the current LilyPond version is 2.17.25.  Until LSR will be upgraded (noone knows when this will happen), I suggest to put all pieces of useful lily code here, just to make sure they won't get lost.
 
 
 Contributing
@@ -24,15 +24,24 @@ The easiest way to contribute is via Github's web interface.
 4. To modify a file, click on it and then click "Edit"
 5. After making changes, write the commit description (form at the bottom) and click "Commit New File"/"Commit Changes".
 6. If you are a member of OpenLilyLib organization, the commit will be instantly added.  If you're not, Github will automatically fork this repository for you and create a pull request that will be handled by the repository admins.
+ 
+Apart from that you can of course explicitly create a fork and clone into that.
+This way you will 'automatically' receive updates of the snippets repository.
+And you will be able to edit the repository offline, including the ability to add .png images
 
 Guidelines
 ----------
 
-Version statement in your snippet is absolutely necessary.
+A `\version` statement in your snippet is absolutely necessary.
 
 Please use spaces for indenting LilyPond code.  If possible, the easiest way to have minimum problems with indentation is to use Frescobaldi's "Format" tool, if you can.
 
-A snippet can consist of more than one file - enclose them in a directory in such cases.  We encourage you to add a README.md file with a description in such folders.
+A snippet can consist of more than one file - enclose them in a directory in such cases.
+
+Please comment your snippet as concisely as possible.
+It is good practice to write the snippet as a compilable LilyPond file and create a usage example as part of the documentation.
+If you provide an example that is rather complex and needs explanation you can place the snippet in its own subdirectory and provide a README.md file there too.
+GitHub will automatically display this Markdown formatted file on the webpage.
 
 A png file showing the output of the snippet is a welcome addition.  Unfortunately, this cannot be added using github's web interface (we'll add instructions later).
 
@@ -52,4 +61,5 @@ Later on, we may divide the snippets into 2 (or more) "quality levels":
 - official ones, showing Recommended LilyPond Practice,
 - drafts, hacks etc. that were just written by someone and may be useful, but may also not be.
 
-The policy would be to allow anyone to add anything to the "hacks", but adding/changing official ones (or moving a draft to official ones) would require some coonfirmation from someone else (not necessarily a full review, but at least a quick look).
+
+The policy would be to allow anyone to add anything to the "hacks", but adding/changing official ones (or moving a draft to official ones) would require some confirmation from someone else (not necessarily a full review, but at least a quick look).
