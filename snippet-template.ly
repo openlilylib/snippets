@@ -11,7 +11,6 @@
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   title = "Example snippet"
   author = "John Doe"
-  short-description = "Offers cool new functionality"
   category = "stylesheets" %[should be one of a given list I think]
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -22,10 +21,7 @@
     by magnitudes because its creator is just _so_ ingenious."
   first-known-version = "2.16.0"
   last-known-version = "2.17.25"
-  tag = "tie"
-  tag = "engraving" %[any number of tags are allowed]
-  submission-date = "2013-09-02"
-  last-modified = "2013-09-02"
+  tags = "tie, engraving" %[any number of tags are allowed]
   %[...?  ]
 }
 
