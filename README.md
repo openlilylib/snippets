@@ -58,6 +58,7 @@ Snippet categories
 * custom-engravers (a place for scheme engravers)
 * specific-solutions (code solving a very specific user problem)
 * standard-snippets (what is now in LSR - code doing something useful)
+* stylesheets
 
 Later on, we may divide the snippets into 2 (or more) "quality levels":
 - official ones, showing Recommended LilyPond Practice,
