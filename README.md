@@ -43,6 +43,8 @@ It is good practice to write the snippet as a compilable LilyPond file and creat
 If you provide an example that is rather complex and needs explanation you can place the snippet in its own subdirectory and provide a README.md file there too.
 GitHub will automatically display this [Markdown](http://en.wikipedia.org/wiki/Markdown) formatted file on the webpage.
 
+In case of multi-file snippets, all compilable files should have extension .ly, and all files not meant to be compiled should have extension .ily.
+
 A png file showing the output of the snippet is a welcome addition.  Unfortunately, this cannot be added using github's web interface (we'll add instructions later).
 
 Every time you make some changes in your snippets, please post updates to the repository!  Also, updating snippets so that they will work with latest LilyPond version is welcome.
