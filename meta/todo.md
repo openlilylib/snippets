@@ -10,3 +10,5 @@ prepare appropriate lilyponds using Janek's script
 https://github.com/janek-warchol/cli-tools/blob/master/lilypond/build-lily.sh ?)
 * mention some cool stuff that may not be obvious to some people:
     * that you can easily link to files and folders
+* having any field from the header actually displayed results in
+  badly cropped previews
