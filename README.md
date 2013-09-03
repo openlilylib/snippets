@@ -30,12 +30,12 @@ How to contribute
 The easiest way to contribute is using GitHub's web interface.
 
 1. Create an account on [GitHub](http://github.com/), log into it.
-2. Go to the repository's
-[github page](https://github.com/openlilylib/snippets).
+2. Go to this repository's
+[GitHub page](https://github.com/openlilylib/snippets).
 3. To add a new file, [click on an icon]
 (https://raw.github.com/openlilylib/snippets/master/meta/adding-new-file-github-interface.png)
 next to the directory path.
-To modify a file, click on it and then click _Edit_.
+To modify a file, click its name and then click _Edit_.
 5. Write a description of your changes (form at the bottom)
 and click _Commit .._
 6. Click _Send pull request_.
@@ -51,14 +51,16 @@ and [here](https://help.github.com/articles/fork-a-repo)
 Guidelines
 ----------
 
-A `\version` statement in your snippet is absolutely necessary.
+A `\version` statement is necessary.  If your snippet can be
+compiled with stable LilyPond version, please mark it as such.
 
-Please use spaces for indenting LilyPond code.  If possible,
-the easiest way to have minimum problems with indentation
-is to use Frescobaldi's "Format" tool, if you can.
+If possible, please format your code using Frescobaldi's
+"Format" tool.
 
-A snippet can consist of more than one file -
-enclose them in a directory in such cases.
+Multi-file snippets should be placed in their own directories
+(this cannot be done using the web interface).  All compilable
+files should have extension `.ly`, and all files not meant
+to be compiled should have extension `.ily`.
 
 Please comment your snippet as concisely as possible.
 It is good practice to write the snippet as a compilable LilyPond
@@ -70,12 +72,8 @@ GitHub will automatically display this
 [Markdown](http://en.wikipedia.org/wiki/Markdown)
 formatted file on the webpage.
 
-In case of multi-file snippets, all compilable files should have
-extension .ly, and all files not meant to be compiled should have extension .ily.
-
 A png file showing the output of the snippet is a welcome addition.
-Unfortunately, this cannot be added using github's web interface
-(we'll add instructions later).
+Unfortunately, this cannot be added using github's web interface.
 
 Every time you make some changes in your snippets, please post
 updates to the repository!  Also, updating snippets so that they
@@ -103,7 +101,8 @@ Every category has a `README.md` file inside with more details,
 but if you're not sure which category to choose, don't worry!
 It's not *that* important.
 
-<!---  (this is Markdown syntax for comments)
+
+<!---
 Later on, we may divide the snippets into 2 (or more)
 "quality levels":
 - official ones, showing Recommended LilyPond Practice,
