@@ -36,7 +36,7 @@ The easiest way to contribute is via Github's web interface.
 ([see screenshot](https://raw.github.com/openlilylib/snippets/master/adding-new-file-github-interface.png)).
 To modify a file, click on it and then click _Edit_
 5. Write a description of your changes (form at the bottom)
-and click _Commit .._ button.
+and click _Commit .._
 6. If you aren't a member of OpenLilyLib organization,
 you'll be asked to create a pull request. Click on _Send pull request_.
 
@@ -95,8 +95,8 @@ Snippet categories
     layout settings ("house styles"),
 * __templates__ - examples showing how to structure LilyPond code.
 
-Every category has a README.md file inside with more details,
-but if you're not sure which category is correct, don't worry!
+Every category has a `README.md` file inside with more details,
+but if you're not sure which category to choose, don't worry!
 It's not *that* important.
 
 <!---  (this is Markdown syntax for comments)
