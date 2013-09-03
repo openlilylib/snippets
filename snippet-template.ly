@@ -10,8 +10,6 @@
     This snippet will make your scores look better by magnitudes
     because its creator is just \italic so ingenious.
   }
-  first-known-supported-version = "2.16.0"
-  last-known-supported-version = "2.17.25"
   % add comma-separated tags to make searching more effective:
   tags = ""
 }
