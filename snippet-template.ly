@@ -12,8 +12,8 @@
     by magnitudes because its creator is just _so_ ingenious."
   first-known-version = "2.16.0"
   last-known-version = "2.17.25"
-  tags = "tie, engraving" %[any number of tags are allowed]
-  %[...?  ]
+  % add comma-separated tags to make searching more effective:
+  tags = ""
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
