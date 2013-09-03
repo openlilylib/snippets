@@ -1,19 +1,31 @@
-\version XXX % absolutely necessary!
+\version "2.16.2" % absolutely necessary!
 
-% this will crop the output - there's no point
-% in having a one-measure example placed on a
-% full page.
+% use this to crop output page size to match the snippet
 #(ly:set-option 'preview #t)
 
 \header {
-  title = ""
-  author = ""
-  % optional
-  description = \markup \justify {
+  snippet-title = "Example snippet"
+  snippet-author = "John Doe"
+  snippet-description = \markup {
+    This snippet will make your scores look better by magnitudes
+    because its creator is just \italic so ingenious.
   }
-  % add some tags to make searching more effective
-  tags = \markup {
-  }
+  % add comma-separated tags to make searching more effective:
+  tags = ""
 }
 
-% put the snippet here:
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% here goes the snippet: %
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+red = {
+  % color only the note head red
+  \once \override NoteHead #'color = #red
+}
+
+%%%%%%%%%%%%%%%%%%%%%
+% USAGE EXAMPLE(S): %
+%%%%%%%%%%%%%%%%%%%%%
+{
+  d'^\markup "Color a note head red"
+  \red d'( d')
+}
