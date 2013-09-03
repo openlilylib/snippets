@@ -53,16 +53,22 @@ Every time you make some changes in your snippets, please post updates to the re
 Snippet categories
 ==================
 
-* templates
-* simple-examples (just explaining things that are already in the documentation)
-* custom-engravers (a place for scheme engravers)
-* specific-solutions (code solving a very specific user problem)
-* standard-snippets (what is now in LSR - code doing something useful)
-* stylesheets
+* __custom-engravers__ -- scheme engravers, especially ones that could be later added to LilyPond itself,
+* __input-shorthands__ -- music functions and other tools that make writing LilyPond code easier,
+* __notation-snippets__ -- LilyPond code that produces some particular notation,
+* __simple-examples__ -- snippets that are just explaining or demonstrating things from the documentation,
+* __specific-solutions__ -- snippets that aren't generic but just solve a very specific problem can be placed here (even "ugly hacks"),
+* __stylesheets__ -- a place for collections of user-designed layout settings ("house styles"),
+* __templates__ -- examples showing how to structure LilyPond code.
 
+Every category has a README.md file inside with more details,
+but if you're not sure which category is correct, don't worry!
+It's not *that* important.
+
+<!---  (this is Markdown syntax for comments)
 Later on, we may divide the snippets into 2 (or more) "quality levels":
 - official ones, showing Recommended LilyPond Practice,
 - drafts, hacks etc. that were just written by someone and may be useful, but may also not be.
 
-
 The policy would be to allow anyone to add anything to the "hacks", but adding/changing official ones (or moving a draft to official ones) would require some confirmation from someone else (not necessarily a full review, but at least a quick look).
+-->
