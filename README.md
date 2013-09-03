@@ -22,9 +22,9 @@ The easiest way to contribute is via Github's web interface.
 2. Go to "snippets" repository's [github page](https://github.com/openlilylib/snippets)
 3. To add a new file, click on an icon next to the directory path ([see screenshot](https://raw.github.com/openlilylib/snippets/master/adding-new-file-github-interface.png))
 4. To modify a file, click on it and then click "Edit"
-5. After making changes, write the commit description (form at the bottom) and click "Commit New File"/"Commit Changes".
-6. If you are a member of OpenLilyLib organization, the commit will be instantly added.  If you're not, Github will automatically fork this repository for you and create a pull request that will be handled by the repository admins.
- 
+5. Write a description of changes (form at the bottom) and click "Commit.." button.
+6. If you aren't a member of OpenLilyLib organization, you'll be asked to create a pull request. Click on "Send pull request".
+
 Apart from that you can of course explicitly create a fork and clone into that.
 This way you will 'automatically' receive updates of the snippets repository.
 And you will be able to edit the repository offline, including the ability to add .png images
