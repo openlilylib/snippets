@@ -11,7 +11,7 @@ Contributing
 What's eligible?
 ----------------
 
-Everything that's useful and isn't totally obvious.  The snippets don't have to do advanced things, be perfect or very generic (although that would be great!) - as a rule of thumb, anything over 20 lines of code is probably worth including.
+Everything that's useful and isn't totally obvious.  The snippets don't have to be generic or do advanced stuff (although that would be great!) - as a rule of thumb, anything over 20 lines of code is probably worth including.  **You can even contribute work in progress** and update it later - just make sure that the snippet compiles.
 
 How to contribute
 -----------------
