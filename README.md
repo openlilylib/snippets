@@ -54,6 +54,18 @@ and [here](https://help.github.com/articles/fork-a-repo)
 Guidelines
 ----------
 
+This repository can only be maintained if the snippets are self-contained
+and self-documented to some extent. For this we are using some kind of
+'medadata' in the snippet files.
+Please use the file `snippet-template.ly` in the root directory of the repo
+as the starting point for your contribution.  
+In addition to the 'mandatory' keys that are present in the template you
+can use the following entries in the `\header`:
+
+- __status__ (e.g. undocumented)
+- __first-known-supported-version__
+- __last-known-supported-version__ (to help users pick suitable snippets)
+
 A `\version` statement is necessary.  If your snippet can be
 compiled with stable LilyPond version, please mark it as such.
 
