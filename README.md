@@ -10,6 +10,9 @@ Until LSR will be upgraded (noone knows when this will happen),
 I suggest to put all pieces of useful lily code here,
 just to make sure they won't get lost.
 
+At some point in the future we may develop a nice web frontend for this repository,
+but for now it is just good to know there is a place for useful LilyPond code.
+
 
 Contributing
 ============
