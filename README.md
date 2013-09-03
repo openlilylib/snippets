@@ -30,10 +30,11 @@ How to contribute
 The easiest way to contribute is via Github's web interface.
 
 1. Create an account on [github](http://github.com/), log into it
-2. Go to "snippets" repository's
+2. Go to the repository's
 [github page](https://github.com/openlilylib/snippets)
-3. To add a new file, click on an icon next to the directory path
-([see screenshot](https://raw.github.com/openlilylib/snippets/master/adding-new-file-github-interface.png)).
+3. To add a new file, [click on an icon]
+(https://raw.github.com/openlilylib/snippets/master/meta/adding-new-file-github-interface.png)
+next to the directory path.
 To modify a file, click on it and then click _Edit_
 5. Write a description of your changes (form at the bottom)
 and click _Commit .._
