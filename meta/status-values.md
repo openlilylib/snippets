@@ -1,5 +1,3 @@
-FIXME: better name? Also, should this be rather placed in `meta` directory?
-
 broken - this snippet doesn't work with latest
 LilyPond development version and needs upgrading.
 
@@ -16,7 +14,7 @@ as desired, but maybe not.
 undocumented - this snippet is missing description and/or
 usage examples, but otherwise it is complete and working.
 
-*"Finished"* states
+*"Finished"* statuses
 (every snippet should eventually reach one of these):
 
 TODO: pick best name
