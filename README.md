@@ -39,6 +39,10 @@ Please use spaces for indenting LilyPond code.  If possible, the easiest way to 
 A snippet can consist of more than one file - enclose them in a directory in such cases.
 
 Please comment your snippet as concisely as possible.
+(However, if you don't have time to document it, please submit it and
+mark its status as "undocumented". we prefer to have undocumented snippets
+rather than no snippets.  Of course, adding documentation later is very
+welcome.)
 It is good practice to write the snippet as a compilable LilyPond file and create a usage example as part of the documentation.
 If you provide an example that is rather complex and needs explanation you can place the snippet in its own subdirectory and provide a README.md file there too.
 GitHub will automatically display this [Markdown](http://en.wikipedia.org/wiki/Markdown) formatted file on the webpage.
