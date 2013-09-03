@@ -9,7 +9,7 @@
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % The following fields are mandatory %
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  title = "Example snippet"
+  snippet-title = "Example snippet"
   author = "John Doe"
   category = "stylesheets" %[should be one of a given list I think]
 
