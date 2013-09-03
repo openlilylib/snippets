@@ -63,14 +63,13 @@ files should have extension `.ly`, and all files not meant
 to be compiled should have extension `.ily`.
 
 Please comment your snippet as concisely as possible.
-It is good practice to write the snippet as a compilable LilyPond
-file and create a usage example as part of the documentation.
-If you provide an example that is rather complex and needs
-explanation you can place the snippet in its own subdirectory
-and provide a README.md file there too.
-GitHub will automatically display this
-[Markdown](http://en.wikipedia.org/wiki/Markdown)
-formatted file on the webpage.
+(However, if you don't have time to document it, please submit it and
+mark its status as "undocumented". we prefer to have undocumented snippets
+rather than no snippets.  Of course, adding documentation later is very
+welcome.)
+It is good practice to write the snippet as a compilable LilyPond file and create a usage example as part of the documentation.
+If you provide an example that is rather complex and needs explanation you can place the snippet in its own subdirectory and provide a README.md file there too.
+GitHub will automatically display this [Markdown](http://en.wikipedia.org/wiki/Markdown) formatted file on the webpage.
 
 A png file showing the output of the snippet is a welcome addition.
 Unfortunately, this cannot be added using github's web interface.
