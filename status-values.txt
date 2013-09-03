@@ -6,3 +6,4 @@ official - the snippet represents Recommended LilyPond Practice
 hack - 
 finished
 buggy - the snippet doesn't work as desired
+broken - doesn't work with newer LilyPond versions
