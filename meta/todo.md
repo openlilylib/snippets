@@ -1,4 +1,3 @@
-* word-wrap all markdown files
 * add instructions on how to work with the repo
 with something else than github's web interface
 * add instructions for "uploading" png files
