@@ -40,7 +40,7 @@ The easiest way to contribute is using GitHub's web interface.
 next to the directory path.
 To modify a file, click its name and then click _Edit_.
 5. Write a description of your changes (form at the bottom)
-and click _Commit .._
+and click _Commit_.
 6. Click _Send pull request_.
 
 If you'd like to do more (upload png images showing snippet's
@@ -70,7 +70,7 @@ A `\version` statement is necessary.  If your snippet can be
 compiled with stable LilyPond version, please mark it as such.
 
 If possible, please format your code using Frescobaldi's
-"Format" tool.
+_Format_ tool.
 
 Multi-file snippets should be placed in their own directories
 (this cannot be done using the web interface).  All compilable
@@ -113,7 +113,7 @@ Snippet categories
 
 Every category has a `README.md` file inside with more details,
 but if you're not sure which category to choose, don't worry!
-It's not *that* important.
+*It's not that important.*
 
 
 <!---
