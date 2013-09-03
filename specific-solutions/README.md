@@ -1,6 +1,6 @@
 Are you answering an email on lilypond-user mailing list
 with some code that looks like an ugly hack but it works?
-Or maybe you think that your code is to specific to be of
+Or maybe you think that your code is too specific to be of
 general interest?
 
 Add it here anyway.  Even if it really won't be usable to
