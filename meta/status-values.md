@@ -29,8 +29,8 @@ TODO: pick best name
 It may be further improved in the future, but there is
 nothing wrong with current code.
 
-**buggy** - this snippet is finished (i.e. nothing in the code
-needs fixing), but there are known problems (for example
+**buggy** - this snippet is finished (i.e. the code is
+complete and it works), but there are known problems (for example
 caused by LilyPond bugs).
 
 **workaround** - this snippet is complete, but due to LilyPond
