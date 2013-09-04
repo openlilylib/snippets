@@ -35,7 +35,7 @@ The easiest way to contribute is using GitHub's web interface.
 3. To add a new file, click on [this button]
 (http://raw.github.com/openlilylib/snippets/master/meta/adding-new-file-github-interface.png).
 To modify a file, click its name and then click _Edit_.
-5. Write a description of your changes (form at the bottom)
+5. Write what you have changed (form at the bottom)
 and click _Commit_.
 6. Click _Send pull request_.
 
