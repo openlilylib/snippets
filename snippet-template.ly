@@ -10,10 +10,10 @@
     This snippet will make your scores look better by magnitudes
     because its creator is just \italic so ingenious.
   }
-  % is this snippet complete?  See meta/status-values.md
-  status = ""
   % add comma-separated tags to make searching more effective:
   tags = ""
+  % is this snippet complete?  See meta/status-values.md
+  status = ""
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
