@@ -10,8 +10,7 @@ Until LSR will be upgraded (noone knows when this will happen),
 I suggest to put all pieces of useful lily code here,
 just to make sure they won't get lost.
 
-At some point in the future we may develop a nice web frontend for this repository,
-but for now it is just good to know there is a place for useful LilyPond code.
+At some point in the future we may develop a nice web frontend for this repository.
 
 
 Contributing
@@ -24,8 +23,8 @@ Everything that's useful and isn't totally obvious.
 The snippets don't have to be generic or do advanced stuff
 (although that would be great!) - as a rule of thumb,
 anything over 20 lines of code is probably worth including.
-**You can even contribute work in progress** and update it later -
-just make sure that the snippet compiles.
+**You can even contribute work in progress** and update it later.
+
 
 How to contribute
 -----------------
@@ -54,20 +53,18 @@ and [here](https://help.github.com/articles/fork-a-repo)
 Guidelines
 ----------
 
-This repository can only be maintained if the snippets are self-contained
-and self-documented to some extent. For this we are using some kind of
-'medadata' in the snippet files.
-Please use the file `snippet-template.ly` in the root directory of the repo
-as the starting point for your contribution.  
-In addition to the 'mandatory' keys that are present in the template you
-can use the following entries in the `\header`:
+_Note: there are detailed guidelines in [`meta/contributors-guide.md`]
+(https://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md),
+but you're not required to read them._
 
-- __status__ (e.g. undocumented)
-- __first-known-supported-version__
-- __last-known-supported-version__ (to help users pick suitable snippets)
+A `\version` statement is necessary.
 
-A `\version` statement is necessary.  If your snippet can be
-compiled with stable LilyPond version, please mark it as such.
+Your snippet must compile (even if it's work-in-progress).
+
+Please use
+[`snippet-template.ly`]
+(https://github.com/openlilylib/snippets/blob/master/snippet-template.ly)
+as the starting point for your contribution.
 
 If possible, please format your code using Frescobaldi's
 _Format_ tool.
@@ -77,26 +74,12 @@ Multi-file snippets should be placed in their own directories
 files should have extension `.ly`, and all files not meant
 to be compiled should have extension `.ily`.
 
-Please comment your snippet as concisely as possible.
-(However, if you don't have time to document it, please submit it and
-mark its status as "undocumented". we prefer to have undocumented snippets
-rather than no snippets.  Of course, adding documentation later is very
-welcome.)
-It is good practice to write the snippet as a compilable LilyPond file and create a usage example as part of the documentation.
-If you provide an example that is rather complex and needs explanation you can place the snippet in its own subdirectory and provide a README.md file there too.
-GitHub will automatically display this [Markdown](http://en.wikipedia.org/wiki/Markdown) formatted file on the webpage.
-
 A png file showing the output of the snippet is a welcome addition.
 Unfortunately, this cannot be added using github's web interface.
 
 Every time you make some changes in your snippets, please post
 updates to the repository!  Also, updating snippets so that they
 will work with latest LilyPond version is welcome.
-
-You can see more guidelines in
-[`meta/contributors-guide.md`]
-(https://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md),
-but you're not required to read them.
 
 
 Snippet categories
