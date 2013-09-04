@@ -47,18 +47,18 @@ Guidelines
 ----------
 
 _Note: detailed guidelines are in [`meta/contributors-guide.md`]
-(http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md),
+(http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md)
 (optional reading)._
 
-A `\version` statement is necessary. ([read more]
+Your snippet must compile (even if it's work-in-progress)
+and it must contain a `\version` statement. ([read more]
 (http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md#version-statement))
-
-Your snippet must compile (even if it's work-in-progress).
 
 Please use [`snippet-template.ly`]
 (http://github.com/openlilylib/snippets/blob/master/snippet-template.ly)
 as your starting point, filling all header fields with appropriate
-information (choose the status of your snippet from [this list]
+information (choose the status of your snippet from the list in
+[`meta/status-values.md`]
 (http://github.com/openlilylib/snippets/blob/master/meta/status-values.md)).
 
 If possible, please format your code using Frescobaldi's
