@@ -1,10 +1,17 @@
+openLilyLib Snippets - Contributor's Information
+------------------------------------------------
+
+This file contains more detailed information how to contribute to
+openLilyLib's Snippet Repository.
+
 
 `\version` statement
 --------------------
 
+
 If your snippet can be compiled with latest stable LilyPond version,
 please mark it as such.  If it cannot be compiled with latest stable,
-please indicate the latest version with which it can be compiled.
+please indicate the latest or earliest version with which it can be compiled.
 
 You may also provide additional information in snippet's `\header`:
 - first-known-supported-version
@@ -46,13 +53,14 @@ Using GitHub's web interface is convenient, but for some tasks like
 you have to use more powerful tools.  Please follow
 instructions [here](http://help.github.com/articles/set-up-git)
 and [here](http://help.github.com/articles/fork-a-repo)
+to get an offline copy of the Git repository.
 (we will try to add more specific instructions later).
 
 
 Special code markers
 --------------------
 
-We use some keywords in the sources to mark specific issues:
+We use some keywords in source comments to mark specific issues:
 
 `TODO` - list things that need to be done (not only related
 to the code)
