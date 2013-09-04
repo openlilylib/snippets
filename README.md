@@ -19,10 +19,8 @@ Contributing
 What's eligible?
 ----------------
 
-Everything that's useful and isn't totally obvious.
-The snippets don't have to be generic or do advanced stuff
-(although that would be great!) - as a rule of thumb,
-anything over 20 lines of code is probably worth including.
+Everything that's useful and isn't totally obvious (rule of thumb:
+anything over 20 lines of code is probably worth including).
 **You can even contribute work in progress** and update it later.
 
 
@@ -42,29 +40,26 @@ To modify a file, click its name and then click _Edit_.
 and click _Commit_.
 6. Click _Send pull request_.
 
-If you'd like to do more (upload png images showing snippet's
-output, modify more than one file at a time, etc.), you have to
-use something more powerful than web interface.  Please follow
-instructions [here](http://help.github.com/articles/set-up-git)
-and [here](http://help.github.com/articles/fork-a-repo)
-(we will try to add more specific instructions later).
+Using more powerful tools for contributing is described [here](http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md#contributing-using-advanced-tools).
 
 
 Guidelines
 ----------
 
-_Note: there are detailed guidelines in [`meta/contributors-guide.md`]
+_Note: detailed guidelines are in [`meta/contributors-guide.md`]
 (http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md),
-but you're not required to read them._
+(optional reading)._
 
-A `\version` statement is necessary.
+A `\version` statement is necessary. ([read more]
+(http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md#version-statement))
 
 Your snippet must compile (even if it's work-in-progress).
 
-Please use
-[`snippet-template.ly`]
+Please use [`snippet-template.ly`]
 (http://github.com/openlilylib/snippets/blob/master/snippet-template.ly)
-as the starting point for your contribution.
+as your starting point, filling all header fields with appropriate
+information (choose the status of your snippet from [this list]
+(http://github.com/openlilylib/snippets/blob/master/meta/status-values.md)).
 
 If possible, please format your code using Frescobaldi's
 _Format_ tool.
@@ -76,6 +71,7 @@ to be compiled should have extension `.ily`.
 
 A png file showing the output of the snippet is a welcome addition.
 Unfortunately, this cannot be added using github's web interface.
+([read more](http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md#contributing-using-advanced-tools))
 
 Every time you make some changes in your snippets, please post
 updates to the repository!  Also, updating snippets so that they

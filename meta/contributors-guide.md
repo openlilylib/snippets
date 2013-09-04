@@ -37,4 +37,13 @@ formatted file on the webpage.
 Contributing using advanced tools
 ---------------------------------
 
-Detailed instructions on how to contribute using "full-blown" git(hub) workflow, not just the web interface.
+If you'd like to do more (upload png images showing snippet's
+output, modify more than one file at a time, etc.), you have to
+use something more powerful than web interface.  Please follow
+instructions [here](http://help.github.com/articles/set-up-git)
+and [here](http://help.github.com/articles/fork-a-repo)
+(we will try to add more specific instructions later).
+
+
+Miscellaneous tips
+------------------
