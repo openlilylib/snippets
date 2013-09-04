@@ -33,9 +33,9 @@ The easiest way to contribute is using GitHub's web interface.
 
 1. Create an account on [GitHub](http://github.com/), log into it.
 2. Go to this repository's
-[GitHub page](https://github.com/openlilylib/snippets).
+[GitHub page](http://github.com/openlilylib/snippets).
 3. To add a new file, [click on an icon]
-(https://raw.github.com/openlilylib/snippets/master/meta/adding-new-file-github-interface.png)
+(http://raw.github.com/openlilylib/snippets/master/meta/adding-new-file-github-interface.png)
 next to the directory path.
 To modify a file, click its name and then click _Edit_.
 5. Write a description of your changes (form at the bottom)
@@ -45,8 +45,8 @@ and click _Commit_.
 If you'd like to do more (upload png images showing snippet's
 output, modify more than one file at a time, etc.), you have to
 use something more powerful than web interface.  Please follow
-instructions [here](https://help.github.com/articles/set-up-git)
-and [here](https://help.github.com/articles/fork-a-repo)
+instructions [here](http://help.github.com/articles/set-up-git)
+and [here](http://help.github.com/articles/fork-a-repo)
 (we will try to add more specific instructions later).
 
 
@@ -54,7 +54,7 @@ Guidelines
 ----------
 
 _Note: there are detailed guidelines in [`meta/contributors-guide.md`]
-(https://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md),
+(http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md),
 but you're not required to read them._
 
 A `\version` statement is necessary.
@@ -63,7 +63,7 @@ Your snippet must compile (even if it's work-in-progress).
 
 Please use
 [`snippet-template.ly`]
-(https://github.com/openlilylib/snippets/blob/master/snippet-template.ly)
+(http://github.com/openlilylib/snippets/blob/master/snippet-template.ly)
 as the starting point for your contribution.
 
 If possible, please format your code using Frescobaldi's

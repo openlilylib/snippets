@@ -7,6 +7,6 @@ with something else than github's web interface
 png images (using appropriate lily versions for each snippet -
 maybe it could even set up the "dev environment", i.e.
 prepare appropriate lilyponds using Janek's script
-https://github.com/janek-warchol/cli-tools/blob/master/lilypond/build-lily.sh ?)
+http://github.com/janek-warchol/cli-tools/blob/master/lilypond/build-lily.sh ?)
 * mention some cool stuff that may not be obvious to some people:
     * that you can easily link to files and folders
