@@ -7,7 +7,7 @@ As of 2013-09-02, the
 accepts snippets for LilyPond version 2.14.2,
 while the current LilyPond version is 2.17.25.
 Until LSR will be upgraded (noone knows when this will happen),
-I suggest to put all pieces of useful lily code here,
+we suggest to put all pieces of useful lily code here,
 just to make sure they won't get lost.
 
 At some point in the future we may develop a nice web frontend for this repository.
