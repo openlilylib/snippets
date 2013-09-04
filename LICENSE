@@ -2,4 +2,9 @@ Since most of the snippets are separate entities,
 they can be licensed individially.
 There are no official rules on licensing (yet);
 Janek Warchoł suggests that unless otherwise specified
-everything should be licenssed under MIT license.
+everything should be licensed under the MIT license
+as found at http://opensource.org/licenses/MIT.
+
+Any content of this repository that isn't explicitly
+licensed is implicitly licensed under the rules of
+this MIT license.
