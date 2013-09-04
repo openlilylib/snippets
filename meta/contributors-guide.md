@@ -75,3 +75,8 @@ Add a tracker issue number if there is one.
 
 Miscellaneous tips
 ------------------
+
+Some contributors experienced problems when trying to paste into the
+web editor (they reported that there was no 'paste' in the right-click
+context menu).  If this happens to you, try using `ctrl-v` keyboard
+shortcut.
