@@ -37,9 +37,13 @@ formatted file on the webpage.
 Contributing using advanced tools
 ---------------------------------
 
-If you'd like to do more (upload png images showing snippet's
-output, modify more than one file at a time, etc.), you have to
-use something more powerful than web interface.  Please follow
+Using GitHub's web interface is convenient, but for some tasks like
+
+* uploading png images that show snippets' output,
+* modifying more than one file at a time
+  (e.g. to add a multi-file snippet),
+
+you have to use more powerful tools.  Please follow
 instructions [here](http://help.github.com/articles/set-up-git)
 and [here](http://help.github.com/articles/fork-a-repo)
 (we will try to add more specific instructions later).

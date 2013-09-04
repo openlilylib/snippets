@@ -50,7 +50,7 @@ _Note: detailed guidelines are in [`meta/contributors-guide.md`]
 (http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md)
 (optional reading)._
 
-Your snippet must compile (even if it's work-in-progress)
+Your snippet must compile (even if it is work-in-progress)
 and it must contain a `\version` statement. ([read more]
 (http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md#version-statement))
 
@@ -61,21 +61,24 @@ information (choose the status of your snippet from the list in
 [`meta/status-values.md`]
 (http://github.com/openlilylib/snippets/blob/master/meta/status-values.md)).
 
+Apart from writing a description, we recommend adding
+usage example(s) to your snippet. ([read more]
+(http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md#documenting-snippets))
+
 If possible, please format your code using Frescobaldi's
 _Format_ tool.
 
-Multi-file snippets should be placed in their own directories
-(this cannot be done using the web interface).  All compilable
-files should have extension `.ly`, and all files not meant
-to be compiled should have extension `.ily`.
+When you make changes in your snippets, please contribute
+updates to the repository! :-)
 
 A png file showing the output of the snippet is a welcome addition.
-Unfortunately, this cannot be added using github's web interface.
-([read more](http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md#contributing-using-advanced-tools))
+Use [advanced contributing tools](http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md#contributing-using-advanced-tools)
+to add them.
 
-Every time you make some changes in your snippets, please post
-updates to the repository!  Also, updating snippets so that they
-will work with latest LilyPond version is welcome.
+Multi-file snippets should be placed in their own directories
+([read more](http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md#contributing-using-advanced-tools)).
+All compilable files should have extension `.ly`, and all files
+not meant to be compiled should have extension `.ily`.
 
 
 Snippet categories
