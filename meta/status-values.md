@@ -2,7 +2,7 @@
 "Incomplete" statuses
 ---------------------
 
-In case of "incomplete" statuses, please provide a 'TODO'
+In case of "incomplete" statuses, please provide a `TODO`
 comment below the status, listing what needs to be done.
 
 **broken** - this snippet doesn't work with latest

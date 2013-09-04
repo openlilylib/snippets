@@ -49,5 +49,21 @@ and [here](http://help.github.com/articles/fork-a-repo)
 (we will try to add more specific instructions later).
 
 
+Special code markers
+--------------------
+
+We use some keywords in the sources to mark specific issues:
+
+`TODO` - list things that need to be done (not only related
+to the code)
+
+`FIXME` - mark problems in the code (similar to `TODO`,
+but slightly different - this is for telling what is wrong,
+possibly without providing a solution)
+
+`LILYBUG` - note a problem related to LilyPond behaviour.
+Add a tracker issue number if there is one.
+
+
 Miscellaneous tips
 ------------------
