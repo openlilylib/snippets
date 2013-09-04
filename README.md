@@ -85,7 +85,7 @@ Snippet categories
     some particular notation,
 * __simple-examples__ - snippets that are just explaining
     or demonstrating things from the documentation,
-* __specific-solutions__ - snippets that aren't generic,
+* __specific-solutions__ - hacks that aren't generic,
     just solve a very specific problem,
 * __stylesheets__ - a place for collections of user-designed
     layout settings ("house styles"),
