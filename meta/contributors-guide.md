@@ -14,24 +14,24 @@ You may also provide additional information in snippet's `\header`:
 Documenting snippets
 --------------------
 
-This repository can only be maintained if the snippets are self-contained
-and self-documented to some extent. For this we are using some kind of
-'medadata' in the snippet files.
+To be able to maintain the repository, we need to have some
+'metadata', like description, status etc. in the snippet files.
 
-Please comment your snippet as concisely as possible.
-(However, if you don't have time to document it, please submit it and
-mark its status as "undocumented". we prefer to have undocumented snippets
-rather than no snippets.  Of course, adding documentation later is very
-welcome.)
+We would also like all snippets to be documented as good as possible.
+However, if you don't have time to document your snippet, please
+submit it anyway (with "undocumented" status) - we prefer to have
+undocumented snippets rather than no snippets.  Of course, we ask
+you to add missing documentation later.
+
 It is good practice to write the snippet as a compilable
 LilyPond file and create a usage example as part of the
 documentation.
-If you provide an example that is rather complex and needs
+
+If you provide an example that is complex and needs lots of
 explanation you can place the snippet in its own subdirectory
-and provide a README.md file there too.
-GitHub will automatically display this
-[Markdown](http://en.wikipedia.org/wiki/Markdown)
-formatted file on the webpage.
+and add a [Markdown](http://en.wikipedia.org/wiki/Markdown)-formatted
+README.md file to that directory. GitHub will automatically
+display this file on the webpage.
 
 
 Contributing using advanced tools
