@@ -93,6 +93,11 @@ Every time you make some changes in your snippets, please post
 updates to the repository!  Also, updating snippets so that they
 will work with latest LilyPond version is welcome.
 
+You can see more guidelines in
+[`meta/contributors-guide.md`]
+(https://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md),
+but you're not required to read them.
+
 
 Snippet categories
 ==================
