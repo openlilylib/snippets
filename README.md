@@ -127,4 +127,6 @@ The policy would be to allow anyone to add anything to the "hacks",
 but adding/changing official ones (or moving a draft to official ones)
 would require some confirmation from someone else (not necessarily
 a full review, but at least a quick look).
+
+Update: actually, the status field probably already does this.
 -->
