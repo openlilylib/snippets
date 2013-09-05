@@ -8,14 +8,14 @@ openLilyLib's Snippet Repository.
 `\version` statement
 --------------------
 
-
-If your snippet can be compiled with latest stable LilyPond version,
-please mark it as such.  If it cannot be compiled with latest stable,
-please indicate the latest or earliest version with which it can be compiled.
-
-You may also provide additional information in snippet's `\header`:
-- first-known-supported-version
-- last-known-supported-version
+* If the snippet can be compiled with latest stable LilyPond version,
+please mark it as such.
+* If the snippet doesn't work with latest _development_ version
+(i.e. its status is "broken"), please also try to specify the
+`last-known-supported-version` field in snippet's `\header`.
+* If the snippet requires new functionality that isn't available
+in latest stable version, please try to specify the
+`first-known-supported-version` field in snippet's `\header`.
 
 
 Documenting snippets
