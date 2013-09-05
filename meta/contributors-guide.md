@@ -52,6 +52,8 @@ Using GitHub's web interface is convenient, but for some tasks like
 
 you have to use more powerful tools.  Please follow
 instructions [here](http://help.github.com/articles/set-up-git)
+(we don't recommend using "GitHub for Windows/Mac" -
+in our opinion it's better to use "ordinary" Git tools)
 and [here](http://help.github.com/articles/fork-a-repo)
 to get an offline copy of the Git repository.
 (we will try to add more specific instructions later).
