@@ -27,8 +27,7 @@ usage examples, but otherwise it is complete and working.
 
 (every snippet should eventually reach one of these)
 
-TODO: pick best name
-**completed/done/ready/working/finished** - this snippet does what it is supposed to do.
+**ready** - this snippet does what it is supposed to do.
 It may be further improved in the future, but there is
 nothing wrong with current code.
 

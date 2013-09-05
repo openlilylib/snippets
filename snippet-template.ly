@@ -12,7 +12,7 @@
   }
   % add comma-separated tags to make searching more effective:
   tags = ""
-  % is this snippet complete?  See meta/status-values.md
+  % is this snippet ready?  See meta/status-values.md
   status = ""
 }
 
