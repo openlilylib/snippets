@@ -50,8 +50,7 @@ _Note: detailed guidelines are in [`meta/contributors-guide.md`]
 (optional reading)._
 
 * Your snippet must compile (even if it's work-in-progress)
-and it must contain a `\version` statement. ([read more]
-(http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md#version-statement))
+and it must contain a `\version` statement.
 * Please use [`snippet-template.ly`]
 (http://github.com/openlilylib/snippets/blob/master/snippet-template.ly)
 as your starting point, filling all header fields with appropriate
@@ -59,17 +58,13 @@ information (choose the status of your snippet from the list in
 [`meta/status-values.md`]
 (http://github.com/openlilylib/snippets/blob/master/meta/status-values.md)).
 * Apart from writing a description, we recommend adding
-usage example(s) to your snippet. ([read more]
-(http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md#documenting-snippets))
+usage example(s) to your snippet.
 * If possible, please format your code using Frescobaldi's
 _Format_ tool.
 * When you make changes in your snippets, please contribute
 updates to the repository! :-)
 * A png file showing the output of the snippet is a welcome addition.
-See [advanced contributing tools]
-(http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md#contributing-using-advanced-tools).
-* Multi-file snippets should be placed in their own directories
-([read more](http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md#contributing-using-advanced-tools)).
+* Multi-file snippets should be placed in their own directories.
 All compilable files should have extension `.ly`, and all files
 not meant to be compiled should have extension `.ily`.
 
