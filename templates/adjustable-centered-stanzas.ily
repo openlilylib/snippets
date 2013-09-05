@@ -1,8 +1,40 @@
 \version "2.16.2"
 
+\header {
+  snippet-title = "Adjustable centered stanzas"
+  snippet-author = "Janek Warchoł"
+  snippet-description = \markup {
+    When typesetting songs, you usually want to put additional stanzas
+    below the music.
+  }
+  % add comma-separated tags to make searching more effective:
+  tags = "stanza, stanzas, song, vocal music, centered"
+  % is this snippet ready?  See meta/status-values.md
+  status = "undocumented"
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% here goes the snippet: %
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %{
   TODO:
   it would be good to turn this into a function.
+  the function would take the number of columns to be used as an argument
+  (i.e. does the user want to have all stanzas in one column, below each other,
+  or should they be in two or more columns?)
+  QUESTION for that: is there a converntion how the stanzas should be ordered?
+  I.e. if we have 9 stanzas in 3x3 layout, are they placed like this
+  1 4 7
+  2 5 8
+  3 6 9
+  or
+  1 2 3
+  4 5 6
+  7 8 9
+  ?
+  If we allow both arrangements, we would need a parameter for that.
+
   BUG: if columns have significantly differrent width, alignment is wrong.
 %}
 
