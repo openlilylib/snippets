@@ -1,4 +1,10 @@
-\version "2.17.3"
+\version "2.16.2"
+
+%{
+  TODO:
+  it would be good to turn this into a function.
+  BUG: if columns have significantly differrent width, alignment is wrong.
+%}
 
 stanzaII = \markup {
 }
@@ -9,16 +15,22 @@ stanzaIV = \markup {
 stanzaV = \markup {
 }
 
-% it would be good if this was stretchable
+spaceAfterNumber = \markup \hspace #0.8
+% it would be good if this was stretchable.
 spaceBetweenStanzas = \markup \vspace #2
-spaceAfterNumber = \markup \hspace #1
 
 \markup {
   \fill-line {
+    % We don't use \large, \small etc. because these commands
+    % don't scale the distance between lines correctly.
+    % First number - horizontal factor, 2nd - vertical.
     \scale #'(1 . 1) {
+      % without this \null, \fill-line would place the left
+      % column flush with the left edge of printable area.
       \null
 
-      % 3 is Lily default
+      % Adjust the distace between text lines (for cramped spacing).
+      % 3 is the default value (it's independent from font size)
       \override #'(baseline-skip . 3)
       \column {
         \line {
