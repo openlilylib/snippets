@@ -8,7 +8,7 @@
     below the music.
   }
   % add comma-separated tags to make searching more effective:
-  tags = "stanza, stanzas, song, vocal music, centered"
+  tags = "stanza, stanzas, song, vocal music, centered, markup, fill-line"
   % is this snippet ready?  See meta/status-values.md
   status = "undocumented"
 }
