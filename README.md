@@ -105,3 +105,9 @@ a full review, but at least a quick look).
 
 Update: actually, the status field probably already does this.
 -->
+
+Contact
+=======
+
+Have trouble contributing?  Let us know!
+[info@openlilylib.org](mailto:info@openlilylib.org)
