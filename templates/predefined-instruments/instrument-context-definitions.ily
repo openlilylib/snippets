@@ -33,8 +33,8 @@
     midiInstrument = "acoustic grand"
 
     \clef G
-    instrumentName = "S "
-    shortInstrumentName = "S "
+    instrumentName = "Soprano"
+    shortInstrumentName = "S"
   }
 
   \context {
@@ -51,8 +51,8 @@
     midiInstrument = "acoustic grand"
 
     \clef G
-    instrumentName = "A "
-    shortInstrumentName = "A "
+    instrumentName = "Alto"
+    shortInstrumentName = "A"
   }
 
   \context {
@@ -69,8 +69,8 @@
     midiInstrument = "acoustic grand"
 
     \clef "G_8"
-    instrumentName = "T "
-    shortInstrumentName = "T "
+    instrumentName = "Tenor"
+    shortInstrumentName = "T"
   }
 
   \context {
@@ -87,7 +87,7 @@
     midiInstrument = "acoustic grand"
 
     \clef F
-    instrumentName = "B "
-    shortInstrumentName = "B "
+    instrumentName = "Bass"
+    shortInstrumentName = "B"
   }
 }
