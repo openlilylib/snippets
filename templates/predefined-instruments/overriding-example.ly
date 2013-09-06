@@ -20,23 +20,23 @@ text = \lyricmode {
 
 \score {
   \new ChoirStaff <<
-    \new SopranoStaff \sopranomelody
-    \addlyrics \text
+    % cannot use \addlyrics because it's dumb
+    % and would create a plain Voice
+    \new SopranoVoice = sop \sopranomelody
+    \new Lyrics \lyricsto sop \text
 
-    \new AltoStaff \altomelody
-    \addlyrics \text
+    \new AltoVoice = alt \altomelody
+    \new Lyrics \lyricsto alt \text
 
-    \new TenorStaff \tenormelody
-    \addlyrics \text
+    \new TenorVoice = ten \tenormelody
+    \new Lyrics \lyricsto ten \text
 
-    \new BassStaff \bassmelody
-    \addlyrics \text
+    \new BassVoice = bas \bassmelody
+    \new Lyrics \lyricsto bas \text
   >>
   \layout {
-    \override Staff.NoteHead #'color = #blue % this works
-    \override AltoStaff.NoteHead #'color = #red % this works
-    \override SopranoVoice.NoteHead #'color = #green % doesn't work!
-    % apparently no SopranoVoice is created, but just a regular Voice.
-    % why? i've used \defaultchild "SopranoVoice" in SopranoStaff definition.
+    \override Staff.NoteHead #'color = #blue
+    \override AltoStaff.NoteHead #'color = #red
+    \override SopranoVoice.NoteHead #'color = #green
   }
 }

@@ -20,16 +20,18 @@ text = \lyricmode {
 
 \score {
   \new ChoirStaff <<
-    \new SopranoStaff \sopranomelody
-    \addlyrics \text
+    % cannot use \addlyrics because it's dumb
+    % and would create a plain Voice
+    \new SopranoVoice = sop \sopranomelody
+    \new Lyrics \lyricsto sop \text
 
-    \new AltoStaff \altomelody
-    \addlyrics \text
+    \new AltoVoice = alt \altomelody
+    \new Lyrics \lyricsto alt \text
 
-    \new TenorStaff \tenormelody
-    \addlyrics \text
+    \new TenorVoice = ten \tenormelody
+    \new Lyrics \lyricsto ten \text
 
-    \new BassStaff \bassmelody
-    \addlyrics \text
+    \new BassVoice = bas \bassmelody
+    \new Lyrics \lyricsto bas \text
   >>
 }
