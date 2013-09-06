@@ -32,7 +32,7 @@
     \consists "Ambitus_engraver"
     midiInstrument = "acoustic grand"
 
-    \clef treble
+    \clef G
     instrumentName = "S "
     shortInstrumentName = "S "
   }
@@ -50,7 +50,7 @@
     \consists "Ambitus_engraver"
     midiInstrument = "acoustic grand"
 
-    \clef treble
+    \clef G
     instrumentName = "A "
     shortInstrumentName = "A "
   }
@@ -86,7 +86,7 @@
     \consists "Ambitus_engraver"
     midiInstrument = "acoustic grand"
 
-    \clef bass
+    \clef F
     instrumentName = "B "
     shortInstrumentName = "B "
   }
