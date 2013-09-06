@@ -3,8 +3,7 @@
 %{
   TODO:
   define other instruments
-  define voices
-  add other useful commands (eg dynamicUp)
+  derive all vocal staves from one VocalStaff
   think how to handle midi instruments
   think how to handle two voices (eg SA) on one staff
   -> what about ambitus in that case?
@@ -33,6 +32,8 @@
     midiInstrument = "acoustic grand"
 
     \clef G
+    \dynamicUp
+    \tupletUp
     instrumentName = "Soprano"
     shortInstrumentName = "S"
   }
@@ -59,6 +60,8 @@
     midiInstrument = "acoustic grand"
 
     \clef G
+    \dynamicUp
+    \tupletUp
     instrumentName = "Alto"
     shortInstrumentName = "A"
   }
@@ -85,6 +88,8 @@
     midiInstrument = "acoustic grand"
 
     \clef "G_8"
+    \dynamicUp
+    \tupletUp
     instrumentName = "Tenor"
     shortInstrumentName = "T"
   }
@@ -111,6 +116,8 @@
     midiInstrument = "acoustic grand"
 
     \clef F
+    \dynamicUp
+    \tupletUp
     instrumentName = "Bass"
     shortInstrumentName = "B"
   }
