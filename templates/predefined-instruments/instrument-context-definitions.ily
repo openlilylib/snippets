@@ -26,8 +26,8 @@
 
     \type "Engraver_group"
     \alias "Staff"
-    \accepts "Voice"
-    \defaultchild "Voice"
+    \accepts "SopranoVoice"
+    \defaultchild "SopranoVoice"
 
     \consists "Ambitus_engraver"
     midiInstrument = "acoustic grand"
@@ -35,6 +35,14 @@
     \clef G
     instrumentName = "Soprano"
     shortInstrumentName = "S"
+  }
+
+  \context {
+    \Voice
+    \name "SopranoVoice"
+    \description "predefined template for soprano voice"
+
+    \alias "Voice"
   }
 
   \context {
