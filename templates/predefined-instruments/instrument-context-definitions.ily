@@ -1,5 +1,15 @@
 \version "2.16.2"
 
+%{
+  TODO:
+  define other instruments
+  define voices
+  add other useful commands (eg dynamicUp)
+  think how to handle midi instruments
+  think how to handle two voices (eg SA) on one staff
+  -> what about ambitus in that case?
+%}
+
 \layout {
   \context {
     \ChoirStaff
