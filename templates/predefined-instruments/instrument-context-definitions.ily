@@ -52,8 +52,8 @@
 
     \type "Engraver_group"
     \alias "Staff"
-    \accepts "Voice"
-    \defaultchild "Voice"
+    \accepts "AltoVoice"
+    \defaultchild "AltoVoice"
 
     \consists "Ambitus_engraver"
     midiInstrument = "acoustic grand"
@@ -64,14 +64,22 @@
   }
 
   \context {
+    \Voice
+    \name "AltoVoice"
+    \description "predefined template for alto voice"
+
+    \alias "Voice"
+  }
+
+  \context {
     \Staff
     \name "TenorStaff"
     \description "predefined template for tenor staff"
 
     \type "Engraver_group"
     \alias "Staff"
-    \accepts "Voice"
-    \defaultchild "Voice"
+    \accepts "TenorVoice"
+    \defaultchild "TenorVoice"
 
     \consists "Ambitus_engraver"
     midiInstrument = "acoustic grand"
@@ -82,14 +90,22 @@
   }
 
   \context {
+    \Voice
+    \name "TenorVoice"
+    \description "predefined template for tenor voice"
+
+    \alias "Voice"
+  }
+
+  \context {
     \Staff
     \name "BassStaff"
     \description "predefined template for bass staff"
 
     \type "Engraver_group"
     \alias "Staff"
-    \accepts "Voice"
-    \defaultchild "Voice"
+    \accepts "BassVoice"
+    \defaultchild "BassVoice"
 
     \consists "Ambitus_engraver"
     midiInstrument = "acoustic grand"
@@ -98,4 +114,13 @@
     instrumentName = "Bass"
     shortInstrumentName = "B"
   }
+
+  \context {
+    \Voice
+    \name "BassVoice"
+    \description "predefined template for bass voice"
+
+    \alias "Voice"
+  }
+
 }
