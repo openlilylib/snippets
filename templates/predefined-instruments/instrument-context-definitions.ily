@@ -3,7 +3,6 @@
 %{
   TODO:
   define other instruments
-  derive all vocal staves from one VocalStaff
   think how to handle two voices (eg SA) on one staff
   -> what about ambitus in that case?
 %}
@@ -12,6 +11,7 @@
 
   \context {
     \ChoirStaff
+    \accepts "VocalStaff"
     \accepts "SopranoStaff"
     \accepts "AltoStaff"
     \accepts "TenorStaff"
@@ -21,94 +21,104 @@
 
   \context {
     \Staff
-    \name "SopranoStaff"
+    \name "VocalStaff"
     \alias "Staff"
+    \accepts "VocalVoice" % it should perhaps also accept derived Voices
+    \defaultchild "VocalVoice"
+    \description "predefined template for vocal staves"
+
+    \consists "Ambitus_engraver"
+    instrumentName = "Vocals"
+    shortInstrumentName = "Voc."
+    \dynamicUp
+    \tupletUp
+  }
+
+  \context {
+    \VocalStaff
+    \name "SopranoStaff"
+    \alias "VocalStaff"
     \accepts "SopranoVoice"
     \defaultchild "SopranoVoice"
     \description "predefined template for soprano staff"
 
-    \consists "Ambitus_engraver"
     instrumentName = "Soprano"
     shortInstrumentName = "S"
     \clef G
-    \dynamicUp
-    \tupletUp
   }
 
   \context {
-    \Staff
+    \VocalStaff
     \name "AltoStaff"
-    \alias "Staff"
+    \alias "VocalStaff"
     \accepts "AltoVoice"
     \defaultchild "AltoVoice"
     \description "predefined template for alto staff"
 
-    \consists "Ambitus_engraver"
     instrumentName = "Alto"
     shortInstrumentName = "A"
     \clef G
-    \dynamicUp
-    \tupletUp
   }
 
   \context {
-    \Staff
+    \VocalStaff
     \name "TenorStaff"
-    \alias "Staff"
+    \alias "VocalStaff"
     \accepts "TenorVoice"
     \defaultchild "TenorVoice"
     \description "predefined template for tenor staff"
 
-    \consists "Ambitus_engraver"
     instrumentName = "Tenor"
     shortInstrumentName = "T"
     \clef "G_8"
-    \dynamicUp
-    \tupletUp
   }
 
   \context {
-    \Staff
+    \VocalStaff
     \name "BassStaff"
-    \alias "Staff"
+    \alias "VocalStaff"
     \accepts "BassVoice"
     \defaultchild "BassVoice"
     \description "predefined template for bass staff"
 
-    \consists "Ambitus_engraver"
     instrumentName = "Bass"
     shortInstrumentName = "B"
     \clef F
-    \dynamicUp
-    \tupletUp
   }
 
 
   \context {
     \Voice
-    \name "SopranoVoice"
+    \name "VocalVoice"
     \alias "Voice"
+    \description "predefined template for vocal voice"
+  }
+
+  \context {
+    \VocalVoice
+    \name "SopranoVoice"
+    \alias "VocalVoice"
     \description "predefined template for soprano voice"
   }
 
   \context {
-    \Voice
+    \VocalVoice
     \name "AltoVoice"
-    \alias "Voice"
+    \alias "VocalVoice"
     \description "predefined template for alto voice"
   }
 
   \context {
-    \Voice
+    \VocalVoice
     \name "TenorVoice"
-    \alias "Voice"
+    \alias "VocalVoice"
     \description "predefined template for tenor voice"
   }
 
   \context {
-    \Voice
+    \VocalVoice
     \name "BassVoice"
-    \alias "Voice"
+    \alias "VocalVoice"
     \description "predefined template for bass voice"
   }
 }
@@ -117,6 +127,7 @@
 \midi {
   \context {
     \ChoirStaff
+    \accepts "VocalStaff"
     \accepts "SopranoStaff"
     \accepts "AltoStaff"
     \accepts "TenorStaff"
@@ -125,63 +136,66 @@
 
   \context {
     \Staff
-    \name "SopranoStaff"
+    \name "VocalStaff"
     \alias "Staff"
+    \accepts "VocalVoice"
+    \defaultchild "VocalVoice"
+    \remove "Staff_performer"
+  }
+  \context {
+    \VocalStaff
+    \name "SopranoStaff"
+    \alias "VocalStaff"
     \accepts "SopranoVoice"
     \defaultchild "SopranoVoice"
-    \remove "Staff_performer"
   }
   \context {
-    \Staff
+    \VocalStaff
     \name "AltoStaff"
-    \alias "Staff"
+    \alias "VocalStaff"
     \accepts "AltoVoice"
     \defaultchild "AltoVoice"
-    \remove "Staff_performer"
   }
   \context {
-    \Staff
+    \VocalStaff
     \name "TenorStaff"
-    \alias "Staff"
+    \alias "VocalStaff"
     \accepts "TenorVoice"
     \defaultchild "TenorVoice"
-    \remove "Staff_performer"
   }
   \context {
-    \Staff
+    \VocalStaff
     \name "BassStaff"
-    \alias "Staff"
+    \alias "VocalStaff"
     \accepts "BassVoice"
     \defaultchild "BassVoice"
-    \remove "Staff_performer"
   }
 
   \context {
     \Voice
+    \name "VocalVoice"
+    \alias "Voice"
+    \consists "Staff_performer"
+    midiInstrument = "voice oohs"
+  }
+  \context {
+    \VocalVoice
     \name "SopranoVoice"
-    \alias "Voice"
-    \consists "Staff_performer"
-    midiInstrument = "voice oohs"
+    \alias "VocalVoice"
   }
   \context {
-    \Voice
+    \VocalVoice
     \name "AltoVoice"
-    \alias "Voice"
-    \consists "Staff_performer"
-    midiInstrument = "voice oohs"
+    \alias "VocalVoice"
   }
   \context {
-    \Voice
+    \VocalVoice
     \name "TenorVoice"
-    \alias "Voice"
-    \consists "Staff_performer"
-    midiInstrument = "voice oohs"
+    \alias "VocalVoice"
   }
   \context {
-    \Voice
+    \VocalVoice
     \name "BassVoice"
-    \alias "Voice"
-    \consists "Staff_performer"
-    midiInstrument = "voice oohs"
+    \alias "VocalVoice"
   }
 }

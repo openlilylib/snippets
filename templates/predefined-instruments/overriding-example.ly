@@ -37,10 +37,13 @@ text = \lyricmode {
   \layout {
     \override Staff.NoteHead #'color = #blue
     \override AltoStaff.NoteHead #'color = #red
-    \override SopranoVoice.NoteHead #'color = #green
+    \override SopranoVoice.Stem #'color = #green
+    \override VocalStaff.Stem #'thickness = #4
   }
   \midi {
-    \set Staff.midiInstrument = #"acoustic grand"
-    \set SopranoStaff.midiInstrument = #"clarinet"
+    % it would be nice if eg. \set SopranoStaff.midiInstrument
+    % affected all voices living in SopranoStaves
+    \set Voice.midiInstrument = #"acoustic grand"
+    \set SopranoVoice.midiInstrument = #"clarinet"
   }
 }
