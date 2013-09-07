@@ -56,5 +56,8 @@ mind and want to use a different naming, you can just change
 the names in `mystaffnames.ily` and all your scores that
 `\include` this file will be affected!
 
+**Known issues:** custom contexts don't work with MIDI (ugh!!).
+See `midi-bug.ly`.
+
 Note: as of 2013-09-06, this is still in very early stage
 of development.
