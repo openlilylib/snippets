@@ -10,6 +10,7 @@
 %}
 
 \layout {
+
   \context {
     \ChoirStaff
     \accepts "SopranoStaff"
@@ -18,108 +19,98 @@
     \accepts "BassStaff"
   }
 
+
   \context {
     \Staff
     \name "SopranoStaff"
-    \description "predefined template for soprano staff"
-
     \alias "Staff"
     \accepts "SopranoVoice"
     \defaultchild "SopranoVoice"
+    \description "predefined template for soprano staff"
 
     \consists "Ambitus_engraver"
-
+    instrumentName = "Soprano"
+    shortInstrumentName = "S"
     \clef G
     \dynamicUp
     \tupletUp
-    instrumentName = "Soprano"
-    shortInstrumentName = "S"
   }
 
   \context {
     \Staff
     \name "AltoStaff"
-    \description "predefined template for alto staff"
-
     \alias "Staff"
     \accepts "AltoVoice"
     \defaultchild "AltoVoice"
+    \description "predefined template for alto staff"
 
     \consists "Ambitus_engraver"
-
+    instrumentName = "Alto"
+    shortInstrumentName = "A"
     \clef G
     \dynamicUp
     \tupletUp
-    instrumentName = "Alto"
-    shortInstrumentName = "A"
   }
 
   \context {
     \Staff
     \name "TenorStaff"
-    \description "predefined template for tenor staff"
-
     \alias "Staff"
     \accepts "TenorVoice"
     \defaultchild "TenorVoice"
+    \description "predefined template for tenor staff"
 
     \consists "Ambitus_engraver"
-
+    instrumentName = "Tenor"
+    shortInstrumentName = "T"
     \clef "G_8"
     \dynamicUp
     \tupletUp
-    instrumentName = "Tenor"
-    shortInstrumentName = "T"
   }
 
   \context {
     \Staff
     \name "BassStaff"
-    \description "predefined template for bass staff"
-
     \alias "Staff"
     \accepts "BassVoice"
     \defaultchild "BassVoice"
+    \description "predefined template for bass staff"
 
     \consists "Ambitus_engraver"
-
+    instrumentName = "Bass"
+    shortInstrumentName = "B"
     \clef F
     \dynamicUp
     \tupletUp
-    instrumentName = "Bass"
-    shortInstrumentName = "B"
   }
+
 
   \context {
     \Voice
     \name "SopranoVoice"
-    \description "predefined template for soprano voice"
-
     \alias "Voice"
+    \description "predefined template for soprano voice"
   }
 
   \context {
     \Voice
     \name "AltoVoice"
-    \description "predefined template for alto voice"
-
     \alias "Voice"
+    \description "predefined template for alto voice"
   }
 
   \context {
     \Voice
     \name "TenorVoice"
-    \description "predefined template for tenor voice"
-
     \alias "Voice"
+    \description "predefined template for tenor voice"
   }
 
   \context {
     \Voice
     \name "BassVoice"
-    \description "predefined template for bass voice"
-
     \alias "Voice"
+    \description "predefined template for bass voice"
   }
 }
 
