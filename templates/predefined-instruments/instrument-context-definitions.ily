@@ -2,9 +2,14 @@
 
 %{
   TODO:
-  define other instruments
+  There's a lot of boilerplate code here.  This should be done
+  using some function, and i'm pretty sure that such a function
+  would be quite easy to write...
+
   think how to handle two voices (eg SA) on one staff
-  -> what about ambitus in that case?
+  -> what about ambitus in that case? Probably shoul be moved to voice.
+
+  define other instruments
 %}
 
 \layout {
