@@ -1,9 +1,7 @@
-_Dedicated to Graham Percival._
-
-_We were talking about making LilyPond easier to use (when
-we met in Waltrop, 2012) and Graham suggested that i make
-a file with custom context definitions which we could all
-test.  Well, better late than never._
+___Dedicated to Graham Percival.___ _At Waltrop 2012 meeting
+We were talking about making LilyPond easier to use and Graham
+suggested that i make a file with custom context definitions
+which we could all test.  Well, better late than never._
 
 Are you tired of setting staff labels (instrumentNames),
 clefs, midi instruments etc. for every staff you create?
@@ -23,7 +21,7 @@ This should help you.  The idea is that instead of writing
 you would just write 
 
     \new TenorStaff \music
-    
+
 And all these settings would be taken from TenorStaff definition.
 
 I hope that one day these definitions will make it to the
@@ -55,9 +53,6 @@ how many of them do you have in your score, and where they are
 mind and want to use a different naming, you can just change
 the names in `mystaffnames.ily` and all your scores that
 `\include` this file will be affected!
-
-**Known issues:** custom contexts don't work with MIDI (ugh!!).
-See `midi-bug.ly`.
 
 Note: as of 2013-09-06, this is still in very early stage
 of development.
