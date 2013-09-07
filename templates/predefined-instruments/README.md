@@ -1,3 +1,10 @@
+_Dedicated to Graham Percival._
+
+_We were talking about making LilyPond easier to use (when
+we met in Waltrop, 2012) and Graham suggested that i make
+a file with custom context definitions which we could all
+test.  Well, better late than never._
+
 Are you tired of setting staff labels (instrumentNames),
 clefs, midi instruments etc. for every staff you create?
 This should help you.  The idea is that instead of writing
