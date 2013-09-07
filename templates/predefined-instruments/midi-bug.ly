@@ -1,10 +1,6 @@
 \version "2.16.2"
 
-\markup \justify {
-  Why there is no sound in midi output? It appears that
-  \typewriter { midiInstrument = "acoustic grand" }
-  from instrument-context-definitions isn't applied.
-}
+% everything works now!
 
 \include "instrument-context-definitions.ily"
 

@@ -144,7 +144,6 @@
     \name "SopranoStaff"
     \description "predefined template for soprano staff"
 
-    \type "Engraver_group"
     \alias "Staff"
     \accepts "SopranoVoice"
     \defaultchild "SopranoVoice"
