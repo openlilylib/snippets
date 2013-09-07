@@ -37,14 +37,6 @@
   }
 
   \context {
-    \Voice
-    \name "SopranoVoice"
-    \description "predefined template for soprano voice"
-
-    \alias "Voice"
-  }
-
-  \context {
     \Staff
     \name "AltoStaff"
     \description "predefined template for alto staff"
@@ -63,14 +55,6 @@
   }
 
   \context {
-    \Voice
-    \name "AltoVoice"
-    \description "predefined template for alto voice"
-
-    \alias "Voice"
-  }
-
-  \context {
     \Staff
     \name "TenorStaff"
     \description "predefined template for tenor staff"
@@ -86,14 +70,6 @@
     \tupletUp
     instrumentName = "Tenor"
     shortInstrumentName = "T"
-  }
-
-  \context {
-    \Voice
-    \name "TenorVoice"
-    \description "predefined template for tenor voice"
-
-    \alias "Voice"
   }
 
   \context {
@@ -116,12 +92,35 @@
 
   \context {
     \Voice
+    \name "SopranoVoice"
+    \description "predefined template for soprano voice"
+
+    \alias "Voice"
+  }
+
+  \context {
+    \Voice
+    \name "AltoVoice"
+    \description "predefined template for alto voice"
+
+    \alias "Voice"
+  }
+
+  \context {
+    \Voice
+    \name "TenorVoice"
+    \description "predefined template for tenor voice"
+
+    \alias "Voice"
+  }
+
+  \context {
+    \Voice
     \name "BassVoice"
     \description "predefined template for bass voice"
 
     \alias "Voice"
   }
-
 }
 
 
@@ -143,12 +142,6 @@
     midiInstrument = "voice oohs"
   }
   \context {
-    \Voice
-    \name "SopranoVoice"
-    \alias "Voice"
-  }
-
-  \context {
     \Staff
     \name "AltoStaff"
     \alias "Staff"
@@ -156,12 +149,6 @@
     \defaultchild "AltoVoice"
     midiInstrument = "voice oohs"
   }
-  \context {
-    \Voice
-    \name "AltoVoice"
-    \alias "Voice"
-  }
-
   \context {
     \Staff
     \name "TenorStaff"
@@ -171,12 +158,6 @@
     midiInstrument = "voice oohs"
   }
   \context {
-    \Voice
-    \name "TenorVoice"
-    \alias "Voice"
-  }
-
-  \context {
     \Staff
     \name "BassStaff"
     \alias "Staff"
@@ -185,6 +166,21 @@
     midiInstrument = "voice oohs"
   }
 
+  \context {
+    \Voice
+    \name "SopranoVoice"
+    \alias "Voice"
+  }
+  \context {
+    \Voice
+    \name "AltoVoice"
+    \alias "Voice"
+  }
+  \context {
+    \Voice
+    \name "TenorVoice"
+    \alias "Voice"
+  }
   \context {
     \Voice
     \name "BassVoice"
