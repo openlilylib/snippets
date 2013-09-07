@@ -4,7 +4,6 @@
   TODO:
   define other instruments
   derive all vocal staves from one VocalStaff
-  think how to handle midi instruments
   think how to handle two voices (eg SA) on one staff
   -> what about ambitus in that case?
 %}
@@ -130,7 +129,7 @@
     \alias "Staff"
     \accepts "SopranoVoice"
     \defaultchild "SopranoVoice"
-    midiInstrument = "voice oohs"
+    \remove "Staff_performer"
   }
   \context {
     \Staff
@@ -138,7 +137,7 @@
     \alias "Staff"
     \accepts "AltoVoice"
     \defaultchild "AltoVoice"
-    midiInstrument = "voice oohs"
+    \remove "Staff_performer"
   }
   \context {
     \Staff
@@ -146,7 +145,7 @@
     \alias "Staff"
     \accepts "TenorVoice"
     \defaultchild "TenorVoice"
-    midiInstrument = "voice oohs"
+    \remove "Staff_performer"
   }
   \context {
     \Staff
@@ -154,27 +153,35 @@
     \alias "Staff"
     \accepts "BassVoice"
     \defaultchild "BassVoice"
-    midiInstrument = "voice oohs"
+    \remove "Staff_performer"
   }
 
   \context {
     \Voice
     \name "SopranoVoice"
     \alias "Voice"
+    \consists "Staff_performer"
+    midiInstrument = "voice oohs"
   }
   \context {
     \Voice
     \name "AltoVoice"
     \alias "Voice"
+    \consists "Staff_performer"
+    midiInstrument = "voice oohs"
   }
   \context {
     \Voice
     \name "TenorVoice"
     \alias "Voice"
+    \consists "Staff_performer"
+    midiInstrument = "voice oohs"
   }
   \context {
     \Voice
     \name "BassVoice"
     \alias "Voice"
+    \consists "Staff_performer"
+    midiInstrument = "voice oohs"
   }
 }
