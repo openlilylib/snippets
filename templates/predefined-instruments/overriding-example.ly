@@ -39,4 +39,8 @@ text = \lyricmode {
     \override AltoStaff.NoteHead #'color = #red
     \override SopranoVoice.NoteHead #'color = #green
   }
+  \midi {
+    \set Staff.midiInstrument = #"acoustic grand"
+    \set SopranoStaff.midiInstrument = #"clarinet"
+  }
 }

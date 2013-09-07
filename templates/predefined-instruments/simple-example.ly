@@ -34,4 +34,6 @@ text = \lyricmode {
     \new BassVoice = bas \bassmelody
     \new Lyrics \lyricsto bas \text
   >>
+  \layout {}
+  \midi {}
 }
