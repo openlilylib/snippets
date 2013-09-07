@@ -23,7 +23,6 @@
     \name "SopranoStaff"
     \description "predefined template for soprano staff"
 
-    \type "Engraver_group"
     \alias "Staff"
     \accepts "SopranoVoice"
     \defaultchild "SopranoVoice"
@@ -51,7 +50,6 @@
     \name "AltoStaff"
     \description "predefined template for alto staff"
 
-    \type "Engraver_group"
     \alias "Staff"
     \accepts "AltoVoice"
     \defaultchild "AltoVoice"
@@ -79,7 +77,6 @@
     \name "TenorStaff"
     \description "predefined template for tenor staff"
 
-    \type "Engraver_group"
     \alias "Staff"
     \accepts "TenorVoice"
     \defaultchild "TenorVoice"
@@ -107,7 +104,6 @@
     \name "BassStaff"
     \description "predefined template for bass staff"
 
-    \type "Engraver_group"
     \alias "Staff"
     \accepts "BassVoice"
     \defaultchild "BassVoice"
