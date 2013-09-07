@@ -29,7 +29,6 @@
     \defaultchild "SopranoVoice"
 
     \consists "Ambitus_engraver"
-    \remove "Staff_performer"
     midiInstrument = "acoustic grand"
 
     \clef G
@@ -45,7 +44,6 @@
     \description "predefined template for soprano voice"
 
     \alias "Voice"
-    \consists "Staff_performer"
   }
 
   \context {
@@ -59,7 +57,6 @@
     \defaultchild "AltoVoice"
 
     \consists "Ambitus_engraver"
-    \remove "Staff_performer"
     midiInstrument = "acoustic grand"
 
     \clef G
@@ -75,7 +72,6 @@
     \description "predefined template for alto voice"
 
     \alias "Voice"
-    \consists "Staff_performer"
   }
 
   \context {
@@ -89,7 +85,6 @@
     \defaultchild "TenorVoice"
 
     \consists "Ambitus_engraver"
-    \remove "Staff_performer"
     midiInstrument = "acoustic grand"
 
     \clef "G_8"
@@ -105,7 +100,6 @@
     \description "predefined template for tenor voice"
 
     \alias "Voice"
-    \consists "Staff_performer"
   }
 
   \context {
@@ -119,7 +113,6 @@
     \defaultchild "BassVoice"
 
     \consists "Ambitus_engraver"
-    \remove "Staff_performer"
     midiInstrument = "acoustic grand"
 
     \clef F
@@ -135,7 +128,36 @@
     \description "predefined template for bass voice"
 
     \alias "Voice"
-    \consists "Staff_performer"
   }
 
+}
+
+
+\midi {
+  \context {
+    \ChoirStaff
+    \accepts "SopranoStaff"
+  }
+
+  \context {
+    \Staff
+    \name "SopranoStaff"
+    \description "predefined template for soprano staff"
+
+    \type "Engraver_group"
+    \alias "Staff"
+    \accepts "SopranoVoice"
+    \defaultchild "SopranoVoice"
+
+    midiInstrument = "acoustic grand"
+  }
+
+  \context {
+    \Voice
+    \name "SopranoVoice"
+    \description "predefined template for soprano voice"
+
+    \alias "Voice"
+    midiInstrument = "acoustic grand"
+  }
 }
