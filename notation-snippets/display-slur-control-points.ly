@@ -13,7 +13,9 @@
   % is this snippet ready?  See meta/status-values.md
   status = "undocumented" % aiming for status "official"
   %{
-    TODO (not important, though):
+    TODO:
+    - there's an error when trying to use with LaissezVibrerTie - fix!
+    - check if this really works with RepeatTies
     - it would be nice to have color controlled by a parameter
     - should we use some global settings for thickness and size?
     the function is called several times for different grobs...
@@ -80,7 +82,7 @@ displayControlPoints = {
   \override Slur #'stencil = #(display-control-points 0.08 0.4)
   \override PhrasingSlur #'stencil = #(display-control-points 0.08 0.4)
   \override Tie #'stencil = #(display-control-points 0.08 0.4)
-  \override LaissezVibrerTie #'stencil = #(display-control-points 0.08 0.4)
+  %\override LaissezVibrerTie #'stencil = #(display-control-points 0.08 0.4)
   \override RepeatTie #'stencil = #(display-control-points 0.08 0.4)
 }
 
