@@ -86,14 +86,14 @@ displayControlPoints = {
   \override RepeatTie #'stencil = #(display-control-points 0.08 0.4)
 }
 
+%%%%%%%%%%%%%%%%%%%%%
+% USAGE EXAMPLE(S): %
+%%%%%%%%%%%%%%%%%%%%%
+
 \layout {
   \displayControlPoints
 }
 
 \relative c' {
-  c( d e\( d c1) g'4 a b f | e\)
-}
-
-{
-  c'1~ \ppp c'
+  c( d e\( d~ d1) g'4 a b f | e\)
 }
