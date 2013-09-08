@@ -18,42 +18,52 @@
 % here goes the snippet: %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-#(define (make-cross-stencil coords)
+#(define (make-cross-stencil coords thickness arm-offset)
+   ;; coords are the coordinates of the center of the cross
    (ly:stencil-add
-    (make-line-stencil 0.1 (- (car coords) 0.2) (- (cdr coords) 0.2)
-      (+ (car coords) 0.2) (+ (cdr coords) 0.2))
-    (make-line-stencil 0.1 (- (car coords) 0.2) (+ (cdr coords) 0.2)
-      (+ (car coords) 0.2) (- (cdr coords) 0.2))))
+    (make-line-stencil
+     thickness
+     (- (car coords) arm-offset)
+     (- (cdr coords) arm-offset)
+     (+ (car coords) arm-offset)
+     (+ (cdr coords) arm-offset))
+    (make-line-stencil
+     thickness
+     (- (car coords) arm-offset)
+     (+ (cdr coords) arm-offset)
+     (+ (car coords) arm-offset)
+     (- (cdr coords) arm-offset))))
 
-#(define (display-control-points)
+#(define (display-control-points thickness cross-size)
    (lambda (grob)
      (let* ((grob-name (lambda (x) (assq-ref (ly:grob-property x 'meta) 'name)))
             (name (grob-name grob))
             (stil (cond ((or (eq? name 'Slur)(eq? name 'PhrasingSlur))(ly:slur::print grob))
                     ((eq? name 'Tie)(ly:tie::print grob))))
-            (cps (ly:grob-property grob 'control-points)))
+            (ctrpts (ly:grob-property grob 'control-points)))
 
+       ;; add crosses:
        (ly:stencil-add stil
          (ly:stencil-in-color
           (ly:stencil-add
-           (make-cross-stencil (second cps))
-           (make-cross-stencil (third cps))
+           ;; to go from desired cross size (length of line)
+           ;; to arm-offset, we have to divide by 2*sqrt(2)
+           (make-cross-stencil (second ctrpts) thickness (/ cross-size 2.8284))
+           (make-cross-stencil (third ctrpts) thickness (/ cross-size 2.8284))
            )
-          1 0 0) ; color is hard-coded here (R G B).
-         ; modify to change the color of the crosses
+          1 0 0) ;; color is hard-coded here (R G B).
 
+         ;; add lines:
          (ly:stencil-in-color
           (ly:stencil-add
-           (make-line-stencil 0.05
-             (car (first cps)) (cdr (first cps))
-             (car (second cps))  (cdr (second cps)))
-           ;(make-line-stencil 0.05 (car (second cps)) (cdr (second cps)) (car (third cps))  (cdr (third cps)))
-           (make-line-stencil 0.05
-             (car (third cps)) (cdr (third cps))
-             (car (fourth cps))  (cdr (fourth cps)))
+           (make-line-stencil (/ thickness 2)
+             (car (first ctrpts)) (cdr (first ctrpts))
+             (car (second ctrpts))  (cdr (second ctrpts)))
+           (make-line-stencil (/ thickness 2)
+             (car (third ctrpts)) (cdr (third ctrpts))
+             (car (fourth ctrpts))  (cdr (fourth ctrpts)))
            )
-          1 0 0) ; color is hard-coded here (R G B).
-         ; modify to change the color of the lines
+          1 0 0) ;; color is hard-coded here (R G B).
          empty-stencil)
        )
      ))
@@ -64,9 +74,9 @@
 
 % Switch on the display of control-points for the current Voice
 displayControlPoints = {
-  \override Slur #'stencil = #(display-control-points)
-  \override PhrasingSlur #'stencil = #(display-control-points)
-  \override Tie #'stencil = #(display-control-points)
+  \override Slur #'stencil = #(display-control-points 0.1 1)
+  \override PhrasingSlur #'stencil = #(display-control-points 0.1 1)
+  \override Tie #'stencil = #(display-control-points 0.1 1)
 }
 
 % Switch on the display of the control-points globally
@@ -74,9 +84,9 @@ displayControlPoints = {
 debugCurvesOn = \layout {
   \context {
     \Score
-    \override Slur #'stencil = #(display-control-points)
-    \override PhrasingSlur #'stencil = #(display-control-points)
-    \override Tie #'stencil = #(display-control-points)
+    \override Slur #'stencil = #(display-control-points 0.1 1)
+    \override PhrasingSlur #'stencil = #(display-control-points 0.1 1)
+    \override Tie #'stencil = #(display-control-points 0.1 1)
   }
 }
 
