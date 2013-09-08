@@ -1,8 +1,5 @@
 \version "2.16.2"
 
-% use this to crop output page size to match the snippet
-#(ly:set-option 'preview #t)
-
 \header {
   snippet-title = "Displaying control points of slurs and ties"
   snippet-author = "David Nalesnik, Thomas Morley, Urs Liska, Janek Warchoł"
