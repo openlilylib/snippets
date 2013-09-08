@@ -7,11 +7,22 @@
   snippet-title = "Displaying control points of slurs and ties"
   snippet-author = "David Nalesnik, Thomas Morley, Urs Liska, Janek Warchoł"
   snippet-description = \markup {
+    Slurs, Ties and other similar objects are drawn in LilyPond as
+    third-order Bezier curves, which means that their shape is controlled
+    by four “control-points” (first and last ones tell where the curve ends
+    are placed, and the middle ones affect the curvature).  Changing the
+    shape of these objects involves moving these control-points around,
+    and it's helpful to see where they actually are.  This snippet defines
+    a "\displayControlPoints" function that displays them.  You can use it
+    by calling it inside your music expression, or by placing it in
+    "\layout" block.  When used inside music expressions, it can be prefixed
+    with "\once" in order to display only the control points of the curve that
+    starts at this moment.
   }
   % add comma-separated tags to make searching more effective:
   tags = "slur, tie, bezier curve, control point, preview mode"
   % is this snippet ready?  See meta/status-values.md
-  status = "undocumented" % aiming for status "official"
+  status = "buggy" % aiming for status "official"
   %{
     TODO:
     - displayed stuff affects layout!! (objects are moved to avoid
