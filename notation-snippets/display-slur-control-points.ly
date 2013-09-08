@@ -35,6 +35,7 @@
      (- (cdr coords) arm-offset))))
 
 #(define (display-control-points thickness cross-size)
+   ;; both arguments are measured in staff-spaces. Typical values are 0.1 0.5
    (lambda (grob)
      (let* ((grob-name (lambda (x) (assq-ref (ly:grob-property x 'meta) 'name)))
             (name (grob-name grob))
@@ -56,10 +57,10 @@
          ;; add lines:
          (ly:stencil-in-color
           (ly:stencil-add
-           (make-line-stencil (/ thickness 2)
+           (make-line-stencil (/ thickness 4)
              (car (first ctrpts)) (cdr (first ctrpts))
              (car (second ctrpts))  (cdr (second ctrpts)))
-           (make-line-stencil (/ thickness 2)
+           (make-line-stencil (/ thickness 4)
              (car (third ctrpts)) (cdr (third ctrpts))
              (car (fourth ctrpts))  (cdr (fourth ctrpts)))
            )
@@ -84,9 +85,9 @@ displayControlPoints = {
 debugCurvesOn = \layout {
   \context {
     \Score
-    \override Slur #'stencil = #(display-control-points 0.1 1)
-    \override PhrasingSlur #'stencil = #(display-control-points 0.1 1)
-    \override Tie #'stencil = #(display-control-points 0.1 1)
+    \override Slur #'stencil = #(display-control-points 0.08 0.4)
+    \override PhrasingSlur #'stencil = #(display-control-points 0.08 0.4)
+    \override Tie #'stencil = #(display-control-points 0.08 0.4)
   }
 }
 
