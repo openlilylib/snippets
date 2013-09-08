@@ -5,13 +5,13 @@
 
 \header {
   snippet-title = "Displaying control points of slurs and ties"
-  snippet-author = "?"
+  snippet-author = "David Nalesnik, Thomas Morley, Urs Liska, Janek Warchoł"
   snippet-description = \markup {
   }
   % add comma-separated tags to make searching more effective:
   tags = "slur, tie, bezier curve, control point, preview mode"
   % is this snippet ready?  See meta/status-values.md
-  status = ""
+  status = "undocumented" % aiming for status "official"
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
