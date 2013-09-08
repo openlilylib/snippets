@@ -12,6 +12,12 @@
   tags = "slur, tie, bezier curve, control point, preview mode"
   % is this snippet ready?  See meta/status-values.md
   status = "undocumented" % aiming for status "official"
+  %{
+    TODO (not important, though):
+    - it would be nice to have color controlled by a parameter
+    - should we use some global settings for thickness and size?
+    the function is called several times for different grobs...
+  %}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
