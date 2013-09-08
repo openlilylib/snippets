@@ -25,9 +25,7 @@
   status = "buggy" % aiming for status "official"
   %{
     TODO:
-    - displayed stuff affects layout!! (objects are moved to avoid
-      the lines and crosses - make crosses big to have this effect easily
-      visible). FIX!
+    - displaying control-points of ties affects layout! (example at the bottom) FIX!
     - there's an error when trying to use with LaissezVibrerTie - fix!
     - check if this really works with RepeatTies
     - it would be nice to have color controlled by a parameter
@@ -110,4 +108,17 @@ displayControlPoints = {
 
 \relative c' {
   c( d e\( d~ d1) g'4 a b f | e\)
+}
+
+% this example shows how displayed control-points affect layout, but
+% only in case of ties - there are no problems with Slurs and PhrasingSlurs!
+
+\relative c' {
+  \override Slur #'stencil = #(display-control-points 0.2 3)
+  \override PhrasingSlur #'stencil = #(display-control-points 0.2 3)
+  \override Tie #'stencil = #(display-control-points 0.2 3)
+
+  c1~\ppp c a''~^\ppp a
+  f,\(\ppp d\) g'\(^\ppp e\)
+  f,(\ppp d) g'(^\ppp e)
 }
