@@ -69,35 +69,18 @@
        )
      ))
 
-% The following functions work in the current context
-% So you can place it in the music input and modify the
-% following music.
-
-% Switch on the display of control-points for the current Voice
+% turn on displaying control-points:
 displayControlPoints = {
-  \override Slur #'stencil = #(display-control-points 0.1 1)
-  \override PhrasingSlur #'stencil = #(display-control-points 0.1 1)
-  \override Tie #'stencil = #(display-control-points 0.1 1)
+  \override Slur #'stencil = #(display-control-points 0.08 0.4)
+  \override PhrasingSlur #'stencil = #(display-control-points 0.08 0.4)
+  \override Tie #'stencil = #(display-control-points 0.08 0.4)
 }
-
-% Switch on the display of the control-points globally
-% Place in a \layout block
-debugCurvesOn = \layout {
-  \context {
-    \Score
-    \override Slur #'stencil = #(display-control-points 0.08 0.4)
-    \override PhrasingSlur #'stencil = #(display-control-points 0.08 0.4)
-    \override Tie #'stencil = #(display-control-points 0.08 0.4)
-  }
-}
-
 
 \layout {
-  \debugCurvesOn
+  \displayControlPoints
 }
 
 \relative c' {
-  %\displayControlPoints
   c( d e\( d c1) g'4 a b f | e\)
 }
 
