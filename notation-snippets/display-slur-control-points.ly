@@ -74,6 +74,8 @@ displayControlPoints = {
   \override Slur #'stencil = #(display-control-points 0.08 0.4)
   \override PhrasingSlur #'stencil = #(display-control-points 0.08 0.4)
   \override Tie #'stencil = #(display-control-points 0.08 0.4)
+  \override LaissezVibrerTie #'stencil = #(display-control-points 0.08 0.4)
+  \override RepeatTie #'stencil = #(display-control-points 0.08 0.4)
 }
 
 \layout {
