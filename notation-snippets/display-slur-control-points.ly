@@ -14,6 +14,9 @@
   status = "undocumented" % aiming for status "official"
   %{
     TODO:
+    - displayed stuff affects layout!! (objects are moved to avoid
+      the lines and crosses - make crosses big to have this effect easily
+      visible). FIX!
     - there's an error when trying to use with LaissezVibrerTie - fix!
     - check if this really works with RepeatTies
     - it would be nice to have color controlled by a parameter
