@@ -58,6 +58,7 @@ dynamicUp = {
   \override DynamicText #'color = #directionUpColor
   \override DynamicLineSpanner #'color = #directionUpColor
   \override DynamicTextSpanner #'color = #directionUpColor
+  \override Hairpin #'color = #directionUpColor
 }
 
 dynamicDown = {
@@ -65,6 +66,7 @@ dynamicDown = {
   \override DynamicText #'color = #directionDownColor
   \override DynamicLineSpanner #'color = #directionDownColor
   \override DynamicTextSpanner #'color = #directionDownColor
+  \override Hairpin #'color = #directionDownColor
 }
 
 dynamicNeutral = {
@@ -72,6 +74,7 @@ dynamicNeutral = {
   \revert DynamicText #'color
   \revert DynamicLineSpanner #'color
   \revert DynamicTextSpanner #'color
+  \revert Hairpin #'color
 }
 
 
