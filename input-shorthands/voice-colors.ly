@@ -21,8 +21,8 @@
 
 #(define voiceOneColor '(0 0.5 0))
 #(define voiceTwoColor '(0 0 0.5))
-#(define directionUpColor '(0 1 0))
-#(define directionDownColor '(0 0 1))
+#(define directionUpColor '(0 0.9 0))
+#(define directionDownColor '(0 0 0.9))
 
 voiceOne = {
   \voiceOne
