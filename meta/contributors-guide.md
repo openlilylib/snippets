@@ -35,10 +35,14 @@ LilyPond file and create a usage example as part of the
 documentation.
 
 If you provide an example that is complex and needs lots of
-explanation you can place the snippet in its own subdirectory
-and add a [Markdown](http://en.wikipedia.org/wiki/Markdown)-formatted
-README.md file to that directory. GitHub will automatically
-display this file on the webpage.
+explanation you can add a [Markdown](http://en.wikipedia.org/wiki/Markdown)-
+formatted documentation file which can be displayed automaticall
+by the GitHub web interface.  
+Either place the snippet in its own subdirectory and add a
+`README.md` file in that directory. This will automatically be
+displayed when opening the directory. Or add a
+`NAME-OF-SNIPPET-FILE-doc.md` beside the snippet which will
+also be displayed when clicked on.
 
 
 Contributing using advanced tools
@@ -56,7 +60,9 @@ instructions [here](http://help.github.com/articles/set-up-git)
 in our opinion it's better to use "ordinary" Git tools)
 and [here](http://help.github.com/articles/fork-a-repo)
 to get an offline copy of the Git repository.
-(we will try to add more specific instructions later).
+(we will try to add more specific instructions later).  
+Note that you can use uploaded png files in your
+documenting Markdown files.
 
 
 Special code markers
