@@ -5,7 +5,7 @@ Snippet image:
 
 Snippet code, highlighted by Frescobaldi's exporter written by Urs:
 
-<pre>
+<html>
 <span style="font-weight: 600;">{</span>
   <span style="">&lt;</span><span style="">e</span><span style="">'</span> <span style="">g</span><span style="">'</span><span style="">&gt;</span><span style="color: #008080;">4</span><span style="color: #008080;">.</span>
   <span style="font-weight: 600;">\once</span> <span style="font-weight: 600;">\override</span> <span style="">Flag</span> <span style="color: #a04900;">#</span><span style="color: #a04900;">'</span><span style="color: #a04900;">stencil</span> =
@@ -22,4 +22,4 @@ Snippet code, highlighted by Frescobaldi's exporter written by Urs:
   <span style="color: #006000;">long</span>
 <span style="font-weight: 600;">}</span>
 
-</pre>
+</html>
