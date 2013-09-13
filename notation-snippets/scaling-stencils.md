@@ -1,9 +1,3 @@
-This is a sample snippet markdown.
-
-Snippet image:
-![scaling-stencils](scaling-stencils.png)
-
-Snippet code, highlighted by Frescobaldi's exporter written by Urs:
 
 <html>
 <pre>
