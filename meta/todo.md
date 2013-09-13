@@ -10,3 +10,10 @@ prepare appropriate lilyponds using Janek's script
 http://github.com/janek-warchol/cli-tools/blob/master/lilypond/build-lily.sh ?)
 * mention some cool stuff that may not be obvious to some people:
     * that you can easily link to files and folders
+remove dpreview lilypond option, it's not working properly and clutters the view.
+Find a way to automatically crop png output.
+answer: 'mogrify -trim image' should work
+Merge other useful lily repositories, for example:
+* https://github.com/mwitmer/LyUtil
+* https://github.com/jpvoigt/lalily
+* orchestrallily
