@@ -1,7 +1,5 @@
 \version "2.17.25"
 
-#(ly:set-option 'preview #t)
-
 \header {
   title = "Using tie-configuration property"
   author = "Janek Warchoł"

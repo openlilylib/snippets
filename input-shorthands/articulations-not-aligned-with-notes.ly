@@ -1,7 +1,5 @@
 \version "2.17.25"
 
-%#(ly:set-option 'preview #t)
-
 \header {
   %FIXME: better name?
   title = "Articulations not aligned to notes"

@@ -1,8 +1,5 @@
 \version "2.16.2" % absolutely necessary!
 
-% use this to crop output page size to match the snippet
-#(ly:set-option 'preview #t)
-
 \header {
   snippet-title = "Aligning lyrics on vowels"
   snippet-author = ""
