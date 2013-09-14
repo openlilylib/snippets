@@ -60,6 +60,17 @@ if [ -n "$versions_missing" ]; then
     echo $versions_missing
 fi
 
+# download lilypond sources if necessary:
+if [[ -n "$versions_missing" && -z "$LILYPOND_GIT" ]]; then
+    echo "No LilyPond build system detected, downloading..."
+    sleep 2; echo ""
+    cd $working_dir/../
+    wget http://raw.github.com/janek-warchol/cli-tools/master/lilypond/grab-lily-sources.sh || \
+    die "Failed to download LilyPond downloading script."
+    ./grab-lily-sources.sh
+    cd $working_dir
+fi
+
 # download building script if necessary:
 if [[ -n "$versions_missing" && ! -f ../build-lily.sh ]]; then
     cd $working_dir/../
