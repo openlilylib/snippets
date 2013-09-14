@@ -1,0 +1,3 @@
+\header {
+  tagline = ##f
+}
