@@ -3,6 +3,10 @@
 # this will generate pngs for all snippets that were changed
 # since last checking.
 
+# TODO:
+# make updating existing pngs and creating pngs
+# for new snippets completely separate steps.
+
 die() { echo "$@"; exit 1; }
 
 while getopts "m" opts; do
