@@ -1,5 +1,32 @@
 \version "2.17.25"
 
+\header {
+  snippet-title = "Bracket repeats"
+  snippet-author = "David Nalesnik"
+  snippet-description = \markup {
+    \wordwrap {
+      This snippet is a workaround which creates a representation
+      for repeats which consists of a bracket above a measure.  The
+      number of repeats is expressed by a number centered within
+      the bracket and formatted as "2x".  This is not a true
+      solution as it creates an arbitrary stencil which does not
+      convey a repeat structure understood by LilyPond.  Currently,
+      the workaround will not accomodate repeats lasting more than
+      a single bar and measures split across lines.
+    }
+  }
+  tags = "repeats, scheme"
+  status = "unfinished"
+}
+
+%%%%%%%%%%%%%%%%%%%
+%   THE SNIPPET   %
+%%%%%%%%%%%%%%%%%%%
+
+% The following procedure is a modification of the function
+% `measure-counter-stencil' found in the file
+% `scm/music-functions.scm' in the LilyPond distribution.
+
 #(define (repeat-stencil grob)
    (let* ((orig (ly:grob-original grob))
           (siblings (ly:spanner-broken-into orig)) ; have we been split?
@@ -87,6 +114,9 @@
           (num (ly:stencil-combine-at-edge num X RIGHT bracket-R 0.4)))
      num))
 
+%%%%%%%%%%%%%%%%%%%%%
+%   USAGE EXAMPLE   %
+%%%%%%%%%%%%%%%%%%%%%
 
 \relative c'' {
   \time 8/4
