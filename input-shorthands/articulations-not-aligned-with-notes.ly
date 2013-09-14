@@ -23,6 +23,12 @@ musat =
 
 % examples:
 
+\paper {
+  line-width = 7 \cm
+  indent = 0
+  ragged-right = ##f
+}
+
 \new Voice {
   \at 1*1/3 \p
   \at 1*2/3 \<
