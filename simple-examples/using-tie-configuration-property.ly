@@ -1,11 +1,11 @@
 \version "2.17.25"
 
 \header {
-  title = "Using tie-configuration property"
-  author = "Janek Warchoł"
-  description = ""
-  status = "undocumented"
+  snippet-title = "Using tie-configuration property"
+  snippet-author = "Janek Warchoł"
+  snippet-description = ""
   tags = "tie, ties, bezier curve"
+  status = "undocumented"
 }
 
 % put the snippet here:

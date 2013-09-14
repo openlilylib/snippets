@@ -2,10 +2,11 @@
 
 \header {
   %FIXME: better name?
-  title = "Articulations not aligned to notes"
-  author = "David Kastrup"
+  snippet-title = "Articulations not aligned to notes"
+  snippet-author = "David Kastrup"
+  snippet-description = ""
+  tags = "syntax, articulation, hairpin, at"
   status = "undocumented"
-  tags = "syntax"
 }
 
 % put the snippet here:
