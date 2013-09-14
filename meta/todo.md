@@ -16,3 +16,6 @@ Merge other useful lily repositories, for example:
 * https://github.com/mwitmer/LyUtil
 * https://github.com/jpvoigt/lalily
 * orchestrallily
+* i think that we should gather together various lilypond
+  repositories under the banner of OpenLilyLib.  For example
+  * https://github.com/dliessi/ports
