@@ -19,3 +19,8 @@ Merge other useful lily repositories, for example:
 * i think that we should gather together various lilypond
   repositories under the banner of OpenLilyLib.  For example
   * https://github.com/dliessi/ports
+
+* add some information about pull requests.  Apparently it's quite
+easy to forget to click on "send pull request" button, and also
+creating a new pull request (choosing appropriate branches) can be
+confusing the first time.
