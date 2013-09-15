@@ -61,10 +61,11 @@ your fork and they most probably won't be noticed (after all, it's
 just your own fork - people look at the original repository).
 
 What if you had forgotten to send the pull request initially?
-Go to your fork (`github.com/yourname/reponame`),
+Go to your fork (`github.com/yourname/repositoryname`),
 click on _pull requests_ (on the right), then _new pull request_.
 You may have to edit what branch will be sent as a pull request -
-to do this, click [_Edit_](editing-pull-request.png).
+to do this, click [_Edit_]
+(http://raw.github.com/openlilylib/snippets/master/meta/editing-pull-request.png).
 
 The _base fork_ is where you want changes to be applied (so it should
 probably be `openlilylib/snippets` reepository and `master` branch).
