@@ -37,7 +37,8 @@ The easiest way to contribute is using GitHub's web interface.
 To modify a file, click its name and then click _Edit_.
 5. Write what you have changed (form at the bottom)
 and click _Commit_.
-6. Click _Send pull request_.
+6. **Don't forget to click** _Send pull request_.
+([more info...](meta/contributors-guide.md#pull-requests))
 
 Using more powerful tools for contributing is described [here](http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md#contributing-using-advanced-tools).
 
