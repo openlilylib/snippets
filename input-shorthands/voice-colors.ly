@@ -19,10 +19,10 @@
 % here goes the snippet: %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-#(define voiceOneColor '(0 0.4 0))
-#(define voiceTwoColor '(0 0 0.4))
-#(define directionUpColor '(0 0.9 0))
-#(define directionDownColor '(0 0 0.9))
+#(define directionUpColor '(0 0.5 0))
+#(define directionDownColor '(0 0.1 0.5))
+#(define voiceOneColor directionUpColor)
+#(define voiceTwoColor directionDownColor)
 
 voiceOne = {
   \voiceOne
