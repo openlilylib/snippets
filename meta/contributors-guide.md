@@ -45,6 +45,35 @@ displayed when opening the directory. Or add a
 also be displayed when clicked on.
 
 
+Pull Requests
+-------------
+
+If you add or modify a snippet in `openlilylib/snippets` repository,
+but you don't have write access to the repository yet, GitHub will
+fork the repository for you (i.e. create your own copy of the
+repository), and save your change in your fork.  To have your change
+added to the main repository, you have to send a _pull request_.
+A pull request is like saying _"Hey, I have some stuff to share.
+Please look at it and include it in the main repository"_.
+
+If you don't send a pull request, your changes will remain only in
+your fork and they most probably won't be noticed (after all, it's
+just your own fork - people look at the original repository).
+
+What if you had forgotten to send the pull request initially?
+Go to your fork (`github.com/yourname/repositoryname`),
+click on _pull requests_ (on the right), then _new pull request_.
+You may have to edit what branch will be sent as a pull request -
+to do this, click [_Edit_]
+(http://raw.github.com/openlilylib/snippets/master/meta/editing-pull-request.png).
+
+The _base fork_ is where you want changes to be applied (so it should
+probably be `openlilylib/snippets` reepository and `master` branch).
+The _head fork_ is the repository from which the changes should be
+taken (usually your fork), and _compare_ is the branch that you want
+to be merged.
+
+
 Contributing using advanced tools
 ---------------------------------
 
