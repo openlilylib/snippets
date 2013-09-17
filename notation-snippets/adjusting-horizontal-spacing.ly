@@ -9,6 +9,18 @@
   tags = "horizontal spacing, common shortest duration"
   % is this snippet ready?  See meta/status-values.md
   status = "unfinished"
+  %{
+    TODO:
+    - change name - \horizontalSpacingDensity ?
+    - make it possible to make spacing tighter (as of now,
+    \scaleBaseShortestDurationFromDefault #(ly:make-moment 4 1)
+    didn't do anything)
+    - change the argument from a moment to a number?  So that
+    one would write \horizontalSpacingDensity #2 and that 2
+    would be internally translated into a moment
+    - add derived commands \horizontalSpacingLoose and
+    \horizontalSpacingTight
+  %}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
