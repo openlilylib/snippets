@@ -42,26 +42,38 @@ scaleBaseShortestDurationFromDefault =
 
 %%% moment offset test
 
+#(set-global-staff-size 15)
+\paper {
+  indent = 0
+  ragged-right = ##t
+}
+
+music = \relative c {
+  \clef "bass"
+  \key d \minor
+  \time 3/4
+  \mergeDifferentlyDottedOn
+  <<
+    { \slurDashed d8.-\flageolet( e16) e4.-\trill( d16 e) }
+    \\
+    { d4_2 a2 }
+  >>
+  \slurDashed
+  <f' a, d,>4. e8( d c)
+  \slurSolid
+  bes8 g' f e16( f g_1 a_2 bes_3 d,_2)
+}
+
 \new Staff {
-  \scaleBaseShortestDurationFromDefault #(ly:make-moment 1 1)
-  \repeat unfold 80
-  {
-    c''4
-  }
+  \music
 }
 
 \new Staff {
   \scaleBaseShortestDurationFromDefault #(ly:make-moment 1 4)
-  \repeat unfold 80
-  {
-    c''4
-  }
+  \music
 }
 
 \new Staff {
-  \scaleBaseShortestDurationFromDefault #(ly:make-moment 1 16)
-  \repeat unfold 80
-  {
-    c''4
-  }
+  \scaleBaseShortestDurationFromDefault #(ly:make-moment 1 8)
+  \music
 }
