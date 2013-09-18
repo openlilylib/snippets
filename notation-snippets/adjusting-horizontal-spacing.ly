@@ -8,12 +8,7 @@
   % add comma-separated tags to make searching more effective:
   tags = "horizontal spacing, common shortest duration"
   % is this snippet ready?  See meta/status-values.md
-  status = "unfinished"
-  %{
-    TODO:
-    - add derived commands \horizontalSpacingLoose and
-    \horizontalSpacingTight
-  %}
+  status = "undocumented"
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -44,6 +39,9 @@ while positive values make the spacing looser.
           (ly:moment-mul default-value multiplier)))
    #})
 
+horizontalSpacingLoose = \stretchHorizontalSpacing #1
+horizontalSpacingTight = \stretchHorizontalSpacing #-1
+
 music = \relative c {
   \clef "bass"
   \key d \minor
@@ -60,9 +58,9 @@ music = \relative c {
   bes8 g' f e16( f g_1 a_2 bes_3 d,_2)
 }
 
-\markup "Tighter spacing:"
+\markup { \smaller \typewriter "\horizontalSpacingTight" }
 \new Staff {
-  \stretchHorizontalSpacing #-1
+  \horizontalSpacingTight
   \music
 }
 
@@ -71,8 +69,8 @@ music = \relative c {
   \music
 }
 
-\markup "Looser spacing:"
+\markup { \smaller \typewriter "\horizontalSpacingLoose" }
 \new Staff {
-  \stretchHorizontalSpacing #1
+  \horizontalSpacingLoose
   \music
 }
