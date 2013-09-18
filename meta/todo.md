@@ -24,3 +24,10 @@ Merge other useful lily repositories, for example:
 easy to forget to click on "send pull request" button, and also
 creating a new pull request (choosing appropriate branches) can be
 confusing the first time.
+
+* add another category for stuff like displaying control-points and
+  coloring voices.  They don't fit "input shorthands" because they're
+  not used to produce any input - they are just helpers in the work.
+  I just don't know how it should be named.
+
+* btw, "input-shorthands" isn't a very good name either.
