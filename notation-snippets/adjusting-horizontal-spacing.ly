@@ -1,4 +1,4 @@
-\version "2.17.25"
+\version "2.16.2"
 
 \header {
   snippet-title = "Adjusting horizontal spacing"
@@ -39,7 +39,7 @@ Negative values of @var{exponent} make the spacing tighter,
 while positive values make the spacing looser.
 ")
    #{
-     \override Score.SpacingSpanner.common-shortest-duration =
+     \override Score.SpacingSpanner #'common-shortest-duration =
      #(lambda (grob)
         (let* ((func (assoc-get 'common-shortest-duration
                        (reverse (ly:grob-basic-properties grob))))
