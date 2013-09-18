@@ -2,7 +2,7 @@
 
 \header {
   snippet-title = "Adjusting horizontal spacing"
-  snippet-author = "David Nalesnik"
+  snippet-author = "David Nalesnik, Janek Warchol"
   snippet-description = \markup {
   }
   % add comma-separated tags to make searching more effective:
@@ -11,10 +11,6 @@
   status = "unfinished"
   %{
     TODO:
-    - change name - \horizontalSpacingDensity ?
-    - make it possible to make spacing tighter (as of now,
-    \scaleBaseShortestDurationFromDefault #(ly:make-moment 4 1)
-    didn't do anything)
     - change the argument from a moment to a number?  So that
     one would write \horizontalSpacingDensity #2 and that 2
     would be internally translated into a moment
@@ -27,17 +23,21 @@
 % here goes the snippet: %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-scaleBaseShortestDurationFromDefault =
-#(define-music-function (parser location factor)
-   (ly:moment?)
-   #{
-     \override Score.SpacingSpanner.base-shortest-duration =
-     #(lambda (grob)
-        (let ((base-shortest-duration
-               (assoc-get 'base-shortest-duration
-                 (reverse (ly:grob-basic-properties grob)))))
-          (ly:moment-mul base-shortest-duration factor)))
-   #})
+horizontalSpacingDensity =
+#(define-music-function (parser location factor) (ly:moment?)
+  (_i "This function determines the default value of the property
+@var{common-shortest-duration} and multiplies it by the argument
+@var{factor}.  Moments smaller than @code{(ly:make-moment 1 1)} make the spacing
+tighter, while larger values make the spacing looser.
+")
+  #{
+    \override Score.SpacingSpanner.common-shortest-duration =
+      #(lambda (grob)
+        (let* ((func (assoc-get 'common-shortest-duration
+                                (reverse (ly:grob-basic-properties grob))))
+               (default-value (func grob)))
+          (ly:moment-mul default-value factor)))
+  #})
 
 
 %%% moment offset test
@@ -64,16 +64,23 @@ music = \relative c {
   bes8 g' f e16( f g_1 a_2 bes_3 d,_2)
 }
 
+% default horizontal spacing
+
 \new Staff {
   \music
 }
 
 \new Staff {
-  \scaleBaseShortestDurationFromDefault #(ly:make-moment 1 4)
+  \horizontalSpacingDensity #(ly:make-moment 3 4)
   \music
 }
 
 \new Staff {
-  \scaleBaseShortestDurationFromDefault #(ly:make-moment 1 8)
+  \horizontalSpacingDensity #(ly:make-moment 1 2)
+  \music
+}
+
+\new Staff {
+  \horizontalSpacingDensity #(ly:make-moment 4 3)
   \music
 }
