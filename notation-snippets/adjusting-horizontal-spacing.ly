@@ -2,7 +2,7 @@
 
 \header {
   snippet-title = "Adjusting horizontal spacing"
-  snippet-author = "David Nalesnik, Janek Warchol"
+  snippet-author = "David Nalesnik, Janek Warchoł"
   snippet-description = \markup {
   }
   % add comma-separated tags to make searching more effective:
