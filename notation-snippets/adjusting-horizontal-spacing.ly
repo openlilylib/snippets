@@ -57,11 +57,6 @@ while positive values make the spacing looser.
 horizontalSpacingLoose = \stretchHorizontalSpacing #1
 horizontalSpacingTight = \stretchHorizontalSpacing #-1
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-% usage example:         %
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 music = \relative c {
   \clef "bass"
   \key d \minor
@@ -89,8 +84,14 @@ music = \relative c {
   \music
 }
 
+\markup { \smaller \typewriter "\stretchHorizontalSpacing #0.5" }
+\new Staff {
+  \stretchHorizontalSpacing #0.5
+  \music
+}
 \markup { \smaller \typewriter "\horizontalSpacingLoose" }
 \new Staff {
   \horizontalSpacingLoose
   \music
 }
+
