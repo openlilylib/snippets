@@ -21,7 +21,8 @@
     This can also be used inside a "\layout" block.
   }
   % add comma-separated tags to make searching more effective:
-  tags = "horizontal spacing, common shortest duration"
+  tags = "horizontal spacing, common shortest duration, common-shortest-duration,
+  density, tightness"
   % is this snippet ready?  See meta/status-values.md
   status = "official"
 }
