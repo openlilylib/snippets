@@ -11,9 +11,6 @@
   status = "unfinished"
   %{
     TODO:
-    - change the argument from a moment to a number?  So that
-    one would write \horizontalSpacingDensity #2 and that 2
-    would be internally translated into a moment
     - add derived commands \horizontalSpacingLoose and
     \horizontalSpacingTight
   %}
@@ -23,30 +20,29 @@
 % here goes the snippet: %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-horizontalSpacingDensity =
-#(define-music-function (parser location factor) (ly:moment?)
-  (_i "This function determines the default value of the property
-@var{common-shortest-duration} and multiplies it by the argument
-@var{factor}.  Moments smaller than @code{(ly:make-moment 1 1)} make the spacing
-tighter, while larger values make the spacing looser.
+stretchHorizontalSpacing =
+#(define-music-function (parser location exponent) (number?)
+   (_i "This function determines the default value of the property
+@var{common-shortest-duration} and multiplies it by a moment
+derived from the @var{exponent} passed as an argument.
+Negative values of @var{exponent} make the spacing tighter,
+while positive values make the spacing looser.
 ")
-  #{
-    \override Score.SpacingSpanner.common-shortest-duration =
-      #(lambda (grob)
+   #{
+     \override Score.SpacingSpanner.common-shortest-duration =
+     #(lambda (grob)
         (let* ((func (assoc-get 'common-shortest-duration
-                                (reverse (ly:grob-basic-properties grob))))
-               (default-value (func grob)))
-          (ly:moment-mul default-value factor)))
-  #})
-
-
-%%% moment offset test
-
-#(set-global-staff-size 15)
-\paper {
-  indent = 0
-  ragged-right = ##t
-}
+                       (reverse (ly:grob-basic-properties grob))))
+               (default-value (func grob))
+               ;; When dealing with moments, we need to operate on an
+               ;; exponential scale. We use 'inexact->exact' to make sure
+               ;; that 'rationalize' will return an exact result as well.
+               (factor (inexact->exact (expt 2 (- 0 exponent))))
+               ;; The second argument to 'rationalize' has to be fairly
+               ;; small to allow lots of stretching/squeezing.
+               (multiplier (ly:make-moment (rationalize factor 1/2000))))
+          (ly:moment-mul default-value multiplier)))
+   #})
 
 music = \relative c {
   \clef "bass"
@@ -64,23 +60,19 @@ music = \relative c {
   bes8 g' f e16( f g_1 a_2 bes_3 d,_2)
 }
 
-% default horizontal spacing
+\markup "Tighter spacing:"
+\new Staff {
+  \stretchHorizontalSpacing #-1
+  \music
+}
 
+\markup "Default spacing:"
 \new Staff {
   \music
 }
 
+\markup "Looser spacing:"
 \new Staff {
-  \horizontalSpacingDensity #(ly:make-moment 3 4)
-  \music
-}
-
-\new Staff {
-  \horizontalSpacingDensity #(ly:make-moment 1 2)
-  \music
-}
-
-\new Staff {
-  \horizontalSpacingDensity #(ly:make-moment 4 3)
+  \stretchHorizontalSpacing #1
   \music
 }
