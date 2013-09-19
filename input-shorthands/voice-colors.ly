@@ -27,6 +27,7 @@
 voiceOne = {
   \voiceOne
   \override NoteHead #'color = #voiceOneColor
+  \override Rest #'color = #voiceOneColor
   \override Stem #'color = #voiceOneColor
   \override Beam #'color = #voiceOneColor
   \override Slur #'color = #voiceOneColor
@@ -36,6 +37,7 @@ voiceOne = {
 voiceTwo = {
   \voiceTwo
   \override NoteHead #'color = #voiceTwoColor
+  \override Rest #'color = #voiceTwoColor
   \override Stem #'color = #voiceTwoColor
   \override Beam #'color = #voiceTwoColor
   \override Slur #'color = #voiceTwoColor
@@ -45,6 +47,7 @@ voiceTwo = {
 oneVoice = {
   \oneVoice
   \revert NoteHead #'color
+  \revert Rest #'color
   \revert Stem #'color
   \revert Beam #'color
   \revert Slur #'color
