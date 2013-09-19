@@ -32,3 +32,13 @@ recompilation).
 
 Note that this doesn't have to be a Frescobaldi-only feature, it could
 be added to LilyPond itself.
+
+In Frescobaldi it can be implemented by inserting options in the command line.
+Finally one file is included which contains a function that includes more 
+style files depending on the absence/presence of these command line options.
+
+For an implementation in LilyPond itself I suggest:
+
+- define a command line option `-ddraft-mode`
+- if this is present then run the function (we have already in the Frescobaldi solution)  
+  at some point in the initialization phase
