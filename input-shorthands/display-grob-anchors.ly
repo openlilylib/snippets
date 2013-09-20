@@ -3,6 +3,8 @@
 \header {
   snippet-title = "Displaying anchors (reference points) of objects"
   snippet-author = "Thomas Morley"
+  % taken from this thread on the mailing list:
+  % http://lists.gnu.org/archive/html/lilypond-user/2013-03/msg01048.html
   snippet-description = \markup {
     In LilyPond, all graphical objects have an anchor (a reference point).
     What is a reference point?  It's a special point that defines the
