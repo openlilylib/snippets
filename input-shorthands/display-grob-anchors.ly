@@ -1,5 +1,24 @@
 \version "2.16.2"
 
+\header {
+  snippet-title = "Displaying anchors (reference points) of objects"
+  snippet-author = "Thomas Morley"
+  snippet-description = \markup {
+    In LilyPond, all graphical objects have an anchor (a reference point).
+    What is a reference point?  It's a special point that defines the
+    object's position.  Think about geometry: if you have to define where a
+    figure is placed on a plane, you'll usually say something like
+    “the lower left corner of this square has coordinates (0, 2)” or “the
+    center of this circle is at (-1, 3)”. “Lower left corner” and “center”
+    would be the reference points for square and circle.
+
+    This snippet shows where anchors of particular objects are located.
+  }
+  % add comma-separated tags to make searching more effective:
+  tags = "preview mode, draft mode, anchor, reference point, refpoint, alignment, offset"
+  % is this snippet ready?  See meta/status-values.md
+  status = "ready"
+}
 
 #(define (add-dot text?)
    (lambda (grob)
