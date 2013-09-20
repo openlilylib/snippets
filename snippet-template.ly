@@ -3,6 +3,7 @@
 \header {
   snippet-title = "Example snippet"
   snippet-author = "John Doe"
+  snippet-source = "link to the mailing list archives or a website, if applicable"
   snippet-description = \markup {
     This snippet will make your scores look better by magnitudes
     because its creator is just \italic so ingenious.
