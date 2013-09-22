@@ -10,7 +10,9 @@ Until LSR will be upgraded,
 I suggest to put pieces of useful lily code here,
 just to make sure they won't get lost.
 
-At some point in the future we may develop a nice web frontend for this repository.
+At some point in the future we may develop a nice web frontend for this repository;
+we would also like to integrate it with the core LilyPond project similarly to
+how stuff from LSR is imported into official documentation.
 
 
 Contributing
