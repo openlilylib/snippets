@@ -1,49 +1,57 @@
-## Implement a 'draft mode' in LilyPond
+## Implement Layout Debugging in LilyPond
 
-We intend to implement a draft mode in LilyPond itself, during first tests I made some observations and had ideas about a strategy.
+We intend to implement a LilyPond mode to visualize aspects of the layout
+to make debugging scores easier.
 
-- insert a check for the presence of a command line option `-ddraft-mode`  
+While we will start with a reference implementation in Frescobaldi
+the ultimate goal is to add this to LilyPond itself,
+so Frescobaldi development should always have this in mind
+(with regards to namings, calling conventions etc.).
+
+For an implementation in LilyPond we currently see the following strategy:
+
+- insert a check for the presence of a command line option `-ddebug-layout`  
   This check has to be inserted at a (still-to-be-found) point 
   where the input file(s) have already been parsed in order 
   to see options that have been set in the input file 
-  with `#(ly:set-option '...)`
-- if `-ddraft-mode` is present include a file `draft-mode-options.ly`  
-  (see [draft-mode-options.ly](draft-mode-options.ly) for a draft).  
-  This file checks for the presence of specific options and
-  activates the respective functionality by either including 
-  secondary 'style files' or setting options
+  with `#(ly:set-option '...)`  
+  Interesting files to investigate seem to be  
+  - `scm/backend-library.scm`  
+  - `scm/lily.scm` (with the main entry point)  
+  - `ly/property-init.ly`
+- if `-ddebug-layout` is present include a file `debug-layout-options.ly`  
+  (see [debug-layout-options.ly](debug-layout-options.ly) for a draft).  
+  This file first sets some default values we consider
+  appropriate for a simple `-ddebug-layout`,  
+  then checks for the presence of specific options and
+  activates/deactivates the respective functionality by either  
+  including secondary 'style files' or setting options
   (e.g. `#(ly:set-option 'debug-skylines)`  
   Current ideas would include the following options:
-    - `-ddraft-debug-skylines`
-    - `-ddraft-display-controlpoints`
-    - `-ddraft-color-voices`
-    - `-ddraft-display-anchors`
-    - `-ddraft-display-offsets`  
+    - `-ddebug-skylines`  
+      (this would imply modifying current behaviour:  
+       `debug-skylines` would then only be active together with `debug-layout`)
+    - `-ddebug-control-points`
+    - `-ddebug-voices`
+    - `-ddebug-anchors`
+    - `-ddebug-offsets`  
      (drawing a line from the default to the actual anchor)
-    - `-ddraft-custom=`  
+    - `-ddebug-custom=`  
      (include a custom style file. I would for example have
       a `draft-editorial.ily` file to color editorial annotations
       as we have in the Fried edition)
 
-- define all known/accepted options in `lily/program-option-scheme.cc`  
+- there should be known options to configure the style of the debugging
+  (colors, line-thickness etc.)- define all known/accepted options in `lily/program-option-scheme.cc`  
   in order to get rid of warnings about unknown internal options.
+- Of course add documentation at all relevant places.
 
-I think we should clearly differentiate between draft mode options 
-that can be simply be switched on and off and options that require 
-tedious implementation.
-For example `debug-skylines` can be switched, the same is true for 
-things like `display-control-points` and similar commands.
-But there could be other ideas that require to override lots of
-predefined commands (such as coloring objects, which might require
-individual tweaks for all kinds of objects).  
-But I'm convinced that we could implement the draft-mode as a feature
-proposal quite quickly if we restrict ourselves to the 'switchable'
-modes.
-I think these already give a striking impression.
-Once that's accepted with LilyPond it would be rather straightforward 
-to extend with new features.
+There are modes that can be achieved with a simple switch
+by including single files (e.g. `\displayControlPoints`).
+These modes usually rely on snippets that are useful in itself,
+so they should be submitted to LilyPond not only in the context
+of a `debug-layout` but also as standalone extensions.
 
-I further think that all functions that are used to format draft mode
-items (like `\displayControlPoints`) have to be included to LilyPond
-separately (thus: before the draft-mode) because they are needed for
-draft mode, and because they are useful in themselves.
+The options will be developed firstly in Frescobaldi,
+but we should concentrate on 'easy' ones first, because they
+are already are extremely helpful.
