@@ -1,4 +1,4 @@
-## Ideas for adding a 'draft-mode' to LilyPond
+## Adding Layout Debugging to LilyPond
 
 In Frescobaldi, there are two "modes" of compiling a file:
 
@@ -27,16 +27,18 @@ preview mode to help editing the score:
  (for any tweaked objects)
 - etc. (add your ideas here)
 
-Additionally, the pdf created in preview mode could be saved under a 
+Additionally, the pdf created in preview mode could be saved under a
 differrent filename, so that one would have both "preview pdf" and
 "final pdf" available at the same time (to save the time needed for
 recompilation).
 
-Note that this doesn't have to be a Frescobaldi-only feature, it could
-be added to LilyPond itself.
+Note that this shouldn't be a Frescobaldi-only feature.
+Rather we'd like Frescobaldi as a platform to develop it.
+When it's reasonably stable we'll propose it as an addition to
+LilyPond and make Frescobaldi *use* it.
 
-In Frescobaldi it can be implemented by inserting options in the command line.
-Finally one file is included which contains a function that includes more 
-style files depending on the absence/presence of these command line options.
+For more ideas on the Frescobaldi implementation
+see [frescobaldi-implementation.md](frescobaldi-implementation.md).
 
-For ideas how to implement it in LilyPond itself see [lilypond-implementation.md](lilypond-implementation.md).
+For ideas how to implement it in LilyPond itself
+see [lilypond-implementation.md](lilypond-implementation.md).
