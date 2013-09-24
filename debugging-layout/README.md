@@ -37,8 +37,10 @@ Rather we'd like Frescobaldi as a platform to develop it.
 When it's reasonably stable we'll propose it as an addition to
 LilyPond and make Frescobaldi *use* it.
 
-For more ideas on the Frescobaldi implementation
-see [frescobaldi-implementation.md](frescobaldi-implementation.md).
+The Frescobaldi implementation is developed in our fork on the
+[debug-layout](https://github.com/openlilylib/frescobaldi/tree/debug-layout)
+branch.  
+For more information see the Wiki and the Issue Tracker of that fork.
 
 For ideas how to implement it in LilyPond itself
 see [lilypond-implementation.md](lilypond-implementation.md).
