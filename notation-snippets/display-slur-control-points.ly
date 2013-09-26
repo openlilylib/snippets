@@ -25,9 +25,8 @@
     - displaying control-points of ties affects layout! (example at the bottom) FIX!
     - there's an error when trying to use with LaissezVibrerTie - fix!
     - check if this really works with RepeatTies
-    - it would be nice to have color controlled by a parameter
-    - should we use some global settings for thickness and size?
-    the function is called several times for different grobs...
+    - color should be controlled by a parameter
+      -> check with ly:stencil-in-color
   %}
 }
 
@@ -35,23 +34,36 @@
 % here goes the snippet: %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-#(define (make-cross-stencil coords thickness arm-offset)
+% Example: Configure appearance somewhere in the input files
+% before the following definitions are read 
+% (i.e. before the snippet is included)
+%#(define control-points-line-thickness 0.5)
+
+% Define appearance
+#(cond ((not (defined? 'control-points-line-thickness))
+        (define control-points-line-thickness 0.05)))
+#(cond ((not (defined? 'control-points-cross-thickness))
+        (define control-points-cross-thickness 0.1)))
+#(cond ((not (defined? 'control-points-cross-size))
+        (define control-points-cross-size 0.7)))
+
+#(define (make-cross-stencil coords cross-thickness arm-offset)
    ;; coords are the coordinates of the center of the cross
    (ly:stencil-add
     (make-line-stencil
-     thickness
+     cross-thickness
      (- (car coords) arm-offset)
      (- (cdr coords) arm-offset)
      (+ (car coords) arm-offset)
      (+ (cdr coords) arm-offset))
     (make-line-stencil
-     thickness
+     cross-thickness
      (- (car coords) arm-offset)
      (+ (cdr coords) arm-offset)
      (+ (car coords) arm-offset)
      (- (cdr coords) arm-offset))))
 
-#(define (display-control-points thickness cross-size)
+#(define (display-control-points line-thickness cross-thickness cross-size)
    ;; both arguments are measured in staff-spaces. Typical values are 0.1 0.5
    (lambda (grob)
      (let* ((grob-name (lambda (x) (assq-ref (ly:grob-property x 'meta) 'name)))
@@ -66,18 +78,18 @@
           (ly:stencil-add
            ;; to go from desired cross size (length of line)
            ;; to arm-offset, we have to divide by 2*sqrt(2)
-           (make-cross-stencil (second ctrpts) thickness (/ cross-size 2.8284))
-           (make-cross-stencil (third ctrpts) thickness (/ cross-size 2.8284))
+           (make-cross-stencil (second ctrpts) cross-thickness (/ cross-size 2.8284))
+           (make-cross-stencil (third ctrpts) cross-thickness (/ cross-size 2.8284))
            )
           1 0 0) ;; color is hard-coded here (R G B).
 
          ;; add lines:
          (ly:stencil-in-color
           (ly:stencil-add
-           (make-line-stencil (/ thickness 4)
+           (make-line-stencil line-thickness
              (car (first ctrpts)) (cdr (first ctrpts))
              (car (second ctrpts))  (cdr (second ctrpts)))
-           (make-line-stencil (/ thickness 4)
+           (make-line-stencil line-thickness
              (car (third ctrpts)) (cdr (third ctrpts))
              (car (fourth ctrpts))  (cdr (fourth ctrpts)))
            )
@@ -88,11 +100,26 @@
 
 % turn on displaying control-points:
 displayControlPoints = {
-  \override Slur #'stencil = #(display-control-points 0.08 0.4)
-  \override PhrasingSlur #'stencil = #(display-control-points 0.08 0.4)
-  \override Tie #'stencil = #(display-control-points 0.08 0.4)
-  %\override LaissezVibrerTie #'stencil = #(display-control-points 0.08 0.4)
-  \override RepeatTie #'stencil = #(display-control-points 0.08 0.4)
+  \override Slur #'stencil = #(display-control-points 
+                               control-points-line-thickness
+                               control-points-cross-thickness 
+                               control-points-cross-size)
+  \override PhrasingSlur #'stencil = #(display-control-points 
+                               control-points-line-thickness
+                               control-points-cross-thickness 
+                               control-points-cross-size)
+  \override Tie #'stencil = #(display-control-points 
+                               control-points-line-thickness
+                               control-points-cross-thickness 
+                               control-points-cross-size)
+  %\override LaissezVibrerTie #'stencil = #(display-control-points 
+  %                             control-points-line-thickness
+  %                             control-points-cross-thickness 
+  %                             control-points-cross-size)
+  \override RepeatTie #'stencil = #(display-control-points 
+                               control-points-line-thickness
+                               control-points-cross-thickness 
+                               control-points-cross-size)
 }
 
 %%%%%%%%%%%%%%%%%%%%%
@@ -110,12 +137,14 @@ displayControlPoints = {
 % this example shows how displayed control-points affect layout, but
 % only in case of ties - there are no problems with Slurs and PhrasingSlurs!
 
+%{
 \relative c' {
-  \override Slur #'stencil = #(display-control-points 0.2 3)
-  \override PhrasingSlur #'stencil = #(display-control-points 0.2 3)
-  \override Tie #'stencil = #(display-control-points 0.2 3)
+  \override Slur #'stencil = #(display-control-points 0.2 0.3 2)
+  \override PhrasingSlur #'stencil = #(display-control-points 0.2 0.3 2)
+  \override Tie #'stencil = #(display-control-points 0.2 0.3 2)
 
   c1~\ppp c a''~^\ppp a
   f,\(\ppp d\) g'\(^\ppp e\)
   f,(\ppp d) g'(^\ppp e)
 }
+%}
