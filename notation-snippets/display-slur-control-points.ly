@@ -23,7 +23,6 @@
   %{
     TODO:
     - displaying control-points of ties affects layout! (example at the bottom) FIX!
-    - there's an error when trying to use with LaissezVibrerTie - fix!
     - check if this really works with RepeatTies
   %}
 }
@@ -71,8 +70,14 @@
    (lambda (grob)
      (let* ((grob-name (lambda (x) (assq-ref (ly:grob-property x 'meta) 'name)))
             (name (grob-name grob))
-            (stil (cond ((or (eq? name 'Slur)(eq? name 'PhrasingSlur))(ly:slur::print grob))
-                    ((eq? name 'Tie)(ly:tie::print grob))))
+            (stil (cond ((or (eq? name 'Slur)
+                        (eq? name 'PhrasingSlur))
+                    (ly:slur::print grob))
+                   ((or (eq? name 'Tie)
+                        (eq? name 'RepeatTie))
+                    (ly:tie::print grob))
+                   ((eq? name 'LaissezVibrerTie)
+                    (laissez-vibrer::print grob))))
             (ctrpts (ly:grob-property grob 'control-points)))
 
        ;; add crosses:
@@ -118,11 +123,11 @@ displayControlPoints = {
                                control-points-cross-thickness 
                                control-points-cross-size
                                control-points-color)
-  %\override LaissezVibrerTie #'stencil = #(display-control-points 
-  %                             control-points-line-thickness
-  %                             control-points-cross-thickness 
-  %                             control-points-cross-size
-  %                             control-points-color)
+  \override LaissezVibrerTie #'stencil = #(display-control-points 
+                               control-points-line-thickness
+                               control-points-cross-thickness 
+                               control-points-cross-size
+                               control-points-color)
   \override RepeatTie #'stencil = #(display-control-points 
                                control-points-line-thickness
                                control-points-cross-thickness 
