@@ -48,7 +48,7 @@
 
 #(define (Lyric_text_align_engraver ctx)
   "If the property 'tagged is set, collect all lyric syllables at that
-timestep in the grob-array `syllables'"
+timestep in the grob-array 'syllables"
   (let (; We will collect LyricText items here.
         (syl '()))
     (make-engraver
@@ -103,7 +103,7 @@ timestep in the grob-array `syllables'"
 
 % a shorthand for tagging:
 
-tagIt = \once \override Lyrics.LyricText.tagged = ##t
+tagIt = \once \override Lyrics.LyricText #'tagged = ##t
 
 %%%%%%%%%%%%%%%%%%%%%
 %   USAGE EXAMPLE   %
@@ -113,7 +113,7 @@ tagIt = \once \override Lyrics.LyricText.tagged = ##t
   ragged-right = ##f
   \context {
     \Lyrics
-    \override LyricText.X-offset = #X-offset-callback
+    \override LyricText #'X-offset = #X-offset-callback
   }
   \context {
     \Score
