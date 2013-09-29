@@ -75,21 +75,28 @@ not meant to be compiled should have extension `.ily`.
 Snippet categories
 ==================
 
-* __custom-engravers__ - scheme engravers, especially ones
+* [__custom-engravers__](custom-engravers) -
+    scheme engravers, especially ones
     that could be later added to LilyPond itself,
-* __debugging-layout__ - tools that visualize LilyPond's
+* [__debugging-layout__](debugging-layout) -
+    tools that visualize LilyPond's
     layout decisions (e.g. directions),
-* __input-shorthands__ - music functions and other tools
+* [__input-shorthands__](input-shorthands) -
+    music functions and other tools
     that make writing LilyPond code easier,
-* __notation-snippets__ - LilyPond code that produces
-    some particular notation,
-* __simple-examples__ - snippets that are just explaining
+* [__notation-snippets__](notation-snippets) -
+    LilyPond code that produces some particular notation,
+* [__simple-examples__](simple-examples) -
+    snippets that are just explaining
     or demonstrating things from the documentation,
-* __specific-solutions__ - hacks that aren't generic,
+* [__specific-solutions__](specific-solutions) -
+    hacks that aren't generic,
     just solve a very specific problem,
-* __stylesheets__ - a place for collections of user-designed
+* [__stylesheets__](stylesheets) -
+    a place for collections of user-designed
     layout settings ("house styles"),
-* __templates__ - examples showing how to structure LilyPond code.
+* [__templates__](templates) -
+    examples showing how to structure LilyPond code.
 
 Every category has a `README.md` file inside with more details,
 but if you're not sure which category to choose, don't worry!
