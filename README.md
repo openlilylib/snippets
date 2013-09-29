@@ -77,6 +77,8 @@ Snippet categories
 
 * __custom-engravers__ - scheme engravers, especially ones
     that could be later added to LilyPond itself,
+* __debugging-layout__ - tools that visualize LilyPond's
+    layout decisions (e.g. directions),
 * __input-shorthands__ - music functions and other tools
     that make writing LilyPond code easier,
 * __notation-snippets__ - LilyPond code that produces
