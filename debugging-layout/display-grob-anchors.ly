@@ -22,7 +22,21 @@
   status = "ready"
 }
 
-#(define (add-dot text?)
+% Define appearance
+#(cond ((not (defined? 'debug-grob-anchor-dotcolor))
+        (define debug-grob-anchor-dotcolor red)))
+% Which grobs to print the dot to?
+% Possible values:
+% - 'all-grobs
+% - Name of a grob (as symbol)
+% - List of grob names
+#(cond ((not (defined? 'debug-grob-anchor-groblist))
+        ;(define debug-grob-anchor-groblist '(NoteHead Stem))))
+        ;(define debug-grob-anchor-groblist 'NoteHead )))
+        (define debug-grob-anchor-groblist 'all-grobs)))
+
+
+#(define (add-dot)
    (lambda (grob)
      (let* ((layout (ly:grob-layout grob))
             (props (layout-extract-page-properties layout))
@@ -49,20 +63,13 @@
                               (string-append "   " grob-string))))
             (ref-text-stil-length
              (interval-length (ly:stencil-extent ref-text-stil Y)))
-            (grob-string-stil (if text? (grob-interpret-markup grob
-                                          (markup
-                                           #:with-dimensions '(0 . 0) '(0 . 0)
-                                           #:stencil
-                                           ref-text-stil))
-                                  point-stencil
-                                  ))
-            ;; Create a red-dot-stencil
-            (dot (ly:font-get-glyph font "dots.dot"))
-            (red-dot (ly:stencil-in-color dot 1 0 0))
-            (red-dot-length
-             (interval-length (ly:stencil-extent red-dot X)))
-            (red-dot-stil
-             (ly:stencil-translate-axis red-dot (/ red-dot-length -2) X)))
+            (dot (stencil-with-color 
+                  (ly:font-get-glyph font "dots.dot")
+                  debug-grob-anchor-dotcolor))
+            (dot-length
+             (interval-length (ly:stencil-extent dot X)))
+            (dot-stil
+             (ly:stencil-translate-axis dot (/ dot-length -2) X)))
 
        ;; If there's a grob with stencil-procedure and a valid stencil is
        ;; created, add the red-dot-stil and an optional text-stencil.
@@ -70,15 +77,7 @@
            (ly:grob-set-property! grob 'stencil
              (ly:stencil-add
               stencil
-              red-dot-stil
-              (if text?
-                  (ly:stencil-translate-axis
-                   (ly:stencil-rotate
-                    grob-string-stil
-                    90 0 0)
-                   (/ ref-text-stil-length 2)
-                   X)
-                  point-stencil)))))))
+              dot-stil))))))
 
 % needs to be here for 2.16.2
 #(define-public (symbol-list-or-symbol? x)
@@ -86,7 +85,7 @@
        (every symbol? x)
        (symbol? x)))
 
-#(define (add-red-dot-to-grobs text? l)
+#(define (add-dot-to-grobs l)
    ;; possible values for l:
    ;;   'all-grobs (adds red-dots to all grobs, where possible)
    ;;          this will naturally cause collisions,
@@ -113,24 +112,23 @@
                 context
                 grob-name
                 'after-line-breaking
-                (add-dot text?))
+                (add-dot))
                (loop (cdr x))))))))
 
-printRefpoint =
-#(define-music-function (parser location text? s-or-l)(boolean? symbol-list-or-symbol?)
+printAnchors =
+#(define-music-function (parser location s-or-l)(symbol-list-or-symbol?)
    "
-       Will add a red dot (and an optional text) to the stencil's ref-point of the
+       Will add a dot to the stencil's ref-point of the
  specified grob(s).
  Valid input for s-or-l:
       @code{'all-grobs}, (adds red-dots to all grobs, where possible), this will
           naturally cause collisions
       a single grob-name, must be a symbol,
       a list of grob-names.
- The additional text may be activated by @code{##t}.
  To avoid bleeding-overs any context has to be initiated explicitly.
 "
 #{
-  \applyContext #(add-red-dot-to-grobs text? s-or-l)
+  \applyContext #(add-dot-to-grobs s-or-l)
 #})
 
 %% For single use:
@@ -145,20 +143,23 @@ printRefpoint =
              (ly:paper-get-font layout
                (cons '((font-encoding . fetaMusic)) props)))
             (dot (ly:font-get-glyph font "dots.dot"))
-            (red-dot (ly:stencil-in-color dot 1 0 0))
-            (red-dot-length (interval-length (ly:stencil-extent red-dot X)))
-            (red-dot-stil
-             (ly:stencil-translate-axis red-dot (/ red-dot-length -2) X)))
+            (dot (stencil-with-color 
+                  (ly:font-get-glyph font "dots.dot")
+                  debug-grob-anchor-dotcolor))
+            (dot-length
+             (interval-length (ly:stencil-extent dot X)))
+            (dot-stil
+             (ly:stencil-translate-axis dot (/ dot-length -2) X)))
 
        (if (and function (ly:stencil? stencil) (grob::is-live? grob))
            (ly:grob-set-property! grob 'stencil
              (ly:stencil-add
               stencil
-              red-dot-stil))))))
+              dot-stil))))))
 
 %% Overriding grobs must be defined separately.
 %% Don't forget to specify the context if necessary.
-onceRedScript = \once \override Script #'after-line-breaking = #addDot
+onceDotScript = \once \override Script #'after-line-breaking = #addDot
 
 %%%%%%%%%%%%
 %%% EXAMPLES
@@ -182,22 +183,16 @@ mus =
 
 
 \markup "Red dots are added for TimeSignature, Script, BarLine"
-\new Staff \with { \printRefpoint ##f #'(TimeSignature Script BarLine) } \mus
-
-\markup "Red dots are added for TextScript plus additional text"
-\new Staff \with { \printRefpoint ##t #'TextScript } \mus
+\new Staff \with { \printAnchors #'(TimeSignature Script BarLine) } \mus
 
 \markup "Red dots are added for all grobs"
-\new Staff \with { \printRefpoint ##f #'all-grobs } \mus
+\new Staff \with { \printAnchors #'all-grobs } \mus
 
-\markup "Red dots are added for all grobs plus additional text"
-\new Staff \with { \printRefpoint ##t #'all-grobs } \mus
-
-\markup "Red dot is added once to Script using \\onceRedScript"
+\markup "Red dot is added once to Script using \\onceDotScript"
 {
   \override NoteHead #'style = #'altdefault
   g'2->
-  \onceRedScript
+  \onceDotScript
   % Testing if \printRefpoint works with a custom-override.
   \once \override Script #'stencil =
   #(lambda (grob)
