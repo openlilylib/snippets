@@ -31,7 +31,7 @@
 #(define (pair-list? x)
   (and (list? x)
        (every number-pair? x)))
-   
+
 #(define (offset-general arg offsets)
 "Displace @code{arg} by @code{offsets} if @code{arg} is a number, a
 number pair, or a list of number pairs.  If @code{offsets} is an empty
@@ -63,7 +63,7 @@ list or if there is a type-mismatch, @code{arg} will be returned."
          (vals
            (if (procedure? target)
                ; check for #<procedure #f (grob)>
-               (if (procedure-name target) 
+               (if (procedure-name target)
                    (target grob)
                    '())
                target))
@@ -73,36 +73,41 @@ list or if there is a type-mismatch, @code{arg} will be returned."
                (pair-list? vals))))
 
     (if can-type-be-offset?
-        (let* ((orig (ly:grob-original grob))
-               (siblings
-                 (if (ly:spanner? grob)
-                     (ly:spanner-broken-into orig)
-                     '()))
-               (total-found (length siblings))
-               ; since there is some flexibility in input syntax,
-               ; structure of `offsets' is normalized
-               (offsets
-                 (if (or (not (pair? offsets))
-                         (number-pair? offsets)
-                         (and (pair-list? offsets) (pair-list? vals)))
-                     (list offsets)
-                     offsets)))
+        ; '(+inf.0 . -inf.0) would offset to itself.  This will
+        ; be confusing to user, so issue a warning.
+        (if (equal? empty-interval vals)
+            (ly:warning "default '~a of ~a is ~a and can't be offset"
+              property grob vals)
+            (let* ((orig (ly:grob-original grob))
+                   (siblings
+                     (if (ly:spanner? grob)
+                         (ly:spanner-broken-into orig)
+                         '()))
+                   (total-found (length siblings))
+                   ; since there is some flexibility in input syntax,
+                   ; structure of `offsets' is normalized
+                   (offsets
+                     (if (or (not (pair? offsets))
+                             (number-pair? offsets)
+                             (and (pair-list? offsets) (pair-list? vals)))
+                         (list offsets)
+                         offsets)))
 
-          (define (helper sibs offs)
-            ; apply offsets to the siblings of broken spanners
-            (if (pair? offs)
-                (if (eq? (car sibs) grob)
-                    (offset-general vals (car offs))
-                    (helper (cdr sibs) (cdr offs)))
-                vals))
+              (define (helper sibs offs)
+                ; apply offsets to the siblings of broken spanners
+                (if (pair? offs)
+                    (if (eq? (car sibs) grob)
+                        (offset-general vals (car offs))
+                        (helper (cdr sibs) (cdr offs)))
+                    vals))
 
-          (if (>= total-found 2)
-              (helper siblings offsets)
-              (offset-general vals (car offsets))))
+              (if (>= total-found 2)
+                  (helper siblings offsets)
+                  (offset-general vals (car offsets)))))
 
-        (begin
-          (ly:warning "the property '~a of ~a cannot be offset" property grob)
-          vals))))
+            (begin
+              (ly:warning "the property '~a of ~a cannot be offset" property grob)
+              vals))))
 
 offset =
 #(define-music-function (parser location property offsets item)
@@ -118,11 +123,11 @@ appropriate tweak applied.")
                                 #:default 'Bottom
                                 #:min 2
                                 #:max 2)
-	  #{
-	    \override #item . #property =
-	      #(offsetter property offsets)
-	  #}
-	  (make-music 'Music))))
+          #{
+            \override #item . #property =
+              #(offsetter property offsets)
+          #}
+          (make-music 'Music))))
 
 %%%%%%%%%%%%%%%%%%%%%%
 %   USAGE EXAMPLES   %
@@ -189,4 +194,14 @@ appropriate tweak applied.")
   c4-\offset #'line-thickness #'(0 10) ( d e f
   \break
   c4 d e f)
+  \bar "||"
+
+  %% A warning is issued if user attempts to offset a property
+  %% which has a value defaulting to '(+inf.0 . -inf.0)
+  %{
+  \break
+  \offset #'extra-spacing-width #'(1 . 10) Score.MetronomeMark
+  \tempo "Adagio"
+  c1
+  %}
 }
