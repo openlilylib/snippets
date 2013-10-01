@@ -1,4 +1,4 @@
-\version "2.16.2"
+\version "2.17.22"
 
 \header {
   snippet-title = "Displaying control points of bezier curves"
@@ -19,14 +19,16 @@
   % add comma-separated tags to make searching more effective:
   tags = "slur, tie, bezier curve, control point, preview mode"
   % is this snippet ready?  See meta/status-values.md
-  status = "buggy" % aiming for status "official"
+  status = "ready" % aiming for status "official"
   %{
-    TODO:
-    - displaying control-points of ties affects layout in version 2.17!
-      (Which version introduces that change?)
-      Workaround is provided in the examples.
+    NOTE:
+    - Workaround for Tie formatting in 2.17 applied:
+      \override Tie #'vertical-skylines = #'()
+      through the use of 'lilypond-greater-than?' from
+      lilypond-version-switch.ly, which has to be present too.
+    - Code for printing of 1st/4th CP and line 2nd-3rd CP is
+      present but commented out.
   %}
-  %% All done or worked around
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -39,43 +41,34 @@
 %#(define control-points-line-thickness 0.5)
 
 % Define appearance
-#(cond ((not (defined? 'control-points-line-thickness))
-        (define control-points-line-thickness 0.05)))
-#(cond ((not (defined? 'control-points-cross-thickness))
-        (define control-points-cross-thickness 0.1)))
-#(cond ((not (defined? 'control-points-cross-size))
-        (define control-points-cross-size 0.7)))
-#(cond ((not (defined? 'control-points-cross-color))
-        (define control-points-cross-color red)))
-#(cond ((not (defined? 'control-points-line-color))
-        (define control-points-line-color blue)))
+#(cond ((not (defined? 'debug-control-points-line-thickness))
+        (define debug-control-points-line-thickness 0.05)))
+#(cond ((not (defined? 'debug-control-points-cross-size))
+        (define debug-control-points-cross-size 0.7)))
+#(cond ((not (defined? 'debug-control-points-color))
+        (define debug-control-points-color red)))
+
+% Note that this file (from /specific-solutions) has to be
+% present in your LilyPond search path too.
+\include "../specific-solutions/lilypond-version-switch.ly"
 
 #(define (make-cross-stencil coords cross-thickness arm-offset)
    ;; coords are the coordinates of the center of the cross
    (ly:stencil-add
     (make-line-stencil
-     cross-thickness
+     debug-control-points-line-thickness
      (- (car coords) arm-offset)
      (- (cdr coords) arm-offset)
      (+ (car coords) arm-offset)
      (+ (cdr coords) arm-offset))
     (make-line-stencil
-     cross-thickness
+     debug-control-points-line-thickness
      (- (car coords) arm-offset)
      (+ (cdr coords) arm-offset)
      (+ (car coords) arm-offset)
      (- (cdr coords) arm-offset))))
 
-#(define (display-control-points 
-          line-thickness 
-          line-color 
-          cross-thickness 
-          cross-size 
-          cross-color)
-   ;; 'cross-thickness' and 'cross-size' are measured in staff-spaces.
-   ;;  Typical values are 0.1 0.5
-   ;; 'line-color' and 'cross-color' takes rgb-colors, x11-colors or the
-   ;; predefined colors like red, green etc
+#(define (display-control-points )
    (lambda (grob)
      (let* ((grob-name (lambda (x) (assq-ref (ly:grob-property x 'meta) 'name)))
             (name (grob-name grob))
@@ -95,25 +88,30 @@
                 ;;
                 ;; If you want to see the first and the last control-point, too,
                 ;; uncomment the relevant lines.
-                ;; TODO: Execute the statment when 'control-points-display-first is defined
-                ;(make-cross-stencil (first ctrpts) cross-thickness (/ cross-size 2.8284))
-                (make-cross-stencil (second ctrpts) cross-thickness (/ cross-size 2.8284))
-                (make-cross-stencil (third ctrpts) cross-thickness (/ cross-size 2.8284))
-                ;; TODO: Execute the statment when 'control-points-display-fourth is defined
-                ;(make-cross-stencil (fourth ctrpts) cross-thickness (/ cross-size 2.8284))
+                ;(make-cross-stencil (first ctrpts)
+                  ;debug-control-points-line-thickness
+                  ;(/ debug-control-points-cross-size 2.8284))
+                (make-cross-stencil (second ctrpts)
+                  debug-control-points-line-thickness
+                  (/ debug-control-points-cross-size 2.8284))
+                (make-cross-stencil (third ctrpts)
+                  debug-control-points-line-thickness
+                  (/ debug-control-points-cross-size 2.8284))
+                ;(make-cross-stencil (fourth ctrpts)
+                  ;debug-control-points-line-thickness
+                  ;(/ debug-control-points-cross-size 2.8284))
                 ))
             (line-stencils
                (ly:stencil-add
-                (make-line-stencil line-thickness
+                (make-line-stencil debug-control-points-line-thickness
                   (car (first ctrpts)) (cdr (first ctrpts))
                   (car (second ctrpts))  (cdr (second ctrpts)))
                 ;; If you want a line from second to third control-point uncomment
                 ;; the following expression.
-                ;; TODO: Execute the statment when 'control-points-display-middle-line is defined
-                ;(make-line-stencil line-thickness
+                ;(make-line-stencil debug-control-points-line-thickness
                 ;  (car (second ctrpts)) (cdr (second ctrpts))
                 ;  (car (third ctrpts))  (cdr (third ctrpts)))
-                (make-line-stencil line-thickness
+                (make-line-stencil debug-control-points-line-thickness
                   (car (third ctrpts)) (cdr (third ctrpts))
                   (car (fourth ctrpts))  (cdr (fourth ctrpts)))
                 ))
@@ -127,94 +125,76 @@
        ;; but not for 2.17.x
        ;; I think there's still something fishy with the skyline-code.
        ;; Workaround: add \override Tie #'vertical-skylines = #'()
-       ;; as shown in the last example below.
+       ;; as shown in the main function below.
        (ly:stencil-add stil
         ;; add crosses:
         (ly:make-stencil
-         (ly:stencil-expr (stencil-with-color cross-stencils cross-color))
+         (ly:stencil-expr (stencil-with-color 
+                           cross-stencils 
+                           debug-control-points-color))
          empty-interval
          empty-interval)
 
          ;; add lines:
         (ly:make-stencil
-         (ly:stencil-expr (stencil-with-color line-stencils line-color))
+         (ly:stencil-expr (stencil-with-color 
+                           line-stencils 
+                           debug-control-points-color))
          empty-interval
          empty-interval)
-         empty-stencil)
-       )
-     ))
+         empty-stencil))))
 
 % turn on displaying control-points:
 displayControlPoints = {
-  \override Slur #'stencil = #(display-control-points
-                               control-points-line-thickness
-                               control-points-line-color
-                               control-points-cross-thickness
-                               control-points-cross-size
-                               control-points-cross-color)
-  \override PhrasingSlur #'stencil = #(display-control-points
-                               control-points-line-thickness
-                               control-points-line-color
-                               control-points-cross-thickness
-                               control-points-cross-size
-                               control-points-cross-color)
-  \override Tie #'stencil = #(display-control-points
-                               control-points-line-thickness
-                               control-points-line-color
-                               control-points-cross-thickness
-                               control-points-cross-size
-                               control-points-cross-color)
-  \override LaissezVibrerTie #'stencil = #(display-control-points
-                               control-points-line-thickness
-                               control-points-line-color
-                               control-points-cross-thickness
-                               control-points-cross-size
-                                control-points-cross-color)
-  \override RepeatTie #'stencil = #(display-control-points
-                               control-points-line-thickness
-                               control-points-line-color
-                               control-points-cross-thickness
-                               control-points-cross-size
-                               control-points-cross-color)
+  % Workaround for Tie issue in 2.17:
+  #(if (lilypond-greater-than? '(2 16 2))
+       #{ \override Tie #'vertical-skylines = #'() #})
+  \override Slur #'stencil = #(display-control-points)
+  \override PhrasingSlur #'stencil = #(display-control-points)
+  \override Tie #'stencil = #(display-control-points)
+  \override LaissezVibrerTie #'stencil = #(display-control-points)
+  \override RepeatTie #'stencil = #(display-control-points)
 }
 
 %%%%%%%%%%%%%%%%%%%%%
 % USAGE EXAMPLE(S): %
 %%%%%%%%%%%%%%%%%%%%%
-%#(ly:set-option 'debug-skylines)
 
-\layout {
-  \displayControlPoints
+
+\score {
+  \new Staff \relative c' {
+    c( d e\( d~ d1) g'4 a b f |
+    e\) d2\laissezVibrer r4 |
+    r c2.\repeatTie
+  }
+  \layout {
+    \displayControlPoints
+  }
 }
 
+% This example show some individual uses of the commands
 \relative c' {
-  c( d e\( d~ d1) g'4 a b f | e\) d2\laissezVibrer r4 | r c2.\repeatTie
-}
+%{
+  % configuring the appearance
+  #(define debug-control-points-color darkgreen)
+  #(define debug-control-points-cross-size 1.5)
+  #(define debug-control-points-line-thickness 0.2)
+%}
 
-% this example shows how displayed control-points affect layout, but
-% only in case of ties - there are no problems with Slurs and PhrasingSlurs!
-%
-%
-% Workaround:
-% insert
-%     \override Tie #'vertical-skylines = #'()
-% as shown below.
-
-%%{
-\relative c' {
-  \override Slur #'stencil = #(display-control-points 0.2 '(1.0 0.0 1.0) 0.3 2 red)
-  \override PhrasingSlur #'stencil = #(display-control-points 0.2 red 0.3 2 (x11-color 'SlateBlue2))
-  \override Tie #'stencil = #(display-control-points 0.2 red 0.3 2 red)
+  % only show the control points for the following curve
+  \once \displayControlPoints
+  c1~\ppp c
+  a''~^\ppp a
+  % Affects layout in 2.17!
+  g,1~ g
+  \override Tie #'stencil = #(display-control-points)
   % bug-workaround for 2.17.x:
-  \override Tie #'vertical-skylines = #'()
-  %% Modifying 'layer may be of some use.
-  %% TODO: If wanted, affect 'layer of all dynamics, markups, etc
-  %% UL: I don't think that's necessary.
-  \override Tie #'layer = #-10
-  \override DynamicText #'layer = #10
-
-  c1~\ppp c a''~^\ppp a
-  f,\(\ppp d\) g'\(^\ppp e\)
-  f,(\ppp d) g'(^\ppp e)
+  % \override Tie #'vertical-skylines = #'()
+  g1~ g
+  f,\(\ppp d\) 
+  \override PhrasingSlur #'stencil = #(display-control-points)
+  g'\(^\ppp e\)
+  f,\(\ppp d\) 
+  g'(^\ppp e)
 }
 %}
