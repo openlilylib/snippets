@@ -51,13 +51,18 @@ list or if there is a type-mismatch, @code{arg} will be returned."
 
 #(define ((offsetter property offsets) grob)
   (let* ((immutable (ly:grob-basic-properties grob))
-         ; To obtain default values, we need the original key/value pair for our
-         ; property from the basic-properties alist.  The tweak/override which
-         ; calls our procedure has added a new pair for this property to the
-         ; head of the alist.  We reverse the alist so our search will return
-         ; the original entry, rather than the new one. If, however, our search
-         ; returns an anonymous procedure, the property isn't an immutable
-         ; property. (We've returned the entry added by the tweak/override.)
+         ;   To obtain default values, we need the original key/value pair for our
+         ; property from the basic-properties alist.  If the music function \offset is
+         ; called as an override, a pair is added to the head of the alist.  This
+         ; pair contains the property name and an anonymous procedure.  The original pair
+         ; is behind the added pair, and we find it by traversing the alist
+         ; from back to front.
+         ;   If we attempt to use an override to offset a property not contained in the
+         ; basic-property alist, a new pair is still created.  In this case, a search
+         ; will return the pair added by the override.  Currently, we recognize it by the
+         ; function's lack of a name, though it would be superior if we could just "remember"
+         ; the procedure and recognize it that way.
+         ;   If \offset is called as a tweak, the basic-property alist is unaffected.
          (target (assoc-get property (reverse immutable)))
          ; calculate or read default values
          (vals
