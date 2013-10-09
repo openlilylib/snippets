@@ -1,27 +1,26 @@
 \version "2.16.2" % absolutely necessary!
 
 \header {
-  snippet-title = "Switch Based on LilyPond Version"
+  snippet-title = "Predicates for LilyPond Version numbers"
   snippet-author = "Urs Liska"
   snippet-description = \markup {
-    This snippet allows you to switch execution
-    based on the currently run LilyPond version.
-    This is useful if you want to provide general code
-    (such as snippets or a library) but have to take
-    changes in LilyPond syntax into account.
-    
-    The function takes a LilyPond version number (formatted
-    as a list) as its argument and returns true if it is
-    run by a LilyPond version greater than the argument.
-    
-    The recommended way to use this is to make a switch
-    in the program flow within a music function as
-    shown in the usage example.
+    This snippet provides a set of predicates or comparison
+    operators for LilyPond version numbers.
+    This is useful for implementing switches in functions
+    to execute code depending on the LilyPond version
+    that is currently running.
+
+    The functions take a LilyPond version number (formatted
+    as a three element list) as argument and
+    compare that to the version number of the running LilyPond.
   }
   % add comma-separated tags to make searching more effective:
   tags = "Program flow, LilyPond versions"
   % is this snippet ready?  See meta/status-values.md
-  status = "ready"
+  status = "unfinished"
+  %{
+    TODO: add more predicates
+  %}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -36,6 +35,23 @@
 #(define (lilypond-greater-than? ref-version)
    (> (calculate-version (ly:version))
       (calculate-version ref-version)))
+
+#(define (lilypond-greater-than-or-equal? ref-version)
+   (>= (calculate-version (ly:version))
+       (calculate-version ref-version)))
+
+#(define (lilypond-less-than? ref-version)
+   (< (calculate-version (ly:version))
+      (calculate-version ref-version)))
+
+#(define (lilypond-less-than-or-equal? ref-version)
+   (<= (calculate-version (ly:version))
+       (calculate-version ref-version)))
+
+#(define (lilypond-equals? ref-version)
+   (= (calculate-version (ly:version))
+      (calculate-version ref-version)))
+
 
 
 %%%%%%%%%%%%%%%%%%%%%
