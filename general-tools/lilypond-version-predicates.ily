@@ -27,8 +27,8 @@
 #(define (calculate-version ver-list)
    ;; take a LilyPond version number as a three element list
    ;; and calculate a integer representation
-   (+ (* 10000 (first ver-list)) 
-      (* 100 (second ver-list)) 
+   (+ (* 1000000 (first ver-list)) 
+      (* 1000 (second ver-list)) 
       (third ver-list)))
 
 #(define (lilypond-greater-than? ref-version)
@@ -52,27 +52,3 @@
       (calculate-version ref-version)))
 
 
-
-%%%%%%%%%%%%%%%%%%%%%
-% USAGE EXAMPLE(S): %
-%%%%%%%%%%%%%%%%%%%%%
-
-%{
-versionComment = 
-#(define-music-function (parser location ver)
-   (list?)
-   (if (lilypond-greater-than? ver)
-       #{ c'^\markup "Higher" #}
-       #{ c'_\markup "Lower/Equal" #}))
-
-{
-  c'1^\markup "2.16.2"
-  \versionComment #'(2 16 2)
-}
-
-{
-  c'1^\markup "2.17.5"
-  \versionComment #'(2 17 5)
-}
-
-%}
