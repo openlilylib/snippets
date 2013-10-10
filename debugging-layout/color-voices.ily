@@ -41,6 +41,7 @@ colorVoice =
    #{
      \override NoteHead #'color = #color
      \override Stem #'color = #color
+     \override Flag #'color = #color
      \override Beam #'color = #color
      \override Accidental #'color = #color
    #})
@@ -69,6 +70,7 @@ oneVoice = {
   \oneVoice
   \revert NoteHead #'color
   \revert Stem #'color
+  \revert Flag #'color
   \revert Beam #'color
   \revert Accidental #'color
 }
