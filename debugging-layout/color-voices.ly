@@ -70,7 +70,5 @@ oneVoice = {
   \revert NoteHead #'color
   \revert Stem #'color
   \revert Beam #'color
-  \revert Slur #'color
-  \revert Tie #'color
   \revert Accidental #'color
 }
