@@ -4,8 +4,8 @@
   snippet-title = "Predicates for LilyPond Version numbers"
   snippet-author = "Urs Liska"
   snippet-description = \markup {
-    This snippet provides a set of predicates or comparison
-    operators for LilyPond version numbers.
+    This snippet provides a set of predicates (or comparison
+    operators) for LilyPond version numbers.
     This is useful for implementing switches in functions
     to execute code depending on the LilyPond version
     that is currently running.
@@ -17,10 +17,7 @@
   % add comma-separated tags to make searching more effective:
   tags = "Program flow, LilyPond versions"
   % is this snippet ready?  See meta/status-values.md
-  status = "unfinished"
-  %{
-    TODO: add more predicates
-  %}
+  status = "ready"
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -28,9 +25,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
 #(define (calculate-version ver-list)
-   ;; take a LilyPond version number as a list
-   ;; and calculate a decimal representation
-   (+ (first ver-list) (second ver-list) (third ver-list)))
+   ;; take a LilyPond version number as a three element list
+   ;; and calculate a integer representation
+   (+ (* 10000 (first ver-list)) 
+      (* 100 (second ver-list)) 
+      (third ver-list)))
 
 #(define (lilypond-greater-than? ref-version)
    (> (calculate-version (ly:version))
