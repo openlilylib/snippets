@@ -5,20 +5,21 @@
   indent = #0
 }
 
-         
+
 #(define-public (number-pair-list? x)
-  (and (pair? x)
-       (every number-pair? x)))
-  
+   (and (pair? x)
+        (every number-pair? x)))
+
 foo-slur =
 #(define-music-function (parser location lst) (number-pair-list?)
-    #{
-      \override Slur.control-points = #(lambda (grob)
+   #{
+     \override Slur.control-points =
+     #(lambda (grob)
         (let* ((cps (assoc-get 'control-points
-                                (reverse (ly:grob-basic-properties grob))))
+                      (reverse (ly:grob-basic-properties grob))))
                (left-bound (ly:spanner-bound grob LEFT))
                (left-yoffset (ly:grob-property left-bound 'Y-offset))
-               (cps (cps grob))                  
+               (cps (cps grob))
                (default-x1 (car (first cps)))
                (default-y1 (cdr (first cps)))
                (default-y4 (cdr (last cps)))
@@ -31,15 +32,15 @@ foo-slur =
                (y3 (+ default-y4 (cdr (third lst))))
                (x4 (+ (car (last cps)) (car (last lst))))
                (y4 (+ default-y4 (cdr (last lst)))))
-      
-      (display left-yoffset)
-       (list (cons x1 y1)
-             (cons x2 y2)
-             (cons x3 y3)
-             (cons x4 y4))))
-    #})
 
-{ 
+          (display left-yoffset)
+          (list (cons x1 y1)
+            (cons x2 y2)
+            (cons x3 y3)
+            (cons x4 y4))))
+   #})
+
+{
   c'2 ( d') | c'4 ( c' d' d' )
   \break
   \foo-slur #'((0 . 0) (0.1 . -1.5) (0.9 . -1.5) (0 . 0))
