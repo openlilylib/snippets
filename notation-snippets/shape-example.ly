@@ -1,3 +1,5 @@
+\include "shape.ily"
+
 \paper { ragged-right = ##t }
 
 \markup {
