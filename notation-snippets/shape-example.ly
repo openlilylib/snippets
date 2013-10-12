@@ -30,3 +30,10 @@
   d''1-\shape #'(()(1 1)) ( f'')
   e'1-\shape #'(()(1 1)) ( g')
 }
+
+\markup {
+  All this works for broken slurs as well:
+}
+{
+  d''1-\shape #'(() (()(0.5 . 1.5)))( f'' \break a'' g'')
+}

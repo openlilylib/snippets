@@ -63,7 +63,7 @@ appropriate tweak applied.")
        ;; we need to handle tricky constructs like '(()(0 . 1)()())
        ;; (which is a list of offsets for ONE slur, so must be normalized).
        (if (or (null? offsets)
-               (any pair? offsets))
+               (any number-pair? offsets))
            (set! offsets (list offsets)))
 
        ;; convert () to (0 . 0), but only on the appropriate level.
