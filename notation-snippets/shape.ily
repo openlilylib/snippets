@@ -44,7 +44,9 @@ appropriate tweak applied.")
                  (helper (cdr sibs) (cdr offs)))
              coords))
 
-       ;; Allow (0 0) as a shorthand for (0 . 0)
+       ;; Allow (0 0) as a shorthand for (0 . 0).
+       ;; This must be done before next step,
+       ;; because we look for pairs there.
        (set! offsets (list->pair-list offsets))
 
        ;; Offsets may be given in a variety of formats:
@@ -56,9 +58,27 @@ appropriate tweak applied.")
        ;; by converting each to (3).
        ;; '() ==> '(())
        ;; '((0 . 1) ... ) ==> '( ((0 . 1) ... ) )
+       ;;
+       ;; WARNING: since we allow () to be a shorthand for (0 . 0),
+       ;; we need to handle tricky constructs like '(()(0 . 1)()())
+       ;; (which is a list of offsets for ONE slur, so must be normalized).
        (if (or (null? offsets)
-               (not (list? (car offsets))))
+               (any pair? offsets))
            (set! offsets (list offsets)))
+
+       ;; convert () to (0 . 0), but only on the appropriate level.
+       ;; I.e. '((()(0 . 1)(0 . 1)())) should be converted to
+       ;; '(((0 . 0)(0 . 1)(0 . 1)(0 . 0))), but
+       ;; '(() ((0 . 1)(0 . 1)(0 . 1)(0 . 1))) shouldn't be converted to
+       ;; '((0 . 0) ((0 . 1)(0 . 1)(0 . 1)(0 . 1)))
+       (set! offsets
+             (map (lambda (onesib)
+                    (map (lambda (oneoff)
+                           (if (not (pair? oneoff))
+                               (cons 0 0)
+                               oneoff))
+                      onesib))
+               offsets))
 
        ;; if only one pair of offsets is supplied,
        ;; use it for all control-points.  I.e.,
