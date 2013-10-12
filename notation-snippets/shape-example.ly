@@ -8,7 +8,7 @@
 }
 {
   d''1 ( f'')
-  d''1-\shape #'((2 0)) ( f'')
+  d''1-\shape #'((3 0)) ( f'')
 }
 
 \markup {
@@ -17,7 +17,7 @@
 }
 {
   d''1 ( f'')
-  d''1-\shape #'((-0.5 0)(1 2)) ( f'')
+  d''1-\shape #'((-2 -1.5)(-1 2)) ( f'')
 }
 
 \markup {
@@ -27,8 +27,17 @@
 {
   d''1 ( f'')
   e'1 ( g')
-  d''1-\shape #'(()(1 1)) ( f'')
-  e'1-\shape #'(()(1 1)) ( g')
+  d''1-\shape #'(()(1 2)) ( f'')
+  e'1-\shape #'(()(1 2)) ( g')
+}
+
+\markup {
+  When all four control-points are given
+  () is a shorthand for (0 0)
+}
+{
+  d''1 ( f'')
+  d''1-\shape #'(()(0 3)(-3 -3)()) ( f'')
 }
 
 \markup {
