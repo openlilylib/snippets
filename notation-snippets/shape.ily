@@ -32,11 +32,13 @@ appropriate tweak applied.")
                  (helper (cdr sibs) (cdr offs)))
              coords))
 
-       ;; Offsets may be (1) the empty list; (2) A number-pair-list;
-       ;; or (3) A list of number-pair-lists.  In order to easily work
-       ;; with these possibilities (and not require overly confusing input
-       ;; from the user), we normalize (1) and (2), by converting each
-       ;; to (3).
+       ;; Offsets may be given in a variety of formats:
+       ;; (1) an empty list,
+       ;; (2) a number-pair-list (used for unbroken curves), or
+       ;; (3) a list of number-pair-lists (for curves crossing a linebreak).
+       ;; In order to easily work with these possibilities (and not require
+       ;; overly confusing input from the user), we normalize (1) and (2),
+       ;; by converting each to (3).
        ;; '() ==> '(())
        ;; '((0 . 1) ... ) ==> '( ((0 . 1) ... ) )
        (if (or (null? offsets)
