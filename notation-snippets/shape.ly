@@ -37,7 +37,46 @@ appropriate tweak applied.")
                (not (list? (car offsets))))
            (set! offsets (list offsets)))
 
+       ;; if only one pair of offsets is supplied,
+       ;; use it for all control-points.  I.e.,
+       ;; \shape #'((0 . 2)) should be equivalent to
+       ;; \shape #'((0 . 2)(0 . 2)(0 . 2)(0 . 2))
+       (set! offsets
+             (map (lambda (onesib)
+                    (if (= 1 (length onesib))
+                        (list (car onesib)(car onesib)(car onesib)(car onesib))
+                        onesib))
+               offsets))
+
+       ;; if two pairs of offsets are supplied,
+       ;; use them X-symmetrically for the other two.  I.e.,
+       ;; \shape #'((-1 . 1)(2 . 5)) should be equivalent to
+       ;; \shape #'((-1 . 1)(2 . 5)(-2 . 5)(1 . 1))
+       (set! offsets
+             (map (lambda (onesib)
+                    (if (= 2 (length onesib))
+                        (list (first onesib)
+                          (second onesib)
+                          (cons (* -1 (car (second onesib)))
+                            (cdr (second onesib)))
+                          (cons (* -1 (car (first onesib)))
+                            (cdr (first onesib))))
+                        onesib))
+               offsets))
+
        (if (>= total-found 2)
            (helper siblings offsets)
            (offset-control-points (car offsets)))))
    #{ \tweak control-points #shape-curve #item #})
+
+\paper { ragged-right = ##t }
+{
+  d''1 ( f'')
+  d'' ( f'' \break
+  a'' e'')
+}
+{
+  d''1-\shape #'((-2 . 1)(2 . 3)) ( f'')
+  d''-\shape #'(((-2 . 0)) ((3 . 0)(2 . 2))) ( f'' \break
+  a'' e'')
+}
