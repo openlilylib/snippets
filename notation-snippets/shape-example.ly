@@ -27,12 +27,11 @@
 {
   d''1 ( f'')
   e'1 ( g')
-  d''1-\shape #'(()(1 2)) ( f'')
-  e'1-\shape #'(()(1 2)) ( g')
+  d''1-\shape #'((0 0)(1 2)) ( f'')
+  e'1-\shape #'((0 0)(1 2)) ( g')
 }
 
 \markup {
-  When all four control-points are given
   () is a shorthand for (0 0)
 }
 {
@@ -44,5 +43,5 @@
   All this works for broken slurs as well:
 }
 {
-  d''1-\shape #'(() (()(0.5 . 1.5)))( f'' \break a'' g'')
+  d''1-\shape #'(() (()(0.5 2)))( f'' \break a'' g'')
 }
