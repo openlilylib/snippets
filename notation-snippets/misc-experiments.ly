@@ -10,7 +10,7 @@
 
 trololo =
 #(define-music-function (parser location lst) (list?)
-   (let* ((slurp (if (equal? "lol" (first (second lst)))
+   (let* ((slurp (if (string=? "lol" (first (second lst)))
                      '(-5 . -3)
                      '(-3 . -5))))
      #{
