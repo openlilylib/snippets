@@ -1,3 +1,15 @@
+\version "2.17.26"
+
+#(define (list->pair-list lst)
+   (cond ((null? lst) lst)
+     ((number-pair? (car lst))
+      (cons (car lst) (list->pair-list (cdr lst))))
+     ((list? (car lst))
+      (cons
+       (list->pair-list (car lst))
+       (list->pair-list (cdr lst))))
+     (else (cons (car lst) (cadr lst)))))
+
 shape =
 #(define-music-function (parser location offsets item)
    (list? symbol-list-or-music?)
@@ -31,6 +43,9 @@ appropriate tweak applied.")
                  (offset-control-points (car offs))
                  (helper (cdr sibs) (cdr offs)))
              coords))
+
+       ;; Allow (0 0) as a shorthand for (0 . 0)
+       (set! offsets (list->pair-list offsets))
 
        ;; Offsets may be given in a variety of formats:
        ;; (1) an empty list,
