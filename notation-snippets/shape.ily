@@ -32,7 +32,13 @@ appropriate tweak applied.")
                  (helper (cdr sibs) (cdr offs)))
              coords))
 
-       ;; we work with lists of lists
+       ;; Offsets may be (1) the empty list; (2) A number-pair-list;
+       ;; or (3) A list of number-pair-lists.  In order to easily work
+       ;; with these possibilities (and not require overly confusing input
+       ;; from the user), we normalize (1) and (2), by converting each
+       ;; to (3).
+       ;; '() ==> '(())
+       ;; '((0 . 1) ... ) ==> '( ((0 . 1) ... ) )
        (if (or (null? offsets)
                (not (list? (car offsets))))
            (set! offsets (list offsets)))
@@ -41,27 +47,24 @@ appropriate tweak applied.")
        ;; use it for all control-points.  I.e.,
        ;; \shape #'((0 . 2)) should be equivalent to
        ;; \shape #'((0 . 2)(0 . 2)(0 . 2)(0 . 2))
-       (set! offsets
-             (map (lambda (onesib)
-                    (if (= 1 (length onesib))
-                        (list (car onesib)(car onesib)(car onesib)(car onesib))
-                        onesib))
-               offsets))
-
+       ;;
        ;; if two pairs of offsets are supplied,
        ;; use them X-symmetrically for the other two.  I.e.,
        ;; \shape #'((-1 . 1)(2 . 5)) should be equivalent to
        ;; \shape #'((-1 . 1)(2 . 5)(-2 . 5)(1 . 1))
        (set! offsets
-             (map (lambda (onesib)
-                    (if (= 2 (length onesib))
-                        (list (first onesib)
-                          (second onesib)
-                          (cons (* -1 (car (second onesib)))
-                            (cdr (second onesib)))
-                          (cons (* -1 (car (first onesib)))
-                            (cdr (first onesib))))
-                        onesib))
+             (map (lambda (x)
+                    (cond
+                     ((= 1 (length x))
+                      (make-list 4 (car x)))
+                     ((= 2 (length x))
+                      (list (first x)
+                        (second x)
+                        (cons (- (car (second x)))
+                          (cdr (second x)))
+                        (cons (- (car (first x)))
+                          (cdr (first x)))))
+                     (else x)))
                offsets))
 
        ;; For downward slurs, flip the offsets vertically
