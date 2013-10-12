@@ -34,8 +34,18 @@ appropriate tweak applied.")
 
        ;; we work with lists of lists
        (if (or (null? offsets)
-               (not (list? (car offsets))))
+               (not (list? (caar offsets))))
            (set! offsets (list offsets)))
+
+       ;; I'd like to convert 2-element lists into pairs...
+       (set! offsets
+             (map (lambda (onesib)
+                    (map (lambda (onectrpt)
+                           (if (pair? onectrpt)
+                               onectrpt
+                               (cons ((car onectrpt)(cdar onectrpt)))))
+                      onesib))
+               offsets))
 
        ;; if only one pair of offsets is supplied,
        ;; use it for all control-points.  I.e.,
