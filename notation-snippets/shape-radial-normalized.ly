@@ -15,13 +15,14 @@ foo-slur =
    #{
      \override Slur.control-points =
      #(lambda (grob)
-        (let* ((cps (assoc-get 'control-points
+        (let* ((get-cpts (assoc-get 'control-points
                       (reverse (ly:grob-basic-properties grob))))
                (left-bound (ly:spanner-bound grob LEFT))
                (left-yoffset (ly:grob-property left-bound 'Y-offset))
-               (cps (cps grob))
+               (cps (get-cpts grob))
                (default-x1 (car (first cps)))
                (default-y1 (cdr (first cps)))
+               (default-x4 (car (last cps)))
                (default-y4 (cdr (last cps)))
                (slur-length (- (car (last cps)) default-x1))
                (x1 (+ default-x1 (car (first lst))))
@@ -33,7 +34,6 @@ foo-slur =
                (x4 (+ (car (last cps)) (car (last lst))))
                (y4 (+ default-y4 (cdr (last lst)))))
 
-          (display left-yoffset)
           (list (cons x1 y1)
             (cons x2 y2)
             (cons x3 y3)
@@ -43,21 +43,8 @@ foo-slur =
 {
   c'2 ( d') | c'4 ( c' d' d' )
   \break
-  \foo-slur #'((0 . 0) (0.1 . -1.5) (0.9 . -1.5) (0 . 0))
+  \once \foo-slur #'((0 . 0) (0.5 . -1.5) (0.9 . -1.5) (0 . 0))
   c'2 ( d') | c'4 ( c' d' d' )
   \break
-  \foo-slur #'((0 . 0) (0.2 . -1.5) (0.8 . -1.5) (0 . 0))
-  c'2 ( d') | c'4 ( c' d' d' )
-  \break
-  \foo-slur #'((0 . 0) (0.3 . -1.5) (0.7 . -1.5) (0 . 0))
-  c'2 ( d') | c'4 ( c' d' d' )
-  \break
-  \foo-slur #'((0 . 0) (0.4 . -1.5) (0.6 . -1.5) (0 . 0))
-  c'2 ( d') | c'4 ( c' d' d' )
-  \break
-  \foo-slur #'((0 . 0) (0.4 . -1.5) (0.8 . -1.5) (0 . 0))
-  c'2 ( d') | c'4 ( c' d' d' )
-  \break
-  \foo-slur #'((0 . 0) (0.5 . -1.5) (0.9 . -1.5) (0 . 0))
-  c'2 ( d') | c'4 ( c' d' d' )
+  a2( d'' a'' d''')
 }
