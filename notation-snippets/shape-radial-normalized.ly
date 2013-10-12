@@ -73,3 +73,8 @@ foo-slur =
   \foo-slur #'((0 . -2.5)(88 . 0.5)(20 . 0.2)(0 . 0))
   e2( d'' b'' d''')
 }
+\markup { S-shaped slurs are trivial to achieve: }
+{
+  \foo-slur #'((0 . 0) (-50 . 0.5) (50 . 0.5) (-1 . 0))
+  a1 ( g)
+}
