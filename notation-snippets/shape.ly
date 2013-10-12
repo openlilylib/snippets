@@ -16,7 +16,8 @@ appropriate tweak applied.")
             (total-found (length siblings))
             (function (assoc-get 'control-points
                         (reverse (ly:grob-basic-properties grob))))
-            (coords (function grob)))
+            (coords (function grob))
+            (dir (ly:grob-property grob 'direction)))
 
        (define (offset-control-points offsets)
          (if (null? offsets)
@@ -64,6 +65,20 @@ appropriate tweak applied.")
                         onesib))
                offsets))
 
+       ;; For downward slurs, flip the offsets vertically
+       ;; so that the same override could be applied to similar
+       ;; upward and downward slurs.
+       (if (eq? dir DOWN)
+           (set! offsets
+                 (map
+                  (lambda (onesib)
+                    (map
+                     (lambda (oneoff)
+                       (cons (car oneoff)
+                         (* -1 (cdr oneoff))))
+                     onesib))
+                  offsets)))
+
        (if (>= total-found 2)
            (helper siblings offsets)
            (offset-control-points (car offsets)))))
@@ -72,11 +87,13 @@ appropriate tweak applied.")
 \paper { ragged-right = ##t }
 {
   d''1 ( f'')
+  d''1 _( f'')
   d'' ( f'' \break
   a'' e'')
 }
 {
   d''1-\shape #'((-2 . 1)(2 . 3)) ( f'')
+  d''1-\shape #'((-2 . 1)(2 . 3)) _( f'')
   d''-\shape #'(((-2 . 0)) ((3 . 0)(2 . 2))) ( f'' \break
   a'' e'')
 }
