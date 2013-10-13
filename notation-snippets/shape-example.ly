@@ -1,5 +1,7 @@
 \include "shape.ily"
 
+\version "2.17.28"
+
 \paper { ragged-right = ##t }
 
 \markup {
