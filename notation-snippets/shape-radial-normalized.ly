@@ -17,8 +17,13 @@ foo-slur =
      #(lambda (grob)
         (let* ((get-cpts (assoc-get 'control-points
                            (reverse (ly:grob-basic-properties grob))))
-               ;(left-bound (ly:spanner-bound grob LEFT))
-               ;(left-yoffset (ly:grob-property left-bound 'Y-offset))
+               (left-bound (ly:spanner-bound grob LEFT))
+               (left-yoffset (ly:grob-property left-bound 'Y-extent))
+               (left-xextent (ly:grob-property left-bound 'X-extent))
+               (right-bound (ly:spanner-bound grob RIGHT))
+               (right-extent (ly:grob-property right-bound 'Y-extent))
+               (grob-name (lambda (x) (assq-ref (ly:grob-property x 'meta) 'name)))
+               (name (grob-name left-bound))
                (cps (get-cpts grob))
 
                (default-x1 (car (first cps)))
@@ -49,6 +54,10 @@ foo-slur =
                (x3 (+ x4 (* rad3 (cos angle3))))
                (y3 (+ y4 (* rad3 (sin angle3)))))
 
+          (display name)
+          (display left-yoffset)
+          (display left-xextent)
+          (display right-extent)
           (list (cons x1 y1)
             (cons x2 y2)
             (cons x3 y3)
