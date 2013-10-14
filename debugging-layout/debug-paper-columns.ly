@@ -14,6 +14,8 @@
 
 % show information about paper-columns:
 \layout {
+  \override Score.PaperColumn #'layer = #100
+  \override Score.NonMusicalPaperColumn #'layer = #100
   \override Score.PaperColumn #'stencil = #ly:paper-column::print
   \override Score.NonMusicalPaperColumn #'stencil = #ly:paper-column::print
 }
