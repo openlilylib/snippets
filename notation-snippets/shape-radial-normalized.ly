@@ -1,5 +1,7 @@
 \version "2.17.15"
 
+#(set-global-staff-size 18)
+
 #(define (list->pair-list lst)
    (cond ((null? lst) lst)
      ((number-pair? (car lst))
@@ -39,6 +41,12 @@ appropriate tweak applied.")
                 (right-name (get-name right-bound))
                 (right-y-extent (ly:grob-property right-bound 'Y-extent))
 
+                ;; in case of cross-staff curves...
+                (refp (ly:grob-system grob))
+                (left-y-coord (ly:grob-relative-coordinate left-bound refp Y))
+                (right-y-coord (ly:grob-relative-coordinate right-bound refp Y))
+                (dist-between-staves (- right-y-coord left-y-coord))
+
                 (default-x1 (car (first coords)))
                 (default-y1 (cdr (first coords)))
                 (default-x4 (car (last coords)))
@@ -50,13 +58,18 @@ appropriate tweak applied.")
                 ;; so we simply offset default coords.
                 (y1 (if (string=? (symbol->string left-name) "NoteColumn")
                         (if (eq? dir DOWN)
-                            ;; 0.65 is the default vert. distance from notehead
-                            (- (car left-y-extent)(+ 0.65 (cdr (first offsets))))
-                            (+ (cdr left-y-extent)(+ 0.65 (cdr (first offsets)))))
+                            ;; 0.6 is the default vert. distance from notehead
+                            (- (car left-y-extent)(+ 0.6 (cdr (first offsets))))
+                            (+ (cdr left-y-extent)(+ 0.6 (cdr (first offsets)))))
                         (+ default-y1 (cdr (first offsets)))))
                 (x4 (+ default-x4 (car (last offsets))))
-                ;; should be calculated like y1, but i need to handle cross-staff stuff
-                (y4 (+ default-y4 (cdr (last offsets))))
+                (y4 (if (string=? (symbol->string right-name) "NoteColumn")
+                        (+ dist-between-staves
+                          (if (eq? dir DOWN)
+                              ;; 0.6 is the default vert. distance from notehead
+                              (- (car right-y-extent)(+ 0.6 (cdr (last offsets))))
+                              (+ (cdr right-y-extent)(+ 0.6 (cdr (last offsets))))))
+                          (+ default-y4 (cdr (last offsets)))))
 
                 ;; get the distance between first and last control-points
                 (x-dif (- x4 x1))
@@ -210,7 +223,7 @@ appropriate tweak applied.")
   \score {
     {
       d''1-\polar #'(((0 . 0.5) (45 . 0.4) (35 . 0.4) (0 . 1))
-                     ((0 . 1)(35 . 0.35)(45 . 0.35)())) ( f'' \break a'' g'')
+                     ((0 . 1)(35 . 0.35)(45 . 0.35)(0 . 0))) ( f'' \break a'' g'')
     }
     \layout { }
   }
@@ -271,12 +284,12 @@ SDn = \change Staff = "down"
     \voiceTwo
     \slurUp
 
-    \polar #'((0 . 0.5)(85 . 0.45)(20 . 0.2)(0 . 0)) Slur
+    \polar #'((0 . 0.5)(85 . 0.45)(20 . 0.2)(0 . 0.3)) Slur
     \SDn \times 2/3 { b32( g' b }
     \SUp \times 2/3 { d g e' }
     \times 2/3 { d b g') }
     |
-    \polar #'((0 . 0.5)(85 . 0.45)(20 . 0.2)(0 . 0)) Slur
+    \polar #'((0 . 0.5)(85 . 0.45)(20 . 0.2)(0 . 0.3)) Slur
     \SDn \times 2/3 { b,,,32( g' b }
     \SUp \times 2/3 { dis g e' }
     \times 2/3 { d b g') }
