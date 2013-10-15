@@ -5,7 +5,6 @@
   indent = #0
 }
 
-
 #(define-public (number-pair-list? x)
    (and (pair? x)
         (every number-pair? x)))
@@ -18,12 +17,13 @@ foo-slur =
         (let* ((get-cpts (assoc-get 'control-points
                            (reverse (ly:grob-basic-properties grob))))
                (dir (ly:grob-property grob 'direction))
+               (get-name (lambda (x) (assq-ref (ly:grob-property x 'meta) 'name)))
                (left-bound (ly:spanner-bound grob LEFT))
+               (left-name (get-name left-bound))
                (left-y-extent (ly:grob-property left-bound 'Y-extent))
                (right-bound (ly:spanner-bound grob RIGHT))
+               (right-name (get-name right-bound))
                (right-y-extent (ly:grob-property right-bound 'Y-extent))
-               (grob-name (lambda (x) (assq-ref (ly:grob-property x 'meta) 'name)))
-               (name (grob-name left-bound))
                (cps (get-cpts grob))
 
                (default-x1 (car (first cps)))
@@ -31,12 +31,18 @@ foo-slur =
                (default-x4 (car (last cps)))
                (default-y4 (cdr (last cps)))
 
+
                ;; need to calculate these before we can calculate length
                (x1 (+ default-x1 (car (first lst))))
-               (y1 (if (eq? dir DOWN)
-                       (- (car left-y-extent)(cdr (first lst)))
-                       (+ (cdr left-y-extent)(cdr (first lst)))))
+               ;; in case of broken slurs, we don't have a NoteColumn to look at,
+               ;; so we simply offset default coords.
+               (y1 (if (string=? (symbol->string left-name) "NoteColumn")
+                       (if (eq? dir DOWN)
+                           (- (car left-y-extent)(cdr (first lst)))
+                           (+ (cdr left-y-extent)(cdr (first lst))))
+                       (+ default-y1 (cdr (first lst)))))
                (x4 (+ default-x4 (car (last lst))))
+               ;; should be calculated like y1, but i need to handle cross-staff stuff
                (y4 (+ default-y4 (cdr (last lst))))
 
                ;; get the distance between first and last control-points
@@ -56,8 +62,9 @@ foo-slur =
                (x3 (+ x4 (* rad3 (cos angle3))))
                (y3 (+ y4 (* rad3 (sin angle3)))))
 
-          (display name)
+          (display left-name)
           (display left-y-extent)
+          (display right-name)
           (display right-y-extent)
           (list (cons x1 y1)
             (cons x2 y2)
@@ -87,6 +94,22 @@ foo-slur =
 {
   \foo-slur #'((0 . 0.5) (-50 . 0.5) (50 . 0.5) (-1 . 0))
   a1 ( g)
+}
+
+\markup { broken slurs: }
+\markup \line {
+  \score {
+    { d''1 ( f'' \break a'' g'') }
+    \layout { }
+  }
+  \hspace #10
+  \score {
+    {
+      \foo-slur #'((0 . 2) (40 . 0.4) (40 . 0.4) (0 . 0))
+      d''1 ( f'' \break a'' g'')
+    }
+    \layout { }
+  }
 }
 
 \markup \justify {
