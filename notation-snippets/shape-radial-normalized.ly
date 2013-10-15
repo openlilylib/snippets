@@ -68,8 +68,13 @@ appropriate tweak applied.")
                 ;; the example below renders wrongly:
                 ;; { d''1-\polar #'(((0 . 0.5) (45 . 0.4) (35 . 0.4) (0 . 1))
                 ;; ((0 . 1)(35 . 0.35)(45 . 0.35)(0 . 0))) ( f'' \break a'' g'') }
-                (y4-correction (- (car right-y-extent)
-                                 (car (ly:grob-extent right-bound refp Y))))
+                ;; the if clause is necessary because otherwise the 'fix' will
+                ;; break the cross-staff case.  UGH!!
+                (y4-correction
+                 (if (ly:grob-property grob 'cross-staff) ; returns boolean
+                     0.0
+                     (- (car right-y-extent)
+                       (car (ly:grob-extent right-bound refp Y)))))
 
                 (y4 (if (string=? (symbol->string right-name) "NoteColumn")
                         (+ dist-between-staves
