@@ -63,13 +63,22 @@ appropriate tweak applied.")
                             (+ (cdr left-y-extent)(+ 0.6 (cdr (first offsets)))))
                         (+ default-y1 (cdr (first offsets)))))
                 (x4 (+ default-x4 (car (last offsets))))
+
+                ;; UGH!! I have no idea why this is needed, but without this correction
+                ;; the example below renders wrongly:
+                ;; { d''1-\polar #'(((0 . 0.5) (45 . 0.4) (35 . 0.4) (0 . 1))
+                ;; ((0 . 1)(35 . 0.35)(45 . 0.35)(0 . 0))) ( f'' \break a'' g'') }
+                (y4-correction (- (car right-y-extent)
+                                 (car (ly:grob-extent right-bound refp Y))))
+
                 (y4 (if (string=? (symbol->string right-name) "NoteColumn")
                         (+ dist-between-staves
+                          y4-correction
                           (if (eq? dir DOWN)
                               ;; 0.6 is the default vert. distance from notehead
                               (- (car right-y-extent)(+ 0.6 (cdr (last offsets))))
                               (+ (cdr right-y-extent)(+ 0.6 (cdr (last offsets))))))
-                          (+ default-y4 (cdr (last offsets)))))
+                        (+ default-y4 (cdr (last offsets)))))
 
                 ;; get the distance between first and last control-points
                 (x-dif (- x4 x1))
