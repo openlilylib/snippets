@@ -1,4 +1,4 @@
-\include "shape.ily"
+\include "shapeII.ily"
 
 \version "2.17.28"
 
@@ -10,7 +10,7 @@
 }
 {
   d''1 ( f'')
-  d''1-\shape #'((3 0)) ( f'')
+  d''1-\shapeII #'((3 0)) ( f'')
 }
 
 \markup {
@@ -19,7 +19,7 @@
 }
 {
   d''1 ( f'')
-  d''1-\shape #'((-2 -1.5)(-1 2)) ( f'')
+  d''1-\shapeII #'((-2 -1.5)(-1 2)) ( f'')
 }
 
 \markup {
@@ -29,8 +29,8 @@
 {
   d''1 ( f'')
   e'1 ( g')
-  d''1-\shape #'((0 0)(1 2)) ( f'')
-  e'1-\shape #'((0 0)(1 2)) ( g')
+  d''1-\shapeII #'((0 0)(1 2)) ( f'')
+  e'1-\shapeII #'((0 0)(1 2)) ( g')
 }
 
 \markup {
@@ -38,12 +38,12 @@
 }
 {
   d''1 ( f'')
-  d''1-\shape #'(()(0 3)(-3 -3)()) ( f'')
+  d''1-\shapeII #'(()(0 3)(-3 -3)()) ( f'')
 }
 
 \markup {
   All this works for broken slurs as well:
 }
 {
-  d''1-\shape #'(() (()(0.5 2)))( f'' \break a'' g'')
+  d''1-\shapeII #'(() (()(0.5 2)))( f'' \break a'' g'')
 }

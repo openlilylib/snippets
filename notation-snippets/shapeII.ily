@@ -1,5 +1,18 @@
 \version "2.17.26"
 
+\header {
+  snippet-title = "Improved \shape"
+  snippet-author = "Janek Warchoł, David Nalesnik"
+  snippet-source = ""
+  snippet-description = \markup {
+    
+  }
+  % add comma-separated tags to make searching more effective:
+  tags = "slurs, ties, bezier curves, shape"
+  % is this snippet ready?  See meta/status-values.md
+  status = "working, unfinished"
+}
+
 #(define (list->pair-list lst)
    (cond ((null? lst) lst)
      ((number-pair? (car lst))
@@ -10,7 +23,7 @@
        (list->pair-list (cdr lst))))
      (else (cons (car lst) (cadr lst)))))
 
-shape =
+shapeII =
 #(define-music-function (parser location offsets item)
    (list? symbol-list-or-music?)
    (_i "Offset control-points of @var{item} by @var{offsets}.  The
