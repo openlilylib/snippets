@@ -16,11 +16,29 @@
   tags = "scale, stretch, squeeze, lyrics, flag, stencil"
   % is this snippet ready?  See meta/status-values.md
   status = "ready"
+  
+  %{
+    TODO: 
+    - make the music function accept music (to be used as tweak)
+  %}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 % here goes the snippet: %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+scaleStencil= 
+#(define-music-function (parser locaion x y grob)
+   (number? number? string?)
+   #{
+     \once \override Flag #'stencil =
+     #(lambda (grob)
+        (ly:stencil-scale (ly:flag::print grob) x y)) #})
+  
+
+{
+  e'4 g'8\noBeam \scaleStencil #2 #1 Flag g'
+}
 
 {
   <e' g'>4.
