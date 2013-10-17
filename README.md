@@ -75,9 +75,14 @@ not meant to be compiled should have extension `.ily`.
 Snippet categories
 ==================
 
+* [__custom-music-fonts__](custom-music-fonts) -
+    alternative fonts for LilyPond, that can
+    be used instead of default Feta.
 * [__debugging-layout__](debugging-layout) -
     tools that visualize LilyPond's
     layout decisions (e.g. directions),
+* [__general-tools__](general-tools) -
+    stuff for working on and with LilyPond itself.
 * [__input-shorthands__](input-shorthands) -
     music functions and other tools
     that make writing LilyPond code easier,
