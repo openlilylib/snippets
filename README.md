@@ -2,10 +2,10 @@ What's this?
 ============
 
 A place to store useful pieces of LilyPond code.
-As of 2013-09-02, the
+As of 2013-10-17, the
 [Lilypond Snippet Repository](http://lsr.dsi.unimi.it/)
 accepts snippets for LilyPond version 2.14.2,
-while the current LilyPond version is 2.17.25.
+while the current LilyPond version is 2.17.28.
 Until LSR will be upgraded,
 I suggest to put pieces of useful lily code here,
 just to make sure they won't get lost.
