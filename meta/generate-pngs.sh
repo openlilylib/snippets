@@ -51,7 +51,7 @@ fi
 
 # diagnose versions:
 versions_needed=$(for f in $snippets_to_compile; do
-    echo $(grep '\\version' $f | \
+    echo $(grep '\\version "' $f | \
     sed 's/^.[^"]*"//' | sed 's/".*$//' | uniq )
 done | sort | uniq )
 
