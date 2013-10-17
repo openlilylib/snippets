@@ -75,9 +75,6 @@ not meant to be compiled should have extension `.ily`.
 Snippet categories
 ==================
 
-* [__custom-engravers__](custom-engravers) -
-    scheme engravers, especially ones
-    that could be later added to LilyPond itself,
 * [__debugging-layout__](debugging-layout) -
     tools that visualize LilyPond's
     layout decisions (e.g. directions),
