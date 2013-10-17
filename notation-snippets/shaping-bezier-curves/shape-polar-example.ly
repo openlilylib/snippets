@@ -75,14 +75,20 @@ SDn = \change Staff = "down"
     \SDn \times 2/3 { b,,,32( g' b }
     \SUp \times 2/3 { dis g e' }
     \times 2/3 { d b g') }
-
+    |
+    \newSpacingSection
+    \override Score.SpacingSpanner #'common-shortest-duration =
+    #(ly:make-moment 1 70)
+    \SDn \times 2/3 { b,,,32( g' b }
+    \SUp \times 2/3 { dis g e' }
+    \times 2/3 { d b g') }
   }
   \new Staff = down {
     \clef F
     \key e \major
     \time 3/16
 
-    s16*6
+    s16*9
   }
 >>
 
@@ -109,13 +115,20 @@ SDn = \change Staff = "down"
     \SDn \times 2/3 { b,,,32( g' b }
     \SUp \times 2/3 { dis g e' }
     \times 2/3 { d b g') }
-
+    |
+    \newSpacingSection
+    \override Score.SpacingSpanner #'common-shortest-duration =
+    #(ly:make-moment 1 70)
+    \shape-polar #'((0 0.5)(85 0.45)(20 0.2)(0 0.3)) Slur
+    \SDn \times 2/3 { b,,,32( g' b }
+    \SUp \times 2/3 { dis g e' }
+    \times 2/3 { d b g') }
   }
   \new Staff = down {
     \clef F
     \key e \major
     \time 3/16
 
-    s16*6
+    s16*9
   }
 >>
