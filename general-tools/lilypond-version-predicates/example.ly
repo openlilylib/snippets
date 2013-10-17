@@ -1,18 +1,11 @@
 \version "2.16.0" % This should also work with older versions 
 
-\include "lilypond-version-predicates.ily"
+\include "./definitions.ily"
 
 
 \header {
   title = "LilyPond Version Predicates"
   subtitle = \markup {Score compiled with LilyPond #(lilypond-version)}
-  subsubtitle = "Compile with different LilyPond versions"
-  example-description = \markup {
-    Define a few music functions that produce output
-    depending on the result of LilyPond version comparisons.
-    Compile this file with different versions of LilyPond
-    and see how the output markups change.
-  }
 }
 
 \paper {
@@ -36,6 +29,15 @@ versionCommentB =
           #{ s^\markup {#(lilypond-version) is equal} #})
          ((lilypond-less-than? ver)
           #{ s^\markup {#(lilypond-version) is less} #})))
+
+\markup { \vspace #3 }
+
+\markup \justify {
+  Define a few music functions that produce output
+  depending on the result of LilyPond version comparisons.
+  Compile this file with different versions of LilyPond
+  and see how the output markups change.
+}
 
 \markup { \vspace #3 }
 
