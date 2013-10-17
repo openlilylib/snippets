@@ -40,17 +40,17 @@ To modify a file, click its name and then click _Edit_.
 5. Write what you have changed (form at the bottom)
 and click _Commit_.
 6. **Don't forget to click** _Send pull request_.
-([more info...](meta/contributors-guide.md#pull-requests))
+([more info...](meta/contributing.md#pull-requests))
 
 Using more powerful tools for contributing is described
-[here](meta/contributors-guide.md#contributing-using-advanced-tools).
+[here](meta/contributing.md#contributing-using-advanced-tools).
 
 
 Guidelines
 ----------
 
-_Note: detailed guidelines are in [`meta/contributors-guide.md`]
-(meta/contributors-guide.md)(optional reading)._
+_Note: detailed guidelines are in [`meta/contributing.md`]
+(meta/contributing.md)(optional reading)._
 
 * Your snippet must compile (even if it's work-in-progress)
 and it must contain a `\version` statement.
