@@ -9,6 +9,7 @@
   tags = "choir, SATB"
   % is this snippet ready?  See meta/status-values.md
   status = "undocumented"
+  % TODO: convert to includable version
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
