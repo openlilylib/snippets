@@ -4,9 +4,13 @@
   snippet-title = "Color Voices"
   snippet-author = "Janek Warchoł, Urs Liska"
   snippet-description = \markup {
-    This snippet redefines the commands
-    "\voiceOne" to "\voiceFour" so that voices explicitly set
-    with them are colored.
+    When this snippet is included it redefines all voiceXXX
+    commands so explicitly assigned voices are colored.
+    *Before* the include directive the configuration
+    variables can be modified to configure the appearance.
+    
+    Please note that this debug mode doesn't behave well
+    together with color-directions.ily
   }
   % add comma-separated tags to make searching more effective:
   tags = "color, preview, frescobaldi"

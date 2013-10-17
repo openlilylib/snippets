@@ -114,10 +114,3 @@ stemNeutral = {
   \revert Flag #'color
   \revert Beam #'color
 }
-
-%%%%%%%%%%%%%%%%%%%%%
-% USAGE EXAMPLE(S): %
-%%%%%%%%%%%%%%%%%%%%%
-{
-  \stemUp g'4 a' \stemNeutral \slurUp b'( a')
-}
