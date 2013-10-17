@@ -10,7 +10,7 @@
 
 trololo =
 #(define-music-function (parser location lst) (list?)
-   (let* ((slurp (if (string=? "lol" (first (second lst)))
+   (let* ((slurp (if (string=? "lol" (symbol->string (first (second lst))))
                      '(-5 . -3)
                      '(-3 . -5))))
      #{
@@ -19,11 +19,11 @@ trololo =
 
 {
   % should override positions to (-5 . -3)
-  \trololo #'(6 ("lol" "fooo"))
+  \trololo #'(6 (lol "fooo"))
   g'1( a')
   \break
   % should override positions to (-3 . -5)
-  \trololo #'(6 ("lala" "fooo"))
+  \trololo #'(6 (lala "fooo"))
   g'1( a')
   \break
 }
