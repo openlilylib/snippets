@@ -7,6 +7,11 @@
   indent = 0
 }
 
+\header {
+  title = "Better \shape: input shorthands"
+}
+
+\markup \vspace #3
 \markup {
   When just one pair of offsets is specified,
   all control-points are offset by this amount:
@@ -22,6 +27,7 @@
   the other two control-points use X-symmetricall offsets:
 }
 \markup \typewriter "\shapeII #'((-2 -1.5)(-1 2))"
+\markup \vspace #0.5
 {
   d''1 ( f'')
   d''1-\shapeII #'((-2 -1.5)(-1 2)) ( f'')
@@ -43,6 +49,7 @@
   () is a shorthand for (0 0):
 }
 \markup \typewriter "\shapeII #'(()(0 3)(-3 -3)())"
+\markup \vspace #0.5
 {
   d''1 ( f'')
   d''1-\shapeII #'(()(0 3)(-3 -3)()) ( f'')
@@ -51,10 +58,12 @@
 \markup {
   All this works for broken slurs as well:
 }
-\markup \vspace #0.3
+\markup \vspace #0.5
 \markup \line {
   \column {
+    \vspace #0.2
     default:
+    \vspace #0.5
     \score {
       { d''1 ( f'' \break a'' g'') }
       \layout { }
@@ -63,6 +72,7 @@
   \hspace #10
   \column {
     \typewriter "\shapeII #'(() (()(0.5 2)))"
+    \vspace #0.5
     \score {
       { d''1-\shapeII #'(() (()(0.5 2))) ( f'' \break a'' g'') }
       \layout { }
