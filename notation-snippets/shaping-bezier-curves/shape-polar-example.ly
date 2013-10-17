@@ -1,6 +1,6 @@
 \version "2.17.15"
 
-#(set-global-staff-size 17)
+#(set-global-staff-size 17.5)
 
 \include "shape-polar.ily"
 
@@ -10,11 +10,11 @@
 }
 
 \markup \wordwrap {
-  Positions of the middle slur control points may be specified using polar coordinates.
+  Positions of the middle slur control-points may be specified using polar coordinates.
   The syntax is
   \typewriter "((x1off y1off) (angle2 rad2) (angle3 rad3) (x4off y4off))"
 }
-\markup \wordwrap {
+\markup \justify {
   where \typewriter angle2 is the angle between horizontal line and the line
   connecting 1st and 2nd control-points (in degrees), \typewriter rad2 is the
   distance between 1st and 2nd control-points (measured in fraction of the total
@@ -24,36 +24,67 @@
   \typewriter "(x4off y4off)".
 }
 
-\markup \vspace #0.5
-\markup \typewriter "\shape-polar #'((0 -2.5)(88 0.5)(20 0.2)(0 0))"
-\markup \vspace #0.1
-{
-  e2( d'' b'' d''')
-  e2-\shape-polar #'((0 -2.5)(88 0.5)(20 0.2)(0 0))( d'' b'' d''')
+\markup \fill-line {
+  \column {
+    \vspace #1
+    \typewriter "\shape-polar #'((0 -2.5)(88 0.5)(20 0.2)(0 0))"
+    \vspace #0.5
+    \score {
+      {
+        e2( d''_\markup \tiny "(default)" b'' d''')
+        \bar "||"
+        e2-\shape-polar #'((0 -2.5)(88 0.5)(20 0.2)(0 0)) (
+        d''_\markup \tiny "(tweaked)" b'' d''')
+      }
+      \layout { }
+    }
+
+    \vspace #1
+    \line { The same values can be used for differently sized slurs: }
+    \typewriter "\shape-polar #'((0 0)(30 0.6)(90 0.3)(0 0))"
+    \vspace #0.5
+    \score {
+      {
+        e''2 ( d'') _\markup \tiny "(default)" |
+        e''4 ( e'' d'' d'' )
+        \bar "||"
+        e''2-\shape-polar #'((0 0)(30 0.6)(90 0.3)(0 0)) (
+        d'') _\markup \tiny "(tweaked)" |
+        e''4-\shape-polar #'((0 0)(30 0.6)(90 0.3)(0 0)) (
+        e'' d'' d'' )
+      }
+      \layout { }
+    }
+
+    \vspace #1
+    \line { S-shaped slurs are very easy to achieve: }
+    \typewriter "\shape-polar #'(()(-30 0.5)(30 0.5)())"
+    \score {
+      {
+        a1-\shape-polar #'(()(-30 0.5)(30 0.5)()) ( g)
+      }
+      \layout { }
+    }
+
+    \vspace #1
+    \line { Shorthands work with shape-polar as well: }
+    \typewriter "\shape-polar #'(()(50 0.3))"
+    \vspace #0.5
+    \score {
+      {
+        d''2-\shape-polar #'(()(50 0.3)) ( f'' f'' d'')
+      }
+      \layout { }
+    }
+  }
+  \general-align #Y #1.5
+  \scale #'(2.2 . 2.2) \score {
+    { e2-\shape-polar #'((0 -2.5)(88 0.5)(20 0.2)(0 0))( d'' b'' d''') }
+    \layout { }
+  }
 }
 
-\markup { The same values can be used for differently sized slurs: }
-\markup \typewriter "\shape-polar #'((0 0)(30 0.6)(90 0.3)(0 0))"
-\markup \vspace #0.2
-{
-  e''2 ( d'') | e''4 ( e'' d'' d'' )
-  e''2-\shape-polar #'((0 0)(30 0.6)(90 0.3)(0 0)) ( d'')
-  e''4-\shape-polar #'((0 0)(30 0.6)(90 0.3)(0 0)) ( e'' d'' d'' )
-}
-
-\markup { S-shaped slurs are very easy to achieve: }
-\markup \typewriter "\shape-polar #'(()(-30 0.5)(30 0.5)())"
-{
-  a1-\shape-polar #'(()(-30 0.5)(30 0.5)()) ( g)
-}
-
-\markup { Shorthands work with shape-polar as well: }
-\markup \typewriter "\shape-polar #'(()(50 0.3))"
-\markup \vspace #0.2
-{
-  d''2-\shape-polar #'(()(50 0.3)) ( f'' f'' d'')
-}
-
+\markup \vspace #1
 \markup \justify {
   What's most important, this function is more robust against layout changes
   than ordinary "\shape", and allows to specify more generic slur shapes.
@@ -112,7 +143,7 @@ SDn = \change Staff = "down"
 >>
 
 \markup \justify {
-  With this new function, such mishap is almost impossible.
+  With this new function, such mishap is very unlikely.
   Note that just \bold one override gives \bold all slurs correct appearance:
 }
 \markup \typewriter "\shape-polar #'((0 0.5)(85 0.45)(20 0.2)(0 0.3))"
