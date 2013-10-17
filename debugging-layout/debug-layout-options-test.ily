@@ -1,5 +1,6 @@
 % demo sketch for a file that is included
-% when a -ddebug-layout command line option is present
+% when a -ddebug-layout command line option is present.
+% This will be deprecated.
 
 debugLayoutOptions =
 #(define-void-function (parser location)()

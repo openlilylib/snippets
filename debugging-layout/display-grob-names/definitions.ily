@@ -136,18 +136,3 @@ printGrobNames =
 #{
   \applyContext #(add-grob-names s-or-l)
 #})
-
-%%%%%%%%%%%%%%%%%%%%%
-% USAGE EXAMPLE(S): %
-%%%%%%%%%%%%%%%%%%%%%
-
-\layout {
-  \context {
-    \Voice
-    \printGrobNames #debug-grob-name-groblist
-  }
-}
-
-{
-  a'4~ a'\fermata g'( f')
-}
