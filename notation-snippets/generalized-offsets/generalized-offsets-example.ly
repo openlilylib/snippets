@@ -2,33 +2,6 @@
 
 \include "generalized-offsets.ily"
 
-\header {
-  title = "Generalized offsetter"
-  composer = "David Nalesnik"
-  tags = "offsets, offsetting, scheme"
-  status = "unfinished"
-  first-known-supported-version = "2.17.6"
-}
-
-\markup {
-  \vspace #2
-    \wordwrap {
-      The ability to offset default values of various properties would be a
-      useful enhancement of LilyPond.  Currently, this is possible for the
-      property "\'control-points" using the "\\shape" command.  The following
-      snippet seeks to generalize the application of offsets to grob properties.
-      Both overrides and tweaks are supported.  Offsets are currently limited to
-      three data types: number, number-pair, and number-pair-list (the latter
-      is defined by this snippet and represents the type used, for example, by
-      "\'control-points)."  Offsets will work with many properties, but not all.
-      (For example, offsets are limited to immutable grob properties; these are
-      listed in "`scm/define-grobs.scm\'.)" Offsets are reckoned against default
-      values.  It is not possible to accumulate offsets, nor to offset against
-      a user-defined procedure.
-    }
-  }
-\markup \vspace #2
-  
 %%%%%%%%%%%%%%%%%%%%%%
 %   USAGE EXAMPLES   %
 %%%%%%%%%%%%%%%%%%%%%%

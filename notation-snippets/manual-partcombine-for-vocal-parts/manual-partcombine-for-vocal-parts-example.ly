@@ -2,24 +2,6 @@
 
 \include "manual-partcombine-for-vocal-parts.ily"
 
-\header {
-  title = "Manual partcombine for vocal parts"
-  composer = "Janek Warchoł"
-  % add comma-separated tags to make searching more effective:
-  tags = "partcombine, lyrics, vocal"
-  % is this snippet ready?  See meta/status-values.md
-  status = "undocumented"
-}
-
-\markup {
-  \vspace #2
-  \wordwrap {
-    \line {"\partcombine" function cannot handle staves with lyrics. }
-    \line { Here's a workaround for combining two vocal parts. }
-  }
-}
-\markup \vspace #2
-  
 % Upper voice.  Here partcombining instructions should go.
 
 tenorI = \relative f {

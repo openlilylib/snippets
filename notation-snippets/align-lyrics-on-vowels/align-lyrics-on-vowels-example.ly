@@ -2,29 +2,6 @@
 
 \include "align-lyrics-on-vowels.ly"
 
-\header {
-  title = "Aligning lyrics on vowels"
-  composer = ""
-  
-  status = "broken, unfinished, undocumented"
-  % TODO:
-  % doesn't work with 2.17.25 - fix. 
-  % Find author.
-  % Document.
-  % add vowels from other languages (e.g. polish)
-  % check if it works with different notehead widths, and if the
-  % vowel is really centered (regardless of glyph width)
-
-  % add comma-separated tags to make searching more effective:
-  tags = "lyrics, alignment, vowel, vowel alignment"
-}
-
-\markup \vspace #2
-\markup {
-    Align lyrics so that the vowel will line up with the note.
-  }
-\markup \vspace #2
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 % usage example:         %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
