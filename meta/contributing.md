@@ -30,19 +30,19 @@ submit it anyway (with "undocumented" status) - we prefer to have
 undocumented snippets rather than no snippets.  Of course, we ask
 you to add missing documentation later.
 
-It is good practice to write the snippet as a compilable
-LilyPond file and create a usage example as part of the
-documentation.
+All snippets should have a usage example.  In some cases (for example
+snippets from "simple-examples" category), the snippet itself will
+provide an example, but in case of "advanced" snippets the example
+should be placed in a separate file.  This is because we want the
+snippets to be "indcludeable": if a snippet defines some useful function,
+we want to just download an `.ily` file with the definition and `\include` it,
+without having to remove usage examples from the included file.
+Such mutli-file snippets should always be placed in their own subdirectories.
 
-If you provide an example that is complex and needs lots of
-explanation you can add a [Markdown](http://en.wikipedia.org/wiki/Markdown)-
-formatted documentation file which can be displayed automaticall
-by the GitHub web interface.  
-Either place the snippet in its own subdirectory and add a
-`README.md` file in that directory. This will automatically be
-displayed when opening the directory. Or add a
-`NAME-OF-SNIPPET-FILE-doc.md` beside the snippet which will
-also be displayed when clicked on.
+If your snippet is complex and needs lots of explanation, we recommend
+writing it in a [Markdown](http://en.wikipedia.org/wiki/Markdown)-
+formatted `README.md` file.  GitHub automatically displays the `README.md`
+file when one's viewing a directory in GitHub's web interface.
 
 
 Pull Requests

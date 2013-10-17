@@ -5,8 +5,7 @@
   snippet-author = "John Doe"
   snippet-source = "link to the mailing list archives or a website, if applicable"
   snippet-description = \markup {
-    This snippet will make your scores look better by magnitudes
-    because its creator is just \italic so ingenious.
+    Describe what the snippet does and how to use it.
   }
   % add comma-separated tags to make searching more effective:
   tags = ""
@@ -14,18 +13,24 @@
   status = ""
 }
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 % here goes the snippet: %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
+
 red = {
-  % color only the note head red
+  % color the next note red
   \once \override NoteHead #'color = #red
+  \once \override Stem #'color = #red
+  \once \override Flag #'color = #red
 }
 
-%%%%%%%%%%%%%%%%%%%%%
-% USAGE EXAMPLE(S): %
-%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%
+% usage examples: %
+%%%%%%%%%%%%%%%%%%%
+
+\markup "Color a note red:"
 {
-  d'^\markup "Color a note head red"
-  \red d'( d')
+  d' \red d'( d')
 }
