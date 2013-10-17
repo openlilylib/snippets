@@ -15,6 +15,43 @@ we would also like to integrate it with the core LilyPond project similarly to
 how stuff from LSR is imported into official documentation.
 
 
+Using
+=====
+
+Get it
+------
+
+In order to use snippets from this repository you have several options
+to get them on your computer:
+
+- Go to the detail page of a snippet and copy&paste it to your
+  favorite LilyPond editor  
+  (recommendable for casual use only)
+- Download the whole repository as a ZIP archive (with the Button
+  on the right side of the front page). Maybe one day we will have
+  'releases' that can be downloaded through the menu item above the
+  main area of the entry page.
+- Clone the repository or fork it before.  
+  This is the easiest way to keep your copy up-to-date or contribute.  
+  If you initially cloned the repo and later decide to contribute you
+  can easily add your personal fork then.
+
+Use it
+------
+
+Once you have obtained a copy of the repository you can immediately use its
+content. Most of the snippets are separated into an includable snippet
+and a standalone example file. Snippets have an `.ily` extension while
+examples end with `-example.ly`.
+
+You should make the root directory of the repository available to LilyPond,
+e.g. by using the `-I` or `--include=` command line option or (if you use
+Frescobaldi) by adding its path to the LilyPond preferences.  
+Then you will be able to `\include` the snippets with a path relative to
+the root dir. In order to use e.g. the `aligning-first-syllables` snippet from
+the `custom-engravers`  directory insert
+`\include "custom-engravers/aligning-first-syllables.ily"` in your input file.
+
 Contributing
 ============
 
