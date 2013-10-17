@@ -1,5 +1,7 @@
 \version "2.17.15"
 
+#(set-global-staff-size 17)
+
 \include "shape-polar.ily"
 
 \layout {
@@ -8,11 +10,18 @@
 }
 
 \markup \wordwrap {
-  Slur shape may be specified using polar coordinates. The syntax is
-  \typewriter "((x1off . y1off) (1-2-angle . 1-2-radius) (3-4-angle . 3-4-radius) (x4off . y4off))"
-  where \typewriter "(x1off . y1off)" are offsets relative to the notehead to which the slur is attached.
-  Angles are in degrees, radius is normalized: 1 means the distance between
-  outer control-points.
+  Positions of the middle slur control points may be specified using polar coordinates.
+  The syntax is
+  \typewriter "((x1off y1off) (angle2 rad2) (angle3 rad3) (x4off y4off))"
+}
+\markup \wordwrap {
+  where \typewriter angle2 is the angle between horizontal line and the line
+  connecting 1st and 2nd control-points (in degrees), \typewriter rad2 is the
+  distance between 1st and 2nd control-points (measured in fraction of the total
+  slur length).  Similarly for \typewriter angle3 and \typewriter rad3.
+  \typewriter "(x1off y1off)" is the position of first control-point,
+  relative to the notehead to which the slur is attached.  Similarly
+  \typewriter "(x4off y4off)".
 }
 
 \markup \vspace #0.5
@@ -46,15 +55,25 @@
 }
 
 \markup \justify {
-  But what's more important, this function is more robust against lilypond layout changes,
-  and allows to write more generic slur shapes.
-  Take this example: in two nearly identical phrases (the difference is just one accidental)
-  get two drastically different slur shapes by default.  Using ordinary "\shape," one
-  would have to find two completely different sets of offsets to achieve a similar slur
-  in both cases.  And what's worse, any slight change in the score may have a “butterfly effect”
-  on the slurs - it may change how LilyPond would typeset them by default, making user's
+  What's most important, this function is more robust against layout changes
+  than ordinary "\shape", and allows to specify more generic slur shapes.
+}
+\markup \vspace #0.3
+\markup \justify {
+  Take this example: first two measures are two nearly identical phrases
+  (the difference is just one accidental) which get two drastically different
+  slur shapes by default. 3rd measure contains the same phrase as the 2nd,
+  but with changed spacing - again we get a different default slur.
+}
+\markup \vspace #0.3
+\markup \justify {
+  Using ordinary "\shape," one would have to find three completely different
+  sets of offsets to achieve a similar slur in all cases.  And what's worse,
+  any change in the score may have a “butterfly effect” on the slurs -
+  it may change how LilyPond would typeset them by default, making user's
   offset values completely wrong.
 }
+\markup \vspace #0.5
 
 SUp = \change Staff = "up"
 SDn = \change Staff = "down"
@@ -94,8 +113,10 @@ SDn = \change Staff = "down"
 
 \markup \justify {
   With this new function, such mishap is almost impossible.
-  Note that just one override gives both slurs correct appearance:
+  Note that just \bold one override gives \bold all slurs correct appearance:
 }
+\markup \typewriter "\shape-polar #'((0 0.5)(85 0.45)(20 0.2)(0 0.3))"
+\markup \vspace #0.5
 
 \new PianoStaff <<
   \new Staff = up \relative d {
