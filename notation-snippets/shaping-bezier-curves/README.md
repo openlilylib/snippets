@@ -22,4 +22,6 @@ polar doesn't handle () well (at least for inner coords)
 
 It's connfusing when signs change like this. (mirrored when using ((a b)(c d)), not mirrored with ((a b)(c d)(a b)(c d))
 
-flipping polar's outer y (when dir = DOWN) doesn't work 
+flipping polar's outer y (when dir = DOWN) doesn't work
+
+Addition for displaying controlpoints - display coordinates of each point, maybe in the format used? (i.e. polar, offset, absolute...)

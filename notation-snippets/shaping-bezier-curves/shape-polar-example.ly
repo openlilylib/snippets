@@ -1,7 +1,5 @@
 \version "2.17.15"
 
-#(set-global-staff-size 18)
-
 \include "shape-polar.ily"
 
 \layout {
@@ -16,39 +14,35 @@
   Angles are in degrees, radius is normalized: 1 means the distance between
   outer control-points.
 }
-{
-  c'2 ( d') | c'4 ( c' d' d' )
-  c'2-\shape-polar #'((0 . 0) (30 . 0.6) (90 . 0.3) (0 . 0)) ( d')
-  c'4-\shape-polar #'((0 . 0) (30 . 0.6) (90 . 0.3) (0 . 0)) ( c' d' d' )
-}
+
+\markup \vspace #0.5
+\markup \typewriter "\shape-polar #'((0 -2.5)(88 0.5)(20 0.2)(0 0))"
+\markup \vspace #0.1
 {
   e2( d'' b'' d''')
-  e2-\shape-polar #'((0 . -2.5)(88 . 0.5)(20 . 0.2)(0 . 0))( d'' b'' d''')
-}
-\markup { shorthands work with shape-polar shape as well: }
-{
-  d''2-\shape-polar #'(()(50 . 0.3)) ( f'' f'' d'')
+  e2-\shape-polar #'((0 -2.5)(88 0.5)(20 0.2)(0 0))( d'' b'' d''')
 }
 
-\markup { S-shaped slurs are trivial to achieve: }
+\markup { The same values can be used for differently sized slurs: }
+\markup \typewriter "\shape-polar #'((0 0)(30 0.6)(90 0.3)(0 0))"
+\markup \vspace #0.2
 {
-  a1-\shape-polar #'((1 . 0) (-50 . 0.5) (50 . 0.5) (-1 . 0)) ( g)
+  e''2 ( d'') | e''4 ( e'' d'' d'' )
+  e''2-\shape-polar #'((0 0)(30 0.6)(90 0.3)(0 0)) ( d'')
+  e''4-\shape-polar #'((0 0)(30 0.6)(90 0.3)(0 0)) ( e'' d'' d'' )
 }
 
-\markup { broken slurs: }
-\markup \line {
-  \score {
-    { d''1 ( f'' \break a'' g'') }
-    \layout { }
-  }
-  \hspace #10
-  \score {
-    {
-      d''1-\shape-polar #'(((0 . 0.5) (45 . 0.4) (35 . 0.4) (0 . 1))
-                     ((0 . 1)(35 . 0.35)(45 . 0.35)(0 . 0))) ( f'' \break a'' g'')
-    }
-    \layout { }
-  }
+\markup { S-shaped slurs are very easy to achieve: }
+\markup \typewriter "\shape-polar #'(()(-30 0.5)(30 0.5)())"
+{
+  a1-\shape-polar #'(()(-30 0.5)(30 0.5)()) ( g)
+}
+
+\markup { Shorthands work with shape-polar as well: }
+\markup \typewriter "\shape-polar #'(()(50 0.3))"
+\markup \vspace #0.2
+{
+  d''2-\shape-polar #'(()(50 0.3)) ( f'' f'' d'')
 }
 
 \markup \justify {
@@ -106,12 +100,12 @@ SDn = \change Staff = "down"
     \voiceTwo
     \slurUp
 
-    \shape-polar #'((0 . 0.5)(85 . 0.45)(20 . 0.2)(0 . 0.3)) Slur
+    \shape-polar #'((0 0.5)(85 0.45)(20 0.2)(0 0.3)) Slur
     \SDn \times 2/3 { b32( g' b }
     \SUp \times 2/3 { d g e' }
     \times 2/3 { d b g') }
     |
-    \shape-polar #'((0 . 0.5)(85 . 0.45)(20 . 0.2)(0 . 0.3)) Slur
+    \shape-polar #'((0 0.5)(85 0.45)(20 0.2)(0 0.3)) Slur
     \SDn \times 2/3 { b,,,32( g' b }
     \SUp \times 2/3 { dis g e' }
     \times 2/3 { d b g') }

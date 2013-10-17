@@ -2,12 +2,16 @@
 
 \version "2.17.28"
 
-\paper { ragged-right = ##t }
+\paper {
+  ragged-right = ##t
+  indent = 0
+}
 
 \markup {
   When just one pair of offsets is specified,
   all control-points are offset by this amount:
 }
+\markup \typewriter "\shapeII #'((3 0))"
 {
   d''1 ( f'')
   d''1-\shapeII #'((3 0)) ( f'')
@@ -17,6 +21,7 @@
   When two pairs of offsets are specified,
   the other two control-points use X-symmetricall offsets:
 }
+\markup \typewriter "\shapeII #'((-2 -1.5)(-1 2))"
 {
   d''1 ( f'')
   d''1-\shapeII #'((-2 -1.5)(-1 2)) ( f'')
@@ -26,6 +31,7 @@
   Offsets for downward slurs are flipped - the same override
   is used for upward and downward slurs here:
 }
+\markup \typewriter "\shapeII #'((0 0)(1 2))"
 {
   d''1 ( f'')
   e'1 ( g')
@@ -34,8 +40,9 @@
 }
 
 \markup {
-  () is a shorthand for (0 0)
+  () is a shorthand for (0 0):
 }
+\markup \typewriter "\shapeII #'(()(0 3)(-3 -3)())"
 {
   d''1 ( f'')
   d''1-\shapeII #'(()(0 3)(-3 -3)()) ( f'')
@@ -44,6 +51,21 @@
 \markup {
   All this works for broken slurs as well:
 }
-{
-  d''1-\shapeII #'(() (()(0.5 2)))( f'' \break a'' g'')
+\markup \vspace #0.3
+\markup \line {
+  \column {
+    default:
+    \score {
+      { d''1 ( f'' \break a'' g'') }
+      \layout { }
+    }
+  }
+  \hspace #10
+  \column {
+    \typewriter "\shapeII #'(() (()(0.5 2)))"
+    \score {
+      { d''1-\shapeII #'(() (()(0.5 2))) ( f'' \break a'' g'') }
+      \layout { }
+    }
+  }
 }
