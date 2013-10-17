@@ -16,9 +16,9 @@ versionCommentA =
 #(define-music-function (parser location ver)
    (list?)
    (cond ((lilypond-greater-than-or-equal? ver)
-          #{ s^\markup {#(lilypond-version) is higher or equals} #})
+          #{ s^\markup {#(lilypond-version) is higher or equals that.} #})
          ((lilypond-less-than-or-equal? ver)
-          #{ s^ \markup {#(lilypond-version) is less or equal} #})))
+          #{ s^ \markup {#(lilypond-version) is less or equals that.} #})))
 
 versionCommentB = 
 #(define-music-function (parser location ver)
@@ -42,7 +42,7 @@ versionCommentB =
 \markup { \vspace #3 }
 
 {
-  \tempo "Comparison: 2.16.0"
+  \tempo "Comparing with: 2.16.0"
   s1
   \versionCommentA #'(2 16 0)
   \versionCommentB #'(2 16 0)
@@ -51,7 +51,7 @@ versionCommentB =
 \markup { \vspace #2 }
 
 {
-  \tempo "Comparison: 2.16.2"
+  \tempo "Comparing with: 2.16.2"
   s1
   \versionCommentA #'(2 16 2)
   \versionCommentB #'(2 16 2)
@@ -60,7 +60,7 @@ versionCommentB =
 \markup { \vspace #2 }
 
 {
-  \tempo "Comparison: 2.17.5"
+  \tempo "Comparing with: 2.17.5"
   s1
   \versionCommentA #'(2 17 5)
   \versionCommentB #'(2 17 5)
@@ -69,7 +69,7 @@ versionCommentB =
 \markup { \vspace #2 }
 
 {
-  \tempo "Comparison: 2.17.16"
+  \tempo "Comparing with: 2.17.16"
   s1
   \versionCommentA #'(2 17 16)
   \versionCommentB #'(2 17 16)
