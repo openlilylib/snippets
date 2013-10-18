@@ -1,18 +1,21 @@
 What's this?
 ============
 
-A place to store useful pieces of LilyPond code.
-As of 2013-10-17, the
-[Lilypond Snippet Repository](http://lsr.dsi.unimi.it/)
-accepts snippets for LilyPond version 2.14.2,
-while the current LilyPond version is 2.17.28.
-Until LSR will be upgraded,
-I suggest to put pieces of useful lily code here,
-just to make sure they won't get lost.
+A place to store and collaborate on LilyPond tools - snippets, templates, extensions.
+Why we don't just put this stuff in [Lilypond Snippet Repository](http://lsr.dsi.unimi.it/)?
+There are three reasons:
+* As of 2013-10-17, LSR accepts snippets for LilyPond version 2.14.2,
+  (current version is 2.17.28).
+* Some things cannot be placed in LSR (multi-file extensions, special scripts).
+* LSR doesn't have tools for collaboration and version control.
 
+<!---
 At some point in the future we may develop a nice web frontend for this repository;
 we would also like to integrate it with the core LilyPond project similarly to
 how stuff from LSR is imported into official documentation.
+We may also move this repository somewhere else, because we dislike the proprietary
+nature of GitHub.
+-->
 
 
 Using
@@ -93,9 +96,7 @@ _Note: detailed guidelines are in [`meta/contributing.md`]
 and it must contain a `\version` statement.
 * Please use a template from [`meta/snippet-templates`]
 (meta/snippet-templates) as your starting point:
-  - simple snippets that just demonstrate built-in LilyPond features
-    should use the one-file template.
-  - snippets defining custom commands, functions, engravers etc.
+  - simple snippets that just demonstrateaanctions, engravers etc.
     that can be useful on their own should use the "includable" template.
 * If possible, please format your code using Frescobaldi's
 _Format_ tool.
@@ -148,6 +149,6 @@ Update: actually, the status field probably already does this.
 Contact
 =======
 
-Have trouble contributing?  Let us know!
-[info@openlilylib.org](mailto:info@openlilylib.org),
-[janek.lilypond@gmail.com](mailto:janek.lilypond@gmail.com).
+Have trouble contributing?  Let us know!  
+[info@openlilylib.org](mailto:info@openlilylib.org)  
+[janek.lilypond@gmail.com](mailto:janek.lilypond@gmail.com)  
