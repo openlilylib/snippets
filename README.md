@@ -77,61 +77,51 @@ To modify a file, click its name and then click _Edit_.
 5. Write what you have changed (form at the bottom)
 and click _Commit_.
 6. **Don't forget to click** _Send pull request_.
-([more info...](meta/contributors-guide.md#pull-requests))
+([more info...](meta/contributing.md#pull-requests))
 
-Using more powerful tools for contributing is described [here](http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md#contributing-using-advanced-tools).
+Using more powerful tools for contributing is described
+[here](meta/contributing.md#contributing-using-advanced-tools).
 
 
 Guidelines
 ----------
 
-_Note: detailed guidelines are in [`meta/contributors-guide.md`]
-(http://github.com/openlilylib/snippets/blob/master/meta/contributors-guide.md)
-(optional reading)._
+_Note: detailed guidelines are in [`meta/contributing.md`]
+(meta/contributing.md)(optional reading)._
 
 * Your snippet must compile (even if it's work-in-progress)
 and it must contain a `\version` statement.
-* Please use [`snippet-template.ly`]
-(http://github.com/openlilylib/snippets/blob/master/snippet-template.ly)
-as your starting point, filling all header fields with appropriate
-information (choose the status of your snippet from the list in
-[`meta/status-values.md`]
-(http://github.com/openlilylib/snippets/blob/master/meta/status-values.md)).
-* Apart from writing a description, we recommend adding
-usage example(s) to your snippet.
+* Please use a template from [`meta/snippet-templates`]
+(meta/snippet-templates) as your starting point:
+  - simple snippets that just demonstrate built-in LilyPond features
+    should use the one-file template.
+  - snippets defining custom commands, functions, engravers etc.
+    that can be useful on their own should use the "includable" template.
 * If possible, please format your code using Frescobaldi's
 _Format_ tool.
 * When you make changes in your snippets, please contribute
 updates to the repository! :-)
-* A png file showing the output of the snippet is a welcome addition.
-* Multi-file snippets should be placed in their own directories.
-All compilable files should have extension `.ly`, and all files
-not meant to be compiled should have extension `.ily`.
 
 
 Snippet categories
 ==================
 
-* [__custom-engravers__](custom-engravers) -
-    scheme engravers, especially ones
-    that could be later added to LilyPond itself,
+* [__custom-music-fonts__](custom-music-fonts) -
+    alternative fonts for LilyPond, that can be used instead of default Feta.
 * [__debugging-layout__](debugging-layout) -
-    tools that visualize LilyPond's
-    layout decisions (e.g. directions),
+    tools that visualize LilyPond's layout decisions (e.g. directions),
+* [__general-tools__](general-tools) -
+    stuff for working on and with LilyPond itself.
 * [__input-shorthands__](input-shorthands) -
-    music functions and other tools
-    that make writing LilyPond code easier,
+    music functions and other tools that make writing LilyPond code easier,
 * [__notation-snippets__](notation-snippets) -
     LilyPond code that produces some particular notation,
 * [__simple-examples__](simple-examples) -
-    snippets that are just explaining
-    or demonstrating things from the documentation,
+    snippets that are just explaining or demonstrating things from the documentation,
 * [__specific-solutions__](specific-solutions) -
-    hacks that aren't generic,
-    just solve a very specific problem,
+    hacks that aren't generic, just solve a very specific problem,
 * [__stylesheets__](stylesheets) -
-    a place for collections of user-designed
-    layout settings ("house styles"),
+    a place for collections of user-designed layout settings ("house styles"),
 * [__templates__](templates) -
     examples showing how to structure LilyPond code.
 
@@ -159,4 +149,5 @@ Contact
 =======
 
 Have trouble contributing?  Let us know!
-[info@openlilylib.org](mailto:info@openlilylib.org)
+[info@openlilylib.org](mailto:info@openlilylib.org),
+[janek.lilypond@gmail.com](mailto:janek.lilypond@gmail.com).
