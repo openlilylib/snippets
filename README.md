@@ -18,42 +18,29 @@ nature of GitHub.
 -->
 
 
-Using
-=====
+Using this repository
+=====================
 
-Get it
-------
+You can view the files in your browser by clicking on their names,
+and simply copy&paste the code into your editor. You can also
+[download](https://github.com/openlilylib/snippets/archive/master.zip)
+the whole repository in a ZIP archive.  This is recommended for casual use.
+For regular users, we recommend using [Git](http://git-scm.com/)
+to clone the whole repository to your computer.  If you need help with Git,
+[contact us](README.md#contact).
 
-In order to use snippets from this repository you have several options
-to get them on your computer:
+Most snippets are divided into an `.ily` file with function definitions and a `.ly`
+file showing a usage example.  To use the functions provided by the snippet,
+simply `\include` the `.ily` file into your score.
 
-- Go to the detail page of a snippet and copy&paste it to your
-  favorite LilyPond editor  
-  (recommendable for casual use only)
-- Download the whole repository as a ZIP archive (with the Button
-  on the right side of the front page). Maybe one day we will have
-  'releases' that can be downloaded through the menu item above the
-  main area of the entry page.
-- Clone the repository or fork it before.  
-  This is the easiest way to keep your copy up-to-date or contribute.  
-  If you initially cloned the repo and later decide to contribute you
-  can easily add your personal fork then.
-
-Use it
-------
-
-Once you have obtained a copy of the repository you can immediately use its
-content. Most of the snippets are separated into an includable snippet
-and a standalone example file. Snippets have an `.ily` extension while
-examples end with `-example.ly`.
-
-You should make the root directory of the repository available to LilyPond,
-e.g. by using the `-I` or `--include=` command line option or (if you use
-Frescobaldi) by adding its path to the LilyPond preferences.  
+You can make the root directory of the repository available to LilyPond,
+e.g. by using the `-I` or `--include=` command line option (or, if you use
+Frescobaldi, add the path in _LilyPond preferences_).  
 Then you will be able to `\include` the snippets with a path relative to
-the root dir. In order to use e.g. the `aligning-first-syllables` snippet from
-the `custom-engravers`  directory insert
-`\include "custom-engravers/aligning-first-syllables.ily"` in your input file.
+the repository root directory - for example, 
+`\include "debugging-layout/display-grob-anchors/definitions.ily"`
+will allow you to use `\printAnchors` function defined in the snippet.
+
 
 Contributing
 ============
