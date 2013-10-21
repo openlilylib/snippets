@@ -1,6 +1,6 @@
 \version "2.16.2"
 
-\include "adjust-horizontal-spacing.ily"
+\include "definitions.ily"
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 % usage example:         %

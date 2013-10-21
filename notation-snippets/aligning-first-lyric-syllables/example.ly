@@ -1,6 +1,6 @@
 \version "2.16.2"
 
-\include "aligning-first-lyric-syllables.ily"
+\include "definitions.ily"
 
 %%%%%%%%%%%%%%%%%%%%%
 %   USAGE EXAMPLE   %

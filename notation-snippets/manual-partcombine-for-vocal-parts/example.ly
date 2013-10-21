@@ -1,6 +1,6 @@
 \version "2.16.2" % absolutely necessary!
 
-\include "manual-partcombine-for-vocal-parts.ily"
+\include "definitions.ily"
 
 % Upper voice.  Here partcombining instructions should go.
 

@@ -1,6 +1,6 @@
 \version "2.16.2" % absolutely necessary!
 
-\include "align-lyrics-on-vowels.ly"
+\include "definitions.ily"
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 % usage example:         %

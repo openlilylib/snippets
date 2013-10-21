@@ -1,6 +1,6 @@
 \version "2.17.26"
 
-\include "metricmod-function.ily"
+\include "definitions.ily"
 
 %%%%%%%%%%%%%%%%%%%%%
 % USAGE EXAMPLE(S): %
