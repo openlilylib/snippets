@@ -46,6 +46,10 @@ appropriate tweak applied.")
        (define (polar-control-points offsets)
          (let* ((get-name (lambda (x) (assq-ref (ly:grob-property x 'meta) 'name)))
                 (left-bound (ly:spanner-bound grob LEFT))
+                (elts (ly:grob-object left-bound 'elements))
+                ;;(if (grob::has-interface grob 'note-head-interface))
+
+                ;;(left-stem (ly: left-bound Stem))
                 (left-name (get-name left-bound))
                 (left-y-extent (ly:grob-property left-bound 'Y-extent))
                 (right-bound (ly:spanner-bound grob RIGHT))
@@ -119,6 +123,20 @@ appropriate tweak applied.")
                 (x3 (+ x4 (* rad3 (cos angle3))))
                 (y3 (+ y4 (* rad3 (sin angle3)))))
 
+       (for-each
+          (lambda (idx)
+            (let ((elt (ly:grob-array-ref elts idx)))
+              (if (grob::has-interface elt 'stem-interface)
+                  (display (ly:grob-property elt 'Y-extent)))))
+          (reverse (iota (ly:grob-array-length elts))))
+       (for-each
+          (lambda (idx)
+            (let ((elt (ly:grob-array-ref elts idx)))
+              (if (grob::has-interface elt 'note-head-interface)
+                  (display (ly:grob-property elt 'Y-offset)))))
+          (reverse (iota (ly:grob-array-length elts))))
+       
+           (display left-y-extent)
            (if (null? offsets)
                coords
                (list (cons x1 y1)
