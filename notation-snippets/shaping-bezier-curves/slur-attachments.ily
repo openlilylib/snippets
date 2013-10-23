@@ -78,28 +78,26 @@
          (+ (* (- 1 t) (car extent))
            (* t (cdr extent)))))
 
-     (define (attach-to-head)
-       ;; 0.5 should be taken from a property
-       (+ (* slur-dir 0.5)
+     (define (attach-to-head off)
+       (+ (* slur-dir off)
          (if (eq? slur-dir UP)
              (cdr heads-ext)
              (car heads-ext))))
 
-     (define (attach-to-stem)
-       ;; 0.3 should be taken from a property
+     (define (attach-to-stem off)
        (if (eq? slur-dir UP)
-           (- (cdr stem-ext) 0.3)
-           (+ (car stem-ext) 0.3)))
+           (- (cdr stem-ext) off)
+           (+ (car stem-ext) off)))
 
      (set! stem-ext (if inappropriate-stem?
                         (make-artificial-ext)
                         (normalize-stem-ext)))
 
      (cond ((number? attach-to)(interpolate stem-ext attach-to))
-       ((eq? attach-to 'head)(attach-to-head))
+       ((eq? attach-to 'head)(attach-to-head 0.5)) ;;TODO: define a property
        ((eq? attach-to 'stem)(if inappropriate-stem?
-                                 (attach-to-head)
-                                 (attach-to-stem)))
+                                 (attach-to-head 0.5) ;;TODO: define a property
+                                 (attach-to-stem 0.3))) ;;TODO: define a property
        (else (display "Error: unknown type")))))
 
 
