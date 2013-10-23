@@ -1,4 +1,6 @@
 
+\version "2.17.29"
+% with earlier versions, \attach ... Slur will probably affect only the first slur
 \include "slur-attachments.ily"
 
 \markup "\attach:"

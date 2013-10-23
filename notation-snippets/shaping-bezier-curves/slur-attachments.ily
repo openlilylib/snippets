@@ -41,78 +41,66 @@
    (or (equal? +inf.0 (car interval))
        (equal? -inf.0 (cdr interval))))
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-
-#(define (get-attachment-interval note-column slur-dir)
-   (let* ((column-ext (ly:grob-property note-column 'Y-extent))
-          (stem (get-stem note-column))
+#(define (calc-one-slur-end note-column slur-dir attach-to)
+   (let* ((stem (get-stem note-column))
           (stem-dir (ly:grob-property stem 'direction))
-          (stem-ext (ly:grob-property stem 'Y-extent)))
+          (stem-ext (ly:grob-property stem 'Y-extent))
+          (column-ext (ly:grob-property note-column 'Y-extent))
+          (heads-ext (get-heads-ext note-column)))
+
+     (define inappropriate-stem?
+       (or (empty-interval? stem-ext)
+           (not (eq? stem-dir slur-dir))))
 
      ;; "raw" stem extent overlaps with the noteheads. We trim it
      ;; so that it represents only the sticking-out part.
-     (define (normalize-stem-ext s-extent column)
-       (let* ((heads-ext (get-heads-ext column)))
-         (if (< (cdr heads-ext) (cdr s-extent))
-             (cons (cdr heads-ext)(cdr s-extent))
-             (cons (car s-extent)(car heads-ext)))))
+     (define (normalize-stem-ext)
+       (if (< (cdr heads-ext) (cdr stem-ext))
+           (cons (cdr heads-ext)(cdr stem-ext))
+           (cons (car stem-ext)(car heads-ext))))
 
      ;; when the column has an empty stem (e.g. a whole note),
      ;; or the stem is on the other side of the notehead than
      ;; the slur (e.g. in { c''2( f') } ), use an "artificial"
      ;; extent, 1-staffspace wide and adjacent to the noteheads.
-     (define (make-artificial-ext base-ext dir)
-       (if (eq? dir UP)
-           (cons (cdr base-ext)(+ 1 (cdr base-ext)))
-           (cons (- (car base-ext) 1)(car base-ext))))
+     (define (make-artificial-ext)
+       (if (eq? slur-dir UP)
+           (cons (cdr column-ext)(+ 1 (cdr column-ext)))
+           (cons (- (car column-ext) 1)(car column-ext))))
 
-     (if (or (empty-interval? stem-ext)
-             (not (eq? stem-dir slur-dir)))
-         (make-artificial-ext column-ext slur-dir)
-         (normalize-stem-ext stem-ext note-column))))
+     (define (interpolate extent t)
+       ;; dir=UP -> interpolate upwards
+       ;; dir=DOWN -> interpolate downwards
+       (begin (if (eq? slur-dir DOWN)(set! t (- 1 t)))
+         (+ (* (- 1 t) (car extent))
+           (* t (cdr extent)))))
 
-#(define (interpolate extent param dir)
-   ;; dir=UP -> interpolate upwards
-   ;; dir=DOWN -> interpolate downwards
-   (let* ((t (if (eq? dir UP)
-                 param
-                 (- 1 param)))
-          (ptA (car extent))
-          (ptB (cdr extent)))
-     (+ (* (- 1 t) ptA)
-       (* t ptB))))
+     (define (attach-to-head)
+       ;; 0.5 should be taken from a property
+       (+ (* slur-dir 0.5)
+         (if (eq? slur-dir UP)
+             (cdr heads-ext)
+             (car heads-ext))))
 
-#(define (attach-to-head column dir)
-   (let* ((heads-ext (get-heads-ext column)))
-     (+ (* dir 0.5) ;; 0.5 should be taken from a property
-       (if (eq? dir UP)
-           (cdr heads-ext)
-           (car heads-ext)))))
-
-
-#(define (attach-to-stem-tip note-column slur-dir)
-   (let* ((stem (get-stem note-column))
-          (stem-dir (ly:grob-property stem 'direction))
-          (stem-ext (ly:grob-property stem 'Y-extent)))
-     (define attach-to-tip
+     (define (attach-to-stem)
+       ;; 0.3 should be taken from a property
        (if (eq? slur-dir UP)
            (- (cdr stem-ext) 0.3)
            (+ (car stem-ext) 0.3)))
 
-     (if (or (empty-interval? stem-ext)
-             (not (eq? stem-dir slur-dir)))
-         (attach-to-head note-column slur-dir)
-         attach-to-tip)))
+     (set! stem-ext (if inappropriate-stem?
+                        (make-artificial-ext)
+                        (normalize-stem-ext)))
 
-#(define (calc-one-slur-end note-column slur-dir spec)
-   (if (number? spec)
-       (interpolate (get-attachment-interval note-column slur-dir)
-         spec
-         slur-dir)
-       (cond ((eq? 'stem spec)(attach-to-stem-tip note-column slur-dir))
-         ((eq? 'head spec)(attach-to-head note-column slur-dir))
-         (else (display "Error: unknown type")))))
+     (cond ((number? attach-to)(interpolate stem-ext attach-to))
+       ((eq? attach-to 'head)(attach-to-head))
+       ((eq? attach-to 'stem)(if inappropriate-stem?
+                                 (attach-to-head)
+                                 (attach-to-stem)))
+       (else (display "Error: unknown type")))))
 
 
 attach =
@@ -121,7 +109,7 @@ attach =
 
    ;; convert 2-elem lists and single values into pairs,
    ;; convert strings to symbols.
-   (define normalize-specs
+   (define normalize-vals
      (let* ((paired (cond ((list? vals) (cons (first vals)(second vals)))
                       ((pair? vals) vals)
                       (else (cons vals vals)))))
@@ -137,12 +125,8 @@ attach =
             (l-bound (ly:spanner-bound grob LEFT))
             (r-bound (ly:spanner-bound grob RIGHT))
             (slur-dir (ly:grob-property grob 'direction))
-            (specs normalize-specs)
+            (specs normalize-vals))
 
-            (l-pos (calc-one-slur-end l-bound slur-dir (car specs)))
-            (r-pos (calc-one-slur-end r-bound slur-dir (cdr specs))))
-
-       ;(format #t ", l-pos ~a" l-pos)
-       ;(format #t ", r-pos ~a" r-pos)
-       (cons l-pos r-pos)))
+       (cons (calc-one-slur-end l-bound slur-dir (car specs))
+         (calc-one-slur-end r-bound slur-dir (cdr specs)))))
    #{ \tweak positions #calc-positions #item #})
