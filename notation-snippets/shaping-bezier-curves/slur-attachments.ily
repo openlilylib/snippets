@@ -120,13 +120,30 @@ attach =
              (string->symbol (cdr paired))
              (cdr paired)))))
 
+   ;; basic sanitization of bounds - if the slur is broken,
+   ;; substitute PaperColumns with available NoteColumns.
+   ;; will not work with slurs spanning more than 1 system.
+   ;; TODO: better support.
+   (define (sanitize-bounds l-bound r-bound)
+     (let* ((get-name (lambda (x)
+                        (assq-ref (ly:grob-property x 'meta) 'name))))
+       (cons (if (string=? (symbol->string (get-name l-bound))
+                   "NoteColumn")
+                 l-bound
+                 r-bound)
+         (if (string=? (symbol->string  (get-name r-bound))
+               "NoteColumn")
+             r-bound
+             l-bound))))
+
    (define (calc-positions grob)
      (let* ((orig (ly:grob-original grob))
+            (slur-dir (ly:grob-property grob 'direction))
+            (specs normalize-vals)
             (l-bound (ly:spanner-bound grob LEFT))
             (r-bound (ly:spanner-bound grob RIGHT))
-            (slur-dir (ly:grob-property grob 'direction))
-            (specs normalize-vals))
+            (cols (sanitize-bounds l-bound r-bound)))
 
-       (cons (calc-one-slur-end l-bound slur-dir (car specs))
-         (calc-one-slur-end r-bound slur-dir (cdr specs)))))
+       (cons (calc-one-slur-end (car cols) slur-dir (car specs))
+         (calc-one-slur-end (cdr cols) slur-dir (cdr specs)))))
    #{ \tweak positions #calc-positions #item #})
