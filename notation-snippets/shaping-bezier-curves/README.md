@@ -32,6 +32,11 @@ flipping polar's outer y (when dir = DOWN) doesn't work
 
 Addition for displaying controlpoints - display coordinates of each point, maybe in the format used? (i.e. polar, offset, absolute...)
 
+
+Slur attachment:
+detect the case when there's no stem on the side of the notehead where the slur is attached (whole notes, or Kieren example) and do a default attachment then.
+If just one attachment is specified, duplicate it.
+
 ### BUGS:
 
 polar doesn't handle () well (at least for inner coords)
