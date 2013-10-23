@@ -30,6 +30,12 @@
   c''-\attach #'(0 . 2) ( f')
 }
 
+{
+  \attach #'(1 . 1) Slur
+  %\override Slur #'positions = #'(-6 . -3)
+  c'2 ( e')
+  c''2 ( e'')
+}
 \markup { What is the desired/expected meaning/behaviour of negative values? }
 {
   \slurNeutral

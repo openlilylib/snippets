@@ -42,6 +42,8 @@
        (equal? -inf.0 (cdr interval))))
 
 
+
+
 #(define (get-attachment-interval note-column slur-dir)
    (let* ((column-ext (ly:grob-property note-column 'Y-extent))
           (stem (get-stem note-column))
@@ -81,24 +83,66 @@
      (+ (* (- 1 t) ptA)
        (* t ptB))))
 
+#(define (attach-to-head column dir)
+   (let* ((heads-ext (get-heads-ext column)))
+     (+ (* dir 0.5) ;; 0.5 should be taken from a property
+       (if (eq? dir UP)
+           (cdr heads-ext)
+           (car heads-ext)))))
+
+
+#(define (attach-to-stem-tip note-column slur-dir)
+   (let* ((stem (get-stem note-column))
+          (stem-dir (ly:grob-property stem 'direction))
+          (stem-ext (ly:grob-property stem 'Y-extent)))
+     (define attach-to-tip
+       (if (eq? slur-dir UP)
+           (- (cdr stem-ext) 0.3)
+           (+ (car stem-ext) 0.3)))
+
+     (if (or (empty-interval? stem-ext)
+             (not (eq? stem-dir slur-dir)))
+         (attach-to-head note-column slur-dir)
+         attach-to-tip)))
+
+#(define (calc-one-slur-end note-column slur-dir spec)
+   (if (number? spec)
+       (interpolate (get-attachment-interval note-column slur-dir)
+         spec
+         slur-dir)
+       (cond ((eq? 'stem spec)(attach-to-stem-tip note-column slur-dir))
+         ((eq? 'head spec)(attach-to-head note-column slur-dir))
+         (else (display "Error: unknown type")))))
+
+
 attach =
-#(define-music-function (parser location attaches item)
-   (pair? symbol-list-or-music?)
-   (define (calc-pos grob)
+#(define-music-function (parser location vals item)
+   (scheme? symbol-list-or-music?)
+
+   ;; convert 2-elem lists and single values into pairs,
+   ;; convert strings to symbols.
+   (define normalize-specs
+     (let* ((paired (cond ((list? vals) (cons (first vals)(second vals)))
+                      ((pair? vals) vals)
+                      (else (cons vals vals)))))
+       (cons (if (string? (car paired))
+                 (string->symbol (car paired))
+                 (car paired))
+         (if (string? (cdr paired))
+             (string->symbol (cdr paired))
+             (cdr paired)))))
+
+   (define (calc-positions grob)
      (let* ((orig (ly:grob-original grob))
             (l-bound (ly:spanner-bound grob LEFT))
             (r-bound (ly:spanner-bound grob RIGHT))
             (slur-dir (ly:grob-property grob 'direction))
+            (specs normalize-specs)
 
-            (l-attach (get-attachment-interval l-bound slur-dir))
-            (r-attach (get-attachment-interval r-bound slur-dir))
+            (l-pos (calc-one-slur-end l-bound slur-dir (car specs)))
+            (r-pos (calc-one-slur-end r-bound slur-dir (cdr specs))))
 
-            (l-pos (interpolate l-attach (car attaches) slur-dir))
-            (r-pos (interpolate r-attach (cdr attaches) slur-dir)))
-
-       (format #t "\nl-attach ~a" l-attach)
-       (format #t ", l-pos ~a" l-pos)
-       (format #t "  r-attach ~a" r-attach)
-       (format #t ", r-pos ~a" r-pos)
+       ;(format #t ", l-pos ~a" l-pos)
+       ;(format #t ", r-pos ~a" r-pos)
        (cons l-pos r-pos)))
-   #{ \tweak positions #calc-pos #item #})
+   #{ \tweak positions #calc-positions #item #})
