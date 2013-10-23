@@ -3,6 +3,7 @@
 \header {
   snippet-title = "adjusting slur attachments"
   snippet-author = "Janek Warchoł"
+  snippet-dedication = "dedicated to Graham Percival"
 }
 
 #(define (get-heads-ext note-column)
