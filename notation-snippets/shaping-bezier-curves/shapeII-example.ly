@@ -19,7 +19,7 @@
 \markup \typewriter "\shapeII #'((3 0))"
 {
   d''1 ( f'')
-  d''1-\shapeII #'((3 0)) ( f'')
+  d''1-\shapeII #'((3 . 0)) ( f'')
 }
 
 \markup {
@@ -48,11 +48,11 @@
 \markup {
   () is a shorthand for (0 0):
 }
-\markup \typewriter "\shapeII #'(()(0 3)(-3 -3)())"
+\markup \typewriter "\shapeII #'(()(0 3)(3 -3)())"
 \markup \vspace #0.5
 {
   d''1 ( f'')
-  d''1-\shapeII #'(()(0 3)(-3 -3)()) ( f'')
+  d''1-\shapeII #'(()(0 3)(3 -3)()) ( f'')
 }
 
 \markup {

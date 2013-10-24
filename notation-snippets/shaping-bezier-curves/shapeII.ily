@@ -13,17 +13,6 @@
   status = "working, unfinished"
 }
 
-#(define (list->pair-list lst)
-   (cond ((null? lst) lst)
-     ((number-pair? (car lst))
-      (cons (car lst) (list->pair-list (cdr lst))))
-     ((list? (car lst))
-      (cons
-       (list->pair-list (car lst))
-       (list->pair-list (cdr lst))))
-     (else (cons (car lst) (cadr lst)))))
-
-
 #(define (single-point-spec? x)
    (or (number-pair? x)
        (and (not (null? x))
@@ -46,26 +35,32 @@ shapeII =
        (define (handle-one-sibling offsets)
          ;; 'offsets' is a set of instructions for one sibling.
 
-         ;; Allow (0 0) as a shorthand for (0 . 0).
-         (set! offsets (list->pair-list offsets))
+         (define (is-null-spec? x)
+           (eq? '() x))
 
-         ;; convert () to (0 . 0).
-         (set! offsets
-               (map (lambda (elem)
-                      (if (pair? elem)
-                          elem
-                          (cons 0 0)))
-                 offsets))
+         (define (is-simple-offset-spec? x)
+           (number-pair? x))
+         ;; simple offset, the same as \shape was using till now:
+         (define (simple-offset x y)
+           (cons (+ (car x) (car y))
+             (+ (cdr x) (cdr y))))
 
-         ;; if only one pair of offsets is supplied,
-         ;; use it for all control-points.  I.e.,
-         ;; \shape #'((0 . 2)) should be equivalent to
-         ;; \shape #'((0 . 2)(0 . 2)(0 . 2)(0 . 2))
-         ;;
-         ;; if two pairs of offsets are supplied,
-         ;; use them X-symmetrically for the other two.  I.e.,
-         ;; \shape #'((-1 . 1)(2 . 5)) should be equivalent to
-         ;; \shape #'((-1 . 1)(2 . 5)(-2 . 5)(1 . 1))
+         (define (is-smart-offset-spec? x)
+           (and (list? x)
+                (every number? x)))
+         ;; flip offset values for right points and downward slurs:
+         (define (smart-offset x y i)
+           (cons (+ (car x)(* i (first y)))
+             (+ (cdr x) (* slur-dir (second y)))))
+
+         (define (handle-one-ctrpt dflt spec idx)
+           (cond ((is-null-spec? spec) dflt)
+             ((is-simple-offset-spec? spec)(simple-offset dflt spec))
+             ((is-smart-offset-spec? spec)(smart-offset dflt spec idx))
+             (else (display "Error: unknown specification type"))))
+
+         ;; make \shape #'((foo)) equivalent to \shape #'((foo foo foo foo))
+         ;; and \shape #'((foo bar)) to \shape #'((foo bar bar foo)):
          (set! offsets
                (cond
                 ((= 1 (length offsets))
@@ -73,29 +68,21 @@ shapeII =
                 ((= 2 (length offsets))
                  (list (first offsets)
                    (second offsets)
-                   (cons (- (car (second offsets)))
-                     (cdr (second offsets)))
-                   (cons (- (car (first offsets)))
-                     (cdr (first offsets)))))
+                   (second offsets)
+                   (first offsets)))
                 (else offsets)))
-
-         ;; For downward slurs, flip the offsets vertically
-         ;; so that the same override could be applied to similar
-         ;; upward and downward slurs.
-         (if (eq? slur-dir DOWN)
-             (set! offsets
-                   (map (lambda (elem)
-                          (cons (car elem)
-                            (* -1 (cdr elem))))
-                     offsets)))
 
          (if (null? offsets)
              default-cpts
-             (map (lambda (x y)
-                    (coord-translate x y))
-               default-cpts offsets)))
-       ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-       ;; end of 'handle-one-sibling' routine.
+             (map (lambda (x y z)
+                    (handle-one-ctrpt x y z))
+               ;; the last list is for indicating whether we're modifying
+               ;; a control-point on the left or on the right:
+               default-cpts offsets '(1 1 -1 -1))))
+       ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;
+       ;; end of 'handle-one-sibling' routine. ;;
+       ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;
+
 
        (define (helper sibs offs)
          (if (pair? offs)
