@@ -54,11 +54,25 @@ shapeII =
            (cons (+ (car x)(* i (first y)))
              (+ (cdr x) (* slur-dir (second y)))))
 
+         (define (absolute-spec? x)
+           (and (list? x)
+                (symbol? (first x))
+                (or (eq? 'a (first x))
+                    (eq? 'abs (first x))
+                    (eq? 'absolute (first x)))))
+         (define (absolute-coords y)
+           (cons (second y)(third y)))
+
          (define (handle-one-ctrpt dflt spec idx)
            (cond ((is-null-spec? spec) dflt)
              ((is-simple-offset-spec? spec)(simple-offset dflt spec))
              ((is-smart-offset-spec? spec)(smart-offset dflt spec idx))
-             (else (display "Error: unknown specification type"))))
+             ((absolute-spec? spec)(absolute-coords spec))
+             (else (begin
+                    (display "Shape error: unknown specification type: ")
+                    (display spec)
+                    (display "\nUsing default control-point coordinates.\n")
+                    dflt))))
 
          ;; make \shape #'((foo)) equivalent to \shape #'((foo foo foo foo))
          ;; and \shape #'((foo bar)) to \shape #'((foo bar bar foo)):
