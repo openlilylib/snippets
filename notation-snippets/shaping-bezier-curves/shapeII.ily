@@ -16,10 +16,11 @@
 #(define (single-point-spec? x)
    (or (number-pair? x)
        (and (not (null? x))
-            (number? (car x)))))
+            (or (number? (car x))
+                (symbol? (car x))))))
 
 shapeII =
-#(define-music-function (parser location all-offsets item)
+#(define-music-function (parser location all-specs item)
    (list? symbol-list-or-music?)
    (_i "TODO: write description when finished")
    (define (shape-curve grob)
@@ -32,8 +33,8 @@ shapeII =
             (default-cpts (get-cpts grob))
             (slur-dir (ly:grob-property grob 'direction)))
 
-       (define (handle-one-sibling offsets)
-         ;; 'offsets' is a set of instructions for one sibling.
+       (define (handle-one-sibling specs)
+         ;; 'specs' is a set of instructions for one sibling.
 
          (define (is-null-spec? x)
            (eq? '() x))
@@ -61,24 +62,24 @@ shapeII =
 
          ;; make \shape #'((foo)) equivalent to \shape #'((foo foo foo foo))
          ;; and \shape #'((foo bar)) to \shape #'((foo bar bar foo)):
-         (set! offsets
+         (set! specs
                (cond
-                ((= 1 (length offsets))
-                 (make-list 4 (car offsets)))
-                ((= 2 (length offsets))
-                 (list (first offsets)
-                   (second offsets)
-                   (second offsets)
-                   (first offsets)))
-                (else offsets)))
+                ((= 1 (length specs))
+                 (make-list 4 (car specs)))
+                ((= 2 (length specs))
+                 (list (first specs)
+                   (second specs)
+                   (second specs)
+                   (first specs)))
+                (else specs)))
 
-         (if (null? offsets)
+         (if (null? specs)
              default-cpts
              (map (lambda (x y z)
                     (handle-one-ctrpt x y z))
                ;; the last list is for indicating whether we're modifying
                ;; a control-point on the left or on the right:
-               default-cpts offsets '(1 1 -1 -1))))
+               default-cpts specs '(1 1 -1 -1))))
        ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;
        ;; end of 'handle-one-sibling' routine. ;;
        ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;
@@ -91,20 +92,20 @@ shapeII =
                  (helper (cdr sibs) (cdr offs)))
              default-cpts))
 
-       ;; normalize all-offsets, so that it always is a
+       ;; normalize all-specs, so that it always is a
        ;; list-of-lists-of-single-point-specs.
-       (if (or (null? all-offsets)
-               (any single-point-spec? all-offsets))
-           (set! all-offsets (list all-offsets)))
+       (if (or (null? all-specs)
+               (any single-point-spec? all-specs))
+           (set! all-specs (list all-specs)))
 
        ;; if there are more siblings than specifications,
        ;; reuse last specification for remaining siblings.
-       (if (> (- total-found (length all-offsets)) 0)
-           (append! all-offsets
-             (list (last all-offsets))))
+       (if (> (- total-found (length all-specs)) 0)
+           (append! all-specs
+             (list (last all-specs))))
 
        (if (>= total-found 2)
-           (helper siblings all-offsets)
-           (handle-one-sibling (car all-offsets)))))
+           (helper siblings all-specs)
+           (handle-one-sibling (car all-specs)))))
 
    #{ \tweak control-points #shape-curve #item #})
