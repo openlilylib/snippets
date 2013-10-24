@@ -74,7 +74,9 @@
     \typewriter "\shapeII #'(() (()(0.5 2)))"
     \vspace #0.5
     \score {
-      { d''1-\shapeII #'(() (()(0.5 2))) ( f'' \break a'' g'') }
+      { d''1-\shapeII #'(() (()(0.5 . 2))) ( f'' \break a'' g'') }
+      % test for multi-applying one offsets to broken slur
+      % { d''1-\shapeII #'(()(0.5 . 2)) ( f'' \break a'' g'') }
       \layout { }
     }
   }

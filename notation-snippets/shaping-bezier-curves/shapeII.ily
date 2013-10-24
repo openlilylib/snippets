@@ -26,13 +26,7 @@
 shapeII =
 #(define-music-function (parser location all-offsets item)
    (list? symbol-list-or-music?)
-   (_i "Offset control-points of @var{item} by @var{offsets}.  The
-argument is a list of number pairs or list of such lists.  Each
-element of a pair represents an offset to one of the coordinates of a
-control-point.  If @var{item} is a string, the result is
-@code{\\once\\override} for the specified grob type.  If @var{item} is
-a music expression, the result is the same music expression with an
-appropriate tweak applied.")
+   (_i "TODO: write description when finished")
    (define (shape-curve grob)
      (let* ((orig (ly:grob-original grob))
             (siblings (if (ly:spanner? grob)
