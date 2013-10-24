@@ -110,6 +110,12 @@ shapeII =
                (any single-point-spec? all-offsets))
            (set! all-offsets (list all-offsets)))
 
+       ;; if there are more siblings than specifications,
+       ;; reuse last specification for remaining siblings.
+       (if (> (- total-found (length all-offsets)) 0)
+           (append! all-offsets
+             (list (last all-offsets))))
+
        (if (>= total-found 2)
            (helper siblings all-offsets)
            (handle-one-sibling (car all-offsets)))))

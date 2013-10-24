@@ -81,3 +81,31 @@
     }
   }
 }
+
+\markup \vspace #1
+\markup {
+  You can specify just one set of instructions and it will duplicate for all siblings:
+}
+\noPageBreak
+\markup \vspace #0.5
+\noPageBreak
+\markup \line {
+  \column {
+    \vspace #0.2
+    default:
+    \vspace #0.5
+    \score {
+      { d''1 ( f'' \break a'' f'' \break a'' g'') }
+      \layout { }
+    }
+  }
+  \hspace #10
+  \column {
+    \typewriter "\shapeII #'(()(1 2))"
+    \vspace #0.5
+    \score {
+      { d''1-\shapeII #'(()(1 2)) ( f'' \break a'' f'' \break a'' g'') }
+      \layout { }
+    }
+  }
+}
