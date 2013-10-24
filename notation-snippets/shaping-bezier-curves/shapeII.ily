@@ -23,6 +23,12 @@
        (list->pair-list (cdr lst))))
      (else (cons (car lst) (cadr lst)))))
 
+
+#(define (single-point-spec? x)
+   (or (number-pair? x)
+       (and (not (null? x))
+            (number? (car x)))))
+
 shapeII =
 #(define-music-function (parser location all-offsets item)
    (list? symbol-list-or-music?)
@@ -98,8 +104,14 @@ shapeII =
                  (helper (cdr sibs) (cdr offs)))
              default-cpts))
 
+       ;; normalize all-offsets, so that it always is a
+       ;; list-of-lists-of-single-point-specs.
+       (if (or (null? all-offsets)
+               (any single-point-spec? all-offsets))
+           (set! all-offsets (list all-offsets)))
+
        (if (>= total-found 2)
            (helper siblings all-offsets)
-           (handle-one-sibling all-offsets))))
+           (handle-one-sibling (car all-offsets)))))
 
    #{ \tweak control-points #shape-curve #item #})
