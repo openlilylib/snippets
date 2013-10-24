@@ -22,6 +22,13 @@
   d''1-\shapeII #'((3 . 0)) ( f'')
 }
 
+\markup "Polar shape:"
+{
+  d''1 ( f'')
+  d''1-\shapeII #'((-2 0)(p 60 0.5)(p 80 0.3)()) ( f'')
+  d'1-\shapeII #'(()(p 60 0.5)(p 80 0.3)()) ( f')
+}
+
 \markup {
   When two pairs of offsets are specified,
   the other two control-points use X-symmetricall offsets:
