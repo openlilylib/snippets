@@ -24,3 +24,5 @@ Addition for displaying controlpoints - display coordinates of each point, maybe
 Slur attachment:
 detect the case when there's no stem on the side of the notehead where the slur is attached (whole notes, or Kieren example) and do a default attachment then.
 If just one attachment is specified, duplicate it.
+
+Handle the situation when the user specified only 3 points?
