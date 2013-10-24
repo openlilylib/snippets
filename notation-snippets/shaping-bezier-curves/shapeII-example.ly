@@ -1,6 +1,8 @@
-\include "shapeII.ily"
+\version "2.17.29"
+% Prior to 2.17.29, \shapeII ... Slur (i.e. the non-tweak syntax)
+% will probably affect only the first slur in each example.
 
-\version "2.17.28"
+\include "shapeII.ily"
 
 \paper {
   ragged-right = ##t
@@ -63,7 +65,7 @@
 \markup \vspace #1
 \markup {
   If you use 2-element lists instead of pairs, offsets for
-  the right control-points will be flipped horizontally...
+  the right control-points will be flipped horizontally:
 }
 \markup\small\typewriter "\shapeII #'((2 0))"
 {
