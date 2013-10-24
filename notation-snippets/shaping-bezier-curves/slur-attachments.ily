@@ -8,28 +8,25 @@
 
 #(define (get-heads-ext note-column)
    ;; Return a combined extent of the noteheads in a notecolumn.
-   ;; This is ugly, and should be implemented in C++.
+   ;; This should be implemented in C++ with a Scheme interface.
    (let* ((elts (ly:grob-object note-column 'elements))
-          (result empty-interval))
-     (for-each
-      (lambda (idx)
-        (let ((elt (ly:grob-array-ref elts idx)))
-          (if (grob::has-interface elt 'note-head-interface)
-              (let*
-               ((off (ly:grob-property elt 'Y-offset))
-                (ext (ly:grob-property elt 'Y-extent)))
-               (set! result (interval-union
-                             result
-                             (coord-translate ext off)))
-               ))))
-      (reverse (iota (ly:grob-array-length elts))))
-     result))
+          (elts (ly:grob-array->list elts)))
+     (fold
+      (lambda (elem prev)
+        (if (grob::has-interface elem 'note-head-interface)
+            (let ((off (ly:grob-property elem 'Y-offset))
+                  (ext (ly:grob-property elem 'Y-extent)))
+              (interval-union prev
+                (coord-translate ext off)))
+            prev))
+      empty-interval
+      elts)))
 
 #(define (get-stem note-column)
    ;; Return the stem from the notecolumn.
-   ;; This is ugly, and should be implemented in C++.
-   (let* ((elts (ly:grob-object note-column 'elements))
-          (result #f))
+   ;; This should be implemented in C++ with a Scheme interface.
+   (let ((elts (ly:grob-object note-column 'elements))
+         (result #f))
      (for-each
       (lambda (idx)
         (let ((elt (ly:grob-array-ref elts idx)))
@@ -37,10 +34,6 @@
               (set! result elt))))
       (reverse (iota (ly:grob-array-length elts))))
      result))
-
-#(define (empty-interval? interval)
-   (or (equal? +inf.0 (car interval))
-       (equal? -inf.0 (cdr interval))))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -53,7 +46,7 @@
           (heads-ext (get-heads-ext note-column)))
 
      (define inappropriate-stem?
-       (or (empty-interval? stem-ext)
+       (or (interval-empty? stem-ext)
            (not (eq? stem-dir slur-dir))))
 
      ;; "raw" stem extent overlaps with the noteheads. We trim it
@@ -109,9 +102,9 @@ attach =
    ;; convert 2-elem lists and single values into pairs,
    ;; convert strings to symbols.
    (define normalize-vals
-     (let* ((paired (cond ((list? vals) (cons (first vals)(second vals)))
-                      ((pair? vals) vals)
-                      (else (cons vals vals)))))
+     (let ((paired (cond ((list? vals) (cons (first vals)(second vals)))
+                     ((pair? vals) vals)
+                     (else (cons vals vals)))))
        (cons (if (string? (car paired))
                  (string->symbol (car paired))
                  (car paired))
@@ -124,8 +117,8 @@ attach =
    ;; will not work with slurs spanning more than 1 system.
    ;; TODO: better support.
    (define (sanitize-bounds l-bound r-bound)
-     (let* ((get-name (lambda (x)
-                        (assq-ref (ly:grob-property x 'meta) 'name))))
+     (let ((get-name (lambda (x)
+                       (assq-ref (ly:grob-property x 'meta) 'name))))
        (cons (if (string=? (symbol->string (get-name l-bound))
                    "NoteColumn")
                  l-bound
