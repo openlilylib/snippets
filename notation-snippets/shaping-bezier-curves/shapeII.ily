@@ -19,6 +19,14 @@
             (or (number? (car x))
                 (symbol? (car x))))))
 
+#(define (find-value-to-offset prop self alist)
+   "Return the first value of the property @var{prop} in the property
+            alist @var{alist} @em{after} having found @var{self}."
+(let ((segment (member (cons prop self) alist)))
+  (if (not segment)
+      (assoc-get prop alist)
+      (assoc-get prop (cdr segment)))))
+
 shapeII =
 #(define-music-function (parser location all-specs item)
    (list? symbol-list-or-music?)
@@ -28,10 +36,11 @@ shapeII =
             (siblings (if (ly:spanner? grob)
                           (ly:spanner-broken-into orig) '()))
             (total-found (length siblings))
-            (get-cpts (assoc-get 'control-points
-                        (reverse (ly:grob-basic-properties grob))))
-            ;; these are the cpts of just the currently calculated sibling: (?)
-            (default-cpts (get-cpts grob))
+            (immutable-props (ly:grob-basic-properties grob))
+            (value (find-value-to-offset 'control-points shape-curve immutable-props))
+            (default-cpts (if (procedure? value)
+                              (value grob)
+                              value))
             (slur-dir (ly:grob-property grob 'direction)))
 
        ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;;;;;;;
