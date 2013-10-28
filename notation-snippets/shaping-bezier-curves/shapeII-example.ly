@@ -135,19 +135,19 @@
   Use polar coordinates for middle points by prefixing
   values with \typewriter polar (or \typewriter p for short):
 }
-\markup\small\typewriter "\shapeII #'((0 -2)(polar 88 0.5)(polar 20 0.2)())"
+\markup\small\typewriter "\shapeII #'((0 -2)(polar 0.5 88)(polar 0.2 20)())"
 \markup\vspace #0.2
 \score {
   {
     e2( d'' b'' d''')
-    \shapeII #'((0 -2)(polar 88 0.5)(polar 20 0.2)()) Slur
+    \shapeII #'((0 -2)(polar 0.5 88)(polar 0.2 20)()) Slur
     e2( d'' b'' d''')
   }
   \layout { }
 }
 
 \markup { With polar coords, the same values can be used for different slurs: }
-\markup\small\typewriter "\shapeII #'(()(p 30 0.7)(p 90 0.3)())"
+\markup\small\typewriter "\shapeII #'(()(p 0.7 30)(p 0.3 90)())"
 \score {
   {
     <>_\markup \tiny "<----------(default)--------->"
@@ -155,7 +155,7 @@
     e''4 ( e'' d'' d'' )
     \bar "||"
     <>_\markup \tiny "<---------(tweaked)-------->"
-    \shapeII #'(()(p 30 0.7)(p 90 0.3)()) Slur
+    \shapeII #'(()(p 0.7 30)(p 0.3 90)()) Slur
     e''2 ( d'')  |
     e''4 ( e'' d'' d'' )
   }
@@ -163,18 +163,18 @@
 }
 
 \markup\line { S-shaped slurs are easy to achieve: }
-\markup\small\typewriter "\shapeII #'(()(p -30 0.5)(p 30 0.5)())"
+\markup\small\typewriter "\shapeII #'(()(p 0.5 -30)(p 0.5 30)())"
 \score {
-  { \shapeII #'(()(p -30 0.5)(p 30 0.5)()) Slur a1 ( g) }
+  { \shapeII #'(()(p 0.5 -30)(p 0.5 30)()) Slur a1 ( g) }
   \layout { }
 }
 
 \markup\line { Shorthands work with polar coordinates: }
-\markup\small\typewriter "\shape-polar #'(()(p 50 0.35))"
+\markup\small\typewriter "\shapeII #'(()(p 0.35 50))"
 \markup\vspace #0.3
 \score {
   {
-    d''2-\shapeII #'(()(p 50 0.35)) ( f'' f'' d'')
+    d''2-\shapeII #'(()(p 0.35 50)) ( f'' f'' d'')
   }
   \layout { }
 }
@@ -200,7 +200,7 @@
 \noPageBreak \markup \vspace #0.2 \noPageBreak
 {
   c''1 ( d'')
-  \shapeII #'((a 2.3 0.5)(0 . 2)(p 45 0.4)(1 0)) Slur
+  \shapeII #'((a 2.3 0.5)(0 . 2)(p 0.4 45)(1 0)) Slur
   c''1 ( d'')
 }
 
@@ -213,7 +213,7 @@
   {
     c''2( d'' f'' d'')
     e2( d'' b'' d''')
-    \shapeII #'(()(rp 50 0.3)(rp 50 0.3)()) Slur
+    \shapeII #'(()(rp 0.3 50)(rp 0.3 50)()) Slur
     c''2( d'' f'' d'')
     e2( d'' b'' d''')
   }
@@ -224,7 +224,7 @@
     \slurDown
     c''2( d'' f'' d'')
     e2( d'' b'' d''')
-    \shapeII #'(()(rp 50 0.3)(rp 50 0.3)()) Slur
+    \shapeII #'(()(rp 0.3 50)(rp 0.3 50)()) Slur
     c''2( d'' f'' d'')
     e2( d'' b'' d''')
   }
@@ -254,7 +254,7 @@ SDn = \change Staff = "down"
     \voiceTwo
     \slurUp
 
-    \shapeII #'((h)(rp 55 0.5)(rp 50 0.2)(h)) Slur
+    \shapeII #'((h)(rp 0.5 55)(rp 0.2 50)(h)) Slur
     \SDn \times 2/3 { b32( g' b }
     \SUp \times 2/3 { d g e' }
     \times 2/3 { d b g') }

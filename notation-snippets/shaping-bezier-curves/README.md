@@ -16,7 +16,5 @@ modes to implement:
 
 Addition for displaying controlpoints - display coordinates of each point, maybe in the format used? (i.e. polar, offset, absolute...)
 
-Change polar coord order
-
 add stem spec
 avoid stems when using head spec
