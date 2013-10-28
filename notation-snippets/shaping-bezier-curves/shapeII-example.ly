@@ -240,3 +240,41 @@
   d''1 ( f'')
   d''1-\shapeII #'(()(0 2)) ( f'')
 }
+
+
+SUp = \change Staff = "up"
+SDn = \change Staff = "down"
+
+\new PianoStaff <<
+  \new Staff = up \relative d {
+    \clef G
+    \key e \major
+    \time 3/16
+
+    \voiceTwo
+    \slurUp
+
+    \shapeII #'((h)(rp 55 0.5)(rp 50 0.2)(h)) Slur
+    \SDn \times 2/3 { b32( g' b }
+    \SUp \times 2/3 { d g e' }
+    \times 2/3 { d b g') }
+    |
+    \SDn \times 2/3 { b,,,32( g' b }
+    \SUp \times 2/3 { dis g e' }
+    \times 2/3 { d b g') }
+    |
+    \newSpacingSection
+    \override Score.SpacingSpanner #'common-shortest-duration =
+    #(ly:make-moment 1 70)
+    \SDn \times 2/3 { b,,,32( g' b }
+    \SUp \times 2/3 { dis g e' }
+    \times 2/3 { d b g') }
+  }
+  \new Staff = down {
+    \clef F
+    \key e \major
+    \time 3/16
+
+    s16*9
+  }
+>>

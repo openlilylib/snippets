@@ -9,8 +9,6 @@ The best part?  It's backward-compatible with the version of \shape in the curre
 
 ### TODOs:
 
-make sure specyfying coords relative to noteheads works well in case of ties as well.
-
 modes to implement:
 - (for outer pts) relative to the notehead, stem or beam (?)
 - (for inner pts) relative to outer pts
@@ -19,6 +17,6 @@ modes to implement:
 Addition for displaying controlpoints - display coordinates of each point, maybe in the format used? (i.e. polar, offset, absolute...)
 
 Change polar coord order
-rename side to LEFT/RIGHT
+
 add stem spec
 avoid stems when using head spec
