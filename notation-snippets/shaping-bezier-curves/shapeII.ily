@@ -79,7 +79,7 @@ shapeII =
               (every number? x)))
        ;; flip offset values for right points and downward slurs:
        (define (smart-offset x y i)
-         (cons (+ (car x)(* i (first y)))
+         (cons (+ (car x)(* -1 i (first y)))
            (+ (cdr x) (* slur-dir (second y)))))
 
        (define (is-absolute-spec? x)
@@ -110,11 +110,11 @@ shapeII =
                 (radius (* slur-length (third spec)))
                 (ref-slope (if relative? (atan (/ y-dif x-dif)) 0))
                 (angl (+ (degrees->radians (second spec))
-                        (* side ref-slope slur-dir)))
-                (ref-pt (if (= 1 side)
+                        (* -1 side ref-slope slur-dir)))
+                (ref-pt (if (= LEFT side)
                             (first points)
                             (last points)))
-                (x-coord (+ (car ref-pt) (* side radius (cos angl))))
+                (x-coord (- (car ref-pt) (* side radius (cos angl))))
                 (y-coord (+ (cdr ref-pt) (* slur-dir radius (sin angl)))))
            (cons x-coord y-coord)))
 
@@ -145,7 +145,7 @@ shapeII =
                       (cross-staff-correction (- my-y ref-y))
                       ;; UGH!! I have no idea why this is needed, but without this correction
                       ;; the example below renders wrongly:
-                      ;; { d''1-\shapeII #'((()()()()) (()()()(head))) ( f'' \break a'' g'') }
+                      ;; { d''1-\shapeII #'(() (()()()(head))) ( f'' \break a'' g'') }
                       ;; the if clause is necessary because otherwise the 'fix' will
                       ;; break the cross-staff case.  UGH!!
                       (ugh-correction
@@ -182,7 +182,7 @@ shapeII =
              (list-ref current-state which)
              (let ((coords (list-ref current-state which))
                    (spec (list-ref specs which))
-                   (side (if (< 1 which) -1 1)))
+                   (side (if (< 1 which) RIGHT LEFT)))
                (cond
                 ((is-null-spec? spec) coords)
                 ((is-simple-offset-spec? spec)(simple-offset coords spec))
@@ -190,7 +190,7 @@ shapeII =
                 ((is-absolute-spec? spec)(absolute-coords spec))
                 ((is-polar-spec? spec)(polar-coords current-state spec side #f))
                 ((is-rel-polar-spec? spec)(polar-coords current-state spec side #t))
-                ((is-notehead-spec? spec)(notehead-placement coords spec (* -1 side)))
+                ((is-notehead-spec? spec)(notehead-placement coords spec side))
                 (else (begin
                        (display "Shape error: unknown specification type: ")
                        (display spec)
