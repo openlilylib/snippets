@@ -17,3 +17,8 @@ modes to implement:
 - polar relative to default
 
 Addition for displaying controlpoints - display coordinates of each point, maybe in the format used? (i.e. polar, offset, absolute...)
+
+Change polar coord order
+rename side to LEFT/RIGHT
+add stem spec
+avoid stems when using head spec

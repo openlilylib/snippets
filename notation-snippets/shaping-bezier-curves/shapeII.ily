@@ -21,11 +21,29 @@
 
 #(define (find-value-to-offset prop self alist)
    "Return the first value of the property @var{prop} in the property
-            alist @var{alist} @em{after} having found @var{self}."
+   alist @var{alist} @em{after} having found @var{self}."
 (let ((segment (member (cons prop self) alist)))
   (if (not segment)
       (assoc-get prop alist)
       (assoc-get prop (cdr segment)))))
+
+#(define (get-head note-column dir)
+   ;; Return the dir-most head from notecolumn.
+   ;; This should be implemented in C++ with a Scheme interface.
+   (let ((elts (ly:grob-object note-column 'elements))
+         (init -inf.0)
+         (result #f))
+     (for-each
+      (lambda (idx)
+        (let* ((elt (ly:grob-array-ref elts idx)))
+          (if (grob::has-interface elt 'note-head-interface)
+              (let ((off (ly:grob-property elt 'Y-offset)))
+                (if (> (* off dir) init)
+                    (begin
+                     (set! init off)
+                     (set! result elt)))))))
+      (reverse (iota (ly:grob-array-length elts))))
+     result))
 
 shapeII =
 #(define-music-function (parser location all-specs item)
@@ -100,6 +118,37 @@ shapeII =
                 (y-coord (+ (cdr ref-pt) (* slur-dir radius (sin angl)))))
            (cons x-coord y-coord)))
 
+       (define (is-notehead-spec? x)
+         (and (list? x)
+              (symbol? (first x))
+              (or (eq? 'h (first x))
+                  (eq? 'head (first x)))))
+       ;; place slur end near the notehead.
+       (define (notehead-placement default spec side)
+         (let* ((bound (ly:spanner-bound grob side))
+                (get-name (lambda (x) (assq-ref (ly:grob-property x 'meta) 'name)))
+                (bound-name (get-name bound)))
+           (if (not (eq? bound-name 'NoteColumn))
+               default
+               (let* ((yoff (if (<= 2 (length spec))
+                                (second spec)
+                                1.2))
+                      (xoff (if (<= 3 (length spec))
+                                (third spec)
+                                0))
+                      (head (get-head bound slur-dir))
+                      (head-xext (ly:grob-property head 'X-extent))
+                      (head-x-mid (+ (* 0.5 (car head-xext))
+                                    (* 0.5 (cdr head-xext))))
+                      (head-yoff (ly:grob-property head 'Y-offset))
+                      (head-yext (coord-translate
+                                  (ly:grob-property head 'Y-extent)
+                                  head-yoff))
+                      (head-y-mid (+ (* 0.5 (car head-yext))
+                                    (* 0.5 (cdr head-yext)))))
+                 (cons (+ xoff head-x-mid)
+                   (+ yoff head-y-mid))))))
+
        ;; end of functions for handling specs. ;;;;;;;;;;;;;;;;;;;
        ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;;;;;;;;;;;;;;;;;
 
@@ -116,6 +165,7 @@ shapeII =
                 ((is-absolute-spec? spec)(absolute-coords spec))
                 ((is-polar-spec? spec)(polar-coords current-state spec side #f))
                 ((is-rel-polar-spec? spec)(polar-coords current-state spec side #t))
+                ((is-notehead-spec? spec)(notehead-placement coords spec (* -1 side)))
                 (else (begin
                        (display "Shape error: unknown specification type: ")
                        (display spec)
