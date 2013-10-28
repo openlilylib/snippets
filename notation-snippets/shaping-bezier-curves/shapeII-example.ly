@@ -240,7 +240,7 @@
 \markup\small\typewriter "\shapeII #'((head 0 1.3)(p 0.3 -35)()(0 -0.2))"
 {
   c''1 ( c'')
-  \shapeII #'((head 0 1.3)(p 0.3 -35)()(0 -0.2)) Slur
+  \shapeII #'((head 1.3 0)(p 0.3 -35)()(0 -0.2)) Slur
   c''1 ( c'')
 }
 

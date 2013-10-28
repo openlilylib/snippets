@@ -158,10 +158,10 @@ shapeII =
                default
                (let* ((head (get-head bound slur-dir))
                       (yoff (if (<= 2 (length spec))
-                                (second spec)
+                                (third spec)
                                 1.2))
                       (xoff (if (<= 3 (length spec))
-                                (third spec)
+                                (second spec)
                                 0))
                       ;; in case of cross-staff curves:
                       (refp (ly:grob-system grob))
@@ -197,8 +197,8 @@ shapeII =
                                   head-xoff))
                       (head-x-mid (+ (* 0.5 (car head-xext))
                                     (* 0.5 (cdr head-xext)))))
-                 (cons (+ xoff head-x-mid)
-                   (+ yoff head-y-mid))))))
+                 (cons (+ (* -1 side xoff) head-x-mid)
+                   (+ (* slur-dir yoff) head-y-mid))))))
 
        ;; end of functions for handling specs. ;;;;;;;;;;;;;;;;;;;
        ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;;;;;;;;;;;;;;;;;
