@@ -20,7 +20,7 @@
 % here goes the snippet: %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-hairpinWithCenteredText =
+hairpinWithText =
 #(define-music-function (parser location text horiz-align vert-align)
    (markup? number-or-string? number?)
    #{
@@ -31,9 +31,12 @@ hairpinWithCenteredText =
                (mrkup (grob-interpret-markup grob text))
                (par-y (ly:grob-parent grob Y))
                (grow-dir (ly:grob-property grob 'grow-direction))
-               (horiz-side (if (and (string? horiz-align)
-                                    (string=? "opening" horiz-align))
-                               (if (eq? grow-dir 1) RIGHT LEFT)
+               (horiz-side (if (string? horiz-align)
+                               (cond
+                                ((string=? "opening" horiz-align)
+                                 (if (eq? grow-dir 1) RIGHT LEFT))
+                                ((string=? "closing" horiz-align)
+                                 (if (eq? grow-dir 1) LEFT RIGHT)))
                                horiz-align))
                (hairpin-dir (ly:grob-property par-y 'direction))
                (new-stencil (ly:stencil-aligned-to
@@ -48,7 +51,7 @@ hairpinWithCenteredText =
                                  (ly:stencil-combine-at-edge
                                   (ly:stencil-aligned-to stencil X horiz-side)
                                   Y
-                                  (* hairpin-dir vert-align)
+                                  (* -1 hairpin-dir vert-align)
                                   (ly:stencil-aligned-to mrkup X horiz-side)
                                   0.1))
                              X LEFT))
