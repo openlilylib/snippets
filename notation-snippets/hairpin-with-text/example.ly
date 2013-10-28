@@ -9,10 +9,10 @@
 % Documentation (if any) should be in `README.md`.
 
 hairpinMolto = 
-\hairpinWithCenteredText \markup { \italic molto }
+\hairpinWithCenteredText \markup { \italic \tiny molto } opening #0
 
 hairpinMore = 
-\hairpinWithCenteredText \markup { \larger moltissimo }
+\hairpinWithCenteredText poco #CENTER #UP
 
 \layout { ragged-right = ##f }
 
@@ -26,4 +26,16 @@ hairpinMore =
   c2^\< c\f
   \hairpinMore
   c2\ppppp\< c\f
+}
+
+\relative c' {
+  \hairpinMolto
+  c2\> c\f
+  \hairpinMore
+  c2\ppppp\> c\f
+  \break
+  \hairpinMolto
+  c2^\> c\f
+  \hairpinMore
+  c2\ppppp\> c\f
 }
