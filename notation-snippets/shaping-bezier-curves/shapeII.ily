@@ -130,22 +130,47 @@ shapeII =
                 (bound-name (get-name bound)))
            (if (not (eq? bound-name 'NoteColumn))
                default
-               (let* ((yoff (if (<= 2 (length spec))
+               (let* ((head (get-head bound slur-dir))
+                      (yoff (if (<= 2 (length spec))
                                 (second spec)
                                 1.2))
                       (xoff (if (<= 3 (length spec))
                                 (third spec)
                                 0))
-                      (head (get-head bound slur-dir))
-                      (head-xext (ly:grob-property head 'X-extent))
-                      (head-x-mid (+ (* 0.5 (car head-xext))
-                                    (* 0.5 (cdr head-xext))))
-                      (head-yoff (ly:grob-property head 'Y-offset))
+                      ;; in case of cross-staff curves:
+                      (refp (ly:grob-system grob))
+                      (ref-bound (ly:spanner-bound grob LEFT))
+                      (ref-y (ly:grob-relative-coordinate ref-bound refp Y))
+                      (my-y (ly:grob-relative-coordinate bound refp Y))
+                      (cross-staff-correction (- my-y ref-y))
+                      ;; UGH!! I have no idea why this is needed, but without this correction
+                      ;; the example below renders wrongly:
+                      ;; { d''1-\shapeII #'((()()()()) (()()()(head))) ( f'' \break a'' g'') }
+                      ;; the if clause is necessary because otherwise the 'fix' will
+                      ;; break the cross-staff case.  UGH!!
+                      (ugh-correction
+                       (if (ly:grob-property grob 'cross-staff) ; returns boolean
+                           0.0
+                           (- (car (ly:grob-property bound 'Y-extent))
+                             (car (ly:grob-extent bound refp Y)))))
+                      (cross-staff-correction (+ cross-staff-correction ugh-correction))
+
+                      (head-yoff (+ (ly:grob-property head 'Y-offset)
+                                   cross-staff-correction))
                       (head-yext (coord-translate
                                   (ly:grob-property head 'Y-extent)
                                   head-yoff))
                       (head-y-mid (+ (* 0.5 (car head-yext))
-                                    (* 0.5 (cdr head-yext)))))
+                                    (* 0.5 (cdr head-yext))))
+
+                      (ref-x (ly:grob-relative-coordinate ref-bound refp X))
+                      (head-x (ly:grob-relative-coordinate head refp X))
+                      (head-xoff (- head-x ref-x))
+                      (head-xext (coord-translate
+                                  (ly:grob-property head 'X-extent)
+                                  head-xoff))
+                      (head-x-mid (+ (* 0.5 (car head-xext))
+                                    (* 0.5 (cdr head-xext)))))
                  (cons (+ xoff head-x-mid)
                    (+ yoff head-y-mid))))))
 
