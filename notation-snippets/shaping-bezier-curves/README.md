@@ -12,7 +12,6 @@ The best part?  It's backward-compatible with the version of \shape in the curre
 modes to implement:
 - (for outer pts) relative to the notehead, stem or beam (?)
 - (for inner pts) relative to outer pts
-- polar relative to default
 
 Addition for displaying controlpoints - display coordinates of each point, maybe in the format used? (i.e. polar, offset, absolute...)
 
