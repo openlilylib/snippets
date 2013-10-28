@@ -1,19 +1,23 @@
-Improved versions of slur shaping function
-------------------------------------------
+Slur-attachment function and improved `\shape`
+----------------------------------------------
 
-Here are some experimental functions that allow to shape slurs more efficiently
-than the `\shape` currently included in LilyPond.  Please see example files for
-more information.
+Here's a greatly expanded version of the `\shape` function, and another
+function for specifying where slur ends should be attached to notes.
 
-The best part?  It's backward-compatible with the version of \shape in the current distribution!
+Please see `.pdf` files for more information.
 
-### TODOs:
+Both functions are ready to be used, but they need testing;
+they are not considered stable yet and their behaviour may change.
 
-modes to implement:
-- (for outer pts) relative to the notehead, stem or beam (?)
-- (for inner pts) relative to outer pts
+### TODOs for the future:
 
-Addition for displaying controlpoints - display coordinates of each point, maybe in the format used? (i.e. polar, offset, absolute...)
+* Implement a mode for specifying control-point positions
+relative to NoteColumn's Stem.
 
-add stem spec
-avoid stems when using head spec
+* Avoid collisions with Stems and NoteHeads when using 'head' mode.
+
+* Implement a mode for specifying inner control-point positions
+relative to outer points' positions.
+
+* for displaying controlpoints - show coordinates of each point,
+maybe in the format used? (i.e. polar, offset, absolute...)
