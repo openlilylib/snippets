@@ -79,8 +79,8 @@
 
 \markup \vspace #0.5
 \markup {
-  You can put the text inside the hairpin.
-  Its opening will be automatically widened:
+  You can put the text inside the hairpin; its opening will be automatically widened.
+  Note that Elaine Gould explicitly recommends against this practice.
 }
 \relative c' {
   \hairpinWithText \markup { \italic \tiny molto } opening #CENTER
