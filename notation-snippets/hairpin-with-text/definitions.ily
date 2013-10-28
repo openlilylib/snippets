@@ -1,4 +1,4 @@
-\version "2.14.2" % absolutely necessary!
+\version "2.17.29" % absolutely necessary!
 
 \header {
   snippet-title = "Hairpins with added text"
@@ -23,7 +23,7 @@
 hairpinWithCenteredText =
 #(define-music-function (parser location text) (markup?)
 #{
-  \once \override Voice.Hairpin #'after-line-breaking = 
+  \once \override Voice.Hairpin.after-line-breaking =
     #(lambda (grob)
       (let* ((stencil (ly:hairpin::print grob))
              (par-y (ly:grob-parent grob Y))
@@ -32,7 +32,7 @@ hairpinWithCenteredText =
                (ly:stencil-combine-at-edge
                  (ly:stencil-aligned-to stencil X CENTER)
                  Y dir
-                 (ly:stencil-aligned-to (grob-interpret-markup grob $text) X CENTER))
+                 (ly:stencil-aligned-to (grob-interpret-markup grob text) X CENTER))
                X LEFT))
              (staff-space (ly:output-def-lookup (ly:grob-layout grob) 'staff-space))
              (staff-line-thickness
