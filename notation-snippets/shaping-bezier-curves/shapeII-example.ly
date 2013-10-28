@@ -242,8 +242,79 @@
 }
 
 
+\score {
+  {
+    e2( d'' b'' d''')
+    \shapeII #'(()(rp 2 20)(rp 1 10)()) Slur
+    e2( d'' b'' d''')
+  }
+  \layout { }
+}
+
+\markup \vspace #1
+\markup \justify {
+  What's most important, this function is more robust against layout changes
+  than ordinary "\shape", and allows to specify more generic slur shapes.
+}
+\markup \vspace #0.5
+\markup \justify {
+  Take this example: first two measures are two nearly identical phrases
+  (the difference is just one accidental) which get two drastically different
+  slur shapes by default. 3rd measure contains the same phrase as the 2nd,
+  but with changed spacing - again we get a different default slur:
+}
+\markup \vspace #0.5
+
 SUp = \change Staff = "up"
 SDn = \change Staff = "down"
+
+\new PianoStaff <<
+  \new Staff = up \relative d {
+    \clef G
+    \key e \major
+    \time 3/16
+
+    \voiceTwo
+    \slurUp
+
+    \SDn \times 2/3 { b32( g' b }
+    \SUp \times 2/3 { d g e' }
+    \times 2/3 { d b g') }
+    |
+    \SDn \times 2/3 { b,,,32( g' b }
+    \SUp \times 2/3 { dis g e' }
+    \times 2/3 { d b g') }
+    |
+    \newSpacingSection
+    \override Score.SpacingSpanner #'common-shortest-duration =
+    #(ly:make-moment 1 70)
+    \SDn \times 2/3 { b,,,32( g' b }
+    \SUp \times 2/3 { dis g e' }
+    \times 2/3 { d b g') }
+  }
+  \new Staff = down {
+    \clef F
+    \key e \major
+    \time 3/16
+
+    s16*9
+  }
+>>
+
+\markup \justify {
+  Using ordinary "\shape," one would have to find three completely different
+  sets of offsets to achieve a similar slur in all cases.  And what's worse,
+  any change in the score may have a “butterfly effect” on the slurs -
+  it may change how LilyPond would typeset them by default, making user's
+  offset values completely wrong.
+}
+\markup \vspace #0.5
+\markup \justify {
+  With this new function, such mishap is very unlikely.
+  Note that just \bold one override gives \bold all slurs correct appearance:
+}
+\markup \typewriter "\shapeII #'((h)(p 0.5 55)(p 0.2 50)(h))"
+\markup \vspace #0.5
 
 \new PianoStaff <<
   \new Staff = up \relative d {
@@ -278,13 +349,3 @@ SDn = \change Staff = "down"
     s16*9
   }
 >>
-
-
-\score {
-  {
-    e2( d'' b'' d''')
-    \shapeII #'(()(rp 2 20)(rp 1 10)()) Slur
-    e2( d'' b'' d''')
-  }
-  \layout { }
-}

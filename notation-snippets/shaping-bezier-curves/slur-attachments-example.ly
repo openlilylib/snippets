@@ -1,7 +1,11 @@
-
 \version "2.17.29"
 % with earlier versions, \attach ... Slur will probably affect only the first slur
 \include "slur-attachments.ily"
+
+\paper {
+  ragged-right = ##t
+  indent = 0
+}
 
 \markup \justify {
   Slur attachment points may be specified using "\attach" function.
@@ -134,4 +138,13 @@
   \attach #'(0.5 1.5) Slur
   c'2 ( e')
   c''2 ( e'')
+}
+
+\markup \typewriter "\attach stem Slur"
+{
+  \slurUp
+  \attach stem Slur
+  a'2( c''
+  \break
+  a' g')
 }
