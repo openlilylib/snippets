@@ -7,6 +7,11 @@
   indent = 0
 }
 
+\header {
+  title = "Specifying slur end attachments"
+}
+
+\markup \vspace #2
 \markup \justify {
   Slur attachment points may be specified using "\attach" function.
   When there is a stem on the same side of the notehead as the slur,
@@ -80,9 +85,9 @@
   The function won't get confused when stems point in different
   directions, even if "\"stem\"" attachment was requested. It will
   simply attach appropriate end to the notehead.
-}
+} \noPageBreak
 \markup \typewriter "\attach stem Slur"
-
+\noPageBreak
 {
   \attach stem Slur
   c''2 ( f')
