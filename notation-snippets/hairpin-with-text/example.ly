@@ -8,10 +8,10 @@
 % `definitions.ily`.
 % Documentation (if any) should be in `README.md`.
 
-hairpinMolto = 
+hairpinMolto =
 \hairpinWithCenteredText \markup { \italic \tiny molto } opening #0
 
-hairpinMore = 
+hairpinMore =
 \hairpinWithCenteredText poco #CENTER #UP
 
 \layout { ragged-right = ##f }
