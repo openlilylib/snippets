@@ -203,3 +203,30 @@
   \shapeII #'((a 2.3 0.5)(0 . 2)(p 45 0.4)(1 0)) Slur
   c''1 ( d'')
 }
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%relative-polar
+
+
+\score {
+  {
+    c''2( d'' f'' d'')
+    e2( d'' b'' d''')
+    \shapeII #'(()(rp 50 0.3)(rp 50 0.3)()) Slur
+    c''2( d'' f'' d'')
+    e2( d'' b'' d''')
+  }
+  \layout { }
+}
+\score {
+  \inversion b' b'{
+    \slurDown
+    c''2( d'' f'' d'')
+    e2( d'' b'' d''')
+    \shapeII #'(()(rp 50 0.3)(rp 50 0.3)()) Slur
+    c''2( d'' f'' d'')
+    e2( d'' b'' d''')
+  }
+  \layout { }
+}
