@@ -13,12 +13,8 @@
   status = "working, unfinished"
 }
 
-#(define (single-point-spec? x)
-   (or (number-pair? x)
-       (and (not (null? x))
-            (or (number? (car x))
-                (symbol? (car x))))))
-
+% This is a duplication of code introduced for \offset.
+% TODO: make that function (in scm/music-functions.scm) define-public
 #(define (find-value-to-offset prop self alist)
    "Return the first value of the property @var{prop} in the property
    alist @var{alist} @em{after} having found @var{self}."
@@ -27,28 +23,35 @@
       (assoc-get prop alist)
       (assoc-get prop (cdr segment)))))
 
-#(define (get-head note-column dir)
-   ;; Return the dir-most head from notecolumn.
-   ;; This should be implemented in C++ with a Scheme interface.
-   (let ((elts (ly:grob-object note-column 'elements))
-         (init -inf.0)
-         (result #f))
-     (for-each
-      (lambda (idx)
-        (let* ((elt (ly:grob-array-ref elts idx)))
-          (if (grob::has-interface elt 'note-head-interface)
-              (let ((off (ly:grob-property elt 'Y-offset)))
-                (if (> (* off dir) init)
-                    (begin
-                     (set! init off)
-                     (set! result elt)))))))
-      (reverse (iota (ly:grob-array-length elts))))
-     result))
-
 shapeII =
 #(define-music-function (parser location all-specs item)
    (list? symbol-list-or-music?)
    (_i "TODO: write description when finished")
+
+   (define (single-point-spec? x)
+     (or (number-pair? x)
+         (and (not (null? x))
+              (or (number? (car x))
+                  (symbol? (car x))))))
+
+   (define (get-head note-column dir)
+     ;; Return the dir-most head from notecolumn.
+     ;; This should be implemented in C++ with a Scheme interface.
+     (let ((elts (ly:grob-object note-column 'elements))
+           (init -inf.0)
+           (result #f))
+       (for-each
+        (lambda (idx)
+          (let* ((elt (ly:grob-array-ref elts idx)))
+            (if (grob::has-interface elt 'note-head-interface)
+                (let ((off (ly:grob-property elt 'Y-offset)))
+                  (if (> (* off dir) init)
+                      (begin
+                       (set! init off)
+                       (set! result elt)))))))
+        (reverse (iota (ly:grob-array-length elts))))
+       result))
+
    (define (shape-curve grob)
      (let* ((orig (ly:grob-original grob))
             (siblings (if (ly:spanner? grob)
@@ -64,43 +67,33 @@ shapeII =
        ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;;;;;;;
        ;; functions for handling various types of specs: ;;;;;;;;;
 
-       (define (is-null-spec? x)
-         (eq? '() x))
-
-       (define (is-simple-offset-spec? x)
-         (number-pair? x))
-       ;; simple offset, the same as \shape was using till now:
-       (define (simple-offset x y)
-         (cons (+ (car x) (car y))
-           (+ (cdr x) (cdr y))))
-
-       (define (is-smart-offset-spec? x)
+       ;; a meta function for spec predicates that use symbols:
+       (define (spec-type? x sym-list)
          (and (list? x)
-              (every number? x)))
+              (symbol? (first x))
+              (member (first x) sym-list)))
+
+       (define is-null-spec? null?)
+
+       (define is-simple-offset-spec? number-pair?)
+       ;; the same as \shape was using till now.
+       (define simple-offset coord-translate)
+
+       (define is-smart-offset-spec? number-list?)
        ;; flip offset values for right points and downward slurs:
        (define (smart-offset x y i)
          (cons (+ (car x)(* -1 i (first y)))
            (+ (cdr x) (* slur-dir (second y)))))
 
        (define (is-absolute-spec? x)
-         (and (list? x)
-              (symbol? (first x))
-              (or (eq? 'a (first x))
-                  (eq? 'abs (first x))
-                  (eq? 'absolute (first x)))))
+         (spec-type? x '(a abs absolute)))
        (define (absolute-coords y)
          (cons (second y)(third y)))
 
        (define (is-polar-spec? x)
-         (and (list? x)
-              (symbol? (first x))
-              (or (eq? 'p (first x))
-                  (eq? 'polar (first x)))))
+         (spec-type? x '(p polar)))
        (define (is-abs-polar-spec? x)
-         (and (list? x)
-              (symbol? (first x))
-              (or (eq? 'ap (first x))
-                  (eq? 'absolute-polar (first x)))))
+         (spec-type? x '(ap absolute-polar)))
        ;; position a middle cpt relative to respective outer cpt,
        ;; in polar coordinates.
        (define (polar-coords points spec side absolute?)
@@ -119,10 +112,7 @@ shapeII =
            (cons x-coord y-coord)))
 
        (define (is-rel-polar-spec? x)
-         (and (list? x)
-              (symbol? (first x))
-              (or (eq? 'rp (first x))
-                  (eq? 'relative-polar (first x)))))
+         (spec-type? x '(rp relative-polar)))
        ;; adjust a middle cpt relative to its default polar-coordinates.
        ;; TODO: merge with the function above?
        (define (rel-polar-coords points spec side)
@@ -145,10 +135,7 @@ shapeII =
            (cons x-coord y-coord)))
 
        (define (is-notehead-spec? x)
-         (and (list? x)
-              (symbol? (first x))
-              (or (eq? 'h (first x))
-                  (eq? 'head (first x)))))
+         (spec-type? x '(h head)))
        ;; place slur end near the notehead.
        (define (notehead-placement default spec side)
          (let* ((bound (ly:spanner-bound grob side))
