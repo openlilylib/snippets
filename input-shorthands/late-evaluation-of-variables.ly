@@ -37,22 +37,19 @@ end = \relative c'' {
 
 % ``Late-bind'' variables using an arity-0 music function that looks up values
 % at function call time instead of variable assignment time.
-late =
-#(define-scheme-function
-  (parser location embedded-lilypond)
-  (list?)
-  (define-music-function
-   (parser location)
-   ()
-   (eval embedded-lilypond
-     (interaction-environment))))
+
+#(define-macro (late embedded-lilypond)
+   `(define-music-function
+     (parser location)
+     ()
+     ,embedded-lilypond))
 
 
-music = \late #'#{
+music = #(late #{
   \beginning
   \middlesection
   \end
-#}
+#})
 
 \score {
   % The music without the enharmonic change---complex key signature!
