@@ -100,8 +100,10 @@
   d4( d' b g g,8  f' e d c2)
 }
 \noPageBreak
-\markup {
-  And we now have a correctly shaped slur.
+\markup \justify {
+  And we now have a correctly shaped slur.  The function can also be used
+  to adjust other curves – just specify appropriate object name
+  (Slur, PhrasingSlur, Tie, etc.).
 }
 
 
