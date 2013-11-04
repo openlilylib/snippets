@@ -206,10 +206,9 @@ shapeII =
                 ((is-rel-polar-spec? spec)(rel-polar-coords current-state spec side))
                 ((is-notehead-spec? spec)(notehead-placement coords spec side))
                 (else (begin
-                       (display "Shape error: unknown specification type: ")
-                       (display spec)
-                       (format #t
-                         "\nUsing default coordinates for control-point ~a.\n"
+                       (ly:programming-error
+                        (_ "unknown control-point instruction type: ~a\nUsing default coordinates for control-point ~a.")
+                         spec
                          (+ which 1))
                        coords))))))
 
