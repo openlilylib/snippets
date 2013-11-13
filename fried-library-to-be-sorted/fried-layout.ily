@@ -1,10 +1,9 @@
 \version "2.17.3"
 
-%{PROJECT:
-  This file belongs to the project
-  "Oskar Fried. Complete Lieder"
-  edited from the original prints by Urs Liska and Alexander Gurdon
-%}
+% TODO: check if everything should be kept. add oll/snippets headers, add example.
+% see how this relates to `lied-stylesheet.ily` and possibly merge them.
+% update syntax to 2.18
+
 
 %{FILE:
   This file specifies global context properties

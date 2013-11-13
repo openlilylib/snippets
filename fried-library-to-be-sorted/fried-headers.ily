@@ -1,29 +1,8 @@
 \version "2.17.3"
-%{PROJECT:
-  This file is part of the project
-  "Oskar Fried. Complete Songs
-  Revised edition"
-  Edited from the original prints by
-  Alexander Gurdon (alexander.gurdon@tu-dortmund.de)
-  and
-  Urs Liska (mail@ursliska.de)
-  (c) sound-rel 2012 (http://www.sound-rel.de, info@sound-rel.de)
-  ISMN 979-0-70034-000-1 (Hardcover edition)
-  ISMN 979-0-70034-001-8 (Softcover edition)
 
-  Music input by Urs Liska (with some assistance of Henning Hraban Ramm and Janek Warchoł)
-  with generous help from the lilypond-user@gnu.org mailing list
-  Engraving (typographical finishing) by
-  Janek Warchoł (lemniskata.bernoullego@gmail.com)
-%}
-%{TYPE:
-  This file is part of the global configuration
-%}
-
-%{FILE:
-  This file defines the title block and the footer
-  which are common to the whole edition
-%}
+% TODO: see what's special here. add oll/snippets headers, add example.
+% probably change some names, don't use proprietary font, remove spurious comments(?)
+% update syntax to 2.18?
 
 \header {
   % Dummy header fields

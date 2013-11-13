@@ -1,8 +1,11 @@
 \version "2.17.3"
-% /includes/ulLibrary/pianoToolbox/pianoStaffShorthands.ily
+
+% TODO: add oll/snippets headers, add example.
+% split into several files? update syntax to 2.18?
+% move the layout stuff at the end to stylesheets?
+
 
 %{ Turn cross staff stems on and off
-
 %}
 
 % WARNING! Doesn't work with beamed notes.

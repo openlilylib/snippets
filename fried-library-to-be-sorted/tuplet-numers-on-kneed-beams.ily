@@ -1,3 +1,8 @@
+
+% TODO: there may be a newer version of this somewhere.  Ask David Nalesnik.
+% actually, i think he's working on a patch that would make Lily's default
+% behaviour correct.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% A function to position tuplet numbers next to kneed beams on a single
 %% staff and between staves. Will ignore tuplets on ordinary beams and

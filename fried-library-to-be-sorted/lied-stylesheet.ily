@@ -1,4 +1,10 @@
 \version "2.17.3"
+
+% TODO: check if everything should be kept. add oll/snippets headers, add example.
+% see how this relates to `fried-layout.ily` and possibly merge them.
+% update syntax to 2.18
+
+
 %{
   This file is part of ulLibrary (Urs Liska's LilyPond Toolbox)
 

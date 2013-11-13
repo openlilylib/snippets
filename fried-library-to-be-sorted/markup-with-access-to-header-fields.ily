@@ -1,3 +1,10 @@
+
+% TODO: 
+% is this still needed (maybe someone has improved default lily's behaviour)?
+% maybe there should be a bug report/feature request about this?
+% add oll/snippets headers, add example.
+
+
 % This function is originally copied from mark-up-title (file scm/titling.scm), 
 % which is lilypond's internal function to handle the title markups. I needed 
 % to replace the scopes and manually add the $defaultheader (which is internally 

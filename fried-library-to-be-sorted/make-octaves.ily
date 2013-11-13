@@ -1,3 +1,8 @@
+
+
+% TODO: add oll/snippets headers, add example.  Review description.
+
+
 %{
   Adding automatic octaves to a melody
   This macro allows you to get octaves from a sequence of single notes 

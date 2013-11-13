@@ -1,5 +1,15 @@
 \version "2.17.3"
-% /includes/ulLibrary/curvesToolbox/shapingCurves.ily
+
+%{
+  TODO:
+  
+  if im not mistaken, this is an old version of \shape that was printing a warning 
+  when the number of specified offsets didn't match the number of broken slur pieces.
+  Think how to incorporate this warning into new \shapeII.
+  
+%}
+
+
 
 %{
   This file is part of ulLibrary (Urs Liska's LilyPond Toolbox)

@@ -1,4 +1,7 @@
 \version "2.17.3"
+
+% TODO: what to do about this?
+
 %{PROJECT:
   This file belongs to the project
   "Oskar Fried. Complete Lieder"

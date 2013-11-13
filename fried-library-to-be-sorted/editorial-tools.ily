@@ -1,24 +1,6 @@
 \version "2.17.3"
-% /includes/ulLibrary/editorialToolbox/editorial.ily
 
-%{
-  This library is part of ulLibrary (Urs Liska's LilyPond Toolbox)
-  and may also be included separately.
-  It assumes that the project root contains any number of 
-  first level subdirectories containing the to-be-compiled .ly files
-  and a folder /includes/ulLibrary.
-  So this file is always accessible through the relative path "../includes/ulLibrary/editorialToolbox/editorial.ily
-  
-  The editorial toolbox contains 
-  functions to visualize editor's decisions and additions to the original music
-  through the usual editorial means (printing smaller grobs, dashing, parenthesizing)
-  
-  TODO: This file is conceptually meant to cover the full range of grobs, 
-  but is just at the beginning (implementing those objects that I've already encountered).
-  
-  This file is complemented by editorial_draftMode.ily
-  which highlights editor's amendements during the editing process.
-%}
+% TODO: add oll/snippets headers, add example. Move description to README? Split into several files?
 
 \include "../includes/ulLibrary/draftMode_colors.ily"
 

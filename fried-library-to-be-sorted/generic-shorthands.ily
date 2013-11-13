@@ -1,6 +1,9 @@
 \version "2.17.3"
 
-% /includes/ulLibrary/tweaks/grobSpecificTweaks.ily
+% TODO: add oll/snippets headers, add example.
+% split into several files
+% update syntax to 2.18?
+
 
 %{
   Move note heads right or left to avoid

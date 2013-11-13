@@ -1,4 +1,7 @@
-%\version "2.17.3"
+%\version "2.17.3" ?
+
+% TODO: add oll/snippets headers, add example.
+
 
 %{
   Scheme engraver that corrects stem-side staccato alignment if there are other articulations present.

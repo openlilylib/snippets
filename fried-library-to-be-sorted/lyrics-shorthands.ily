@@ -1,5 +1,7 @@
 \version "2.17.3"
-% /includes/ulLibrary/tweaks/lyrics.ily
+
+% TODO: what to do with this?  keep all shortcuts or what?
+% add oll/snippets headers, add example.
 
 %{
   This library is part of ulLibrary (Urs Liska's LilyPond Toolbox)
@@ -13,8 +15,6 @@
   - shorthands to align lyrics
   - functions to control melisma behaviour
 %}
-
-
 
 %%%%%%%%%%%%%%
 % Align lyrics

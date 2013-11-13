@@ -1,5 +1,7 @@
 \version "2.17.3"
 
+% TODO: add oll/snippets headers, add example.
+
 %{
   Scheme engraver that places double bar lines before time signature changes
   Provided by Jan-Peter Voigt
