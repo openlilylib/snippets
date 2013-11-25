@@ -17,11 +17,29 @@
 % TODO: make that function (in scm/music-functions.scm) define-public
 #(define (find-value-to-offset prop self alist)
    "Return the first value of the property @var{prop} in the property
-   alist @var{alist} @em{after} having found @var{self}."
+               alist @var{alist} @em{after} having found @var{self}."
 (let ((segment (member (cons prop self) alist)))
   (if (not segment)
       (assoc-get prop alist)
       (assoc-get prop (cdr segment)))))
+
+% Return the dir-most head from note-column.
+% TODO: implement in C++ with a Scheme interface.
+#(define (get-extremal-head note-column dir)
+   (let ((elts (ly:grob-object note-column 'elements))
+         (init -inf.0)
+         (result #f))
+     (for-each
+      (lambda (idx)
+        (let* ((elt (ly:grob-array-ref elts idx)))
+          (if (grob::has-interface elt 'note-head-interface)
+              (let ((off (ly:grob-property elt 'Y-offset)))
+                (if (> (* off dir) init)
+                    (begin
+                     (set! init off)
+                     (set! result elt)))))))
+      (reverse (iota (ly:grob-array-length elts))))
+     result))
 
 shapeII =
 #(define-music-function (parser location all-specs item)
@@ -33,24 +51,6 @@ shapeII =
          (and (not (null? x))
               (or (number? (car x))
                   (symbol? (car x))))))
-
-   (define (get-head note-column dir)
-     ;; Return the dir-most head from notecolumn.
-     ;; This should be implemented in C++ with a Scheme interface.
-     (let ((elts (ly:grob-object note-column 'elements))
-           (init -inf.0)
-           (result #f))
-       (for-each
-        (lambda (idx)
-          (let* ((elt (ly:grob-array-ref elts idx)))
-            (if (grob::has-interface elt 'note-head-interface)
-                (let ((off (ly:grob-property elt 'Y-offset)))
-                  (if (> (* off dir) init)
-                      (begin
-                       (set! init off)
-                       (set! result elt)))))))
-        (reverse (iota (ly:grob-array-length elts))))
-       result))
 
    (define (shape-curve grob)
      (let* ((orig (ly:grob-original grob))
@@ -67,42 +67,19 @@ shapeII =
        ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;;;;;;;
        ;; functions for handling various types of specs: ;;;;;;;;;
 
-       ;; a meta function for spec predicates that use symbols:
-       (define (spec-type? x sym-list)
-         (and (list? x)
-              (symbol? (first x))
-              (member (first x) sym-list)))
+       ;; flips offset values for right points and downward slurs
+       (define (symmetrical-offset coords offs side)
+         (cons (+ (car coords)(* -1 side (second offs)))
+           (+ (cdr coords) (* slur-dir (third offs)))))
 
-       (define is-null-spec? null?)
-
-       (define is-simple-offset-spec? number-pair?)
-       ;; the same as \shape was using till now.
-       (define simple-offset coord-translate)
-
-       (define is-smart-offset-spec? number-list?)
-       ;; flip offset values for right points and downward slurs:
-       (define (smart-offset x y i)
-         (cons (+ (car x)(* -1 i (first y)))
-           (+ (cdr x) (* slur-dir (second y)))))
-
-       (define (is-absolute-spec? x)
-         (spec-type? x '(a abs absolute)))
-       (define (absolute-coords y)
-         (cons (second y)(third y)))
-
-       (define (is-polar-spec? x)
-         (spec-type? x '(p polar)))
-       (define (is-abs-polar-spec? x)
-         (spec-type? x '(ap absolute-polar)))
-       ;; position a middle cpt relative to respective outer cpt,
-       ;; in polar coordinates.
+       ;; position a cpt in polar coordinates.
        (define (polar-coords points spec side absolute?)
          (let* ((x-dif (- (car (last points)) (car (first points))))
                 (y-dif (- (cdr (last points)) (cdr (first points))))
                 (slur-length (sqrt (+ (expt x-dif 2) (expt y-dif 2))))
-                (radius (* slur-length (second spec)))
+                (radius (* slur-length (third spec)))
                 (ref-slope (if absolute? 0 (atan (/ y-dif x-dif))))
-                (angl (+ (degrees->radians (third spec))
+                (angl (+ (degrees->radians (second spec))
                         (* -1 side ref-slope slur-dir)))
                 (ref-pt (if (= LEFT side)
                             (first points)
@@ -111,8 +88,6 @@ shapeII =
                 (y-coord (+ (cdr ref-pt) (* slur-dir radius (sin angl)))))
            (cons x-coord y-coord)))
 
-       (define (is-rel-polar-spec? x)
-         (spec-type? x '(rp relative-polar)))
        ;; adjust a middle cpt relative to its default polar-coordinates.
        ;; TODO: merge with the function above?
        (define (rel-polar-coords points spec side)
@@ -125,25 +100,23 @@ shapeII =
                 (x-dif (- (car point2) (car point1)))
                 (y-dif (- (cdr point2) (cdr point1)))
                 (dist (sqrt (+ (expt x-dif 2) (expt y-dif 2))))
-                (radius (* dist (second spec)))
+                (radius (* dist (third spec)))
                 (ref-slope (atan (/ y-dif x-dif)))
-                (angl (+ (degrees->radians (third spec))
+                (angl (+ (degrees->radians (second spec))
                         (* -1 side ref-slope slur-dir)))
 
                 (x-coord (- (car point1) (* side radius (cos angl))))
                 (y-coord (+ (cdr point1) (* slur-dir radius (sin angl)))))
            (cons x-coord y-coord)))
 
-       (define (is-notehead-spec? x)
-         (spec-type? x '(h head)))
-       ;; place slur end near the notehead.
+       ;; place slur end relative to the notehead.
        (define (notehead-placement default spec side)
-         (let* ((bound (ly:spanner-bound grob side))
-                (get-name (lambda (x) (assq-ref (ly:grob-property x 'meta) 'name)))
+         (let* ((get-name (lambda (x) (assq-ref (ly:grob-property x 'meta) 'name)))
+                (bound (ly:spanner-bound grob side))
                 (bound-name (get-name bound)))
            (if (not (eq? bound-name 'NoteColumn))
                default
-               (let* ((head (get-head bound slur-dir))
+               (let* ((head (get-extremal-head bound slur-dir))
                       (yoff (if (<= 2 (length spec))
                                 (third spec)
                                 1.2))
@@ -190,29 +163,45 @@ shapeII =
        ;; end of functions for handling specs. ;;;;;;;;;;;;;;;;;;;
        ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;;;;;;;;;;;;;;;;;
 
-       (define (calc-one-point current-state specs which)
-         (if (null? specs)
-             (list-ref current-state which)
-             (let ((coords (list-ref current-state which))
-                   (spec (list-ref specs which))
-                   (side (if (< 1 which) RIGHT LEFT)))
+       ;; does this spec start with specified symbol?
+       ;; TODO: check other list elements
+       (define (spec-type? spec symbol-list)
+         (and (list? spec)
+              (symbol? (first spec))
+              (member (first spec) symbol-list)))
+
+       (define (calc-one-point current-state specifications which-point)
+         (if (null? specifications)
+             (list-ref current-state which-point)
+             (let ((coords (list-ref current-state which-point))
+                   (spec (list-ref specifications which-point))
+                   (side (if (< 1 which-point) RIGHT LEFT)))
                (cond
-                ((is-null-spec? spec) coords)
-                ((is-simple-offset-spec? spec)(simple-offset coords spec))
-                ((is-smart-offset-spec? spec)(smart-offset coords spec side))
-                ((is-absolute-spec? spec)(absolute-coords spec))
-                ((is-polar-spec? spec)(polar-coords current-state spec side #f))
-                ((is-abs-polar-spec? spec)(polar-coords current-state spec side #t))
-                ((is-rel-polar-spec? spec)(rel-polar-coords current-state spec side))
-                ((is-notehead-spec? spec)(notehead-placement coords spec side))
+                ((null? spec) coords)
+                ((number-pair? spec)
+                 (coord-translate coords spec))
+                ((number-list? spec) ; 2-elem list -> pair:
+                 (coord-translate coords (cons (first spec)(second spec))))
+                ((spec-type? spec '(s sym symmetrical))
+                 (symmetrical-offset coords spec side))
+                ((spec-type? spec '(a abs absolute))
+                 (cons (second spec)(third spec)))
+                ((spec-type? spec '(p polar))
+                 (polar-coords current-state spec side #f))
+                ((spec-type? spec '(ap absolute-polar))
+                 (polar-coords current-state spec side #t))
+                ((spec-type? spec '(rp relative-polar))
+                 (rel-polar-coords current-state spec side))
+                ((spec-type? spec '(h head))
+                 (notehead-placement coords spec side))
                 (else (begin
                        (ly:programming-error
                         (_ "unknown control-point instruction type: ~a\nUsing default coordinates for control-point ~a.")
-                         spec
-                         (+ which 1))
+                        spec
+                        (+ which-point 1))
                        coords))))))
 
-       (define (calc-sibling specs)
+       (define (calc-one-sibling specs)
          ;; 'specs' is a set of instructions for one sibling.
          (let ((new-cpts default-cpts)
                ;; make \shape #'((foo)) equivalent to \shape #'((foo foo foo foo))
@@ -231,22 +220,21 @@ shapeII =
 
            ;; In some cases (most notably when using polar coordinates),
            ;; middle cpts need to access information that is available
-           ;; only after processing outer cpts (e.g. full slur length).
+           ;; only after processing outer cpts (e.g. slur length).
            (list-set! new-cpts 0 (calc-one-point new-cpts specs 0))
            (list-set! new-cpts 3 (calc-one-point new-cpts specs 3))
            (list-set! new-cpts 1 (calc-one-point new-cpts specs 1))
            (list-set! new-cpts 2 (calc-one-point new-cpts specs 2))
            new-cpts))
 
-       (define (helper sibs offs)
-         (if (pair? offs)
+       (define (find-specs-for-current-sibling sibs specs)
+         (if (pair? specs)
              (if (eq? (car sibs) grob)
-                 (calc-sibling (car offs))
-                 (helper (cdr sibs) (cdr offs)))
+                 (calc-one-sibling (car specs))
+                 (find-specs-for-current-sibling (cdr sibs) (cdr specs)))
              default-cpts))
 
-       ;; normalize all-specs, so that it always is a
-       ;; list-of-lists-of-single-point-specs.
+       ;; normalize all-specs:
        (if (or (null? all-specs)
                (any single-point-spec? all-specs))
            (set! all-specs (list all-specs)))
@@ -258,7 +246,7 @@ shapeII =
              (list (last all-specs))))
 
        (if (>= total-found 2)
-           (helper siblings all-specs)
-           (calc-sibling (car all-specs)))))
+           (find-specs-for-current-sibling siblings all-specs)
+           (calc-one-sibling (car all-specs)))))
 
    #{ \tweak control-points #shape-curve #item #})

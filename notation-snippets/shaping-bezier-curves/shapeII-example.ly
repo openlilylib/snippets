@@ -211,7 +211,7 @@ SDn = \change Staff = "down"
     "the position of control-points:"
   }
   "•  offsets relative to default positions (like in old \shape),"
-  "•  smart offsets,"
+  "•  symmetrical offsets,"
   "•  absolute coordinates,"
   "•  offsets relative to the noteheads,"
   "•  polar corrdinates."
@@ -317,7 +317,7 @@ separator = \markup \hspace #2
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\markup\large\bold "“Smart” (symmetrical) offsets"
+\markup\large\bold "Symmetrical offsets"
 \markup \vspace #1
 \markup \justify {
   It often happens that you want to shape the curve symmetrically –
@@ -328,28 +328,28 @@ separator = \markup \hspace #2
 }
 \markup \vspace #0.5
 \markup \justify {
-  In such situations, use “smart” offsets, which will be flipped
-  horizontally for control-points on the right.  The syntax for
-  smart offsets is to use 2-element lists instead of pairs:
-  \separator \small\typewriter "\shapeII #'((2 0)(2 0)(2 0)(2 0))"
+  In such situations, use symmetrical offsets, which will be flipped
+  horizontally for control-points on the right.  Prefix numbers with
+  with \italic symmetrical (or just \italic "s"), e.g.:
+  \separator \small\typewriter "\shapeII #'((s 2 0)(s 2 0)(s 2 0)(s 2 0))"
   will shorten the slur by 2 staffspaces on each end. It can be
-  written as \separator \small\typewriter "\shapeII #'((2 0))":
+  written as \separator \small\typewriter "\shapeII #'((s 2 0))":
 }
 \markup \vspace #0.5
 {
   d''1 ( g'' f'')
-  \shapeII #'((2 0)) Slur
+  \shapeII #'((s 2 0)) Slur
   d''1( g'' f'')
 }
-\markup {
-  \small\typewriter "\shapeII #'((-2 -1)(-1 2))"
+\markup \wordwrap {
+  \small\typewriter "\shapeII #'((s -2 -1)(s -1 2))"
   \separator is equivalent to \separator
   \small\typewriter "\shapeII #'((-2 . -1)(-1 . 2)(1 . 2)(2 . -1))":
 }
 \noPageBreak \markup \vspace #0.5 \noPageBreak
 {
   d''1 ( d'')
-  d''1-\shapeII #'((-2 -1)(-1 2)) ( d'')
+  d''1-\shapeII #'((s -2 -1)(s -1 2)) ( d'')
 }
 
 \markup{
@@ -358,7 +358,7 @@ separator = \markup \hspace #2
 }
 \noPageBreak
 \markup{
-  \small\typewriter "\shapeII #'(()(0.5 2))" \separator
+  \small\typewriter "\shapeII #'(()(s 0.5 2))" \separator
   will be equivalent to
 }
 \noPageBreak
@@ -374,13 +374,13 @@ separator = \markup \hspace #2
 <<
   {
     d''1 ( d'')
-    \shapeII #'(()(0.5 2)) Slur
+    \shapeII #'(()(s 0.5 2)) Slur
     d''1 ( d'')
   }
   \\
   {
     g'1 ( g')
-    \shapeII #'(()(0.5 2)) Slur
+    \shapeII #'(()(s 0.5 2)) Slur
     g'1 ( g')
   }
 >>
@@ -419,7 +419,7 @@ separator = \markup \hspace #2
 \markup \justify  {
   You can position control-points relative to respective noteheads.
   The offset is measured relative to the notehead center,
-  and it is flipped like “smart” offsets.
+  and it is flipped like “symmetrical” offsets.
   First two points will use left notehead as the reference,
   and last two points will use right notehead:
 }
@@ -455,11 +455,11 @@ separator = \markup \hspace #2
 }
 \noPageBreak
 \markup \vspace #0.5
-\markup\small\typewriter "\shapeII #'((a -0.5 0)(a 0 3)(1 1)(h 0 0))"
+\markup\small\typewriter "\shapeII #'((a -0.5 0)(a 0 3)(s 1 1)(h 0 0))"
 \noPageBreak \markup \vspace #0.2 \noPageBreak
 {
   c''1 ( d'')
-  \shapeII #'((a -0.5 0)(a 0 3)(1 1)(h 0 0)) Slur
+  \shapeII #'((a -0.5 0)(a 0 3)(s 1 1)(h 0 0)) Slur
   c''1 ( d'')
 }
 
@@ -471,7 +471,7 @@ separator = \markup \hspace #2
 \markup \justify {
   Arguably the most powerful way of specifying the positions of middle
   control-points is using polar coordinates.  Use the following syntax:
-  \small\typewriter { (polar \concat { \italic "radius angle" ) } }
+  \small\typewriter { (polar \concat { \italic "angle radius" ) } }
   (Instead of “polar” you can use “p” to save typing).
   How angle and radius are measured?  Look at the illustration below:
 }
@@ -492,13 +492,13 @@ separator = \markup \hspace #2
   (as well as between 3rd and 4th) "is 0.5 of the" blue line's length,
   and the red lines (which connect 1st point to the 2nd, and 3rd point
   to the 4th) are perpendicular to the blue line: \separator
-  \small\typewriter "\shapeII #'(()(polar 0.5 90)(polar 0.5 90)())"
+  \small\typewriter "\shapeII #'(()(polar 90 0.5)(polar 90 0.5)())"
 }
 \noPageBreak \markup \vspace #0.2 \noPageBreak
 {
   \override Slur #'stencil = #(special-control-points)
   e''1( e'')
-  \shapeII #'(()(polar 0.5 90)(polar 0.5 90)()) Slur
+  \shapeII #'(()(polar 90 0.5)(polar 90 0.5)()) Slur
   e''1( e'')
 }
 
@@ -511,14 +511,14 @@ separator = \markup \hspace #2
   and red lines:
 }
 \noPageBreak \markup \vspace #0.3 \noPageBreak
-\markup\small\typewriter"\shapeII #'(()(polar 0.5 60))"
+\markup\small\typewriter"\shapeII #'(()(polar 60 0.5))"
 {
   \override Slur #'stencil = #(special-control-points)
   <>_\markup \tiny "<----------------(default)--------------->"
   b'1( b')
   d'( g'')
   <>_\markup \tiny "<---------------(tweaked)-------------->"
-  \shapeII #'(()(polar 0.5 60)) Slur
+  \shapeII #'(()(polar 60 0.5)) Slur
   b'1( b')
   d'( g'')
 }
@@ -529,12 +529,12 @@ separator = \markup \hspace #2
 }
 \noPageBreak \markup \vspace #0.3 \noPageBreak
 \markup\small\typewriter
-"\shapeII #'((0 -2)(absolute-polar 0.5 88)(ap 0.2 20)())"
+"\shapeII #'((0 -2)(absolute-polar 88 0.5)(ap 20 0.2)())"
 \markup\vspace #0.2
 \score {
   {
     g2( d'' b'' d''')
-    \shapeII #'((0 -2)(absolute-polar 0.5 88)(ap 0.2 20)()) Slur
+    \shapeII #'((s 0 -2)(absolute-polar 88 0.5)(ap 20 0.2)()) Slur
     g2( d'' b'' d''')
   }
   \layout { }
@@ -544,7 +544,7 @@ separator = \markup \hspace #2
   to produce very similar shapes:
 }
 \noPageBreak \markup \vspace #0.3 \noPageBreak
-\markup\small\typewriter "\shapeII #'(()(p 0.7 30)(p 0.3 90)())"
+\markup\small\typewriter "\shapeII #'(()(p 30 0.7)(p 90 0.3)())"
 
 {
   <>_\markup \tiny "<----------(default)--------->"
@@ -552,7 +552,7 @@ separator = \markup \hspace #2
   e''4 ( e'' d'' d'' )
   \bar "||"
   <>_\markup \tiny "<---------(tweaked)-------->"
-  \shapeII #'(()(ap 0.7 30)(ap 0.3 90)()) Slur
+  \shapeII #'(()(p 30 0.7)(p 90 0.3)()) Slur
   e''2 ( d'')  |
   e''4 ( e'' d'' d'' )
 }
@@ -563,11 +563,11 @@ separator = \markup \hspace #2
   two times farther and 20 degrees more outwards than default placement:
 }
 \noPageBreak \markup \vspace #0.3 \noPageBreak
-\markup\small\typewriter "\shapeII #'(()(rp 2 20)()()) Slur"
+\markup\small\typewriter "\shapeII #'(()(rp 20 2)()()) Slur"
 \score {
   {
     b2( d'' a'' b'')
-    \shapeII #'(()(rp 2 20)()()) Slur
+    \shapeII #'(()(rp 20 2)()()) Slur
     b2( d'' a'' b'')
   }
   \layout { }
@@ -577,16 +577,16 @@ separator = \markup \hspace #2
   S-shaped slurs are easy to achieve with polar coordinates:
 }
 \noPageBreak \markup \vspace #0.3 \noPageBreak
-\markup\small\typewriter "\shapeII #'(()(p 0.5 -30)(p 0.5 30)())"
+\markup\small\typewriter "\shapeII #'(()(p -30 0.5)(p 30 0.5)())"
 {
-  \shapeII #'(()(p 0.5 -30)(p 0.5 30)()) Slur a1 ( g)
+  \shapeII #'(()(p -30 0.5)(p 30 0.5)()) Slur a1 ( g)
 }
 
-\markup\small\typewriter "\shapeII #'((h 0 1.8)(p 0.5 35)(p 0.5 -35)(h 0 -1.5))"
+\markup\small\typewriter "\shapeII #'((h 0 1.8)(p 35 0.5)(p -35 0.5)(h 0 -1.5))"
 \noPageBreak \markup \vspace #0.3 \noPageBreak
 \relative c''{
   c8( e b-> f d' a e-> g)
-  \shapeII #'((h 0 1.8)(p 0.5 35)(p 0.5 -35)(h 0 -1.5)) Slur
+  \shapeII #'((h 0 1.8)(p 35 0.5)(p -35 0.5)(h 0 -1.5)) Slur
   c8( e b-> f d' a e-> g)
 }
 
@@ -594,11 +594,11 @@ separator = \markup \hspace #2
   As you can see, shorthands work with polar coordinates:
 }
 \noPageBreak \markup \vspace #0.3 \noPageBreak
-\markup\small\typewriter "\shapeII #'(()(p 0.35 50))"
+\markup\small\typewriter "\shapeII #'(()(p 50 0.35))"
 \noPageBreak \markup \vspace #0.3 \noPageBreak
 \score {
   {
-    d''2-\shapeII #'(()(p 0.35 50)) ( f'' f'' d'')
+    d''2-\shapeII #'(()(p 50 0.35)) ( f'' f'' d'')
   }
   \layout { }
 }
@@ -694,7 +694,7 @@ separator = \markup \hspace #2
   "  a'1 ( c'')"
   "  a'1 ( c'')"
   "  a'1 ( c'')"
-  "  a'1-\shapeII #'(()(rp 1.7 20)) ( c'')"
+  "  a'1-\shapeII #'(()(rp 20 1.7)) ( c'')"
   "  a'1 ( c'')"
   "}"
 }
@@ -703,7 +703,7 @@ separator = \markup \hspace #2
   a'1 ( c'')
   a'1 ( c'')
   a'1 ( c'')
-  a'1-\shapeII #'(()(rp 1.7 20)) ( c'')
+  a'1-\shapeII #'(()(rp 20 1.7)) ( c'')
   a'1 ( c'')
 }
 
@@ -733,10 +733,10 @@ separator = \markup \hspace #2
   \hspace #20
   \column {
     \vspace #0.5
-    \small\typewriter "\shapeII #'(()(rp 2 15))"
+    \small\typewriter "\shapeII #'(()(rp 15 2))"
     \vspace #0.5
     \score {
-      { d''1-\shapeII #'(()(rp 2 15)) ( f'' \break a'' g'') }
+      { d''1-\shapeII #'(()(rp 15 2)) ( f'' \break a'' g'') }
       \layout { }
     }
   }
@@ -755,7 +755,7 @@ separator = \markup \hspace #2
   Note that just \bold one override gives \bold all slurs correct appearance:
 }
 \markup \vspace #0.5
-\markup \typewriter\small "\shapeII #'((h)(p 0.5 55)(p 0.2 50)(h 0 1.5)) Slur"
+\markup \typewriter\small "\shapeII #'((h)(p 55 0.5)(p 50 0.2)(h 0 1.5)) Slur"
 \markup \vspace #1
 
 \new PianoStaff <<
@@ -767,7 +767,7 @@ separator = \markup \hspace #2
     \voiceTwo
     \slurUp
 
-    \shapeII #'((h)(p 0.5 55)(p 0.2 50)(h 0 1.5)) Slur
+    \shapeII #'((h)(p 55 0.5)(p 50 0.2)(h 0 1.5)) Slur
 
     \SDn \times 2/3 { b32( g' b }
     \SUp \times 2/3 { d g e' }
