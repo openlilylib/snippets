@@ -5,7 +5,7 @@
   snippet-author = "Janek Warchoł, David Nalesnik"
   snippet-source = ""
   snippet-description = \markup {
-    
+
   }
   % add comma-separated tags to make searching more effective:
   tags = "slurs, ties, bezier curves, shape"
@@ -13,125 +13,240 @@
   status = "working, unfinished"
 }
 
-#(define (list->pair-list lst)
-   (cond ((null? lst) lst)
-     ((number-pair? (car lst))
-      (cons (car lst) (list->pair-list (cdr lst))))
-     ((list? (car lst))
-      (cons
-       (list->pair-list (car lst))
-       (list->pair-list (cdr lst))))
-     (else (cons (car lst) (cadr lst)))))
+% This is a duplication of code introduced for \offset.
+% TODO: make that function (in scm/music-functions.scm) define-public
+#(define (find-value-to-offset prop self alist)
+   "Return the first value of the property @var{prop} in the property
+               alist @var{alist} @em{after} having found @var{self}."
+(let ((segment (member (cons prop self) alist)))
+  (if (not segment)
+      (assoc-get prop alist)
+      (assoc-get prop (cdr segment)))))
+
+% Return the dir-most head from note-column.
+% TODO: implement in C++ with a Scheme interface.
+#(define (get-extremal-head note-column dir)
+   (let ((elts (ly:grob-object note-column 'elements))
+         (init -inf.0)
+         (result #f))
+     (for-each
+      (lambda (idx)
+        (let* ((elt (ly:grob-array-ref elts idx)))
+          (if (grob::has-interface elt 'note-head-interface)
+              (let ((off (ly:grob-property elt 'Y-offset)))
+                (if (> (* off dir) init)
+                    (begin
+                     (set! init off)
+                     (set! result elt)))))))
+      (reverse (iota (ly:grob-array-length elts))))
+     result))
 
 shapeII =
-#(define-music-function (parser location offsets item)
+#(define-music-function (parser location all-specs item)
    (list? symbol-list-or-music?)
-   (_i "Offset control-points of @var{item} by @var{offsets}.  The
-argument is a list of number pairs or list of such lists.  Each
-element of a pair represents an offset to one of the coordinates of a
-control-point.  If @var{item} is a string, the result is
-@code{\\once\\override} for the specified grob type.  If @var{item} is
-a music expression, the result is the same music expression with an
-appropriate tweak applied.")
+   (_i "TODO: write description when finished")
+
+   (define (single-point-spec? x)
+     (or (number-pair? x)
+         (and (not (null? x))
+              (or (number? (car x))
+                  (symbol? (car x))))))
+
    (define (shape-curve grob)
      (let* ((orig (ly:grob-original grob))
             (siblings (if (ly:spanner? grob)
                           (ly:spanner-broken-into orig) '()))
             (total-found (length siblings))
-            (function (assoc-get 'control-points
-                        (reverse (ly:grob-basic-properties grob))))
-            (coords (function grob))
-            (dir (ly:grob-property grob 'direction)))
+            (immutable-props (ly:grob-basic-properties grob))
+            (value (find-value-to-offset 'control-points shape-curve immutable-props))
+            (default-cpts (if (procedure? value)
+                              (value grob)
+                              value))
+            (slur-dir (ly:grob-property grob 'direction)))
 
-       (define (offset-control-points offsets)
-         (if (null? offsets)
-             coords
-             (map
-              (lambda (x y) (coord-translate x y))
-              coords offsets)))
+       ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;;;;;;;
+       ;; functions for handling various types of specs: ;;;;;;;;;
 
-       (define (helper sibs offs)
-         (if (pair? offs)
+       ;; flips offset values for right points and downward slurs
+       (define (symmetrical-offset coords offs side)
+         (cons (+ (car coords)(* -1 side (second offs)))
+           (+ (cdr coords) (* slur-dir (third offs)))))
+
+       ;; position a cpt in polar coordinates.
+       (define (polar-coords points spec side absolute?)
+         (let* ((x-dif (- (car (last points)) (car (first points))))
+                (y-dif (- (cdr (last points)) (cdr (first points))))
+                (slur-length (sqrt (+ (expt x-dif 2) (expt y-dif 2))))
+                (radius (* slur-length (third spec)))
+                (ref-slope (if absolute? 0 (atan (/ y-dif x-dif))))
+                (angl (+ (degrees->radians (second spec))
+                        (* -1 side ref-slope slur-dir)))
+                (ref-pt (if (= LEFT side)
+                            (first points)
+                            (last points)))
+                (x-coord (- (car ref-pt) (* side radius (cos angl))))
+                (y-coord (+ (cdr ref-pt) (* slur-dir radius (sin angl)))))
+           (cons x-coord y-coord)))
+
+       ;; adjust a middle cpt relative to its default polar-coordinates.
+       ;; TODO: merge with the function above?
+       (define (rel-polar-coords points spec side)
+         (let* ((point1 (if (= LEFT side)
+                            (first default-cpts)
+                            (last default-cpts)))
+                (point2 (if (= LEFT side)
+                            (second default-cpts)
+                            (third default-cpts)))
+                (x-dif (- (car point2) (car point1)))
+                (y-dif (- (cdr point2) (cdr point1)))
+                (dist (sqrt (+ (expt x-dif 2) (expt y-dif 2))))
+                (radius (* dist (third spec)))
+                (ref-slope (atan (/ y-dif x-dif)))
+                (angl (+ (degrees->radians (second spec))
+                        (* -1 side ref-slope slur-dir)))
+
+                (x-coord (- (car point1) (* side radius (cos angl))))
+                (y-coord (+ (cdr point1) (* slur-dir radius (sin angl)))))
+           (cons x-coord y-coord)))
+
+       ;; place slur end relative to the notehead.
+       (define (notehead-placement default spec side)
+         (let* ((get-name (lambda (x) (assq-ref (ly:grob-property x 'meta) 'name)))
+                (bound (ly:spanner-bound grob side))
+                (bound-name (get-name bound)))
+           (if (not (eq? bound-name 'NoteColumn))
+               default
+               (let* ((head (get-extremal-head bound slur-dir))
+                      (yoff (if (<= 2 (length spec))
+                                (third spec)
+                                1.2))
+                      (xoff (if (<= 3 (length spec))
+                                (second spec)
+                                0))
+                      ;; in case of cross-staff curves:
+                      (refp (ly:grob-system grob))
+                      (ref-bound (ly:spanner-bound grob LEFT))
+                      (ref-y (ly:grob-relative-coordinate ref-bound refp Y))
+                      (my-y (ly:grob-relative-coordinate bound refp Y))
+                      (cross-staff-correction (- my-y ref-y))
+                      ;; UGH!! I have no idea why this is needed, but without this correction
+                      ;; the example below renders wrongly:
+                      ;; { d''1-\shapeII #'(() (()()()(head))) ( f'' \break a'' g'') }
+                      ;; the if clause is necessary because otherwise the 'fix' will
+                      ;; break the cross-staff case.  UGH!!
+                      (ugh-correction
+                       (if (ly:grob-property grob 'cross-staff) ; returns boolean
+                           0.0
+                           (- (car (ly:grob-property bound 'Y-extent))
+                             (car (ly:grob-extent bound refp Y)))))
+                      (cross-staff-correction (+ cross-staff-correction ugh-correction))
+
+                      (head-yoff (+ (ly:grob-property head 'Y-offset)
+                                   cross-staff-correction))
+                      (head-yext (coord-translate
+                                  (ly:grob-property head 'Y-extent)
+                                  head-yoff))
+                      (head-y-mid (+ (* 0.5 (car head-yext))
+                                    (* 0.5 (cdr head-yext))))
+
+                      (ref-x (ly:grob-relative-coordinate ref-bound refp X))
+                      (head-x (ly:grob-relative-coordinate head refp X))
+                      (head-xoff (- head-x ref-x))
+                      (head-xext (coord-translate
+                                  (ly:grob-property head 'X-extent)
+                                  head-xoff))
+                      (head-x-mid (+ (* 0.5 (car head-xext))
+                                    (* 0.5 (cdr head-xext)))))
+                 (cons (+ (* -1 side xoff) head-x-mid)
+                   (+ (* slur-dir yoff) head-y-mid))))))
+
+       ;; end of functions for handling specs. ;;;;;;;;;;;;;;;;;;;
+       ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;;;;;;;;;;;;;;;;;;
+
+       ;; does this spec start with specified symbol?
+       ;; TODO: check other list elements
+       (define (spec-type? spec symbol-list)
+         (and (list? spec)
+              (symbol? (first spec))
+              (member (first spec) symbol-list)))
+
+       (define (calc-one-point current-state specifications which-point)
+         (if (null? specifications)
+             (list-ref current-state which-point)
+             (let ((coords (list-ref current-state which-point))
+                   (spec (list-ref specifications which-point))
+                   (side (if (< 1 which-point) RIGHT LEFT)))
+               (cond
+                ((null? spec) coords)
+                ((number-pair? spec)
+                 (coord-translate coords spec))
+                ((number-list? spec) ; 2-elem list -> pair:
+                 (coord-translate coords (cons (first spec)(second spec))))
+                ((spec-type? spec '(s sym symmetrical))
+                 (symmetrical-offset coords spec side))
+                ((spec-type? spec '(a abs absolute))
+                 (cons (second spec)(third spec)))
+                ((spec-type? spec '(p polar))
+                 (polar-coords current-state spec side #f))
+                ((spec-type? spec '(ap absolute-polar))
+                 (polar-coords current-state spec side #t))
+                ((spec-type? spec '(rp relative-polar))
+                 (rel-polar-coords current-state spec side))
+                ((spec-type? spec '(h head))
+                 (notehead-placement coords spec side))
+                (else (begin
+                       (ly:programming-error
+                        (_ "unknown control-point instruction type: ~a\nUsing default coordinates for control-point ~a.")
+                        spec
+                        (+ which-point 1))
+                       coords))))))
+
+       (define (calc-one-sibling specs)
+         ;; 'specs' is a set of instructions for one sibling.
+         (let ((new-cpts default-cpts)
+               ;; make \shape #'((foo)) equivalent to \shape #'((foo foo foo foo))
+               ;; and \shape #'((foo bar)) to \shape #'((foo bar bar foo)):
+               (specs (cond
+                       ((= 1 (length specs))
+                        (make-list 4 (car specs)))
+                       ((= 2 (length specs))
+                        (list (first specs)
+                          (second specs)
+                          (second specs)
+                          (first specs)))
+                       ((= 3 (length specs))
+                        (append specs '(())))
+                       (else specs))))
+
+           ;; In some cases (most notably when using polar coordinates),
+           ;; middle cpts need to access information that is available
+           ;; only after processing outer cpts (e.g. slur length).
+           (list-set! new-cpts 0 (calc-one-point new-cpts specs 0))
+           (list-set! new-cpts 3 (calc-one-point new-cpts specs 3))
+           (list-set! new-cpts 1 (calc-one-point new-cpts specs 1))
+           (list-set! new-cpts 2 (calc-one-point new-cpts specs 2))
+           new-cpts))
+
+       (define (find-specs-for-current-sibling sibs specs)
+         (if (pair? specs)
              (if (eq? (car sibs) grob)
-                 (offset-control-points (car offs))
-                 (helper (cdr sibs) (cdr offs)))
-             coords))
+                 (calc-one-sibling (car specs))
+                 (find-specs-for-current-sibling (cdr sibs) (cdr specs)))
+             default-cpts))
 
-       ;; Allow (0 0) as a shorthand for (0 . 0).
-       ;; This must be done before next step,
-       ;; because we look for pairs there.
-       (set! offsets (list->pair-list offsets))
+       ;; normalize all-specs:
+       (if (or (null? all-specs)
+               (any single-point-spec? all-specs))
+           (set! all-specs (list all-specs)))
 
-       ;; Offsets may be given in a variety of formats:
-       ;; (1) an empty list,
-       ;; (2) a number-pair-list (used for unbroken curves), or
-       ;; (3) a list of number-pair-lists (for curves crossing a linebreak).
-       ;; In order to easily work with these possibilities (and not require
-       ;; overly confusing input from the user), we normalize (1) and (2),
-       ;; by converting each to (3).
-       ;; '() ==> '(())
-       ;; '((0 . 1) ... ) ==> '( ((0 . 1) ... ) )
-       ;;
-       ;; WARNING: since we allow () to be a shorthand for (0 . 0),
-       ;; we need to handle tricky constructs like '(()(0 . 1)()())
-       ;; (which is a list of offsets for ONE slur, so must be normalized).
-       (if (or (null? offsets)
-               (any number-pair? offsets))
-           (set! offsets (list offsets)))
-
-       ;; convert () to (0 . 0), but only on the appropriate level.
-       ;; I.e. '((()(0 . 1)(0 . 1)())) should be converted to
-       ;; '(((0 . 0)(0 . 1)(0 . 1)(0 . 0))), but
-       ;; '(() ((0 . 1)(0 . 1)(0 . 1)(0 . 1))) shouldn't be converted to
-       ;; '((0 . 0) ((0 . 1)(0 . 1)(0 . 1)(0 . 1)))
-       (set! offsets
-             (map (lambda (onesib)
-                    (map (lambda (oneoff)
-                           (if (not (pair? oneoff))
-                               (cons 0 0)
-                               oneoff))
-                      onesib))
-               offsets))
-
-       ;; if only one pair of offsets is supplied,
-       ;; use it for all control-points.  I.e.,
-       ;; \shape #'((0 . 2)) should be equivalent to
-       ;; \shape #'((0 . 2)(0 . 2)(0 . 2)(0 . 2))
-       ;;
-       ;; if two pairs of offsets are supplied,
-       ;; use them X-symmetrically for the other two.  I.e.,
-       ;; \shape #'((-1 . 1)(2 . 5)) should be equivalent to
-       ;; \shape #'((-1 . 1)(2 . 5)(-2 . 5)(1 . 1))
-       (set! offsets
-             (map (lambda (x)
-                    (cond
-                     ((= 1 (length x))
-                      (make-list 4 (car x)))
-                     ((= 2 (length x))
-                      (list (first x)
-                        (second x)
-                        (cons (- (car (second x)))
-                          (cdr (second x)))
-                        (cons (- (car (first x)))
-                          (cdr (first x)))))
-                     (else x)))
-               offsets))
-
-       ;; For downward slurs, flip the offsets vertically
-       ;; so that the same override could be applied to similar
-       ;; upward and downward slurs.
-       (if (eq? dir DOWN)
-           (set! offsets
-                 (map
-                  (lambda (onesib)
-                    (map
-                     (lambda (oneoff)
-                       (cons (car oneoff)
-                         (* -1 (cdr oneoff))))
-                     onesib))
-                  offsets)))
+       ;; if there are more siblings than specifications,
+       ;; reuse last specification for remaining siblings.
+       (if (> (- total-found (length all-specs)) 0)
+           (append! all-specs
+             (list (last all-specs))))
 
        (if (>= total-found 2)
-           (helper siblings offsets)
-           (offset-control-points (car offsets)))))
+           (find-specs-for-current-sibling siblings all-specs)
+           (calc-one-sibling (car all-specs)))))
+
    #{ \tweak control-points #shape-curve #item #})
