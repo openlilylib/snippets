@@ -8,6 +8,7 @@
     Simple, user-friendly way to define custom dynamics
     with minimal fuss.  Accepts markups and plain text definitions.
   }
+  snippet-dedication = "dedicated to Marc and Tine Hohl :-)"
   % add comma-separated tags to make searching more effective:
   tags = "dynamics"
   % is this snippet ready?  See meta/status-values.md
