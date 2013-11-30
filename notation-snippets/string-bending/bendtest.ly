@@ -1,13 +1,27 @@
-\version "2.14.0"
+\version "2.16.2"
+
 \include "bend.ly"
 
 \pointAndClickOff
 
+% #(ly:set-option 'debug-skylines)
+
 \paper {
    indent = 0
    ragged-right = ##f
-   %ragged-bottom = ##f
-   %ragged-last-bottom= ##f
+   ragged-bottom = ##f
+   ragged-last-bottom= ##f
+}
+
+\layout {
+  \context {
+    \Staff
+    \override StringNumber #'stencil = ##f
+    \override VerticalAxisGroup #'default-staff-staff-spacing =
+      #'((basic-distance . 12)
+         (minimum-distance . 12)
+         (padding . 1))
+  }
 }
 
 %% the test
@@ -29,22 +43,25 @@ test = \relative c'' {
   % elegant here, I hope that there will be a better solution...
   \bendGrace { \preBendHold c8( } d2)  r2
   \bendGrace { \preBendRelease c8( d)( } c2)  r2
-  c4 ( es) e\2 ( gis\2 ) %{\break
+  c4 ( es) e\2 ( gis\2 )
+  %%{
+  \break
   % quarter tone bends are not yet supported as they should be, but
   % the bend amount is calculated correctly ;-)
-  c,4 ( cih ) c4 ( cisih )
-  % I hope that in future releases the tie will recognize automagically
-  % that he ties to a note which is bent, but I don't know how (yet).
+  %c,4 ( cih ) c4 ( cisih )
+  %% I hope that in future releases the tie will recognize automagically
+  %% that he ties to a note which is bent, but I don't know how (yet).
   \bendGrace c'8 ( \holdBend d2 ) ~ d2 ( c1 )
   c4 ( \shiftBend d) ( e2 )
   \bendOff
-  % switching bends off works apparently
+  %% switching bends off works apparently
   c,4 ( e ) c4 ( f )
-  c'4 ( b ) c4 ( a ) %}
+  c'4 ( b ) c4 ( a )
+  %}
 }
 
 %{
-\markup { First attempt: pointed slurs have a fixed height. }
+\markup \wordwrap { First attempt: pointed slurs have a fixed height. }
 
 \score {
   <<
@@ -65,9 +82,12 @@ test = \relative c'' {
 }
 
 \pageBreak
-
-\markup {Second variant: pointed slurs are drawn tangential to the slur's
-starting point and end point.}
+%}
+%{
+\markup \wordwrap {
+	Second variant: pointed slurs are drawn tangential to the slur's
+	starting point and end point.
+}
 
 \score {
   <<
@@ -88,10 +108,15 @@ starting point and end point.}
 }
 
 \pageBreak
-
-\markup {Third variant: the coordinates of the point are half-way between the
-second and the third point of the control points for the slur's bezier curve.}
 %}
+%%{
+\markup \wordwrap {
+	Third variant: the coordinates of the point are half-way between the
+	second and the third point of the control points for the slur's bezier
+	curve.
+}
+
+
 \score {
   <<
     \new Staff {
@@ -109,3 +134,4 @@ second and the third point of the control points for the slur's bezier curve.}
     }
   >>
 }
+%}

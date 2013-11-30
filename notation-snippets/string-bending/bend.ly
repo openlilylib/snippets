@@ -1,5 +1,5 @@
 %
-% bend.ly
+% bend.ly (revised)
 %
 % preliminary tests for drawing bends
 % 2011-03-11
@@ -12,8 +12,8 @@
 % - simplify \preBend and \holdBend usage
 % - ...
 
-#(display "\n\nbend.ly ─ 2011-03-11\n\n")
-
+% Slightly revised by Thomas Morley for "2.16.2"
+#(display "\n\nbend.ly ─ 2011-03-11 (revised: 2013-07-16)\n\n")
 
 %%% sizes and values (to be changed/adapted):
 
@@ -58,6 +58,7 @@
                             (else "")))))
 
 %%% markup commands
+
 #(define-markup-command (pointedSlur layout props thickness bx by mx my ex ey)
   (number? number? number? number? number? number? number?)
   (interpret-markup layout props
@@ -91,8 +92,13 @@
             #:hspace 0
             #:translate (cons (- end-x 1.2) (+ end-y 0.5))
             #:fontsize -2
-            #:bold #:center-column (outstring))))
-
+            #:bold
+;; changed:
+            ;#:center-column (outstring)
+            outstring
+            )))
+%% Delete?
+%{
 #(define-markup-command (drawHoldBend layout props
   thickness begin-x end-x line-y)
   (number? number? number? number?)
@@ -102,7 +108,7 @@
                         ~f ~f moveto
                         ~f ~f lineto
                         stroke" thickness begin-x line-y end-x line-y))))
-
+%}
 #(define-markup-command (drawHoldBendWithArrow layout props
   thickness begin-x begin-y end-x end-y arrow-lx arrow-rx arrow-y outstring)
   (number? number? number? number? number? number? number? number? string?)
@@ -130,6 +136,7 @@
             #:hspace 0
             #:translate (cons (- begin-x 1.2) (+ end-y 0.5))
             #:fontsize -2
+;; Why does it work here??
             #:bold #:center-column (outstring))))
 
 #(define-markup-command (drawHoldBendArrowOnly layout props
@@ -154,8 +161,11 @@
             #:hspace 0
             #:translate (cons (- begin-x 1.2) (+ end-y 0.5))
             #:fontsize -2
+;; Why does it work here??
             #:bold #:center-column (outstring))))
 
+%% The markup-command 'draw-dashed-line' was implemented with version 2.17.x
+%% TODO: use 'draw-dashed-line' instead. See also 'tie::draw-hold-bend' below.
 #(define-markup-command (drawDashedLine layout props
   thickness begin-x end-x line-y)
   (number? number? number? number?)
@@ -169,7 +179,6 @@
                         thickness begin-x line-y end-x line-y))))
 
 %%% callbacks
-
 #(define-public (slur::draw-pointed-slur grob)
   (let* (;;(pointed-slur-height 2.0)
          ;;(bend-line-thickness 0.1)
@@ -261,8 +270,9 @@
          (left-tab-note-head (ly:grob-property left-bound 'cause))
          (right-tab-note-head (ly:grob-property right-bound 'cause))
          (control-points (ly:grob-property grob 'control-points))
-         (left-point (car control-points))
-         (right-point (cadddr control-points))
+;;changed: car and cadddr changed to: first and last
+         (left-point (first control-points))
+         (right-point (last control-points))
          (left-pitch  (ly:event-property (event-cause left-bound) 'pitch))
          (right-pitch (ly:event-property (event-cause right-bound) 'pitch))
          (quarterdiff (- (ly:pitch-quartertones right-pitch)
@@ -284,20 +294,19 @@
             ;; bend down
             (let* ((y-offset (cdr (ly:grob-extent left-tab-note-head left-tab-note-head Y)))
                    (temp begin-y))
-
                   (set! begin-y end-y) ;; swap begin-y/end-y
                   (set! end-y (+ temp y-offset))
                   (set! arrow-y (+ end-y bend-arrow-height))
                   (set! bend-amount "")
                   (ly:grob-set-property! right-tab-note-head 'display-cautionary #t)
                   (ly:grob-set-property! right-tab-note-head 'stencil tab-note-head::print))
-
             ;; bend up
             (let* ((x-offset (/ (cdr (ly:grob-extent left-tab-note-head left-tab-note-head X))
                                 2)))
 
                   (set! begin-x (+ begin-x x-offset))
                   (ly:grob-set-property! right-tab-note-head 'transparent #t)))
+
         ;; draw resulting bend arrow
         (grob-interpret-markup grob
                                (make-drawBendArrow-markup
@@ -305,6 +314,7 @@
                                  begin-x middle-x end-x begin-y end-y
                                  arrow-lx arrow-rx arrow-y
                                  bend-amount))))
+
 
 #(define-public (slur::draw-shifted-bend-arrow grob)
   (let* ((staff-symbol (ly:grob-object grob 'staff-symbol))
@@ -333,7 +343,6 @@
          (arrow-y (- end-y bend-arrow-height))
          (middle-x (+ begin-x (* bend-ratio (- end-x begin-x))))
          (bend-amount (quarterdiff->string quarterdiff)))
-
         (if (< quarterdiff 0)
             ;; bend down
             (let* ((y-offset (cdr (ly:grob-extent left-tab-note-head left-tab-note-head Y)))
@@ -450,7 +459,13 @@
         (grob-interpret-markup grob
                                (make-drawDashedLine-markup
                                  bend-line-thickness
-                                 begin-x end-x line-y))))
+                                 begin-x end-x line-y)
+;; with 2.17.21 one could use:
+                             ;(make-translate-markup (cons 0 line-y)
+                             ;  (make-override-markup '(on . 0.3)
+                             ;    (make-draw-dashed-line-markup
+                             ;      (cons end-x 0))))
+                                 )))
 
 %%% music functions
 
@@ -466,7 +481,10 @@ bendOff = {
 
 bendGrace = #(define-music-function (parser location note) (ly:music?)
   #{
-    \once \override Voice.Stem #'stencil = ##f
+%% changed: 'stencil from #f to point-stencil
+    \once \override Voice.Stem #'stencil = #point-stencil
+%% changed: override for Flag added
+    \once \override Voice.Flag #'stencil = ##f
     \once \override Voice.Stem #'direction = #DOWN
     \once \override Voice.Slur #'direction = #UP
     \grace $note
