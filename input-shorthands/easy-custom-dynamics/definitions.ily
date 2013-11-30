@@ -12,13 +12,8 @@
   % add comma-separated tags to make searching more effective:
   tags = "dynamics"
   % is this snippet ready?  See meta/status-values.md
-  status = ""
+  status = "ready"
 }
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-% here goes the snippet: %
-%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 #(use-modules (ice-9 regex))
 
@@ -35,8 +30,7 @@ dynamic =
                             (if (string-match "^[mrzfps]*$" word)
                                 (markup #:dynamic word)
                                 (markup #:normal-text #:italic word)))
-                          split-text))
-              )
+                          split-text)))
          #{
            #(make-dynamic-script (make-line-markup formatted))
          #})
@@ -45,20 +39,3 @@ dynamic =
        #{
          #(make-dynamic-script (markup #:normal-text text))
        #}))
-
-%%%%%%%%%%%%%%%%%%%
-% usage examples: %
-%%%%%%%%%%%%%%%%%%%
-
-{
-  c'1 -\dynamic sfffzppppp
-}
-{
-  c' -\dynamic "molto f ekspressivvo"
-}
-{
-  c' -\dynamic fff_I_can_use_underscores
-}
-{
-  c' -\dynamic \markup { lolish \huge \dynamic pp \italic ekspress, \caps "markups ftw!" }
-}
