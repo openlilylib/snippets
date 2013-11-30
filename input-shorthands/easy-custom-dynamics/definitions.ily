@@ -15,6 +15,30 @@
   status = "ready"
 }
 
+%{
+  TODOs and notes:
+  ----------------
+
+  Of course I want to eventually add this function as official lily command.
+
+  There should be some easy way of specifying roman font, for example for
+  "1st time p, 2nd f" and the like.  I suppose that
+
+  Other things that would be nice to support:
+  - text attached to hairpins
+  - parenthesized and bracketed dynamics (similar to optional clef transposition)
+
+  Later on, it would be great to have a shorthand for the function -
+  for example ! (it fits the context):
+  !ppppppppp
+  !sfzp
+  !"|molto| f"
+  !p_espressivo
+
+  A problem: when i \override DynamicText.font-name, only the font of the
+  additional text should change.  Currently, the dynamic letter itself changes.
+%}
+
 #(use-modules (ice-9 regex))
 
 dynamic =
