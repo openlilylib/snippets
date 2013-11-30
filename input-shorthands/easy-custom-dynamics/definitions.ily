@@ -18,7 +18,7 @@
 #(use-modules (ice-9 regex))
 
 dynamic =
-#(define-music-function (parser location text) (markup?)
+#(define-event-function (parser location text) (markup?)
    (if (string? text)
        (let* ((underscores-replaced
                (string-map
