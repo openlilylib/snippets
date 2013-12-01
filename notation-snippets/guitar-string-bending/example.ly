@@ -2,10 +2,6 @@
 
 \include "definitions.ily"
 
-\pointAndClickOff
-
-% #(ly:set-option 'debug-skylines)
-
 \paper {
   indent = 0
   ragged-right = ##f
@@ -23,6 +19,8 @@
        (padding . 1))
   }
 }
+
+% TODO: this should be split into separate cases, and comments turned into description markups:
 
 test = \relative c'' {
   \bendOn
@@ -59,7 +57,7 @@ test = \relative c'' {
 }
 
 \markup \wordwrap {
-  Third variant: the coordinates of the point are half-way between the
+  The coordinates of the point are half-way between the
   second and the third point of the control points for the slur's bezier
   curve.
 }
@@ -68,7 +66,7 @@ test = \relative c'' {
   <<
     \new Staff {
       \new Voice {
-        \override Voice.Slur #'stencil = #slur::draw-another-alternate-pointed-slur
+        \override Voice.Slur #'stencil = #slur::draw-pointed-slur
         \clef "G_8"
         \test
       }

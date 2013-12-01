@@ -13,21 +13,13 @@
   status = "undocumented"
 }
 
-% bend.ly (revised)
-%
-% preliminary tests for drawing bends
-% 2011-03-11
-%
-% Marc Hohl
-%
 % TODO:
 % - draw dashed line for \holdBend
 % - enable consecutive bend ups
 % - simplify \preBend and \holdBend usage
 % - ...
 
-% Slightly revised by Thomas Morley for "2.16.2"
-#(display "\n\nbend.ly ─ 2011-03-11 (revised: 2013-07-16)\n\n")
+#(display "\nbend.ly ─ 2011-03-11 (revised: 2013-07-16)\n\n")
 
 %%% sizes and values (to be changed/adapted):
 
@@ -47,7 +39,6 @@
 % the distance between the end of a bend and the consecuting second one
 #(define bend-shift-dy 2.75)
 
-
 % the height of the bend arrow head:
 #(define bend-arrow-height 1.25)
 
@@ -57,6 +48,8 @@
 % the distance between the tablature line where a bend starts
 % and the starting point in vertical direction:
 #(define bend-y-offset 0.35)
+
+% TODO: if it's 'internal', should it be define-public?? --jw
 
 %%% internal commands
 #(define-public (quarterdiff->string quarterdiff)
@@ -111,18 +104,6 @@ arrow-rx arrow-y)
        ;#:center-column (outstring)
        outstring
        )))
-%% Delete?
-%{
-  #(define-markup-command (drawHoldBend layout props
-  thickness begin-x end-x line-y)
-  (number? number? number? number?)
-  (interpret-markup layout props
-  (markup #:postscript
-  (ly:format "~f setlinewidth
-  ~f ~f moveto
-  ~f ~f lineto
-  stroke" thickness begin-x line-y end-x line-y))))
-%}
 #(define-markup-command (drawHoldBendWithArrow layout props
                           thickness begin-x begin-y end-x end-y arrow-lx arrow-rx arrow-y outstring)
    (number? number? number? number? number? number? number? number? string?)
@@ -187,14 +168,14 @@ arrow-rx arrow-y)
    (interpret-markup layout props
      (markup #:postscript
        (ly:format "~f setlinewidth
-                                                            ~f ~f moveto
+                        ~f ~f moveto
                         ~f ~f lineto
                         stroke"
 thickness begin-x line-y end-x line-y))))
 
 %%% callbacks
 
-#(define-public (slur::draw-another-alternate-pointed-slur grob)
+#(define-public (slur::draw-pointed-slur grob)
    (let* ((control-points (ly:grob-property grob 'control-points))
           (direction (ly:grob-property grob 'direction))
           (first-point (car control-points))
@@ -438,9 +419,7 @@ bendOff = {
 bendGrace =
 #(define-music-function (parser location note) (ly:music?)
    #{
-     %% changed: 'stencil from #f to point-stencil
      \once \override Voice.Stem #'stencil = #point-stencil
-     %% changed: override for Flag added
      \once \override Voice.Flag #'stencil = ##f
      \once \override Voice.Stem #'direction = #DOWN
      \once \override Voice.Slur #'direction = #UP
