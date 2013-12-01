@@ -2,7 +2,7 @@
 
 \header {
   snippet-title = "Guitar string bending notation"
-  snippet-author = "Marc Hohl, Thomas Morley"
+  snippet-author = "Marc Hohl"
   snippet-source = "http://code.google.com/p/lilypond/issues/detail?id=1196"
   snippet-description = \markup {
     Please add brief description
