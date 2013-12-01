@@ -23,31 +23,19 @@
 
 %%% sizes and values (to be changed/adapted):
 
-% the line thickness of bends and stuff:
 #(define bend-line-thickness 0.1)
 
-% the height of pointed slurs is fixed regardless of its width
-% (TODO: should this be changed?):
-#(define pointed-slur-height 2.0)
+#(define bend-arrow-curvature-factor 0.35)
 
-% the linear amount of the bend arrow (TODO: find a better name?)
-#(define bend-ratio 0.35)
+#(define y-distance-from-tabstaff-to-arrow-tip 2.75)
 
-% the distance between the topmost tablature line and the arrow head
-#(define bend-dy 2.75)
+#(define consecutive-bends-arrow-height 2.75)
 
-% the distance between the end of a bend and the consecuting second one
-#(define bend-shift-dy 2.75)
+#(define bend-arrowhead-height 1.25)
 
-% the height of the bend arrow head:
-#(define bend-arrow-height 1.25)
+#(define bend-arrowhead-width 0.8)
 
-% the width of the arrow head base:
-#(define bend-arrow-width 0.8)
-
-% the distance between the tablature line where a bend starts
-% and the starting point in vertical direction:
-#(define bend-y-offset 0.35)
+#(define y-distance-from-staffline-to-arrow 0.35)
 
 % TODO: if it's 'internal', should it be define-public?? --jw
 
@@ -217,14 +205,14 @@ thickness begin-x line-y end-x line-y))))
           (begin-x (car left-point))
           (begin-y (+ (* (/ (ly:grob-property left-tab-note-head 'staff-position) 2)
                         staff-space)
-                     bend-y-offset))
+                     y-distance-from-staffline-to-arrow))
           ;; cdr left-point doesn't work, because invisible stems are included
           (end-x (car right-point))
-          (end-y (+ (* (/ (- line-count 1) 2) staff-space) bend-dy))
-          (arrow-lx (- end-x (/ bend-arrow-width 2)))
-          (arrow-rx (+ end-x (/ bend-arrow-width 2)))
-          (arrow-y (- end-y bend-arrow-height))
-          (middle-x (+ begin-x (* bend-ratio (- end-x begin-x))))
+          (end-y (+ (* (/ (- line-count 1) 2) staff-space) y-distance-from-tabstaff-to-arrow-tip))
+          (arrow-lx (- end-x (/ bend-arrowhead-width 2)))
+          (arrow-rx (+ end-x (/ bend-arrowhead-width 2)))
+          (arrow-y (- end-y bend-arrowhead-height))
+          (middle-x (+ begin-x (* bend-arrow-curvature-factor (- end-x begin-x))))
           (bend-amount (quarterdiff->string quarterdiff)))
 
      (if (< quarterdiff 0)
@@ -233,7 +221,7 @@ thickness begin-x line-y end-x line-y))))
                 (temp begin-y))
            (set! begin-y end-y) ;; swap begin-y/end-y
            (set! end-y (+ temp y-offset))
-           (set! arrow-y (+ end-y bend-arrow-height))
+           (set! arrow-y (+ end-y bend-arrowhead-height))
            (set! bend-amount "")
            (ly:grob-set-property! right-tab-note-head 'display-cautionary #t)
            (ly:grob-set-property! right-tab-note-head 'stencil tab-note-head::print))
@@ -271,14 +259,14 @@ thickness begin-x line-y end-x line-y))))
           (begin-x (car left-point))
           (begin-y (+ (* (/ (ly:grob-property left-tab-note-head 'staff-position) 2)
                         staff-space)
-                     bend-dy))
+                     y-distance-from-tabstaff-to-arrow-tip))
           ;; cdr left-point doesn't work, because invisible stems are included
           (end-x (car right-point))
-          (end-y (+ (* (/ (- line-count 1) 2) staff-space) bend-dy bend-shift-dy))
-          (arrow-lx (- end-x (/ bend-arrow-width 2)))
-          (arrow-rx (+ end-x (/ bend-arrow-width 2)))
-          (arrow-y (- end-y bend-arrow-height))
-          (middle-x (+ begin-x (* bend-ratio (- end-x begin-x))))
+          (end-y (+ (* (/ (- line-count 1) 2) staff-space) y-distance-from-tabstaff-to-arrow-tip consecutive-bends-arrow-height))
+          (arrow-lx (- end-x (/ bend-arrowhead-width 2)))
+          (arrow-rx (+ end-x (/ bend-arrowhead-width 2)))
+          (arrow-y (- end-y bend-arrowhead-height))
+          (middle-x (+ begin-x (* bend-arrow-curvature-factor (- end-x begin-x))))
           (bend-amount (quarterdiff->string quarterdiff)))
      (if (< quarterdiff 0)
          ;; bend down
@@ -287,7 +275,7 @@ thickness begin-x line-y end-x line-y))))
 
            (set! begin-y end-y) ;; swap begin-y/end-y
            (set! end-y (+ temp y-offset))
-           (set! arrow-y (+ end-y bend-arrow-height))
+           (set! arrow-y (+ end-y bend-arrowhead-height))
            (set! bend-amount "")
            (ly:grob-set-property! right-tab-note-head 'stencil
              (lambda (grob) (parenthesize-tab-note-head grob))))
@@ -324,10 +312,10 @@ thickness begin-x line-y end-x line-y))))
                      y-offset))
           ;; cdr left-point doesn't work, because invisible stems are included
           (end-x (car right-point))
-          (end-y (+ (* (/ (- line-count 1) 2) staff-space) bend-dy))
-          (arrow-lx (- begin-x (/ bend-arrow-width 2)))
-          (arrow-rx (+ begin-x (/ bend-arrow-width 2)))
-          (arrow-y (- end-y bend-arrow-height))
+          (end-y (+ (* (/ (- line-count 1) 2) staff-space) y-distance-from-tabstaff-to-arrow-tip))
+          (arrow-lx (- begin-x (/ bend-arrowhead-width 2)))
+          (arrow-rx (+ begin-x (/ bend-arrowhead-width 2)))
+          (arrow-y (- end-y bend-arrowhead-height))
           (bend-amount (quarterdiff->string quarterdiff)))
 
      (ly:grob-set-property! right-tab-note-head 'transparent #t)
@@ -363,10 +351,10 @@ thickness begin-x line-y end-x line-y))))
                      y-offset))
           ;; cdr left-point doesn't work, because invisible stems are included
           (end-x (car right-point))
-          (end-y (+ (* (/ (- line-count 1) 2) staff-space) bend-dy))
-          (arrow-lx (- begin-x (/ bend-arrow-width 2)))
-          (arrow-rx (+ begin-x (/ bend-arrow-width 2)))
-          (arrow-y (- end-y bend-arrow-height))
+          (end-y (+ (* (/ (- line-count 1) 2) staff-space) y-distance-from-tabstaff-to-arrow-tip))
+          (arrow-lx (- begin-x (/ bend-arrowhead-width 2)))
+          (arrow-rx (+ begin-x (/ bend-arrowhead-width 2)))
+          (arrow-y (- end-y bend-arrowhead-height))
           (bend-amount (quarterdiff->string quarterdiff)))
 
      (ly:grob-set-property! right-tab-note-head 'transparent #t)
@@ -390,7 +378,7 @@ thickness begin-x line-y end-x line-y))))
           (right-point (cadddr control-points))
           (begin-x (car left-point))
           (end-x (car right-point))
-          (line-y (+ (* (/ (- line-count 1) 2) staff-space) bend-dy)))
+          (line-y (+ (* (/ (- line-count 1) 2) staff-space) y-distance-from-tabstaff-to-arrow-tip)))
 
      (ly:grob-set-property! right-tab-note-head 'transparent #t)
      (grob-interpret-markup grob
