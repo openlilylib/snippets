@@ -419,7 +419,7 @@ preBendHold =
    #{
      \once \override TabVoice.Slur #'stencil = #slur::draw-pre-bend-only
      \once \override TabStaff.ParenthesesItem #'transparent = ##t
-     \parenthesize $note
+     <>\noBeam \parenthesize $note
    #})
 
 preBendRelease =
@@ -428,7 +428,7 @@ preBendRelease =
      \once \override TabVoice.Slur #'stencil = #slur::draw-pre-bend-hold
      \once \override TabStaff.ParenthesesItem #'transparent = ##t
      \once \override Voice.Slur #'direction = #DOWN
-     \parenthesize $note
+     <>\noBeam \parenthesize $note
    #})
 
 holdBend =
