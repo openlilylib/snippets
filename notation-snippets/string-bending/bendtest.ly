@@ -7,10 +7,10 @@
 % #(ly:set-option 'debug-skylines)
 
 \paper {
-   indent = 0
-   ragged-right = ##f
-   ragged-bottom = ##f
-   ragged-last-bottom= ##f
+  indent = 0
+  ragged-right = ##f
+  ragged-bottom = ##f
+  ragged-last-bottom= ##f
 }
 
 \layout {
@@ -18,9 +18,9 @@
     \Staff
     \override StringNumber #'stencil = ##f
     \override VerticalAxisGroup #'default-staff-staff-spacing =
-      #'((basic-distance . 12)
-         (minimum-distance . 12)
-         (padding . 1))
+    #'((basic-distance . 12)
+       (minimum-distance . 12)
+       (padding . 1))
   }
 }
 
@@ -111,9 +111,9 @@ test = \relative c'' {
 %}
 %%{
 \markup \wordwrap {
-	Third variant: the coordinates of the point are half-way between the
-	second and the third point of the control points for the slur's bezier
-	curve.
+  Third variant: the coordinates of the point are half-way between the
+  second and the third point of the control points for the slur's bezier
+  curve.
 }
 
 
@@ -121,7 +121,7 @@ test = \relative c'' {
   <<
     \new Staff {
       \new Voice {
-      \override Voice.Slur #'stencil = #slur::draw-another-alternate-pointed-slur
+        \override Voice.Slur #'stencil = #slur::draw-another-alternate-pointed-slur
         \clef "G_8"
         \test
       }
