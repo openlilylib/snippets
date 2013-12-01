@@ -1,6 +1,6 @@
 \version "2.16.2"
 
-\include "bend.ly"
+\include "definitions.ily"
 
 \pointAndClickOff
 
