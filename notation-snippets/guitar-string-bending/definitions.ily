@@ -37,10 +37,8 @@
 
 #(define y-distance-from-staffline-to-arrow 0.35)
 
-% TODO: if it's 'internal', should it be define-public?? --jw
-
 %%% internal commands
-#(define-public (quarterdiff->string quarterdiff)
+#(define (quarterdiff->string quarterdiff)
    (let ((wholesteps (floor (/ quarterdiff 4))))
 
      (string-append (case wholesteps
@@ -163,7 +161,7 @@ thickness begin-x line-y end-x line-y))))
 
 %%% callbacks
 
-#(define-public (slur::draw-pointed-slur grob)
+#(define (slur::draw-pointed-slur grob)
    (let* ((control-points (ly:grob-property grob 'control-points))
           (direction (ly:grob-property grob 'direction))
           (first-point (car control-points))
@@ -186,7 +184,7 @@ thickness begin-x line-y end-x line-y))))
        (make-pointedSlur-markup bend-line-thickness
          first-x first-y middle-x middle-y forth-x forth-y))))
 
-#(define-public (slur::draw-bend-arrow grob)
+#(define (slur::draw-bend-arrow grob)
    (let* ((staff-symbol (ly:grob-object grob 'staff-symbol))
           (line-count (ly:grob-property staff-symbol 'line-count))
           (staff-space (ly:grob-property staff-symbol 'staff-space))
@@ -241,7 +239,7 @@ thickness begin-x line-y end-x line-y))))
         bend-amount))))
 
 
-#(define-public (slur::draw-shifted-bend-arrow grob)
+#(define (slur::draw-shifted-bend-arrow grob)
    (let* ((staff-symbol (ly:grob-object grob 'staff-symbol))
           (line-count (ly:grob-property staff-symbol 'line-count))
           (staff-space (ly:grob-property staff-symbol 'staff-space))
@@ -289,7 +287,7 @@ thickness begin-x line-y end-x line-y))))
         arrow-lx arrow-rx arrow-y
         bend-amount))))
 
-#(define-public (slur::draw-pre-bend-hold grob)
+#(define (slur::draw-pre-bend-hold grob)
    (let* ((staff-symbol (ly:grob-object grob 'staff-symbol))
           (line-count (ly:grob-property staff-symbol 'line-count))
           (staff-space (ly:grob-property staff-symbol 'staff-space))
@@ -328,7 +326,7 @@ thickness begin-x line-y end-x line-y))))
         arrow-lx arrow-rx arrow-y
         bend-amount))))
 
-#(define-public (slur::draw-pre-bend-only grob)
+#(define (slur::draw-pre-bend-only grob)
    (let* ((staff-symbol (ly:grob-object grob 'staff-symbol))
           (line-count (ly:grob-property staff-symbol 'line-count))
           (staff-space (ly:grob-property staff-symbol 'staff-space))
@@ -367,7 +365,7 @@ thickness begin-x line-y end-x line-y))))
         arrow-lx arrow-rx arrow-y
         bend-amount))))
 
-#(define-public (tie::draw-hold-bend grob)
+#(define (tie::draw-hold-bend grob)
    (let* ((staff-symbol (ly:grob-object grob 'staff-symbol))
           (line-count (ly:grob-property staff-symbol 'line-count))
           (staff-space (ly:grob-property staff-symbol 'staff-space))
