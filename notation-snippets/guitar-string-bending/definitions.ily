@@ -407,7 +407,7 @@ thickness begin-x line-y end-x line-y))))
 %%% music functions
 
 bendOn = {
-  %\override Voice.Slur #'stencil = #slur::draw-pointed-slur
+  \override Voice.Slur #'stencil = #slur::draw-pointed-slur
   \override TabVoice.Slur #'stencil = #slur::draw-bend-arrow
 }
 

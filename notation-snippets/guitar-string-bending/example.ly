@@ -66,7 +66,6 @@ test = \relative c'' {
   <<
     \new Staff {
       \new Voice {
-        \override Voice.Slur #'stencil = #slur::draw-pointed-slur
         \clef "G_8"
         \test
       }
