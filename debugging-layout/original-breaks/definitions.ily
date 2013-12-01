@@ -29,8 +29,8 @@
     This makes it possible to have the original breaking
     entered in the input files but only respected when the
     switch (the variable) is set.
-    #(define layout-keep-original-breaks #t) activates original breaks,
-    with #(define layout-keep-original-breaks #f) it is possible
+    "#(define layout-keep-original-breaks #t)" activates original breaks,
+    with "#(define layout-keep-original-breaks #f)" it is possible
     to deactivate original breaks, even during a score.
     
     %TODO: The following doesn't work yet.
