@@ -2,6 +2,12 @@
 
 \include "definitions.ily"
 
+\markup \justify {
+  WARNING! in 2.17.26 a special NullVoice context was added to LilyPond.
+  Using NullVoice makes it possible to use "\partcombine" function
+  with vocal music - this snippet is probably no longer needed.
+}
+
 % Upper voice.  Here partcombining instructions should go.
 
 tenorI = \relative f {
