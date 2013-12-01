@@ -193,64 +193,6 @@ arrow-rx arrow-y)
 thickness begin-x line-y end-x line-y))))
 
 %%% callbacks
-#(define-public (slur::draw-pointed-slur grob)
-   (let* (;;(pointed-slur-height 2.0)
-          ;;(bend-line-thickness 0.1)
-          (control-points (ly:grob-property grob 'control-points))
-          (direction (ly:grob-property grob 'direction))
-          (left-point (car control-points))
-          (right-point (cadddr control-points))
-          (begin-x (+ (car left-point) 0.125)) ;; due to David's proposals
-          (begin-y (cdr left-point))
-          (end-x (- (car right-point) 0.125)) ;; due to David's proposals
-          (end-y (cdr right-point))
-          (middle-x (/ (+ begin-x end-x) 2))
-          (middle-y (/ (+ begin-y end-y) 2))
-          (normal-x (* direction (- begin-y end-y)))
-          (normal-y (* direction (- end-x begin-x)))
-          (normal-length (sqrt (+ (* normal-x normal-x)
-                                 (* normal-y normal-y))))
-          (point-x (+ middle-x (* pointed-slur-height
-                                 (/ normal-x normal-length))))
-          (point-y (+ middle-y (* pointed-slur-height
-                                 (/ normal-y normal-length)))))
-
-     (grob-interpret-markup grob
-       (make-pointedSlur-markup bend-line-thickness
-         begin-x begin-y point-x point-y end-x end-y))))
-
-#(define-public (slur::draw-alternate-pointed-slur grob)
-   (let* ((control-points (ly:grob-property grob 'control-points))
-          (direction (ly:grob-property grob 'direction))
-          (first-point (car control-points))
-          (second-point (cadr control-points))
-          (third-point (caddr control-points))
-          (forth-point (cadddr control-points))
-          (first-x (car first-point))
-          (first-y (cdr first-point))
-          (second-x (car second-point))
-          (second-y (cdr second-point))
-          (third-x (car third-point))
-          (third-y (cdr third-point))
-          (forth-x (car forth-point))
-          (forth-y (cdr forth-point))
-          (A (- second-y first-y))
-          (B (- first-x second-x))
-          (C (- (* second-x first-y)
-               (* first-x second-y)))
-          (D (- forth-y third-y))
-          (E (- third-x forth-x))
-          (F (- (* forth-x third-y)
-               (* third-x forth-y)))
-          (DEN  (- (* A E) (* D B)))
-          (NOMx (- (* B F) (* E C)))
-          (NOMy (- (* C D) (* F A)))
-          (middle-x (/ NOMx DEN))
-          (middle-y (/ NOMy DEN)))
-
-     (grob-interpret-markup grob
-       (make-pointedSlur-markup bend-line-thickness
-         first-x first-y middle-x middle-y forth-x forth-y))))
 
 #(define-public (slur::draw-another-alternate-pointed-slur grob)
    (let* ((control-points (ly:grob-property grob 'control-points))

@@ -24,8 +24,6 @@
   }
 }
 
-%% the test
-
 test = \relative c'' {
   \bendOn
   % First, some bends to see if they work from the topmost to the lowest string
@@ -60,62 +58,11 @@ test = \relative c'' {
   %}
 }
 
-%{
-\markup \wordwrap { First attempt: pointed slurs have a fixed height. }
-
-\score {
-  <<
-    \new Staff {
-      \new Voice {
-        \override Voice.Slur #'stencil = #slur::draw-pointed-slur
-        \clef "G_8"
-        \test
-      }
-    }
-    \new TabStaff {
-      \new TabVoice {
-        \clef "tab"
-        \test
-      }
-    }
-  >>
-}
-
-\pageBreak
-%}
-%{
-\markup \wordwrap {
-	Second variant: pointed slurs are drawn tangential to the slur's
-	starting point and end point.
-}
-
-\score {
-  <<
-    \new Staff {
-      \new Voice {
-      \override Voice.Slur #'stencil = #slur::draw-alternate-pointed-slur
-        \clef "G_8"
-        \test
-      }
-    }
-    \new TabStaff {
-      \new TabVoice {
-        \clef "tab"
-        \test
-      }
-    }
-  >>
-}
-
-\pageBreak
-%}
-%%{
 \markup \wordwrap {
   Third variant: the coordinates of the point are half-way between the
   second and the third point of the control points for the slur's bezier
   curve.
 }
-
 
 \score {
   <<
@@ -134,4 +81,3 @@ test = \relative c'' {
     }
   >>
 }
-%}
