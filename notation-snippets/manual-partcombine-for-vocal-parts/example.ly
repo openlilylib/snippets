@@ -29,6 +29,26 @@ tenorI = \relative f {
   }
 }
 
+% lower voice (lyrics are attached to it):
+
+tenorII = \relative f {
+  r2 c'4\< c
+  f4. f8\! f2
+  d2\mf ( c4) c
+  b4.( a8 g4) g4\dim
+  a2 a2\p
+  a a
+  r a4\mf a
+  c4. e8 e2
+  a,4\f(f' g, e'
+  a, d g, c~
+  c b2 a4~
+  a4 g2)
+  f4
+  f4 ( e8 d e4) e
+  g2 r
+}
+
 % shared staff:
 
 \new Staff = "tenory" {
