@@ -1,4 +1,18 @@
-%
+\version "2.16.2" % absolutely necessary!
+
+\header {
+  snippet-title = "Guitar string bending notation"
+  snippet-author = "Marc Hohl, Thomas Morley"
+  snippet-source = "http://code.google.com/p/lilypond/issues/detail?id=1196"
+  snippet-description = \markup {
+    Please add brief description
+  }
+  % add comma-separated tags to make searching more effective:
+  tags = "guitar, bend, string bending"
+  % is this snippet ready?  See meta/status-values.md
+  status = "undocumented"
+}
+
 % bend.ly (revised)
 %
 % preliminary tests for drawing bends
