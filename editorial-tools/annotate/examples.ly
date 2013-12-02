@@ -1,7 +1,13 @@
 % Usage examples for \annotate
 
+% Real-world include command:
 % \include "editorial-tools/annotate/definitions.ily"
 \include "definitions.ily"
+
+\header {
+  title = "Annotate grobs"
+  subtitle = "Currently this only colors them magenta"
+}
 
 \relative g' {
   % default call with specified grob
@@ -14,7 +20,7 @@
     message = "Tenuto added as in Vc. 2"
   }
   Script
-  g1-- |
+  g1-- -\markup "Explicitly annotate Script" |
   
   % default call without specified grob (defaults to NoteHead (?))
   \annotate \with {
@@ -22,14 +28,14 @@
     source = "MS2"
     message = "Ms. 2: b flat"
   }
-  a4 b 
+  a4 ~  ^\markup "Implicitly annotate notehead, tie is not affected" a b 
   
      % postfix call
      c-\annotate \with {
       type = "todo-engraving"
       message = "Improve tie engraving"
     }
-    ~ 
+    ~ -\markup "Postfix annotation"
     c 
-    d ~ d e2-- 
+    d ~ d e-- 
 }

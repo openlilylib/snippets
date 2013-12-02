@@ -15,6 +15,13 @@
     to enter annotations, see the enclosed example file for how
     it works.
     
+    Calling syntax:
+    "\annotate \with { [list of expressions] } grobname"
+    If you leave out the grobname the function will implicitly
+    annotate the next notehead.
+    You can also use postfix notation to annotate individual
+    grobs like with the "\tweak" command.
+    
   }
   status = "started"
   todo = \markup {
@@ -22,13 +29,19 @@
     without causing compiler warnings. As a placeholder affected grobs
     are printed magenta. Any further functionality has to be implemented yet.
     
-    - The coloring through tweak doesn't seem to be "\once" currently.
-    
-    - What is lacking is any kind of checking against a list of predefined
-      message types, formats etc.
+    - Determine current musical moment as well as current position
+      in the source file for point-and-click links.
+    - There should be a set of predefined annotation types (e.g.
+      "todo", "critical remark", "discussion" etc.). These may behave
+      differently, e.g. color the output differently or export information
+      differently formatted.
+    - Apart from that, arbitrary annotation types can be entered with some
+      predefined response, e.g. output sorted lists for each detected type.
     
     - Find a way to "enclose" images as links (maybe kind of Markdown style?)
-    - Find a way to insert score examples in the message.
+    - Find a way to insert score examples in the message.)
+      This could either be done by including LilyPond code (would be best)
+      or by linking to external source files and/or image/pdf scores.
     
     - For further discussion see 
       https://github.com/openlilylib/lilypond-doc/wiki/Documenting-musical-content
