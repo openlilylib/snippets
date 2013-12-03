@@ -65,6 +65,15 @@
          (else
           (cons (cdr (car l)) (create-props-alist (cdr l))))))
 
+#(define (display-prop p)
+   ; this is more or less a trial in iterating over an alist
+   (cond ((null? p)
+     '())
+     (else
+      (display (car p))
+      (newline)
+      (display-prop (cdr p)))))
+   
 annotate = 
 #(define-music-function (parser location properties item)
    (ly:context-mod? symbol-list-or-music?)
