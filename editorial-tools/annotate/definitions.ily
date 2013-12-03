@@ -57,14 +57,30 @@
 
 \version "2.16.2"
 
+#(define (create-props-alist l)
+   ;; takes the list of context-mods and creates
+   ;; an alist with type/content pairs
+   (cond ((null? l)
+          '())
+         (else
+          (cons (cdr (car l)) (create-props-alist (cdr l))))))
+
 annotate = 
 #(define-music-function (parser location properties item)
    (ly:context-mod? symbol-list-or-music?)
    ;; annotates a musical object for use with lilypond-doc
-   
-   ; Dummy coloring
+   (let ((props (create-props-alist (ly:get-context-mods properties))))
+     
+     (newline)
+     (display (assoc 'message props))
+     (newline)
+     (newline)
+     (display "props: ")
+     (display props)
+     (newline)
+
+     ; Dummy coloring
      #{ 
        \once \tweak color #magenta #item
      #}
-   )
-
+   ))
