@@ -1,5 +1,7 @@
 % Usage examples for \annotate
 
+\version "2.16.2"
+
 % Real-world include command:
 % \include "editorial-tools/annotate/definitions.ily"
 \include "definitions.ily"
@@ -12,7 +14,7 @@
 \relative g' {
   % default call with specified grob
   \annotate \with {
-    type = "critical remark"
+    type = "critical-remark"
     context = "vc1"
     author = "Urs Liska"
     date = "2013-06-06"
