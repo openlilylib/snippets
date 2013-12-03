@@ -79,14 +79,30 @@ annotate =
    (ly:context-mod? symbol-list-or-music?)
    ;; annotates a musical object for use with lilypond-doc
    (let ((props (create-props-alist (ly:get-context-mods properties))))
+
+     ; some debug/test actions
+     ;(newline)
+     (display-prop props)
      
+     ;(display props)
+     ; the else clause doesn't work yet!
+     (cond ((assoc 'type props)(newline))
+       (else ((cons ('type "annotation") props))))
      (newline)
-     (display (assoc 'message props))
-     (newline)
-     (newline)
-     (display "props: ")
      (display props)
-     (newline)
+     
+     ; Plan/TODO:
+       ; set defaults (e.g. for type and format)
+       ; iterate over props
+       ; for each prop do
+         ; check against a list of accepted types
+         ; respond to it
+         ; if it's no accepted type do a default action
+       ; keep in mind to respect configuration variables:
+         ; output to console
+         ; output to file
+         ; coloring
+         ; etc.
 
      ; Dummy coloring
      #{ 
