@@ -1,6 +1,6 @@
 % Usage examples for \annotate
 
-\version "2.16.2"
+\version "2.19.0"
 
 % Real-world include command:
 % \include "editorial-tools/annotate/definitions.ily"
