@@ -75,10 +75,17 @@
       (ly:message "   ~a: ~s\n" (caar p) (cadar p))
       (newline)
       (iter-props (cdr p)))))
-   
+
+#(define (symbol-or-music? item)
+   ;; new predicate:
+   ;; I don't want to annotate grob lists
+   (cond ((symbol? item) #t)
+     ((ly:music? item) #t)
+     (else #f)))
+
 annotate = 
 #(define-music-function (parser location properties item)
-   (ly:context-mod? symbol-list-or-music?)
+   (ly:context-mod? symbol-or-music?)
    ;; annotates a musical object for use with lilypond-doc
    (let ((props (props-alist (ly:get-context-mods properties))))
 
