@@ -87,7 +87,9 @@ annotate =
 #(define-music-function (parser location properties item)
    (ly:context-mod? symbol-or-music?)
    ;; annotates a musical object for use with lilypond-doc
-   (let ((props (props-alist (ly:get-context-mods properties))))
+   (let ((props (props-alist (ly:get-context-mods properties)))
+         (input-file (car (ly:input-file-line-char-column location)))
+         (input-filepos (cdr (ly:input-file-line-char-column location))))
 
      ; Plan/TODO:
        ; set defaults (e.g. for type and format)
@@ -107,10 +109,10 @@ annotate =
 
      ; some debug/test actions
      (ly:message "Annotation:\n")
+     (ly:message "   File: ~a" input-file)
+     (ly:message "   Position: ~a" input-filepos)
      (iter-props props)
      
-     ;(write props)
-     ;(newline)
      
      ; TODO: Trying to set defaults, doesn't work yet
      ; the else clause doesn't work yet!
@@ -119,7 +121,6 @@ annotate =
      ;(newline)
      ;(display props)
      
-
      ; Dummy coloring
      #{ 
        \once \tweak color #magenta #item
