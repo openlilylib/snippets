@@ -19,7 +19,8 @@
     author = "Urs Liska"
     date = "2013-06-06"
     format = "plain"
-    message = "Tenuto added as in Vc. 2"
+    message = "Tenuto added 
+    as in Vc. 2"
   }
   Script
   g1-- -\markup "Explicitly annotate Script" |
