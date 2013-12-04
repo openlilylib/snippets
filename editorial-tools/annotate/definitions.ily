@@ -57,52 +57,61 @@
 
 \version "2.16.2"
 
-#(define (create-props-alist l)
+#(define (props-alist l)
    ;; takes the list of context-mods and creates
    ;; an alist with type/content pairs
    (cond ((null? l)
           '())
-         (else
-          (cons (cdr (car l)) (create-props-alist (cdr l))))))
-
-#(define (display-prop p)
-   ; this is more or less a trial in iterating over an alist
+          (else
+           (cons (cdr (car l)) (props-alist (cdr l))))))
+      
+#(define (iter-props p)
+   ; TODO:
+     ; Make this conditional and maybe improve formatting
+     ; Use this also to store the annotation (in an object?)
    (cond ((null? p)
      '())
      (else
-      (display (car p))
+      (ly:message "   ~a: ~s\n" (caar p) (cadar p))
       (newline)
-      (display-prop (cdr p)))))
+      (iter-props (cdr p)))))
    
 annotate = 
 #(define-music-function (parser location properties item)
    (ly:context-mod? symbol-list-or-music?)
    ;; annotates a musical object for use with lilypond-doc
-   (let ((props (create-props-alist (ly:get-context-mods properties))))
+   (let ((props (props-alist (ly:get-context-mods properties))))
 
-     ; some debug/test actions
-     ;(newline)
-     (display-prop props)
-     
-     ;(display props)
-     ; the else clause doesn't work yet!
-     (cond ((assoc 'type props)(newline))
-       (else ((cons ('type "annotation") props))))
-     (newline)
-     (display props)
-     
      ; Plan/TODO:
        ; set defaults (e.g. for type and format)
-       ; iterate over props
-       ; for each prop do
-         ; check against a list of accepted types
+       ; check against a list of accepted types
          ; respond to it
-         ; if it's no accepted type do a default action
+           ; (e.g. set configuration variables,
+           ;  choose a different output file etd.)
+         ; if it's no accepted type choose a default action
+       ; iterate over props (existing iter-props)
+       ; for each prop do
+         
        ; keep in mind to respect configuration variables:
          ; output to console
          ; output to file
          ; coloring
          ; etc.
+
+     ; some debug/test actions
+     (ly:message "Annotation:\n")
+     (iter-props props)
+     
+     ;(write props)
+     ;(newline)
+     
+     ; TODO: Trying to set defaults, doesn't work yet
+     ; the else clause doesn't work yet!
+     ;(cond ((assoc 'type props)(newline))
+     ;  (else ((cons ('type "annotation") props))))
+     ;(newline)
+     ;(display props)
+     
 
      ; Dummy coloring
      #{ 
