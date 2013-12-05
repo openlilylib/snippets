@@ -5,7 +5,10 @@
   snippet-author = "Marc Hohl"
   snippet-source = "http://code.google.com/p/lilypond/issues/detail?id=1196"
   snippet-description = \markup {
-    Please add brief description
+    This snippet allows to typeset bend symbols -
+    typically used on guitar - on Staff and TabStaff.
+    While issue 1196 aims to create a specific engraver
+    for bends, this snippet leverages the slur engraver.
   }
   % add comma-separated tags to make searching more effective:
   tags = "guitar, bend, string bending"
