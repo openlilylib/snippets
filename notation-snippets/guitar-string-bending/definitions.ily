@@ -1,51 +1,47 @@
-%
-% bend.ly (revised)
-%
-% preliminary tests for drawing bends
-% 2011-03-11
-%
-% Marc Hohl
-%
+\version "2.16.2" % absolutely necessary!
+
+\header {
+  snippet-title = "Guitar string bending notation"
+  snippet-author = "Marc Hohl"
+  snippet-source = "http://code.google.com/p/lilypond/issues/detail?id=1196"
+  snippet-description = \markup {
+    This snippet allows to typeset bend symbols -
+    typically used on guitar - on Staff and TabStaff.
+    While issue 1196 aims to create a specific engraver
+    for bends, this snippet leverages the slur engraver.
+  }
+  % add comma-separated tags to make searching more effective:
+  tags = "guitar, bend, string bending"
+  % is this snippet ready?  See meta/status-values.md
+  status = "undocumented"
+}
+
 % TODO:
 % - draw dashed line for \holdBend
 % - enable consecutive bend ups
 % - simplify \preBend and \holdBend usage
 % - ...
 
-% Slightly revised by Thomas Morley for "2.16.2"
-#(display "\n\nbend.ly ─ 2011-03-11 (revised: 2013-07-16)\n\n")
+#(display "\nbend.ly ─ 2011-03-11 (revised: 2013-07-16)\n\n")
 
 %%% sizes and values (to be changed/adapted):
 
-% the line thickness of bends and stuff:
 #(define bend-line-thickness 0.1)
 
-% the height of pointed slurs is fixed regardless of its width
-% (TODO: should this be changed?):
-#(define pointed-slur-height 2.0)
+#(define bend-arrow-curvature-factor 0.35)
 
-% the linear amount of the bend arrow (TODO: find a better name?)
-#(define bend-ratio 0.35)
+#(define y-distance-from-tabstaff-to-arrow-tip 2.75)
 
-% the distance between the topmost tablature line and the arrow head
-#(define bend-dy 2.75)
+#(define consecutive-bends-arrow-height 2.75)
 
-% the distance between the end of a bend and the consecuting second one
-#(define bend-shift-dy 2.75)
+#(define bend-arrowhead-height 1.25)
 
+#(define bend-arrowhead-width 0.8)
 
-% the height of the bend arrow head:
-#(define bend-arrow-height 1.25)
-
-% the width of the arrow head base:
-#(define bend-arrow-width 0.8)
-
-% the distance between the tablature line where a bend starts
-% and the starting point in vertical direction:
-#(define bend-y-offset 0.35)
+#(define y-distance-from-staffline-to-arrow 0.35)
 
 %%% internal commands
-#(define-public (quarterdiff->string quarterdiff)
+#(define (quarterdiff->string quarterdiff)
    (let ((wholesteps (floor (/ quarterdiff 4))))
 
      (string-append (case wholesteps
@@ -97,18 +93,6 @@ arrow-rx arrow-y)
        ;#:center-column (outstring)
        outstring
        )))
-%% Delete?
-%{
-  #(define-markup-command (drawHoldBend layout props
-  thickness begin-x end-x line-y)
-  (number? number? number? number?)
-  (interpret-markup layout props
-  (markup #:postscript
-  (ly:format "~f setlinewidth
-  ~f ~f moveto
-  ~f ~f lineto
-  stroke" thickness begin-x line-y end-x line-y))))
-%}
 #(define-markup-command (drawHoldBendWithArrow layout props
                           thickness begin-x begin-y end-x end-y arrow-lx arrow-rx arrow-y outstring)
    (number? number? number? number? number? number? number? number? string?)
@@ -173,72 +157,14 @@ arrow-rx arrow-y)
    (interpret-markup layout props
      (markup #:postscript
        (ly:format "~f setlinewidth
-                                                            ~f ~f moveto
+                        ~f ~f moveto
                         ~f ~f lineto
                         stroke"
 thickness begin-x line-y end-x line-y))))
 
 %%% callbacks
-#(define-public (slur::draw-pointed-slur grob)
-   (let* (;;(pointed-slur-height 2.0)
-          ;;(bend-line-thickness 0.1)
-          (control-points (ly:grob-property grob 'control-points))
-          (direction (ly:grob-property grob 'direction))
-          (left-point (car control-points))
-          (right-point (cadddr control-points))
-          (begin-x (+ (car left-point) 0.125)) ;; due to David's proposals
-          (begin-y (cdr left-point))
-          (end-x (- (car right-point) 0.125)) ;; due to David's proposals
-          (end-y (cdr right-point))
-          (middle-x (/ (+ begin-x end-x) 2))
-          (middle-y (/ (+ begin-y end-y) 2))
-          (normal-x (* direction (- begin-y end-y)))
-          (normal-y (* direction (- end-x begin-x)))
-          (normal-length (sqrt (+ (* normal-x normal-x)
-                                 (* normal-y normal-y))))
-          (point-x (+ middle-x (* pointed-slur-height
-                                 (/ normal-x normal-length))))
-          (point-y (+ middle-y (* pointed-slur-height
-                                 (/ normal-y normal-length)))))
 
-     (grob-interpret-markup grob
-       (make-pointedSlur-markup bend-line-thickness
-         begin-x begin-y point-x point-y end-x end-y))))
-
-#(define-public (slur::draw-alternate-pointed-slur grob)
-   (let* ((control-points (ly:grob-property grob 'control-points))
-          (direction (ly:grob-property grob 'direction))
-          (first-point (car control-points))
-          (second-point (cadr control-points))
-          (third-point (caddr control-points))
-          (forth-point (cadddr control-points))
-          (first-x (car first-point))
-          (first-y (cdr first-point))
-          (second-x (car second-point))
-          (second-y (cdr second-point))
-          (third-x (car third-point))
-          (third-y (cdr third-point))
-          (forth-x (car forth-point))
-          (forth-y (cdr forth-point))
-          (A (- second-y first-y))
-          (B (- first-x second-x))
-          (C (- (* second-x first-y)
-               (* first-x second-y)))
-          (D (- forth-y third-y))
-          (E (- third-x forth-x))
-          (F (- (* forth-x third-y)
-               (* third-x forth-y)))
-          (DEN  (- (* A E) (* D B)))
-          (NOMx (- (* B F) (* E C)))
-          (NOMy (- (* C D) (* F A)))
-          (middle-x (/ NOMx DEN))
-          (middle-y (/ NOMy DEN)))
-
-     (grob-interpret-markup grob
-       (make-pointedSlur-markup bend-line-thickness
-         first-x first-y middle-x middle-y forth-x forth-y))))
-
-#(define-public (slur::draw-another-alternate-pointed-slur grob)
+#(define (slur::draw-pointed-slur grob)
    (let* ((control-points (ly:grob-property grob 'control-points))
           (direction (ly:grob-property grob 'direction))
           (first-point (car control-points))
@@ -261,7 +187,7 @@ thickness begin-x line-y end-x line-y))))
        (make-pointedSlur-markup bend-line-thickness
          first-x first-y middle-x middle-y forth-x forth-y))))
 
-#(define-public (slur::draw-bend-arrow grob)
+#(define (slur::draw-bend-arrow grob)
    (let* ((staff-symbol (ly:grob-object grob 'staff-symbol))
           (line-count (ly:grob-property staff-symbol 'line-count))
           (staff-space (ly:grob-property staff-symbol 'staff-space))
@@ -280,14 +206,14 @@ thickness begin-x line-y end-x line-y))))
           (begin-x (car left-point))
           (begin-y (+ (* (/ (ly:grob-property left-tab-note-head 'staff-position) 2)
                         staff-space)
-                     bend-y-offset))
+                     y-distance-from-staffline-to-arrow))
           ;; cdr left-point doesn't work, because invisible stems are included
           (end-x (car right-point))
-          (end-y (+ (* (/ (- line-count 1) 2) staff-space) bend-dy))
-          (arrow-lx (- end-x (/ bend-arrow-width 2)))
-          (arrow-rx (+ end-x (/ bend-arrow-width 2)))
-          (arrow-y (- end-y bend-arrow-height))
-          (middle-x (+ begin-x (* bend-ratio (- end-x begin-x))))
+          (end-y (+ (* (/ (- line-count 1) 2) staff-space) y-distance-from-tabstaff-to-arrow-tip))
+          (arrow-lx (- end-x (/ bend-arrowhead-width 2)))
+          (arrow-rx (+ end-x (/ bend-arrowhead-width 2)))
+          (arrow-y (- end-y bend-arrowhead-height))
+          (middle-x (+ begin-x (* bend-arrow-curvature-factor (- end-x begin-x))))
           (bend-amount (quarterdiff->string quarterdiff)))
 
      (if (< quarterdiff 0)
@@ -296,7 +222,7 @@ thickness begin-x line-y end-x line-y))))
                 (temp begin-y))
            (set! begin-y end-y) ;; swap begin-y/end-y
            (set! end-y (+ temp y-offset))
-           (set! arrow-y (+ end-y bend-arrow-height))
+           (set! arrow-y (+ end-y bend-arrowhead-height))
            (set! bend-amount "")
            (ly:grob-set-property! right-tab-note-head 'display-cautionary #t)
            (ly:grob-set-property! right-tab-note-head 'stencil tab-note-head::print))
@@ -316,7 +242,7 @@ thickness begin-x line-y end-x line-y))))
         bend-amount))))
 
 
-#(define-public (slur::draw-shifted-bend-arrow grob)
+#(define (slur::draw-shifted-bend-arrow grob)
    (let* ((staff-symbol (ly:grob-object grob 'staff-symbol))
           (line-count (ly:grob-property staff-symbol 'line-count))
           (staff-space (ly:grob-property staff-symbol 'staff-space))
@@ -334,14 +260,14 @@ thickness begin-x line-y end-x line-y))))
           (begin-x (car left-point))
           (begin-y (+ (* (/ (ly:grob-property left-tab-note-head 'staff-position) 2)
                         staff-space)
-                     bend-dy))
+                     y-distance-from-tabstaff-to-arrow-tip))
           ;; cdr left-point doesn't work, because invisible stems are included
           (end-x (car right-point))
-          (end-y (+ (* (/ (- line-count 1) 2) staff-space) bend-dy bend-shift-dy))
-          (arrow-lx (- end-x (/ bend-arrow-width 2)))
-          (arrow-rx (+ end-x (/ bend-arrow-width 2)))
-          (arrow-y (- end-y bend-arrow-height))
-          (middle-x (+ begin-x (* bend-ratio (- end-x begin-x))))
+          (end-y (+ (* (/ (- line-count 1) 2) staff-space) y-distance-from-tabstaff-to-arrow-tip consecutive-bends-arrow-height))
+          (arrow-lx (- end-x (/ bend-arrowhead-width 2)))
+          (arrow-rx (+ end-x (/ bend-arrowhead-width 2)))
+          (arrow-y (- end-y bend-arrowhead-height))
+          (middle-x (+ begin-x (* bend-arrow-curvature-factor (- end-x begin-x))))
           (bend-amount (quarterdiff->string quarterdiff)))
      (if (< quarterdiff 0)
          ;; bend down
@@ -350,7 +276,7 @@ thickness begin-x line-y end-x line-y))))
 
            (set! begin-y end-y) ;; swap begin-y/end-y
            (set! end-y (+ temp y-offset))
-           (set! arrow-y (+ end-y bend-arrow-height))
+           (set! arrow-y (+ end-y bend-arrowhead-height))
            (set! bend-amount "")
            (ly:grob-set-property! right-tab-note-head 'stencil
              (lambda (grob) (parenthesize-tab-note-head grob))))
@@ -364,7 +290,7 @@ thickness begin-x line-y end-x line-y))))
         arrow-lx arrow-rx arrow-y
         bend-amount))))
 
-#(define-public (slur::draw-pre-bend-hold grob)
+#(define (slur::draw-pre-bend-hold grob)
    (let* ((staff-symbol (ly:grob-object grob 'staff-symbol))
           (line-count (ly:grob-property staff-symbol 'line-count))
           (staff-space (ly:grob-property staff-symbol 'staff-space))
@@ -387,10 +313,10 @@ thickness begin-x line-y end-x line-y))))
                      y-offset))
           ;; cdr left-point doesn't work, because invisible stems are included
           (end-x (car right-point))
-          (end-y (+ (* (/ (- line-count 1) 2) staff-space) bend-dy))
-          (arrow-lx (- begin-x (/ bend-arrow-width 2)))
-          (arrow-rx (+ begin-x (/ bend-arrow-width 2)))
-          (arrow-y (- end-y bend-arrow-height))
+          (end-y (+ (* (/ (- line-count 1) 2) staff-space) y-distance-from-tabstaff-to-arrow-tip))
+          (arrow-lx (- begin-x (/ bend-arrowhead-width 2)))
+          (arrow-rx (+ begin-x (/ bend-arrowhead-width 2)))
+          (arrow-y (- end-y bend-arrowhead-height))
           (bend-amount (quarterdiff->string quarterdiff)))
 
      (ly:grob-set-property! right-tab-note-head 'transparent #t)
@@ -403,7 +329,7 @@ thickness begin-x line-y end-x line-y))))
         arrow-lx arrow-rx arrow-y
         bend-amount))))
 
-#(define-public (slur::draw-pre-bend-only grob)
+#(define (slur::draw-pre-bend-only grob)
    (let* ((staff-symbol (ly:grob-object grob 'staff-symbol))
           (line-count (ly:grob-property staff-symbol 'line-count))
           (staff-space (ly:grob-property staff-symbol 'staff-space))
@@ -426,10 +352,10 @@ thickness begin-x line-y end-x line-y))))
                      y-offset))
           ;; cdr left-point doesn't work, because invisible stems are included
           (end-x (car right-point))
-          (end-y (+ (* (/ (- line-count 1) 2) staff-space) bend-dy))
-          (arrow-lx (- begin-x (/ bend-arrow-width 2)))
-          (arrow-rx (+ begin-x (/ bend-arrow-width 2)))
-          (arrow-y (- end-y bend-arrow-height))
+          (end-y (+ (* (/ (- line-count 1) 2) staff-space) y-distance-from-tabstaff-to-arrow-tip))
+          (arrow-lx (- begin-x (/ bend-arrowhead-width 2)))
+          (arrow-rx (+ begin-x (/ bend-arrowhead-width 2)))
+          (arrow-y (- end-y bend-arrowhead-height))
           (bend-amount (quarterdiff->string quarterdiff)))
 
      (ly:grob-set-property! right-tab-note-head 'transparent #t)
@@ -442,7 +368,7 @@ thickness begin-x line-y end-x line-y))))
         arrow-lx arrow-rx arrow-y
         bend-amount))))
 
-#(define-public (tie::draw-hold-bend grob)
+#(define (tie::draw-hold-bend grob)
    (let* ((staff-symbol (ly:grob-object grob 'staff-symbol))
           (line-count (ly:grob-property staff-symbol 'line-count))
           (staff-space (ly:grob-property staff-symbol 'staff-space))
@@ -453,7 +379,7 @@ thickness begin-x line-y end-x line-y))))
           (right-point (cadddr control-points))
           (begin-x (car left-point))
           (end-x (car right-point))
-          (line-y (+ (* (/ (- line-count 1) 2) staff-space) bend-dy)))
+          (line-y (+ (* (/ (- line-count 1) 2) staff-space) y-distance-from-tabstaff-to-arrow-tip)))
 
      (ly:grob-set-property! right-tab-note-head 'transparent #t)
      (grob-interpret-markup grob
@@ -470,7 +396,7 @@ thickness begin-x line-y end-x line-y))))
 %%% music functions
 
 bendOn = {
-  %\override Voice.Slur #'stencil = #slur::draw-pointed-slur
+  \override Voice.Slur #'stencil = #slur::draw-pointed-slur
   \override TabVoice.Slur #'stencil = #slur::draw-bend-arrow
 }
 
@@ -482,9 +408,7 @@ bendOff = {
 bendGrace =
 #(define-music-function (parser location note) (ly:music?)
    #{
-     %% changed: 'stencil from #f to point-stencil
      \once \override Voice.Stem #'stencil = #point-stencil
-     %% changed: override for Flag added
      \once \override Voice.Flag #'stencil = ##f
      \once \override Voice.Stem #'direction = #DOWN
      \once \override Voice.Slur #'direction = #UP
@@ -496,7 +420,7 @@ preBendHold =
    #{
      \once \override TabVoice.Slur #'stencil = #slur::draw-pre-bend-only
      \once \override TabStaff.ParenthesesItem #'transparent = ##t
-     \parenthesize $note
+     <>\noBeam \parenthesize $note
    #})
 
 preBendRelease =
@@ -505,7 +429,7 @@ preBendRelease =
      \once \override TabVoice.Slur #'stencil = #slur::draw-pre-bend-hold
      \once \override TabStaff.ParenthesesItem #'transparent = ##t
      \once \override Voice.Slur #'direction = #DOWN
-     \parenthesize $note
+     <>\noBeam \parenthesize $note
    #})
 
 holdBend =
