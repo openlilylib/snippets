@@ -83,11 +83,32 @@
      ((ly:music? item) #t)
      (else #f)))
 
+#(define (check-prop prop props)
+   ;TODO: continue here (description)
+   (cond ((null? props)
+          #f)
+         ((string=?  prop (format "~s" (caar props)))
+          #t)
+     (else (check-prop prop (cdr props)))))
+
+#(define (check-default-prop default props)
+   ;TODO: Continue here
+   (if (check-prop (car default) props)
+       props
+   (append (list default) props))
+   )
+   
+#(define (check-default-props props)
+   ;TODO: Continue here: check for multiple defaults
+    (check-default-prop (list "type" "annotation") props))
+
 annotate = 
 #(define-music-function (parser location properties item)
    (ly:context-mod? symbol-or-music?)
    ;; annotates a musical object for use with lilypond-doc
-   (let ((props (props-alist (ly:get-context-mods properties)))
+   (let ((props 
+          (check-default-props
+           (props-alist (ly:get-context-mods properties))))
          (input-file (car (ly:input-file-line-char-column location)))
          (input-filepos (cdr (ly:input-file-line-char-column location))))
 
@@ -107,6 +128,7 @@ annotate =
          ; coloring
          ; etc.
 
+     
      ; some debug/test actions
      (ly:message "Annotation:\n")
      (ly:message "   File: ~a" input-file)

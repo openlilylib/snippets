@@ -27,7 +27,7 @@
   
   % default call without specified grob (defaults to NoteHead (?))
   \annotate \with {
-    type = "question"
+    %no type -> should get default "annotation"
     source = "MS2"
     message = "Ms. 2: b flat"
   }
