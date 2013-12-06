@@ -84,7 +84,8 @@
      (else #f)))
 
 #(define (check-prop prop props)
-   ;TODO: continue here (description)
+   ;; return #t if the given prop is in props
+   ;; otherwise return #f
    (cond ((null? props)
           #f)
          ((equal? prop  (caar props))
@@ -92,9 +93,12 @@
      (else (check-prop prop (cdr props)))))
 
 #(define (check-default-prop default props)
-   ;TODO: Continue here
+   ;; test if the given prop (car default) is defined.
+   ;; If not append the given default pair to props.
    (if (check-prop (car default) props)
        props
+   (append (list default) props)))
+   
    (append (list default) props))
    )
    
