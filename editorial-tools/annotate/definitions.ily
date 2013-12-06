@@ -87,7 +87,7 @@
    ;TODO: continue here (description)
    (cond ((null? props)
           #f)
-         ((string=?  prop (format "~s" (caar props)))
+         ((equal? prop  (caar props))
           #t)
      (else (check-prop prop (cdr props)))))
 
@@ -100,7 +100,7 @@
    
 #(define (check-default-props props)
    ;TODO: Continue here: check for multiple defaults
-    (check-default-prop (list "type" "annotation") props))
+    (check-default-prop (list (string->symbol "type") "annotation") props))
 
 annotate = 
 #(define-music-function (parser location properties item)
