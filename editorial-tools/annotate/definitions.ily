@@ -57,14 +57,6 @@
 
 \version "2.16.2"
 
-#(define (props-alist l)
-   ;; takes the list of context-mods and creates
-   ;; an alist with type/content pairs
-   (cond ((null? l)
-          '())
-          (else
-           (cons (cdr (car l)) (props-alist (cdr l))))))
-      
 #(define (iter-props p)
    ; TODO:
      ; Make this conditional and maybe improve formatting
@@ -86,11 +78,14 @@
 #(define (check-prop prop props)
    ;; return #t if the given prop is in props
    ;; otherwise return #f
+   ;TODO: This doesn't work yet!!!
    (cond ((null? props)
           #f)
          ((equal? prop  (caar props))
           #t)
-     (else (check-prop prop (cdr props)))))
+     (else 
+      ;(ly:message "prop: ~s - ~s" prop (cdr props))
+      (check-prop prop (cdr props)))))
 
 #(define (check-default-prop default props)
    ;; test if the given prop (car default) is defined.
@@ -99,23 +94,42 @@
        props
    (append (list default) props)))
    
-   (append (list default) props))
-   )
+#(define (default-props)
+   '(((string->symbol "type") . "annotation")
+     ((string->symbol "message") . "")
+     ))
    
-#(define (check-default-props props)
+#(define (check-default-props defaults props)
    ;TODO: Continue here: check for multiple defaults
-    (check-default-prop (list (string->symbol "type") "annotation") props))
-
+   (ly:message "check-default-props: ~s -- ~s" defaults props)
+   (cond ((null? defaults) props)
+     ((check-prop (cdr (car defaults)) props)
+      (write (caar defaults))
+      (append (list (car defaults) props)))
+     (else (check-default-props (cdr defaults) props))))
+    
+%    (check-default-prop (list (string->symbol "type") "annotation") props))
+    
+#(define (props-alist l)
+   ;; takes the list of context-mods and creates
+   ;; an alist with type/content pairs
+   (cond ((null? l)
+          '())
+          (else
+           (cons (cdr (car l)) (props-alist (cdr l))))))
+      
 annotate = 
 #(define-music-function (parser location properties item)
    (ly:context-mod? symbol-or-music?)
    ;; annotates a musical object for use with lilypond-doc
    (let ((props 
           (check-default-props
+           (default-props)
            (props-alist (ly:get-context-mods properties))))
          (input-file (car (ly:input-file-line-char-column location)))
          (input-filepos (cdr (ly:input-file-line-char-column location))))
 
+     %(write (assoc 'date props))
      ; Plan/TODO:
        ; set defaults (e.g. for type and format)
        ; check against a list of accepted types

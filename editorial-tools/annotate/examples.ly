@@ -29,7 +29,7 @@
   \annotate \with {
     %no type -> should get default "annotation"
     source = "MS2"
-    message = "Ms. 2: b flat"
+    %message = "Ms. 2: b flat"
   }
   a4 ~  ^\markup "Implicitly annotate notehead, tie is not affected" a b 
   
