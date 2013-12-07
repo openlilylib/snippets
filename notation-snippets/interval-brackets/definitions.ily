@@ -75,7 +75,7 @@
 #(define three-semi-tone-gliss
   (elbowed-glissando '((0 . -0.35) (0.5 . -0.7) (1.0 . -0.2) (1.0 . 0.15))))
 
-scaleSettings = {
+intervalBracketsOn = {
   \override Glissando #'Y-offset = #-1
   \override Glissando #'thickness = #0.2
   \override Glissando #'bound-details =
@@ -83,7 +83,7 @@ scaleSettings = {
         (right   (end-on-accidental . #f) (padding . 0.2)))
 }
 
-revertScaleSettings = {
+intervalBracketsOff = {
   \revert Glissando #'Y-offset
   \revert Glissando #'thickness
   \revert Glissando #'bound-details

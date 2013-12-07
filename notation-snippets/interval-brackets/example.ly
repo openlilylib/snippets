@@ -6,7 +6,7 @@
 \relative c' {
   \override Staff.TimeSignature #'stencil = ##f
   \time 32/4
-  \scaleSettings
+  \intervalBracketsOn
   c1\tone
   d\semiTone
   ees\tone
@@ -15,5 +15,5 @@
   as\threeSemiTone
   b!\semiTone c
   \bar "|."
-  \revertScaleSettings
+  \intervalBracketsOff
 }
