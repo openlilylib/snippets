@@ -13,7 +13,7 @@
     "\threesemitone".
   }
   tags = "scale, interval, semitone, bracket"
-  status = "ready"
+  status = "unfinished"
 }
 
 %{
