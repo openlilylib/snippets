@@ -13,11 +13,12 @@
 }
 
 % this is intended to return the scheme construct with the given values:
-simplespace = #(define-scheme-function
-     (parser location bdist mdist padd stret)
-     (number? number? number? number?)
-     `((basic-distance . ,bdist)
-       (minimum-distance . ,mdist)
-       (padding . ,padd)
-       (stretchability . ,stret))
-     )
+simplespace =
+#(define-scheme-function
+  (parser location bdist mdist padd stret)
+  (number? number? number? number?)
+  `((basic-distance . ,bdist)
+    (minimum-distance . ,mdist)
+    (padding . ,padd)
+    (stretchability . ,stret))
+  )

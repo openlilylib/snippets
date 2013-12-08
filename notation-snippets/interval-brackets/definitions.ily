@@ -27,60 +27,60 @@
 
 #(define ((elbowed-glissando coords) grob)
 
- (define (pair-to-list pair)
-    (list (car pair) (cdr pair)))
+   (define (pair-to-list pair)
+     (list (car pair) (cdr pair)))
 
- (define (normalize-coords goods x y)
-   (map
-     (lambda (coord)
-       (cons (* x (car coord)) (* y (cdr coord))))
-     goods))
+   (define (normalize-coords goods x y)
+     (map
+      (lambda (coord)
+        (cons (* x (car coord)) (* y (cdr coord))))
+      goods))
 
- (define (my-c-p-s points thick)
-   (make-connected-path-stencil
-     points
-     thick
-     1.0
-     1.0
-     #f
-     #f))
+   (define (my-c-p-s points thick)
+     (make-connected-path-stencil
+      points
+      thick
+      1.0
+      1.0
+      #f
+      #f))
 
-; outer let to trigger suicide
- (let ((sten (ly:line-spanner::print grob)))
-   (if (grob::is-live? grob)
-       (let* ((thick (ly:grob-property grob 'thickness 0.1))
-              (xex (ly:stencil-extent sten X))
-              (lenx (interval-length xex))
-              (yex (ly:stencil-extent sten Y))
-              (xtrans (car xex))
-              (ytrans (car yex))
-              (uplist
-                (map pair-to-list
-                     (normalize-coords coords lenx 3)))
-              (downlist
-                (map pair-to-list
-                     (normalize-coords coords lenx -3))))
+   ; outer let to trigger suicide
+   (let ((sten (ly:line-spanner::print grob)))
+     (if (grob::is-live? grob)
+         (let* ((thick (ly:grob-property grob 'thickness 0.1))
+                (xex (ly:stencil-extent sten X))
+                (lenx (interval-length xex))
+                (yex (ly:stencil-extent sten Y))
+                (xtrans (car xex))
+                (ytrans (car yex))
+                (uplist
+                 (map pair-to-list
+                   (normalize-coords coords lenx 3)))
+                (downlist
+                 (map pair-to-list
+                   (normalize-coords coords lenx -3))))
 
-  (ly:stencil-translate
-      (my-c-p-s uplist thick)
-    (cons xtrans ytrans)))
-  '())))
+           (ly:stencil-translate
+            (my-c-p-s uplist thick)
+            (cons xtrans ytrans)))
+         '())))
 
 #(define semi-tone-gliss
-  (elbowed-glissando '((0.5 . -0.5) (1.0 . 0.15))))
+   (elbowed-glissando '((0.5 . -0.5) (1.0 . 0.15))))
 
 #(define tone-gliss
-  (elbowed-glissando '((0 . -0.5) (1.0 . -0.35) (1.0 . 0.16))))
+   (elbowed-glissando '((0 . -0.5) (1.0 . -0.35) (1.0 . 0.16))))
 
 #(define three-semi-tone-gliss
-  (elbowed-glissando '((0 . -0.35) (0.5 . -0.7) (1.0 . -0.2) (1.0 . 0.15))))
+   (elbowed-glissando '((0 . -0.35) (0.5 . -0.7) (1.0 . -0.2) (1.0 . 0.15))))
 
 intervalBracketsOn = {
   \override Glissando #'Y-offset = #-1
   \override Glissando #'thickness = #0.2
   \override Glissando #'bound-details =
-     #'((left    (padding . 0.2))
-        (right   (end-on-accidental . #f) (padding . 0.2)))
+  #'((left    (padding . 0.2))
+     (right   (end-on-accidental . #f) (padding . 0.2)))
 }
 
 intervalBracketsOff = {
@@ -92,21 +92,21 @@ intervalBracketsOff = {
 
 semiTone =
 #(define-event-function (parser location)()
-#{
-        \tweak #'stencil #semi-tone-gliss
-        \glissando
-#})
+   #{
+     \tweak #'stencil #semi-tone-gliss
+     \glissando
+   #})
 
 tone =
 #(define-event-function (parser location)()
-#{
-        \tweak #'stencil #tone-gliss
-        \glissando
-#})
+   #{
+     \tweak #'stencil #tone-gliss
+     \glissando
+   #})
 
 threeSemiTone =
 #(define-event-function (parser location)()
-#{
-        \tweak #'stencil #three-semi-tone-gliss
-        \glissando
-#})
+   #{
+     \tweak #'stencil #three-semi-tone-gliss
+     \glissando
+   #})
