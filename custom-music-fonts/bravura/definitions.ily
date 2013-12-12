@@ -1,4 +1,5 @@
 \version "2.17.27"
+#(ly:set-option 'relative-includes #t)
 \include "smufldata.ily"
 
 % PUBLIC DOMAIN
