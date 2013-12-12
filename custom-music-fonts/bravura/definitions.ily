@@ -11,7 +11,7 @@
   snippet-source = "https://github.com/backseatviolist/lilysmufl"
   snippet-description = \markup {
     This snippet enables LilyPond to use the Bravura font. It can be used via
-    the command "\bravuraOn". The file README.md provides a
+    the commands "\bravuraOn" and "\bravuraOff". The file README.md provides a
     more detailed description.
   }
   % add comma-separated tags to make searching more effective:
@@ -354,4 +354,26 @@ bravuraOn = {
   \override Staff.StaffSymbol.thickness = #1.2
   \override Staff.Beam.beam-thickness = #0.55
   \override Staff.Slur.thickness = #1.5
+}
+
+smuflOff = {
+  % This reverts all settings activated with \smuflOn
+  \revert Staff.Clef.stencil
+  \revert Staff.TimeSignature.stencil
+  \revert Staff.KeySignature.stencil
+  \revert Staff.KeyCancellation.stencil
+  \revert Staff.NoteHead.stencil
+  \revert Staff.Flag.stencil
+  \revert Staff.Accidental.stencil
+  \revert Staff.Rest.stencil
+  \revert Staff.Script.stencil
+  \revert Staff.DynamicText.stencil
+}
+
+bravuraOff = {
+  \smuflOff
+  % This reverts all settings activated with \bravuraOn
+  \revert Staff.StaffSymbol.thickness
+  \revert Staff.Beam.beam-thickness
+  \revert Staff.Slur.thickness
 }
