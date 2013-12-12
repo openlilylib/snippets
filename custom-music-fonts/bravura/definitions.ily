@@ -1,11 +1,23 @@
-%{
-
-  PUBLIC DOMAIN
-
-%}
 \version "2.17.27"
-
 \include "smufldata.ily"
+
+% PUBLIC DOMAIN
+
+\header {
+  snippet-title = "Support for Bravura font"
+  snippet-author = "Nathan Ho, Joram Berger"
+  % The original author is Nathan Ho who agreed to put this into
+  % openlilylib/snippets under public domain/MIT licence (cf. LICENSE)
+  snippet-source = "https://github.com/backseatviolist/lilysmufl"
+  snippet-description = \markup {
+    This snippet enables LilyPond to use the Bravura font. It can be used via
+    the command "\bravuraOn". The file README.md provides a
+    more detailed description.
+  }
+  % add comma-separated tags to make searching more effective:
+  tags = "font, bravura"
+  status = "unfinished"
+}
 
 %{
 
@@ -23,6 +35,7 @@
   - Implement StemTremolo
   - Implement SustainPedal
   - Implement font metadata
+  - Fix missing dynamic n in LilyPond
 
 %}
 
