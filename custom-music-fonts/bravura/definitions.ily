@@ -1,6 +1,6 @@
 %{
 
-PUBLIC DOMAIN
+  PUBLIC DOMAIN
 
 %}
 \version "2.17.27"
@@ -9,20 +9,20 @@ PUBLIC DOMAIN
 
 %{
 
-TODO:
+  TODO:
 
- - Notehead styles
- - Rest styles
- - Percent repeats
- - Implement Arpeggio
- - Implement BreathingSign
- - Implement Dots
- - Implement OttavaBracket
- - Implement TrillSpanner
- - Implement TupletNumber
- - Implement StemTremolo
- - Implement SustainPedal
- - Implement font metadata
+  - Notehead styles
+  - Rest styles
+  - Percent repeats
+  - Implement Arpeggio
+  - Implement BreathingSign
+  - Implement Dots
+  - Implement OttavaBracket
+  - Implement TrillSpanner
+  - Implement TupletNumber
+  - Implement StemTremolo
+  - Implement SustainPedal
+  - Implement font metadata
 
 %}
 
@@ -30,19 +30,19 @@ TODO:
 
 #(define (smufl-duration-name log)
    (list-ref
-     '("Longa" "DoubleWhole" "Whole" "Half" "Quarter" "8th" "16th" "32nd" "64th" "128th" "256th" "512th" "1024th")
-     (+ log 2)))
+    '("Longa" "DoubleWhole" "Whole" "Half" "Quarter" "8th" "16th" "32nd" "64th" "128th" "256th" "512th" "1024th")
+    (+ log 2)))
 
 #(define smufl-alteration-glyph-name-alist
-  '((0 . "accidentalNatural")
-    (-1/2 . "accidentalFlat")
-    (1/2 . "accidentalSharp")
-    (1 . "accidentalDoubleSharp")
-    (-1 . "accidentalDoubleFlat")
-    (-1/4 . "accidentalQuarterFlat4")
-    (1/4 . "accidentalQuarterSharp4")
-    (-3/4 . "accidentalThreeQuartersFlat2")
-    (3/4 . "accidentalThreeQuartersSharp2")))
+   '((0 . "accidentalNatural")
+     (-1/2 . "accidentalFlat")
+     (1/2 . "accidentalSharp")
+     (1 . "accidentalDoubleSharp")
+     (-1 . "accidentalDoubleFlat")
+     (-1/4 . "accidentalQuarterFlat4")
+     (1/4 . "accidentalQuarterSharp4")
+     (-3/4 . "accidentalThreeQuartersFlat2")
+     (3/4 . "accidentalThreeQuartersSharp2")))
 
 #(define smufl-clef-map
    '(("clefs.C" . "cClef")
@@ -157,16 +157,16 @@ TODO:
 #(define-markup-command (smuflglyph layout props glyphname) (string?)
    (let* ((glyph-assoc (assoc glyphname smufl-map)))
      (if (pair? glyph-assoc)
-       (interpret-markup layout props
-         (markup (#:fontsize 5 #:override `(font-name . ,smufl-font) #:char (cdr glyph-assoc))))
-       (begin (ly:warning (string-append "SMuFL glyph `" glyphname "' not found")) point-stencil))))
+         (interpret-markup layout props
+           (markup (#:fontsize 5 #:override `(font-name . ,smufl-font) #:char (cdr glyph-assoc))))
+         (begin (ly:warning (string-append "SMuFL glyph `" glyphname "' not found")) point-stencil))))
 
 #(define-markup-command (smuflglyph-compat layout props glyphname) (string?)
    ; Allows Feta names if no appropriate SMuFL char is found.
    (interpret-markup layout props
      (if (smufl-has-glyph? glyphname)
-       (markup (#:fontsize 5 #:override `(font-name . ,smufl-font) #:char (cdr (assoc glyphname smufl-map))))
-       (markup #:musicglyph glyphname))))
+         (markup (#:fontsize 5 #:override `(font-name . ,smufl-font) #:char (cdr (assoc glyphname smufl-map))))
+         (markup #:musicglyph glyphname))))
 
 #(define-markup-command (smuflchar layout props charnum) (integer?)
    (interpret-markup layout props
@@ -179,59 +179,59 @@ TODO:
           (glyphname-assoc (assoc glyphname smufl-clef-map))
           (glyphname-without-suffix-assoc (assoc glyphname-without-suffix smufl-clef-map)))
      (if (smufl-has-glyph? glyphname)
-       ; Is this already a SMuFL glyph?
-       (grob-interpret-markup grob (markup #:smuflglyph glyphname))
-       ; If not, can it be converted into a SMuFL glyph?
-       (if (pair? glyphname-assoc)
-         (grob-interpret-markup grob (markup #:smuflglyph (cdr glyphname-assoc)))
-         (if (and (string-suffix? "_change" glyphname) (pair? glyphname-without-suffix-assoc))
-           (grob-interpret-markup grob (markup #:fontsize -2 #:smuflglyph (cdr glyphname-without-suffix-assoc)))
-           ; Last resort
-           (ly:clef::print grob))))))
+         ; Is this already a SMuFL glyph?
+         (grob-interpret-markup grob (markup #:smuflglyph glyphname))
+         ; If not, can it be converted into a SMuFL glyph?
+         (if (pair? glyphname-assoc)
+             (grob-interpret-markup grob (markup #:smuflglyph (cdr glyphname-assoc)))
+             (if (and (string-suffix? "_change" glyphname) (pair? glyphname-without-suffix-assoc))
+                 (grob-interpret-markup grob (markup #:fontsize -2 #:smuflglyph (cdr glyphname-without-suffix-assoc)))
+                 ; Last resort
+                 (ly:clef::print grob))))))
 
 #(define (smufl-number n)
    (map
-     (lambda (digit)
-       (make-smuflglyph-markup
-         (string-append "timeSig" (make-string 1 digit))))
-     (string->list (number->string n))))
+    (lambda (digit)
+      (make-smuflglyph-markup
+       (string-append "timeSig" (make-string 1 digit))))
+    (string->list (number->string n))))
 
 #(define (smufl-numeric-time-signature grob num denom)
    (grob-interpret-markup
-     grob
-     (markup
-       #:vcenter
-       #:override '(baseline-skip . 0)
-       (make-center-column-markup
-         (list
-           (make-concat-markup (smufl-number num))
-           (make-concat-markup (smufl-number denom)))))))
+    grob
+    (markup
+     #:vcenter
+     #:override '(baseline-skip . 0)
+     (make-center-column-markup
+      (list
+       (make-concat-markup (smufl-number num))
+       (make-concat-markup (smufl-number denom)))))))
 
 #(define (smufl-time-signature grob)
-  (let* ((style (ly:grob-property grob 'style))
-         (fraction (ly:grob-property grob 'fraction))
-         (num (if (pair? fraction) (car fraction) 4))
-         (denom (if (pair? fraction) (cdr fraction) 4))
-         (glyphname
+   (let* ((style (ly:grob-property grob 'style))
+          (fraction (ly:grob-property grob 'fraction))
+          (num (if (pair? fraction) (car fraction) 4))
+          (denom (if (pair? fraction) (cdr fraction) 4))
+          (glyphname
            (cond
-             ((equal? fraction '(4 . 4)) "timeSigCommon")
-             ((equal? fraction '(2 . 2)) "timeSigCutCommon")
-             (else ""))))
-    (if (and (equal? style 'C) (not (equal? glyphname "")))
-      (grob-interpret-markup
-        grob
-        (markup #:vcenter #:smuflglyph glyphname))
-      (smufl-numeric-time-signature grob num denom))))
+            ((equal? fraction '(4 . 4)) "timeSigCommon")
+            ((equal? fraction '(2 . 2)) "timeSigCutCommon")
+            (else ""))))
+     (if (and (equal? style 'C) (not (equal? glyphname "")))
+         (grob-interpret-markup
+          grob
+          (markup #:vcenter #:smuflglyph glyphname))
+         (smufl-numeric-time-signature grob num denom))))
 
 #(define (smufl-notehead grob)
-  (let* ((log (ly:grob-property grob 'duration-log))
-         (style (ly:grob-property grob 'style)))
+   (let* ((log (ly:grob-property grob 'duration-log))
+          (style (ly:grob-property grob 'style)))
      (grob-interpret-markup grob
-      (cond 
-         ((<= log -1) (markup #:smuflglyph "noteheadDoubleWhole"))
-         ((<= log 0) (markup #:smuflglyph "noteheadWhole"))
-         ((<= log 1) (markup #:smuflglyph "noteheadHalf"))  
-	 (else  (markup #:smuflglyph "noteheadBlack"))))))
+       (cond
+        ((<= log -1) (markup #:smuflglyph "noteheadDoubleWhole"))
+        ((<= log 0) (markup #:smuflglyph "noteheadWhole"))
+        ((<= log 1) (markup #:smuflglyph "noteheadHalf"))
+        (else  (markup #:smuflglyph "noteheadBlack"))))))
 
 
 #(define (smufl-flag grob)
@@ -245,48 +245,48 @@ TODO:
           (flag-pos (cons (* stem-width -1) 0))
           (stroke-style (ly:grob-property grob 'stroke-style))
           (stroke-stencil (if (equal? stroke-style "grace")
-                              (if (equal? dir UP) 
+                              (if (equal? dir UP)
                                   (make-line-stencil 0.15 -0.5 -1.6 0.75 -0.6)
                                   (make-line-stencil 0.15 -0.4 1.6 0.85 0.6))
-     ;                            (grob-interpret-markup grob (markup #:smuflglyph "flags.ugrace"))
-     ;                            (grob-interpret-markup grob (markup #:smuflglyph "flags.dgrace")))
+                              ;                            (grob-interpret-markup grob (markup #:smuflglyph "flags.ugrace"))
+                              ;                            (grob-interpret-markup grob (markup #:smuflglyph "flags.dgrace")))
                               empty-stencil)))
-          (ly:stencil-translate (ly:stencil-add flag-stencil stroke-stencil) flag-pos)))
+     (ly:stencil-translate (ly:stencil-add flag-stencil stroke-stencil) flag-pos)))
 
 #(define (smufl-accidental grob)
-  (let* ((alt (ly:grob-property grob 'alteration))
-         (show (if (null? (ly:grob-property grob 'forced)) (if (null? (ly:grob-object grob 'tie)) #t #f ) #t )))
-    (if (equal? show #t)
-      (grob-interpret-markup grob (markup #:smuflglyph (assoc-get alt smufl-alteration-glyph-name-alist "")))
-      (ly:accidental-interface::print grob))))
+   (let* ((alt (ly:grob-property grob 'alteration))
+          (show (if (null? (ly:grob-property grob 'forced)) (if (null? (ly:grob-object grob 'tie)) #t #f ) #t )))
+     (if (equal? show #t)
+         (grob-interpret-markup grob (markup #:smuflglyph (assoc-get alt smufl-alteration-glyph-name-alist "")))
+         (ly:accidental-interface::print grob))))
 
-#(define (smufl-key-signature grob) 
-  (let* ((altlist (ly:grob-property grob 'alteration-alist)) 
-    (c0pos (ly:grob-property grob 'c0-position)) 
-    (keysig-stencil '())) 
-    (for-each (lambda (alt) 
-         (let* ((alteration (if (grob::has-interface grob 'key-cancellation-interface) 0 (cdr alt))) 
-           (glyphname (assoc-get alteration smufl-alteration-glyph-name-alist "")) 
-           (padding (cond 
-             ((< alteration 0) 0.1)  ; any kind of flat 
-             ((= alteration 0) 0.3)  ;  natural 
-             ((< alteration 1) 0.1)  ; sharp (less than double sharp) 
-             (else -0.4)))           ; double sharp 
-           (ypos (key-signature-interface::alteration-positions alt c0pos grob)) 
-           (acc-stencil (fold (lambda (y s) 
-                                (ly:stencil-add 
-                                  (grob-interpret-markup grob 
-                                    (markup #:raise (/ y 2) #:smuflglyph glyphname)) 
-                                  s)) 
-                              empty-stencil 
-                              ypos))) 
-           (set! keysig-stencil (ly:stencil-combine-at-edge acc-stencil X RIGHT keysig-stencil padding)))) altlist) 
-    keysig-stencil)) 
+#(define (smufl-key-signature grob)
+   (let* ((altlist (ly:grob-property grob 'alteration-alist))
+          (c0pos (ly:grob-property grob 'c0-position))
+          (keysig-stencil '()))
+     (for-each (lambda (alt)
+                 (let* ((alteration (if (grob::has-interface grob 'key-cancellation-interface) 0 (cdr alt)))
+                        (glyphname (assoc-get alteration smufl-alteration-glyph-name-alist ""))
+                        (padding (cond
+                                  ((< alteration 0) 0.1)  ; any kind of flat
+                                  ((= alteration 0) 0.3)  ; natural
+                                  ((< alteration 1) 0.1)  ; sharp (less than double sharp)
+                                  (else -0.4)))           ; double sharp
+                        (ypos (key-signature-interface::alteration-positions alt c0pos grob))
+                        (acc-stencil (fold (lambda (y s)
+                                             (ly:stencil-add
+                                              (grob-interpret-markup grob
+                                                (markup #:raise (/ y 2) #:smuflglyph glyphname))
+                                              s))
+                                       empty-stencil
+                                       ypos)))
+                   (set! keysig-stencil (ly:stencil-combine-at-edge acc-stencil X RIGHT keysig-stencil padding)))) altlist)
+     keysig-stencil))
 
 #(define (smufl-rest grob)
-  (let* ((duration (ly:grob-property grob 'duration-log))
-         (glyphname (string-append "rest" (smufl-duration-name duration))))
-      (grob-interpret-markup grob (markup #:smuflglyph glyphname))))
+   (let* ((duration (ly:grob-property grob 'duration-log))
+          (glyphname (string-append "rest" (smufl-duration-name duration))))
+     (grob-interpret-markup grob (markup #:smuflglyph glyphname))))
 
 #(define (smufl-script grob)
    (let* ((dir (ly:grob-property grob 'direction))
@@ -294,28 +294,28 @@ TODO:
           (glyphname (string-append "scripts." (if (= dir DOWN) (car (cdr var)) (cdr (cdr var)))))
           (glyphname-assoc (assoc glyphname smufl-script-map)))
      (if (smufl-has-glyph? glyphname)
-       ; Is this already a SMuFL glyph?
-       (grob-interpret-markup grob (markup #:center-align #:smuflglyph glyphname))
-       ; If not, can it be converted into a SMuFL glyph?
-       (if (pair? glyphname-assoc)
-         (grob-interpret-markup grob (markup #:center-align #:smuflglyph (cdr glyphname-assoc)))
-         (ly:script-interface::print grob)))))
+         ; Is this already a SMuFL glyph?
+         (grob-interpret-markup grob (markup #:center-align #:smuflglyph glyphname))
+         ; If not, can it be converted into a SMuFL glyph?
+         (if (pair? glyphname-assoc)
+             (grob-interpret-markup grob (markup #:center-align #:smuflglyph (cdr glyphname-assoc)))
+             (ly:script-interface::print grob)))))
 
 % Bug: long dynamics are cut off
 #(define (smufl-dynamic-text grob)
    (let* ((text (ly:grob-property grob 'text)))
      (grob-interpret-markup
-       grob
-       (markup #:fontsize -4
-         (if (pair? (assoc text smufl-dynamic-map))
-           (make-smuflglyph-markup (cdr (assoc text smufl-dynamic-map)))
-           (make-concat-markup
+      grob
+      (markup #:fontsize -4
+        (if (pair? (assoc text smufl-dynamic-map))
+            (make-smuflglyph-markup (cdr (assoc text smufl-dynamic-map)))
+            (make-concat-markup
              (map
-               (lambda (char)
-                 (if (pair? (assoc (make-string 1 char) smufl-dynamic-map))
-                   (make-smuflglyph-markup (cdr (assoc (make-string 1 char) smufl-dynamic-map)))
-                   (markup (make-string 1 char))))
-               (string->list text))))))))
+              (lambda (char)
+                (if (pair? (assoc (make-string 1 char) smufl-dynamic-map))
+                    (make-smuflglyph-markup (cdr (assoc (make-string 1 char) smufl-dynamic-map)))
+                    (markup (make-string 1 char))))
+              (string->list text))))))))
 
 ffffff = #(make-dynamic-script "ffffff")
 pppppp = #(make-dynamic-script "pppppp")
