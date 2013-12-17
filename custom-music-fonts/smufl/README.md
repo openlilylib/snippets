@@ -8,7 +8,7 @@ Perhaps someday the Feta font will be made SMuFL-compatible so Feta can be used 
 
 **Current version:** SMuFL 0.7
 
-Make sure Bravura is installed on your system (get it from [the SMuFL website](http://www.smufl.org/fonts/)), and  that the openLilyLib snippets repository is present locally and in Lilypond's search path.
+Make sure Bravura is installed on your system (get it from the `bravura-0.7` folder or from [the SMuFL website](http://www.smufl.org/fonts/) and install it by copying Bravura.otf into the directory `/usr/share/lilypond/<version>/fonts/otf/` of your LilyPond installation), and  that the openLilyLib snippets repository is present locally and in Lilypond's search path.
 Include `custom-music-fonts/smufl/definitions.ily` and add `\bravuraOn` (or `\smuflOn` to avoid Bravura-specific overrides) to the Staff context:
 
 ```lilypond
