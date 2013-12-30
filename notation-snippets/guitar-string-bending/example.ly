@@ -1,4 +1,4 @@
-\version "2.16.2"
+\version "2.18.0"
 
 \include "definitions.ily"
 
@@ -47,12 +47,12 @@ test = \relative c'' {
   %c,4 ( cih ) c4 ( cisih )
   %% I hope that in future releases the tie will recognize automagically
   %% that he ties to a note which is bent, but I don't know how (yet).
-  \bendGrace c'8 ( \holdBend d2 ) ~ d2 ( c1 )
+  \bendGrace c8 ( \holdBend d2 ) ~ d2 ( c1 )
   c4 ( \shiftBend d) ( e2 )
   \bendOff
   %% switching bends off works apparently
-  c,4 ( e ) c4 ( f )
-  c'4 ( b ) c4 ( a )
+  c,4 ( d ) f4 ( g )
+  a4 ( g ) e\2 ( d )
   %}
 }
 
