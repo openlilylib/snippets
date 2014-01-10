@@ -11,6 +11,48 @@
 
   define other instruments
 %}
+\version "2.19.0"
+
+newInstrument =
+#(define-void-function (parser location name)(string?)
+   (let ((staffname (string-append name "Staff"))
+         (voicename (string-append name "Voice")))
+
+     ;; We have to make a Scheme assignment to make this work as a layout modification.
+     ;; From David's explanation:
+
+     ;; Presumably because Scheme expressions in layout definitions are not
+     ;; interpreted.  That's similar to a few other places where a local module
+     ;; can be manipulated by Scheme expressions like #(set-staff-size) and
+     ;; similar stuff where the expectation is that the return value should not
+     ;; get interpreted.
+     (ly:parser-define! parser '$defaultlayout
+       #{
+         \layout {
+           \context {
+             \ChoirStaff
+             \accepts #staffname
+           }
+           \context {
+             \Staff
+             \name #staffname
+             \alias "Staff"
+             \accepts #voicename
+             \defaultchild #voicename
+
+             instrumentName = "Test"
+             shortInstrumentName = "Test"
+             \dynamicUp
+             \tupletUp
+           }
+
+           \context {
+             \Voice
+             \name #voicename
+             \alias "Voice"
+           }
+         }
+       #})))
 
 \layout {
 
