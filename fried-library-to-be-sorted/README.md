@@ -8,6 +8,7 @@ Functions, stylesheets and other stuff from the library of
 This is quite chaotic, as i just copied stuff from our library subdir,
 removing unwanted stuff but without doing thorough cleanup.  It should
 be formatted accodrdingly to openlilylib/snippets conventions, files
-renamed appropriately and put in appropriate places.
+renamed appropriately and put in appropriate subdirectories.
 
-Every file should contain a TODO explaining roughly what should be done.
+Every file contains a TODO explaining in more detail what should be done.
+Pull requests welcome!
