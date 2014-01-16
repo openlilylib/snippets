@@ -8,7 +8,7 @@
   % add comma-separated tags to make searching more effective:
   tags = "Program flow, LilyPond variables, a-lists"
   % is this snippet ready?  See meta/status-values.md
-  status = "undocumented"
+  status = "ready"
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
