@@ -35,6 +35,10 @@
     (string-append "M " publisher "-" title "-" (number->string check))
     ))
 
+% wrap scheme-function
+createISMN = #(define-scheme-function (parser location publisher title)(string? string?)(create-ismn publisher title))
+
+% markup command
 #(define-markup-command (ismn layout props publisher title)(string? string?)   
    (interpret-markup layout props (create-ismn publisher title)))
 
