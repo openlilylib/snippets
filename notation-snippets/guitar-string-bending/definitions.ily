@@ -412,7 +412,7 @@ bendGrace =
      \once \override Voice.Flag #'stencil = ##f
      \once \override Voice.Stem #'direction = #DOWN
      \once \override Voice.Slur #'direction = #UP
-     \grace $note
+     \grace #note
    #})
 
 preBendHold =
@@ -420,7 +420,7 @@ preBendHold =
    #{
      \once \override TabVoice.Slur #'stencil = #slur::draw-pre-bend-only
      \once \override TabStaff.ParenthesesItem #'transparent = ##t
-     <>\noBeam \parenthesize $note
+     <>\noBeam \parenthesize #note
    #})
 
 preBendRelease =
@@ -429,7 +429,7 @@ preBendRelease =
      \once \override TabVoice.Slur #'stencil = #slur::draw-pre-bend-hold
      \once \override TabStaff.ParenthesesItem #'transparent = ##t
      \once \override Voice.Slur #'direction = #DOWN
-     <>\noBeam \parenthesize $note
+     <>\noBeam \parenthesize #note
    #})
 
 holdBend =
