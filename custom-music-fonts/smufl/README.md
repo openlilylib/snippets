@@ -17,7 +17,7 @@ from source code, copy the file to `out/share/lilypond/current/fonts/otf/` subdi
 
 #### Using the font in LilyPond files ####
 
-and that the openLilyLib snippets repository is present locally and in Lilypond's search path.
+Ensure that the openLilyLib snippets repository is present locally and in Lilypond's search path.
 Include `custom-music-fonts/smufl/definitions.ily` and add `\bravuraOn` (or `\smuflOn` to avoid Bravura-specific overrides) to the Staff context:
 
 ```lilypond
@@ -45,6 +45,8 @@ Or, better:
 ```
 
 With this, many music features will be automatically converted into the Bravura font. Compilation will be a little slower, espcially for large scores.
+
+To revert things back to normal, use `\bravuraOff` or `\smuflOff`.
 
 ## Commands ##
 
