@@ -21,13 +21,16 @@ Limitations
 -----------
 
 * Quarter tone bends are not supported.
+* Line breaks are not supported.  If a bending is broken by a line
+  break, the file won't compile: the workaround is using \noBreak.
 * You can't use hammer-on and pull-off when `\bendOn` is active, because
   this snippet uses and transforms the slur engraver.  This implies that
   you cannot, for instance, start a pull-off right after a bend release.
   This is one of the reasons why a bend engraver is needed (see
   issue 1196 above).
-* If you use Staff and TabStaff, especially in polyphonic pieces, you may
-  have to add some more padding in order to avoid collisions:
+* If you use Staff and TabStaff, you may have to add some more padding
+  in order to avoid collisions between the bending interval number and
+  the staff:
   ```
   \layout {
     \context {
