@@ -309,10 +309,10 @@
           (glyphname-assoc (assoc glyphname smufl-script-map)))
      (if (smufl-has-glyph? glyphname)
          ; Is this already a SMuFL glyph?
-         (grob-interpret-markup grob (markup #:center-align #:smuflglyph glyphname))
+         (grob-interpret-markup grob (markup #:vcenter #:center-align #:smuflglyph glyphname))
          ; If not, can it be converted into a SMuFL glyph?
          (if (pair? glyphname-assoc)
-             (grob-interpret-markup grob (markup #:center-align #:smuflglyph (cdr glyphname-assoc)))
+             (grob-interpret-markup grob (markup #:vcenter #:center-align #:smuflglyph (cdr glyphname-assoc)))
              (ly:script-interface::print grob)))))
 
 % Bug: long dynamics are cut off
