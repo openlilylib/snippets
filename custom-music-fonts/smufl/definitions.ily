@@ -320,7 +320,7 @@
    (let* ((text (ly:grob-property grob 'text)))
      (grob-interpret-markup
       grob
-      (markup #:fontsize -4
+      (markup
         (if (pair? (assoc text smufl-dynamic-map))
             (make-smuflglyph-markup (cdr (assoc text smufl-dynamic-map)))
             (make-concat-markup

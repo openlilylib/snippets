@@ -6,7 +6,7 @@ Perhaps someday the Feta font will be made SMuFL-compatible so Feta can be used 
 
 ## Usage ##
 
-**Current version:** SMuFL 0.7
+**Current version:** SMuFL 0.8
 
 #### Installing font files ####
 
