@@ -6,11 +6,11 @@ Perhaps someday the Feta font will be made SMuFL-compatible so Feta can be used 
 
 ## Usage ##
 
-**Current version:** SMuFL 0.7
+**Current version:** SMuFL 0.8
 
 #### Installing font files ####
 
-Make sure Bravura is installed on your system.  You can either take the files from the `bravura-0.7` folder or from
+Make sure Bravura is installed on your system.  You can either take the files from the `bravura-0.8` folder or from
 [the SMuFL website](http://www.smufl.org/fonts/).  Install the font by copying `Bravura.otf` into the directory `/usr/share/lilypond/<version>/fonts/otf/` of your LilyPond installation.  (If you are running lilypond
 from source code, copy the file to `out/share/lilypond/current/fonts/otf/` subdir of lilypond build).
 

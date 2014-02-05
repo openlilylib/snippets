@@ -161,8 +161,8 @@
      ("scripts.usemicirculus" . "chantSemiCirculusAbove")
      ("scripts.dsemicirculus" . "chantSemiCirculusBelow")
      ("scripts.circulus" . "chantAugmentum")
-     ("scripts.usignumcongruentiae" . "mensuralSignum")
-     ;("scripts.dsignumcongruentiae" . "mensuralSignum")
+     ("scripts.usignumcongruentiae" . "mensuralSignumUp")
+     ("scripts.dsignumcongruentiae" . "mensuralSignumDown")
      ))
 
 #(define (smufl-has-glyph? glyphname)
@@ -320,7 +320,7 @@
    (let* ((text (ly:grob-property grob 'text)))
      (grob-interpret-markup
       grob
-      (markup #:fontsize -4
+      (markup
         (if (pair? (assoc text smufl-dynamic-map))
             (make-smuflglyph-markup (cdr (assoc text smufl-dynamic-map)))
             (make-concat-markup
