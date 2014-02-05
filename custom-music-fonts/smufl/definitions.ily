@@ -161,8 +161,8 @@
      ("scripts.usemicirculus" . "chantSemiCirculusAbove")
      ("scripts.dsemicirculus" . "chantSemiCirculusBelow")
      ("scripts.circulus" . "chantAugmentum")
-     ("scripts.usignumcongruentiae" . "mensuralSignum")
-     ;("scripts.dsignumcongruentiae" . "mensuralSignum")
+     ("scripts.usignumcongruentiae" . "mensuralSignumUp")
+     ("scripts.dsignumcongruentiae" . "mensuralSignumDown")
      ))
 
 #(define (smufl-has-glyph? glyphname)
