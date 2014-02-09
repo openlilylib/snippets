@@ -34,12 +34,12 @@
   7 8 9
   ?
   We could also have a parameter that would allow to choose the arrangement.
-
-  BUG: if columns have significantly differrent width, alignment is wrong.
 %}
 
+\include "../../notation-snippets/fill-line-evenly/definitions.ily"
+
 stanzas = \markup {
-  \fill-line {
+  \fill-line-evenly {
     % We don't use \large, \small etc. because these commands
     % don't scale the distance between lines correctly.
     % First number - horizontal factor, 2nd - vertical.
