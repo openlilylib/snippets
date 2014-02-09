@@ -28,30 +28,17 @@
   1 4 7
   2 5 8
   3 6 9
-  or
+  or like this
   1 2 3
   4 5 6
   7 8 9
   ?
-  If we allow both arrangements, we would need a parameter for that.
+  We could also have a parameter that would allow to choose the arrangement.
 
   BUG: if columns have significantly differrent width, alignment is wrong.
 %}
 
-stanzaII = \markup {
-}
-stanzaIII = \markup {
-}
-stanzaIV = \markup {
-}
-stanzaV = \markup {
-}
-
-spaceAfterNumber = \markup \hspace #0.8
-% it would be good if this was stretchable.
-spaceBetweenStanzas = \markup \vspace #2
-
-\markup {
+stanzas = \markup {
   \fill-line {
     % We don't use \large, \small etc. because these commands
     % don't scale the distance between lines correctly.
