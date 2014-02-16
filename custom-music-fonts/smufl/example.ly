@@ -17,3 +17,5 @@ music = \relative c' {
   \new Staff \with { instrumentName = "Feta" } \music
   \new Staff \with { \bravuraOn instrumentName = "Bravura" } \music
 >>
+
+\markup { \smufllig #'("gClefLigatedNumberAbove" "tuplet4") }

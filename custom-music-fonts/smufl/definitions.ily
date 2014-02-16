@@ -186,6 +186,14 @@
    (interpret-markup layout props
      (markup (#:fontsize 5 #:override `(font-name . ,smufl-font) #:char charnum))))
 
+#(define-markup-command (smufllig layout props glyphs) (list?)
+   (interpret-markup layout props
+     (markup (#:fontsize 5 #:override `(font-name . ,smufl-font)
+               (apply string-append
+                 (map
+                   (lambda (glyphname) (ly:wide-char->utf-8 (cdr (assoc glyphname smufl-map))))
+                   glyphs))))))
+
 % TODO: Support for ottavation
 #(define (smufl-clef grob)
    (let* ((glyphname (ly:grob-property grob 'glyph-name))
