@@ -18,4 +18,6 @@ music = \relative c' {
   \new Staff \with { \bravuraOn instrumentName = "Bravura" } \music
 >>
 
+\markup "Create a ligature of two glyphs with \\smufllig"
+
 \markup { \smufllig #'("gClefLigatedNumberAbove" "tuplet4") }
