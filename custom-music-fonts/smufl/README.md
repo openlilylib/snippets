@@ -52,6 +52,15 @@ To revert things back to normal, use `\bravuraOff` or `\smuflOff`.
 
 To invoke a glyph by name like `\musicglyph`, use the markup command `\smuflglyph`. `\smuflglyph #"segno"`, for example, will print a segno sign in the Bravura font. `\smuflglyph` is **not** compatible wih `\musicglyph`, and manual conversion may be necessary. Sorry!
 
+`\smuflchar` is the same as `\smuflglyph`, but it takes a Unicode code point in place of a glyph name.
+
+`\smufllig` takes a list of glyph names (in the form of strings, not symbols) and concatenates them together. This is useful because it can create ligatures; there is no way to do so using the other two commands:
+
+    % Wrong:
+    \concat { \smuflglyph #"gClefLigatedNumberAbove" \smuflglyph #"tuplet5" }
+    % Right:
+    \smufllig #("gClefLigatedNumberAbove" "tuplet5")
+
 A few other new commands are added, such as the dynamics `\pppppp`, `\ffffff`, and `\niente`.
 
 If you want access to LilySMuFL's new commands, but don't want to slow down compilation for now, leave the include in place and comment out `\bravuraOn` or `\smuflOn`. Now you can use `\smuflglyph`, etc. while keeping compilation speedy. There is a caveat: if you use `\niente`, add this line where you would put `\bravuraOn`:
