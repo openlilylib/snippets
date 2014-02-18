@@ -1,5 +1,5 @@
 \version "2.18.0"
-\
+
 \header {
   snippet-title = "Fill-line respecting markup widths"
   snippet-author = "David Nalesnik"
