@@ -1,25 +1,31 @@
-\version "2.16.2"
+\version "2.19.0"
 
 %{
   TODO:
-  There's a lot of boilerplate code here.  This should be done
-  using some function, and i'm pretty sure that such a function
-  would be quite easy to write...
+  newInstrument function should be finished (see below), and all the boilerplate code
+  should be rewritten using this function.
 
   think how to handle two voices (eg SA) on one staff
   -> what about ambitus in that case? Probably shoul be moved to voice.
 
   define other instruments
 %}
-\version "2.19.0"
 
+
+%{
+  NOTE:
+  As you can read in http://lists.gnu.org/archive/html/lilypond-user/2014-01/msg00471.html
+  it should be possible to write this function in a more straightforward way since v.2.19.1
+  Also note that this version is very much unfinished - in particular it should be possible
+  to specify from which context the newly created instrument should "inherit" properties.
+%}
 newInstrument =
 #(define-void-function (parser location name)(string?)
    (let ((staffname (string-append name "Staff"))
          (voicename (string-append name "Voice")))
 
      ;; We have to make a Scheme assignment to make this work as a layout modification.
-     ;; From David's explanation:
+     ;; From David's explanation (http://lists.gnu.org/archive/html/lilypond-user/2014-01/msg00457.html):
 
      ;; Presumably because Scheme expressions in layout definitions are not
      ;; interpreted.  That's similar to a few other places where a local module
