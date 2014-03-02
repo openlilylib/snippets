@@ -3,7 +3,7 @@
 \include "instrument-context-definitions.ily"
 
 \layout {
-  \newInstrument "Test" \Staff \ChoirStaff {
+  \newInstrument "Test" \Staff "" \ChoirStaff {
     \set instrumentName = "Test"
     \set shortInstrumentName = "Test"
     \dynamicUp

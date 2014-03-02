@@ -2,8 +2,7 @@
 
 %{
   TODO:
-  newInstrument function should be finished (see below), and all the boilerplate code
-  should be rewritten using this function.
+  all the boilerplate code should be rewritten using newInstrument function.
 
   think how to handle two voices (eg SA) on one staff
   -> what about ambitus in that case? Probably shoul be moved to voice.
@@ -12,37 +11,37 @@
 %}
 
 
-%{
-  Note that this version is very much unfinished - in particular it should be possible
-  to specify from which context the newly created instrument should "inherit" properties.
-%}
 newInstrument =
-#(define-scheme-function (parser location name parent grouping settings)
-   (string? ly:context-def? ly:context-def? ly:music?)
-   (let ((staffname (string-append name "Staff"))
-         (voicename (string-append name "Voice")))
-       #{
-         \layout {
-           \context {
-             #grouping
-             \accepts #staffname
-           }
-           \context {
-             #parent
-             \name #staffname
-             \alias "Staff"   % TODO this should be derived from "parent"
-             \accepts #voicename
-             \defaultchild #voicename
+#(define-scheme-function
+  (parser location name parent parentname grouping settings)
+  (string? ly:context-def? string? ly:context-def? ly:music?)
+  (let ((staffname (string-append name "Staff"))
+        (voicename (string-append name "Voice"))
+        ;; TODO: should be derived from parent, there shouldn't be a separate arg for this
+        (parentstaffname (string-append parentname "Staff"))
+        (parentvoicename (string-append parentname "Voice")))
+    #{
+      \layout {
+        \context {
+          #grouping
+          \accepts #staffname
+        }
+        \context {
+          #parent
+          \name #staffname
+          \alias #parentstaffname
+          \accepts #voicename % is it possible to make it accept Voices of derived instruments?
+          \defaultchild #voicename
 
-             #settings
-           }
-           \context {
-             \Voice
-             \name #voicename
-             \alias "Voice"   % TODO this should be derived from "parent"
-           }
-         }
-       #}))
+          #settings
+        }
+        \context {
+          \Voice
+          \name #voicename
+          \alias #parentvoicename
+        }
+      }
+    #}))
 
 \layout {
 
@@ -60,7 +59,7 @@ newInstrument =
     \Staff
     \name "VocalStaff"
     \alias "Staff"
-    \accepts "VocalVoice" % it should perhaps also accept derived Voices
+    \accepts "VocalVoice"
     \defaultchild "VocalVoice"
     \description "predefined template for vocal staves"
 
