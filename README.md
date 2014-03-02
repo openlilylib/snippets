@@ -83,7 +83,9 @@ _Note: detailed guidelines are in [`meta/contributing.md`]
 and it must contain a `\version` statement.
 * Please use a template from [`meta/snippet-templates`]
 (meta/snippet-templates) as your starting point:
-  - simple snippets that just demonstrateaanctions, engravers etc.
+  - simple snippets that just demonstrate built-in LilyPond features
+    should use the one-file template.
+  - snippets defining custom commands, functions, engravers etc.
     that can be useful on their own should use the "includable" template.
 * If possible, please format your code using Frescobaldi's
 _Format_ tool.
