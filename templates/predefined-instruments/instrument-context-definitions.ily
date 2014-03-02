@@ -10,14 +10,14 @@
   define other instruments
 %}
 
-
+% TODO: parentstaff and parentvoice should be derived from parentname,
+% there shouldn't be separate args for this
 newInstrument =
 #(define-scheme-function
-  (parser location name parent parentname grouping settings)
-  (string? ly:context-def? string? ly:context-def? ly:context-mod?)
+  (parser location name parentstaff parentvoice parentname grouping settings)
+  (string? ly:context-def? ly:context-def? string? ly:context-def? ly:context-mod?)
   (let ((staffname (string-append name "Staff"))
         (voicename (string-append name "Voice"))
-        ;; TODO: should be derived from parent, there shouldn't be a separate arg for this
         (parentstaffname (string-append parentname "Staff"))
         (parentvoicename (string-append parentname "Voice")))
     #{
@@ -27,7 +27,7 @@ newInstrument =
           \accepts #staffname
         }
         \context {
-          #parent
+          #parentstaff
           \name #staffname
           \alias #parentstaffname
           \accepts #voicename % is it possible to make it accept Voices of derived instruments?
@@ -36,7 +36,7 @@ newInstrument =
           #settings
         }
         \context {
-          \Voice
+          #parentvoice
           \name #voicename
           \alias #parentvoicename
         }
@@ -44,7 +44,7 @@ newInstrument =
     #}))
 
 \layout {
-  \newInstrument "Vocal" \Staff "" \ChoirStaff \with {
+  \newInstrument "Vocal" \Staff \Voice "" \ChoirStaff \with {
     \consists "Ambitus_engraver"
     instrumentName = "Vocals"
     shortInstrumentName = "Voc."
