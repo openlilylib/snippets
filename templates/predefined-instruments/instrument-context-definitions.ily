@@ -14,7 +14,7 @@
 newInstrument =
 #(define-scheme-function
   (parser location name parent parentname grouping settings)
-  (string? ly:context-def? string? ly:context-def? ly:music?)
+  (string? ly:context-def? string? ly:context-def? ly:context-mod?)
   (let ((staffname (string-append name "Staff"))
         (voicename (string-append name "Voice"))
         ;; TODO: should be derived from parent, there shouldn't be a separate arg for this

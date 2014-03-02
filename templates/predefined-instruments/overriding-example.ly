@@ -3,9 +3,9 @@
 \include "instrument-context-definitions.ily"
 
 \layout {
-  \newInstrument "Test" \Staff "" \ChoirStaff {
-    \set instrumentName = "Test"
-    \set shortInstrumentName = "Test"
+  \newInstrument "Test" \Staff "" \ChoirStaff \with {
+    instrumentName = "Test"
+    shortInstrumentName = "Test"
     \dynamicUp
     \tupletUp
   }
