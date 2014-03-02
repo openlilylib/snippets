@@ -2,6 +2,8 @@
 
 \include "instrument-context-definitions.ily"
 
+\newInstrument "Test"
+
 sopranomelody = \relative c'' {
   c b a f
 }
@@ -25,6 +27,8 @@ text = \lyricmode {
     \new SopranoVoice = sop \sopranomelody
     \new Lyrics \lyricsto sop \text
 
+    \new TestStaff = trolo \sopranomelody
+
     \new AltoVoice = alt \altomelody
     \new Lyrics \lyricsto alt \text
 
@@ -39,6 +43,7 @@ text = \lyricmode {
     \override AltoStaff.NoteHead #'color = #red
     \override SopranoVoice.Stem #'color = #green
     \override VocalStaff.Stem #'thickness = #4
+    \override TestStaff.Stem #'color = #magenta
   }
   \midi {
     % it would be nice if eg. \set SopranoStaff.midiInstrument
