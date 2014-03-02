@@ -3,9 +3,7 @@ What's this?
 
 A place to store and collaborate on LilyPond tools - snippets, templates, extensions.
 Why we don't just put this stuff in [Lilypond Snippet Repository](http://lsr.dsi.unimi.it/)?
-There are three reasons:
-* As of 2014-01-26, LSR accepts snippets for LilyPond version 2.14.2
-  (current version is 2.18.0).
+There are two reasons:
 * Some things cannot be placed in LSR (multi-file extensions, special scripts).
 * LSR doesn't have tools for collaboration and version control.
 
