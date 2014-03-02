@@ -52,30 +52,24 @@ newInstrument =
     \tupletUp
   }
 }
+% Why i cannot put this in one \layout????
+\layout {
+  \newInstrument "Soprano" \VocalStaff \VocalVoice "Vocal" \ChoirStaff \with {
+    instrumentName = "Soprano"
+    shortInstrumentName = "S"
+    \clef G
+  }
+}
 
 \layout {
 
   \context {
     \ChoirStaff
-    \accepts "SopranoStaff"
     \accepts "AltoStaff"
     \accepts "TenorStaff"
     \accepts "BassStaff"
   }
 
-
-  \context {
-    \VocalStaff
-    \name "SopranoStaff"
-    \alias "VocalStaff"
-    \accepts "SopranoVoice"
-    \defaultchild "SopranoVoice"
-    \description "predefined template for soprano staff"
-
-    instrumentName = "Soprano"
-    shortInstrumentName = "S"
-    \clef G
-  }
 
   \context {
     \VocalStaff
@@ -116,13 +110,6 @@ newInstrument =
     \clef F
   }
 
-
-  \context {
-    \VocalVoice
-    \name "SopranoVoice"
-    \alias "VocalVoice"
-    \description "predefined template for soprano voice"
-  }
 
   \context {
     \VocalVoice
