@@ -1,4 +1,4 @@
-\version "2.19.0"
+\version "2.19.1"
 
 %{
   TODO:
@@ -13,26 +13,13 @@
 
 
 %{
-  NOTE:
-  As you can read in http://lists.gnu.org/archive/html/lilypond-user/2014-01/msg00471.html
-  it should be possible to write this function in a more straightforward way since v.2.19.1
-  Also note that this version is very much unfinished - in particular it should be possible
+  Note that this version is very much unfinished - in particular it should be possible
   to specify from which context the newly created instrument should "inherit" properties.
 %}
 newInstrument =
-#(define-void-function (parser location name)(string?)
+#(define-scheme-function (parser location name)(string?)
    (let ((staffname (string-append name "Staff"))
          (voicename (string-append name "Voice")))
-
-     ;; We have to make a Scheme assignment to make this work as a layout modification.
-     ;; From David's explanation (http://lists.gnu.org/archive/html/lilypond-user/2014-01/msg00457.html):
-
-     ;; Presumably because Scheme expressions in layout definitions are not
-     ;; interpreted.  That's similar to a few other places where a local module
-     ;; can be manipulated by Scheme expressions like #(set-staff-size) and
-     ;; similar stuff where the expectation is that the return value should not
-     ;; get interpreted.
-     (ly:parser-define! parser '$defaultlayout
        #{
          \layout {
            \context {
@@ -58,7 +45,7 @@ newInstrument =
              \alias "Voice"
            }
          }
-       #})))
+       #}))
 
 \layout {
 

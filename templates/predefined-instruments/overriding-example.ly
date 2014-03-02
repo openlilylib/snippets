@@ -1,8 +1,8 @@
-\version "2.16.2"
+\version "2.19.1"
 
 \include "instrument-context-definitions.ily"
 
-\newInstrument "Test"
+\layout { \newInstrument "Test" }
 
 sopranomelody = \relative c'' {
   c b a f
