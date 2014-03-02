@@ -29,7 +29,6 @@
   - Percent repeats
   - Implement Arpeggio
   - Implement BreathingSign
-  - Implement Dots
   - Implement OttavaBracket
   - Implement TrillSpanner
   - Implement TupletNumber
@@ -290,10 +289,10 @@
                  (let* ((alteration (if (grob::has-interface grob 'key-cancellation-interface) 0 (cdr alt)))
                         (glyphname (assoc-get alteration smufl-alteration-glyph-name-alist ""))
                         (padding (cond
-                                  ((< alteration 0) 0.1)  ; any kind of flat
-                                  ((= alteration 0) 0.3)  ; natural
-                                  ((< alteration 1) 0.1)  ; sharp (less than double sharp)
-                                  (else -0.4)))           ; double sharp
+                                   ((< alteration 0) 0.1)
+                                   ((= alteration 0) 0.3)
+                                   ((< alteration 1) 0.1)
+                                   (else -0.4)))
                         (ypos (key-signature-interface::alteration-positions alt c0pos grob))
                         (acc-stencil (fold (lambda (y s)
                                              (ly:stencil-add
@@ -339,6 +338,18 @@
                     (markup (make-string 1 char))))
               (string->list text))))))))
 
+#(define (smufl-dots grob)
+   (let* ((count (ly:grob-property grob 'dot-count))
+          (dot (grob-interpret-markup grob (markup #:smuflglyph "augmentationDot")))
+          (dot-width ((lambda (ext) (- (cdr ext) (car ext))) (ly:stencil-extent dot X)))
+          (stil (make-transparent-box-stencil '(0 . 0) '(0 . 0))))
+     (if (number? count)
+       (let loop ((i count))
+         (if (= i 0) stil
+           (begin
+             (set! stil (ly:stencil-combine-at-edge stil X RIGHT dot dot-width))
+             (loop (- i 1))))))))
+
 ffffff = #(make-dynamic-script "ffffff")
 pppppp = #(make-dynamic-script "pppppp")
 niente = #(make-dynamic-script "n")
@@ -351,6 +362,7 @@ smuflOn = {
   \override Staff.KeyCancellation.stencil = #smufl-key-signature
   \override Staff.NoteHead.stencil = #smufl-notehead
   \override Staff.Flag.stencil = #smufl-flag
+  \override Staff.Dots.stencil = #smufl-dots
   \override Staff.Accidental.stencil = #smufl-accidental
   \override Staff.Rest.stencil = #smufl-rest
   \override Staff.Script.stencil = #smufl-script
@@ -373,6 +385,7 @@ smuflOff = {
   \revert Staff.KeyCancellation.stencil
   \revert Staff.NoteHead.stencil
   \revert Staff.Flag.stencil
+  \revert Staff.Dots.stencil
   \revert Staff.Accidental.stencil
   \revert Staff.Rest.stencil
   \revert Staff.Script.stencil
