@@ -2,7 +2,14 @@
 
 \include "instrument-context-definitions.ily"
 
-\layout { \newInstrument "Test" }
+\layout {
+  \newInstrument "Test" \Staff \ChoirStaff {
+    \set instrumentName = "Test"
+    \set shortInstrumentName = "Test"
+    \dynamicUp
+    \tupletUp
+  }
+}
 
 sopranomelody = \relative c'' {
   c b a f

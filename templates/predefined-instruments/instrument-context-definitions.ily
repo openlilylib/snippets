@@ -17,32 +17,29 @@
   to specify from which context the newly created instrument should "inherit" properties.
 %}
 newInstrument =
-#(define-scheme-function (parser location name)(string?)
+#(define-scheme-function (parser location name parent grouping settings)
+   (string? ly:context-def? ly:context-def? ly:music?)
    (let ((staffname (string-append name "Staff"))
          (voicename (string-append name "Voice")))
        #{
          \layout {
            \context {
-             \ChoirStaff
+             #grouping
              \accepts #staffname
            }
            \context {
-             \Staff
+             #parent
              \name #staffname
-             \alias "Staff"
+             \alias "Staff"   % TODO this should be derived from "parent"
              \accepts #voicename
              \defaultchild #voicename
 
-             instrumentName = "Test"
-             shortInstrumentName = "Test"
-             \dynamicUp
-             \tupletUp
+             #settings
            }
-
            \context {
              \Voice
              \name #voicename
-             \alias "Voice"
+             \alias "Voice"   % TODO this should be derived from "parent"
            }
          }
        #}))
