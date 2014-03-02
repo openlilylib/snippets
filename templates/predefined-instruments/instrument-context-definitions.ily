@@ -44,31 +44,25 @@ newInstrument =
     #}))
 
 \layout {
-
-  \context {
-    \ChoirStaff
-    \accepts "VocalStaff"
-    \accepts "SopranoStaff"
-    \accepts "AltoStaff"
-    \accepts "TenorStaff"
-    \accepts "BassStaff"
-  }
-
-
-  \context {
-    \Staff
-    \name "VocalStaff"
-    \alias "Staff"
-    \accepts "VocalVoice"
-    \defaultchild "VocalVoice"
-    \description "predefined template for vocal staves"
-
+  \newInstrument "Vocal" \Staff "" \ChoirStaff \with {
     \consists "Ambitus_engraver"
     instrumentName = "Vocals"
     shortInstrumentName = "Voc."
     \dynamicUp
     \tupletUp
   }
+}
+
+\layout {
+
+  \context {
+    \ChoirStaff
+    \accepts "SopranoStaff"
+    \accepts "AltoStaff"
+    \accepts "TenorStaff"
+    \accepts "BassStaff"
+  }
+
 
   \context {
     \VocalStaff
@@ -122,13 +116,6 @@ newInstrument =
     \clef F
   }
 
-
-  \context {
-    \Voice
-    \name "VocalVoice"
-    \alias "Voice"
-    \description "predefined template for vocal voice"
-  }
 
   \context {
     \VocalVoice
