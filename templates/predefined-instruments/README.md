@@ -54,8 +54,8 @@ mind and want to use a different naming, you can just change
 the names in `mystaffnames.ily` and all your scores that
 `\include` this file will be affected!
 
-Note: as of 2014-03-02, this is in early stage of development.
+Note: as of 2014-03-02, this is work-in-progress.
 The definitions of various vocal staves provide a proof of concept
-that demonstrates that the approach is valid.  There is a draft of
-a function that will help with generating all these contexts.
-This function should be finished and all context defined using it.
+that demonstrates that the approach is valid.  There is an initial
+version of a function for generating all these contexts.
+This function should be improved and all contexts defined using it.
