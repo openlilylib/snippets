@@ -83,4 +83,4 @@ LilySMuFL has a few defects. A few make it not yet usable for professional engra
  * Styles not supported for rests, noteheads, or flags
  * Strange Script alignment at times (fermatas, staccatos)
  * Occasional ugly Accidental spacing
- * Still using Feta: Arpeggio, BreathingSign, Dots, OttavaBracket, PercentRepeat, TrillSpanner, TupletNumber, StemTremolo, SustainPedal
+ * Still using Feta: Arpeggio, BreathingSign, OttavaBracket, PercentRepeat, TrillSpanner, TupletNumber, StemTremolo, SustainPedal

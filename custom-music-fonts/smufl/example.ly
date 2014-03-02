@@ -11,6 +11,7 @@ music = \relative c' {
   \time 2/2
   \clef treble
   r2-\fermata c8( eeh8)-^ \tuplet 3/2 { eeh8( gisih8 b')-! } |
+  c,,4. c8 c4.. c16 |
 }
 
 <<
