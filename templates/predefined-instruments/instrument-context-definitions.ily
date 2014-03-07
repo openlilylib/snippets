@@ -60,76 +60,25 @@ newInstrument =
     \clef G
   }
 }
-
 \layout {
-
-  \context {
-    \ChoirStaff
-    \accepts "AltoStaff"
-    \accepts "TenorStaff"
-    \accepts "BassStaff"
-  }
-
-
-  \context {
-    \VocalStaff
-    \name "AltoStaff"
-    \alias "VocalStaff"
-    \accepts "AltoVoice"
-    \defaultchild "AltoVoice"
-    \description "predefined template for alto staff"
-
+  \newInstrument "Alto" \VocalStaff \VocalVoice "Vocal" \ChoirStaff \with {
     instrumentName = "Alto"
     shortInstrumentName = "A"
     \clef G
   }
-
-  \context {
-    \VocalStaff
-    \name "TenorStaff"
-    \alias "VocalStaff"
-    \accepts "TenorVoice"
-    \defaultchild "TenorVoice"
-    \description "predefined template for tenor staff"
-
+}
+\layout {
+  \newInstrument "Tenor" \VocalStaff \VocalVoice "Vocal" \ChoirStaff \with {
     instrumentName = "Tenor"
     shortInstrumentName = "T"
     \clef "G_8"
   }
-
-  \context {
-    \VocalStaff
-    \name "BassStaff"
-    \alias "VocalStaff"
-    \accepts "BassVoice"
-    \defaultchild "BassVoice"
-    \description "predefined template for bass staff"
-
+}
+\layout {
+  \newInstrument "Bass" \VocalStaff \VocalVoice "Vocal" \ChoirStaff \with {
     instrumentName = "Bass"
     shortInstrumentName = "B"
     \clef F
-  }
-
-
-  \context {
-    \VocalVoice
-    \name "AltoVoice"
-    \alias "VocalVoice"
-    \description "predefined template for alto voice"
-  }
-
-  \context {
-    \VocalVoice
-    \name "TenorVoice"
-    \alias "VocalVoice"
-    \description "predefined template for tenor voice"
-  }
-
-  \context {
-    \VocalVoice
-    \name "BassVoice"
-    \alias "VocalVoice"
-    \description "predefined template for bass voice"
   }
 }
 
