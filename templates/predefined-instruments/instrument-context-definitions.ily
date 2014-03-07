@@ -14,8 +14,8 @@
 % there shouldn't be separate args for this
 newInstrument =
 #(define-scheme-function
-  (parser location name parentstaff parentvoice parentname grouping settings)
-  (string? ly:context-def? ly:context-def? string? ly:context-def? ly:context-mod?)
+  (parser location name parentstaff parentvoice parentname grouping staffsettings voicesettings)
+  (string? ly:context-def? ly:context-def? string? ly:context-def? ly:context-mod? ly:context-mod?)
   (let ((staffname (string-append name "Staff"))
         (voicename (string-append name "Voice"))
         (parentstaffname (string-append parentname "Staff"))
@@ -33,12 +33,14 @@ newInstrument =
           \accepts #voicename % is it possible to make it accept Voices of derived instruments?
           \defaultchild #voicename
 
-          #settings
+          #staffsettings
         }
         \context {
           #parentvoice
           \name #voicename
           \alias #parentvoicename
+
+          #voicesettings
         }
       }
     #}))
@@ -51,6 +53,7 @@ newInstrument =
     \dynamicUp
     \tupletUp
   }
+  \with { }
 }
 % Why i cannot put this in one \layout????
 \layout {
@@ -59,6 +62,7 @@ newInstrument =
     shortInstrumentName = "S"
     \clef G
   }
+  \with { }
 }
 \layout {
   \newInstrument "Alto" \VocalStaff \VocalVoice "Vocal" \ChoirStaff \with {
@@ -66,6 +70,7 @@ newInstrument =
     shortInstrumentName = "A"
     \clef G
   }
+  \with { }
 }
 \layout {
   \newInstrument "Tenor" \VocalStaff \VocalVoice "Vocal" \ChoirStaff \with {
@@ -73,6 +78,7 @@ newInstrument =
     shortInstrumentName = "T"
     \clef "G_8"
   }
+  \with { }
 }
 \layout {
   \newInstrument "Bass" \VocalStaff \VocalVoice "Vocal" \ChoirStaff \with {
@@ -80,6 +86,7 @@ newInstrument =
     shortInstrumentName = "B"
     \clef F
   }
+  \with { }
 }
 
 
