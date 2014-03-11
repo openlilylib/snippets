@@ -71,7 +71,7 @@ Without it, `\niente` will look a bit strange.
 
 ## Updating ##
 
-SMuFL regularly changes its character codes with each update, and LilySMuFL is ideally forward-compatible with these changes. To try out a SMuFL update, first update the font installed on your system. Then download the JSON metadata file from [the SMuFL website](http://www.smufl.org/download/), replace the existing `glyphnames.json`, and run `python3.3 glyphnames.py`. This will update `smufldata.ily`, and will hopefully not break.
+SMuFL regularly changes its character codes with each update, and LilySMuFL is ideally forward-compatible with these changes. To try out a SMuFL update, first update the font installed on your system. Then download the JSON metadata file from [the SMuFL website](http://www.smufl.org/download/), replace the existing `glyphnames.json`, and run `python3 glyphnames.py`. This will update `smufldata.ily`, and will hopefully not break.
 
 You may need to delete `~/.lilypond-fonts.cache-2/` if LilyPond has trouble recognizing the new font.
 
@@ -79,7 +79,6 @@ You may need to delete `~/.lilypond-fonts.cache-2/` if LilyPond has trouble reco
 
 LilySMuFL has a few defects. A few make it not yet usable for professional engraving, and others are simply Feta features not converted to SMuFL yet.
 
- * Long dynamics (ppppp) are cut off to the right
  * Styles not supported for rests, noteheads, or flags
  * Strange Script alignment at times (fermatas, staccatos)
  * Occasional ugly Accidental spacing
