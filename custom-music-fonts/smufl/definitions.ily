@@ -52,10 +52,10 @@
      (1/2 . "accidentalSharp")
      (1 . "accidentalDoubleSharp")
      (-1 . "accidentalDoubleFlat")
-     (-1/4 . "accidentalQuarterFlat4")
-     (1/4 . "accidentalQuarterSharp4")
-     (-3/4 . "accidentalThreeQuartersFlat2")
-     (3/4 . "accidentalThreeQuartersSharp2")))
+     (-1/4 . "accidentalQuarterToneFlatStein")
+     (1/4 . "accidentalQuarterToneSharpStein")
+     (-3/4 . "accidentalThreeQuarterTonesFlatCouper")
+     (3/4 . "accidentalThreeQuarterTonesSharpStein")))
 
 #(define smufl-clef-map
    '(("clefs.C" . "cClef")
@@ -107,11 +107,11 @@
      ("scripts.uverylongfermata" . "fermataVeryLongAbove")
      ("scripts.dverylongfermata" . "fermataVeryLongBelow")
      ("scripts.thumb" . "stringsThumbPosition")
-     ("scripts.sforzato" . "articAccent")
-     ("scripts.staccato" . "articStaccato")
+     ("scripts.sforzato" . ("articAccentAbove" . "articAccentBelow"))
+     ("scripts.staccato" . ("articStaccatoAbove" . "articStaccatoBelow"))
      ("scripts.ustaccatissimo" . "articStaccatissimoAbove")
      ("scripts.dstaccatissimo" . "articStaccatissimoBelow")
-     ("scripts.tenuto" . "articTenuto")
+     ("scripts.tenuto" . ("articTenutoAbove" . "articTenutoBelow"))
      ("scripts.uportato" . "articTenutoSlurAbove")
      ("scripts.dportato" . "articTenutoSlurBelow")
      ("scripts.umarcato" . "articMarcatoAbove")
@@ -319,7 +319,13 @@
          (grob-interpret-markup grob (markup #:vcenter #:center-align #:smuflglyph glyphname))
          ; If not, can it be converted into a SMuFL glyph?
          (if (pair? glyphname-assoc)
-             (grob-interpret-markup grob (markup #:vcenter #:center-align #:smuflglyph (cdr glyphname-assoc)))
+             (let* ((smufl-glyph (cdr glyphname-assoc)))
+               (grob-interpret-markup
+                 grob
+                 (markup #:vcenter #:center-align #:smuflglyph
+                   (if (pair? smufl-glyph)
+                     (if (= dir DOWN) (cdr smufl-glyph) (car smufl-glyph))
+                     smufl-glyph))))
              (ly:script-interface::print grob)))))
 
 % Bug: long dynamics are cut off
