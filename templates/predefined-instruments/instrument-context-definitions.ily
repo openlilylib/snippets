@@ -2,16 +2,20 @@
 
 %{
   TODO:
-  all the boilerplate code should be rewritten using newInstrument function.
 
+  parentstaff and parentvoice should be derived from parentname,
+  there shouldn't be separate args for this.
+
+  why it's not possible to put all \newInstrument definitions in one layout block?
+
+  handle code for Midi contexts (when i tried it didn't work...)
+
+  (for later)
   think how to handle two voices (eg SA) on one staff
   -> what about ambitus in that case? Probably shoul be moved to voice.
-
+  (for later)
   define other instruments
 %}
-
-% TODO: parentstaff and parentvoice should be derived from parentname,
-% there shouldn't be separate args for this
 newInstrument =
 #(define-scheme-function
   (parser location name parentstaff parentvoice parentname grouping staffsettings voicesettings)
