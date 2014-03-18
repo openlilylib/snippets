@@ -18,10 +18,12 @@ These are (for example)
 
 Using templates with lilypond where the first part of the lalily-collection of utilities. There is a start of documentation in the lalily repository.
 It shall move here together with the separated module. For now you can take a look [here](https://github.com/jpvoigt/lalily/blob/master/examples/lalily-templates.md#lalily-templates).
+TBC
 
 2. The [edition-engraver](edition-engraver/)
---------------------------
+--------------------------------------------
 
 The edition-engraver is the first module I extracted. It prepares an engraver, which can be consisted to any context.
-Its main purpose is to add tweaks to a score without touching the music input.
-The 
+Its main and original purpose is to add tweaks to a score without touching the music input. But it also proved very helpful to add breaks and pageBreaks (or forbid them)
+and to add annotations in form of textscripts. 
+TBC
