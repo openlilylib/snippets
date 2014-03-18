@@ -22,9 +22,11 @@
 \addEdition fullscore
 
 \new Staff \with {
+  % add edition engraver with id-path #'(my test) to this Staff
   \consists \editionEngraver my.test
 } <<
   \new Voice \with {
+    % add edition engraver to this voice and inherit id-path from parent context: #'(my test) from parent Staff
     \consists \editionEngraver ##f
   } \relative c'' { c4 bes a( g) f e d c }
 >>
