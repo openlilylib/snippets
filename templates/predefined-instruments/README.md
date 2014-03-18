@@ -54,7 +54,8 @@ mind and want to use a different naming, you can just change
 the names in `mystaffnames.ily` and all your scores that
 `\include` this file will be affected!
 
-You may also take a look at the [simple-example.ly] and [overriding-example.ly]
+You may also take a look at the [simple-example.ly](simple-example.ly)
+and [overriding-example.ly](overriding-example.ly)
 files.  Imagine how much boilerplate code would be needed to write
 these examples with plain LilyPond!
 
