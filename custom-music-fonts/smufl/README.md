@@ -71,7 +71,7 @@ Without it, `\niente` will look a bit strange.
 
 ## Updating ##
 
-SMuFL regularly changes its character codes with each update, and LilySMuFL is ideally forward-compatible with these changes. To try out a SMuFL update, first update the font installed on your system. Then download the JSON metadata file from [the SMuFL website](http://www.smufl.org/download/), replace the existing `glyphnames.json`, and run `python3 glyphnames.py`. This will update `smufldata.ily`, and will hopefully not break.
+Until its 1.0 release, which is expected to happen in the first half of 2014 SMuFL will regularly change its character codes with each update, and LilySMuFL is ideally forward-compatible with these changes. To try out a SMuFL update, first update the font installed on your system. Then download the JSON metadata file from [the SMuFL website](http://www.smufl.org/download/), replace the existing `glyphnames.json`, and run `python3 glyphnames.py`. This will update `smufldata.ily`, and will hopefully not break.
 
 You may need to delete `~/.lilypond-fonts.cache-2/` if LilyPond has trouble recognizing the new font.
 
