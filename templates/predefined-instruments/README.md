@@ -54,8 +54,15 @@ mind and want to use a different naming, you can just change
 the names in `mystaffnames.ily` and all your scores that
 `\include` this file will be affected!
 
-Note: as of 2014-03-02, this is work-in-progress.
+You may also take a look at the [simple-example.ly](simple-example.ly)
+and [overriding-example.ly](overriding-example.ly)
+files.  Imagine how much boilerplate code would be needed to write
+these examples with plain LilyPond!
+
+Note: as of 2014-03-18, this is work-in-progress.
 The definitions of various vocal staves provide a proof of concept
 that demonstrates that the approach is valid.  There is an initial
 version of a function for generating all these contexts.
-This function should be improved and all contexts defined using it.
+This function should be improved (I suppose that someone more experienced
+with Scheme and LilyPond internals should look at it)
+and all contexts defined using it.

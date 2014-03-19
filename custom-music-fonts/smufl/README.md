@@ -71,7 +71,7 @@ Without it, `\niente` will look a bit strange.
 
 SMuFL changes its character codes with the 0.x updates, and LilySMuFL is ideally forward-compatible with these changes. To try out a SMuFL update, first update `Bravura.otf`. Then download the JSON metadata file from [the SMuFL website](http://www.smufl.org/download/), replace the existing `glyphnames.json` in this directory, and run `python3 glyphnames.py`. This will update `smufldata.ily`, and now LilySMuFL is at least partially functional. You may need to delete `~/.lilypond-fonts.cache-2/` if LilyPond has trouble recognizing the new font.
 
-Starting with the upcoming SMuFL 1.0, this process will no longer be necessary.
+Starting with the upcoming SMuFL 1.0, expected to be released within the next few months, this process will no longer be necessary.
 
 ## To-do list ##
 
