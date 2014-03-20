@@ -21,10 +21,12 @@
 \layout {
   \context {
     \Score
+    % consist the Score with an edition-engraver to inject breaks
     \consists \editionEngraver my.test
   }
   \context {
     \Voice
+    % consist every explicitly or implicitly created voice with an edition-engraver, and inherits its tag-path from the parental staff
     \consists \editionEngraver ##f
   }
 }
