@@ -17,7 +17,7 @@ for an edition-engraver tagged with `altatrinita.alt.music`.
 Howto use it?
 -------------
 
->> You have to `\include "edition-engraver.ily"` from this folder, to make the following work.
+> You have to `\include "edition-engraver.ily"` from this folder, to make the following work.
 
 To make use of an edition-engraver, you have to consist the target context with a "named" edition-engraver. For example:
 
@@ -41,7 +41,7 @@ Now you can add an edition tag `"fullscore"` to the list of "active" editions:
 \addEdition fullscore
 ```
 
->> You can add or remove edition-tags almost anytime, before the engraving is started.
+> You can add or remove edition-tags almost anytime, before the engraving is started.
 
 To add tweaks to the Staff or the Voice, you enter them with the `\editionMod` command:
 
@@ -60,7 +60,7 @@ contexts with the same tag-path. A Staff can contain a lot of Voices. If they al
 attributes, which discrimnates all voices from each other. That is the reason, the counter is added. The counter is counting with characters,
 so that we can enter the full path with "dot-notation" - `\editionMod fullscore 2 1/4 my.test.Staff.1` is not parsable.
 
->> There may be a better solution to count contexts.
+> There may be a better solution to count contexts.
 
 ----
 
