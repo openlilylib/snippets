@@ -58,9 +58,28 @@ Now the Voice is consisted with an edition-engraver, which inherits the tag-path
 addressed by: `my.test.Voice.A`. With the context-name `"Voice"` in its path, the edition-engraver(s) can distinguish between different
 contexts with the same tag-path. A Staff can contain a lot of Voices. If they all inherit there tag-path, we have to have some kind of
 attributes, which discrimnates all voices from each other. That is the reason, the counter is added. The counter is counting with characters,
-so that we can enter the full path with "dot-notation" - `\editionMod fullscore 2 1/4 my.test.Staff.1` is not parsable.
+so that we can enter the full path with "dot-notation" - `\editionMod fullscore 2 1/4 my.test.Staff.1` is accepted by the parser.
 
 > There may be a better solution to count contexts.
+
+To consist all Voice contexts and the global Score context with an edition-engraver, you can add it to a global `\layout` block:
+
+```
+\layout {
+  \context {
+    \Score
+    \consists \editionEngraver my.test % set this to your "global" tag-path
+  }
+  \context {
+    \Voice
+    \consists \editionEngraver ##f % a tag-path of value #f inherits from the parent context
+  }
+}
+```
+
+> When the music is entered with many `<< {} \\ {} >>` constructs, it may lead to a lot of voices and (inherently) edition-engravers.
+> This is an issue to work on, because it gets quite difficult to address the correct voice in such a case.
+> If you enter TextScript events, you can almost anytime address the Staff context.
 
 ----
 

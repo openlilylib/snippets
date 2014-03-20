@@ -23,6 +23,10 @@
     \Score
     \consists \editionEngraver my.test
   }
+  \context {
+    \Voice
+    \consists \editionEngraver ##f
+  }
 }
 
 % edition flightname activated
@@ -34,7 +38,8 @@
 } <<
   \new Voice \with {
     % add edition engraver to this voice and inherit id-path from parent context: #'(my test) from parent Staff
-    \consists \editionEngraver ##f
+    %\consists \editionEngraver ##f
+    % ... but it is already done by the layout block
   } \relative c'' { c4 bes a( g) f e d c }
 >>
 
