@@ -2,6 +2,8 @@
 lalily
 ======
 
+> A lot of needed code is placed in scheme-modules now, so you have to keep the folder structure inside the lalily folder!
+
 The core functions of [lalily](https://github.com/jpvoigt/lalily/) shall be separated and provided as independant modules in this folder.
 
 These are (for example)
