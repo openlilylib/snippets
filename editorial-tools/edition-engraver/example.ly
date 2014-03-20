@@ -1,6 +1,6 @@
 \version "2.18.0"
 % include the edition engraver
-\include "edition-engraver.ily"
+\include "definitions.ily"
 
 %%%
 % prepare some mods for an edition fullscore
