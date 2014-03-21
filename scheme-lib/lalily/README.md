@@ -1,6 +1,6 @@
 
-lalily
-======
+lalily scheme-modules
+=====================
 
 > A lot of needed code is placed in scheme-modules now, so you have to keep the folder structure inside the lalily folder!
 

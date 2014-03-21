@@ -2,5 +2,3 @@
 \include "general-tools/scheme-wrapper/add-guile-path/definitions.ily"
 
 \addGuilePath ".."
-% import lalily utilities
-#(use-modules (lalily utilities))
