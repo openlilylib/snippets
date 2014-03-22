@@ -1,6 +1,4 @@
-% creating templates for lilypond
-% Jan-Peter Voigt
-% 19. Feb. 2014
+`TBD` copy and adapt code from [lalily](https://github.com/jpvoigt/lalily)
 
 creating templates for lilypond
 ===============================
