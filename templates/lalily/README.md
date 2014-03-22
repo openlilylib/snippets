@@ -5,7 +5,7 @@
 creating templates for lilypond
 ===============================
 
-[skip to lalily-templates](#lalily_templates)
+[skip to lalily-templates](#lalily-templates)
 
 introduction
 ------------
