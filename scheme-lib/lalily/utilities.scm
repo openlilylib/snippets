@@ -20,8 +20,14 @@
 
 (use-modules (lily)(oop goops))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; some helper functions
+(define-public (assoc-set-all! lst vls)
+  "set all values from vls in lst"
+  (begin
+   (for-each (lambda (p)
+               (set! lst (assoc-set! lst (car p) (cdr p)))) vls)
+   lst))
+
+
 
 (define-public (base26 i)
   "produce a string A, B, ..., Z, AA, AB, ... for numbers
