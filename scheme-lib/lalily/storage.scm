@@ -16,60 +16,9 @@
 ;;;; along with lalily.  If not, see <http://www.gnu.org/licenses/>.
 
 
-(define-module (lalily utilities))
+(define-module (scheme-lib lalily storage))
 
 (use-modules (lily)(oop goops))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; some helper functions
-
-(define-public (base26 i)
-  "produce a string A, B, ..., Z, AA, AB, ... for numbers
-usable to allow 2.17+ list input like in: \\editionMod notes.sop.Voice.A
-ATTENTION: there will be no ZZ but YZ -> AAA and YZZ -> AAAA"
-  (let ((A (char->integer (if (< i 0) #\a #\A)))
-        (i (if (< i 0) (- -1 i) i)))
-
-    (define (baseX x i)
-      (let ((q (quotient i x))
-            (r (remainder i x)))
-        (if (and (> q 0) (< q x))
-            (list (- q 1) r)
-            (let ((ret '()))
-              (if (> q 0) (set! ret (baseX x q)))
-              `(,@ret ,r))
-            )))
-
-    (list->string
-     (map
-      (lambda (d) (integer->char (+ A d)))
-      (baseX 26 i)))
-    ))
-
-(define-public (glue-list lst glue)
-  "create string from list containing arbitrary objects"
-  (string-join (map (lambda (s) (format "~A" s)) lst) glue 'infix))
-(define-public (glue-symbol lst . glue)
-  "create symbol from list containig arbitrary objects"
-  (string->symbol (string-join (map (lambda (s) (format "~A" s)) lst) (if (> (length glue) 0)(car glue) ":") 'infix)))
-
-; custom string representation of a moment
-(define-public (moment->string mom)
-  "produce a human readable string from a moment"
-  (if (ly:moment? mom)
-      (let ((num (ly:moment-main-numerator mom))
-            (den (ly:moment-main-denominator mom))
-            (gnum (ly:moment-grace-numerator mom))
-            (gden (ly:moment-grace-denominator mom)))
-        (format "(~A/~A~A)" num den
-          (cond
-           ((> gnum 0)(format "+~A/~A" gnum gden))
-           ((< gnum 0)(format "~A/~A" gnum gden))
-           (else "")
-           ))
-        )
-      "(?:?)"
-      ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; stack

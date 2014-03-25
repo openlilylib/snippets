@@ -16,13 +16,15 @@
 ;;;; along with lalily.  If not, see <http://www.gnu.org/licenses/>.
 
 
-(define-module (lalily edition-engraver))
+(define-module (editorial-tools edition-engraver module))
 
 (use-modules
  (lily)
  (oop goops)
  (srfi srfi-1)
- (lalily utilities))
+ (scheme-lib lalily utilities)
+ (scheme-lib lalily storage)
+ )
 
 
 
