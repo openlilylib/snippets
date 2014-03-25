@@ -12,7 +12,7 @@
 % stored in #'(music choral altatrinita meta)
 \putMusic meta {
   \key f \major \time 2/2
-  \repeat volta 2 { s1*16 } % \spanVisible is lalily provided helper, which once allows the spanBar
+  \repeat volta 2 { s1*16 }
   \repeat volta 2 { s1*8 }
 }
 
