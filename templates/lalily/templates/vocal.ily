@@ -1,4 +1,14 @@
-\version "2.17.29"
+\version "2.18.0"
+
+\registerTemplate lalily.vocal.init
+#(define-music-function (parser location piece options)(list? list?)
+   (let* ((localsym (assoc-get 'localsym options '(global) #f)) ; symbol for 
+          (deepsym (assoc-get 'deepsym options 'global-voice #f))
+          (deepm #{ \getMusicDeep { \dynamicUp \autoBeamOff } #deepsym #}))
+     #{
+       \getMusic $deepm $localsym
+     #}))
+
 
 \registerTemplate lalily.vocal
 #(define-music-function (parser location piece options)(list? list?)
@@ -25,7 +35,7 @@
            $(if (ly:context-mod? voice-mods) voice-mods #{ \with {} #})
          } <<
            \getMusicDeep #'meta
-           { \callTemplate #'(/ global voice) #'() #'() \clef $clef \getMusic music }
+           { \callTemplate init #'() #'() \clef $clef \getMusic music }
          >>
          % TODO repeats
          $(if (list? verses)
