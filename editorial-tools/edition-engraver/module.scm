@@ -24,6 +24,7 @@
  (srfi srfi-1)
  (scheme-lib lalily utilities)
  (scheme-lib lalily storage)
+ (templates lalily store)
  )
 
 

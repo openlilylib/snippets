@@ -20,6 +20,17 @@
 
 (use-modules (lily)(oop goops))
 
+
+
+(define-public (normalize-path path)
+  "create list, removing '.. elements
+example: (normalize-path '(a b .. c d)) ==> '(a c d)"
+(let ((ret '()))
+  (for-each (lambda (e)
+              (set! ret (cond ((eq? e '..)(if (> (length ret) 1) (cdr ret) '()))
+                          (else `(,e ,@ret))))) path)
+  (reverse ret)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; stack
 
@@ -49,7 +60,7 @@
           (set! (stack-get-store stack) (cdr st))
           ret)
         #f)))
-(export stack-get)
+(export stack-pop)
 
 (define-method (display (stack <stack>) port)
   (for-each

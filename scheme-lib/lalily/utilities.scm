@@ -46,6 +46,15 @@ ATTENTION: there will be no ZZ but YZ -> AAA and YZZ -> AAAA"
       (baseX 26 i)))
     ))
 
+(define-public (object->symbol o)
+    "create symbol from any object"
+   (cond
+    ((symbol? o) o)
+    ((string? o) (string->symbol o))
+    ((list? o) (glue-symbol o))
+    (else (string->symbol (object->string o display)))
+    ))
+
 (define-public (glue-list lst glue)
   "create string from list containing arbitrary objects"
   (string-join (map (lambda (s) (format "~A" s)) lst) glue 'infix))

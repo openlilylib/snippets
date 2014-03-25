@@ -15,7 +15,11 @@
 ;;;; You should have received a copy of the GNU General Public License
 ;;;; along with lalily.  If not, see <http://www.gnu.org/licenses/>.
 
-(use-modules (templates lalily definitions)(templates lalily store))
+(use-modules
+ (scheme-lib lalily utilities)
+ (scheme-lib lalily registry)
+ (templates lalily definitions)
+ (templates lalily store))
 
 (re-export LY_NOOP)
 
@@ -45,7 +49,7 @@
               (def (ly:assoc-get 'defaults options #t #f))
               (quot (ly:assoc-get 'quotes options #t #f))
               (edit (ly:assoc-get 'edition-mods options #t #f)))
-          (format #t "lalily V ~A @ ~A" (glue-list lalily:version ".") (strftime "%d.%m.%Y %H:%M:%S" lalily:init))(newline)
+          ; (format #t "lalily V ~A @ ~A" (glue-list lalily:version ".") (strftime "%d.%m.%Y %H:%M:%S" lalily:init))(newline)
           (if incl (begin
                     (display "Includes: ---")(newline)
                     (for-each (lambda (p) (format #t "'~A'" p)(newline))

@@ -17,7 +17,12 @@
 
 (define-module (templates lalily store))
 
-(use-modules (lily)(templates lalily definitions)(scheme-lib lalily utilities))
+(use-modules
+ (lily)
+ (scheme-lib lalily utilities)
+ (scheme-lib lalily registry)
+ (scheme-lib lalily storage)
+ (templates lalily definitions))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; path substitution
@@ -253,18 +258,18 @@
                           (add-template-ref name 'template)
                           (if (ly:music-function? tmpl)
                               (let ((mus #f))
-                                (push call-template-stack name)
-                                (push call-music-stack piece)
+                                (stack-push call-template-stack name)
+                                (stack-push call-music-stack piece)
                                 (set! mus ((ly:music-function-extract tmpl) parser location piece options))
-                                (pop call-music-stack)
-                                (pop call-template-stack)
+                                (stack-pop call-music-stack)
+                                (stack-pop call-template-stack)
                                 mus)
                               (make-music 'SimultaneousMusic 'void #t))
                           )))
 
-  (set! get-current-music (lambda () (get call-music-stack)))
+  (set! get-current-music (lambda () (stack-get call-music-stack)))
   (set! display-music-stack (lambda () (display call-music-stack)))
-  (set! get-current-template (lambda () (get call-template-stack)))
+  (set! get-current-template (lambda () (stack-get call-template-stack)))
   (set! display-template-stack (lambda () (display call-template-stack)))
 
   (set! display-templates (lambda ()
