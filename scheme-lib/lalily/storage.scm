@@ -226,12 +226,13 @@ example: (normalize-path '(a b .. c d)) ==> '(a c d)"
         (vformat (ly:assoc-get 'vformat opt (lambda (v)(format "~A" v)) #f))
         (pformat (ly:assoc-get 'pformat opt (lambda (v)(format "~A" v)) #f))
         (pathsep (ly:assoc-get 'pathsep opt "/" #f))
+        (valuesep (ly:assoc-get 'valuesep opt ": " #f))
         (port (ly:assoc-get 'port opt (current-output-port))))
     (tree-walk-branch tree path
       (lambda (path k val)
         (format #t "[~A] ~A" (key tree) (string-join (map pformat path) pathsep 'infix) port)
         (if (and dval val) (begin
-                            (display ": " port)
+                            (display valuesep port)
                             (display (vformat val) port)
                             ))
         (newline port)

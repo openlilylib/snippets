@@ -13,9 +13,14 @@
 
 \include "scheme-lib/modules.ily"
 \include "editorial-tools/edition-engraver/definitions.ily"
+\include "general-tools/includeHelper/definitions.ily"
 
 #(load-from-path "templates/lalily/init.scm")
 #(use-modules (srfi srfi-1))
+
+\include "general-tools/scheme-wrapper/a-list-access/definitions.ily"
+\includePattern "templates" ".*\\.ily"
+
 
 #(define-public (set-book-headers! book header)
   (let ((bookhead (ly:book-header book)))

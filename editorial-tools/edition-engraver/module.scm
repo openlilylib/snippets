@@ -430,7 +430,8 @@
              )))
 
    (set! display-edition (lambda () (tree-display edition-tree
-                                      '(pathsep . " ")
+                                      '(pathsep . ".")
+                                      '(valuesep . " ")
                                       `(vformat . ,(lambda (p) (let ((m (if (pair? p) (cdr p) p)))
                                                                  (if (and (pair? m)(ly:moment? (cdr m)))
                                                                      (format "(~A . ~A)" (car m)(moment->string (cdr m)))
@@ -462,15 +463,12 @@
 
 ;%%% the key function "editionMod"
 (define-public editionMod
-   (define-music-function (parser location edition takt pos path mod)
+   (define-void-function (parser location edition takt pos path mod)
      (string-or-symbol? integer? frac-or-mom? list? music-or-contextmod?)
      "Add modification to edition @ measure moment"
      (if (fraction? pos)(set! pos (ly:make-moment (car pos)(cdr pos))))
-     (add-edmod edition takt pos path mod)
-     (make-music 'SequentialMusic 'void #t))
-   )
-
-
+     (add-edmod edition takt pos (create-music-path #f path) mod)
+     ))
 
 
 (define (memom? v)
@@ -494,7 +492,7 @@
           (if (fraction? pos)(set! pos (fraction->moment pos)))
           (if (rational? pos)
               (set! pos (ly:make-moment (numerator pos)(denominator pos))))
-          (add-edmod edition takt pos path mod)
+          (add-edmod edition takt pos (create-music-path #f path) mod)
           )) mposl)
      ))
 
