@@ -3,146 +3,35 @@
 creating templates for lilypond
 ===============================
 
-[skip to lalily-templates](#lalily-templates)
-
-introduction
-------------
-
-The first scores I engraved with lilypond where coded all inline.
-All notes where surrounded by the needed `\new Staff` or `Voice` constructs and also `\score`.
-But when it came to the second SATB choral score, I started to use variables and first copied,
-then included the needed structure.
-But this also didn't met my needs fully, when I had to copy and then edit the needed wrapper for most scores.
-So I started to use scheme and create `music-function`s, which let me enter the needed changes to the wrapper with parameters to a function.
-
-For example, one might create a function, which conditionally creates a SATB score in two or four staves:
-(jump to [lalily-templates](#lalily-templates))
-
-```
-\version "2.18.0"
-
-% create a function, which creates conditionally 2 or 4 staves
-SATB =
-#(define-music-function (parser location type)(symbol?)
-   (cond
-    ((eq? type 'two)
-     #{
-       % create a ChoirStaff with two staves and lyrics above and below
-       \new ChoirStaff <<
-         % create lyrics context to be filled later
-         \new Lyrics = "soptxt" { \skip 4 }
-         \new Staff \with {
-           instrumentName = "S/A"
-         } <<
-           \new Voice = "sop" { \voiceOne \sop }
-           \new Voice = "alt" { \voiceTwo \alt }
-         >>
-         % insert soprano lyrics into formerly created lyrics context above the stave
-         \context Lyrics = "soptxt" \lyricsto "sop" \soptxt
-         % create alto lyrics
-         \new Lyrics = "alttxt" \lyricsto "alt" \alttxt
-         
-         % the same for tenor and bass
-         \new Lyrics = "tentxt" { \skip 4 }
-         \new Staff \with {
-           instrumentName = "T/B"
-         } <<
-           { \clef bass }
-           \new Voice = "ten" { \voiceOne \ten }
-           \new Voice = "bas" { \voiceTwo \bas }
-         >>
-         \context Lyrics = "tentxt" \lyricsto "ten" \soptxt
-         \new Lyrics = "bastxt" \lyricsto "bas" \alttxt
-       >>
-     #})
-    (else
-     #{
-       % if the argument is not 'two, create ChoirStaff with four staves
-       \new ChoirStaff <<
-         \new Staff \with {
-           instrumentName = "Sopran"
-         } \new Voice = "sop" { \sop }
-         \new Lyrics \lyricsto "sop" \soptxt
-         
-         \new Staff \with {
-           instrumentName = "Alt"
-         } \new Voice = "alt" { \alt }
-         \new Lyrics \lyricsto "alt" \alttxt
-         
-         \new Staff \with {
-           instrumentName = "Tenor"
-         } \new Voice = "ten" { \clef "G_8" \ten }
-         \new Lyrics \lyricsto "ten" \tentxt
-         
-         \new Staff \with {
-           instrumentName = "Bass"
-         } \new Voice = "bas" { \clef "bass" \bas }
-         \new Lyrics \lyricsto "bas" \bastxt
-       >>
-     #})))
-
-% now create the variables
-
-sop = \relative c'' { c4 }
-alt = \relative c' { c4 }
-ten = \relative c' { c4 }
-bas = \relative c { c4 }
-soptxt = \lyricmode { la }
-alttxt = \lyricmode { la }
-tentxt = \lyricmode { la }
-bastxt = \lyricmode { la }
-
-% engrave two stave system
-\score {
-  \SATB two
-  \layout { }
-}
-% engrave four stave system
-\score {
-  \SATB four
-  \layout { }
-}
-```
-
-Still there are copied parts inside this function.
-It's no magic to create a function, which creates a vocal stave with lyrics,
-but variable naming and variable placing gets a little bit tricky.
-The musical and the layout information are still mixed.
-And when one wants to combine multiple scores this way, it gets even more tricky.
-
 lalily templates
 ----------------
 
-I want to be able to code the music once and then include and engrave it (almost) anywhere.
-When you develop in object oriented computer languages like for example Java or C++,
-you will know the concept of namespaces and of inheritance.
-So I asked myself: What would it mean to organize the music like that?
-The result is, that the functions in my templating system are called within an active namespace set.
-
+With lalily-templates music is organized in `folders` - one might call it namespaces.
 In lalily it is called `music-folder` because music is stored in a file-system-tree like manner.
-(I might change the naming in the future to namespace)
 The music-folder is addressed by a path, which is actually a list.
 The templates are `music-function`s with a fixed signature: `(piece options)(list? list?)`
 The `piece` argument is the current music-folder (or namespace) and the
 `options` argument is an association-list with all needed arguments.
-Also the templates are stored in such a folder-, directory- or namespace-tree,
-so they can be called by their respective path.
-To engrave music, the template function is called with a current namespace.
+Also the templates are stored in such a foldertree,
+so they are also called by their respective path.
+
+To engrave music, the template function is called with a current music-folder.
 For example:
 
-    \callTemplate choral.group my.choral.music #'() % alternatively you can `\LY_NOOP` for empty options
+    \callTemplate lalily.vocal.group my.choral.music #'() % alternatively you can `\LY_NOOP` for empty options
 
 This calls a template with a path `#'(lalily vocal group)`
 (thanks to David K.s parser improvements, it can be entered in dot-notation since lilypond 2.17.?)
-The namespace is set to `#'(my choral music)` and options are empty --- SATB four stave is default for the template.
-When the template-function returns, the current namespace is reset to its previous value.
+The music-folder is set to `#'(my choral music)` and options are empty - SATB four stave is default for the template.
+When the template-function returns, the music-folder is reset to its previous value.
+On the console (at least in *nix-like systems) it is equivalent to `cd -`.
 Inside the template function, the music is accessed using `\getMusic sop.melody`,
 to get the melody for the soprano voice.
 In affect music is taken from a music-folder `my.choral.music.sop.melody`.
-And if there is a template to create a staff with lyrics,
+And if there is a template to create a staff with a /relative/ template name `staff`,
 it can be called with `\callTemplate staff $voice $voice-options`,
 where voice and voice-options may be variables inside a loop,
-which name the /relative/ namespace and the related options.
+which name the /relative/ path and the related options.
 That might be `#'(ten)` for the path and `#'((clef . "G_8")(name . "Tenor"))` for the options.
 And the loop might result from a given list in the wrapping template.
 
