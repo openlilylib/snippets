@@ -5,12 +5,26 @@ includePatternVerbose = ##t
 
 \include "definitions.ily"
 
-\clralist opts
-\addalist opts transposition #(ly:make-pitch -1 2 -1/2) % instrument transposition e flat (b flat is default for trumpet)
-\addalist opts input-concert-pitch ##t % music input in concert pitch (default)
-\addalist opts output-concert-pitch ##f % music output in instrument transposition (default)
+\setMusicFolder musik.test.trumpet
+\setTemplate lalily.instrument.trumpet
+\setOption #'transposition #(ly:make-pitch -1 2 -1/2) % instrument transposition e flat (b flat is default for trumpet)
+\setOption #'input-concert-pitch ##t % music input in concert pitch (default)
+\setOption #'output-concert-pitch ##f % music output in instrument transposition (default)
 
-\setDefaultTemplate musik.test.trumpet lalily.instrument.trumpet #opts
+% alternatively you prepare options and set them:
+%
+% \clralist opts
+% % instrument transposition e flat (b flat is default for template lalily.instrument.trumpet)
+% \addalist opts transposition #(ly:make-pitch -1 2 -1/2)
+% % music input in concert pitch (default #t)
+% \addalist opts input-concert-pitch ##t
+% % music output in instrument transposition (default #f)
+% \addalist opts output-concert-pitch ##f
+% \setOptions #'() #opts
+%
+% or you combine setMusicFolder, setTemplate and setOptions (with a prepared a-list) to
+% \setDefaultTemplate musik.test.trumpet lalily.instrument.trumpet #opts
+
 \putMusic LY_UP.meta {
   \key f \major \time 2/4 s1 \bar "|."
 }
