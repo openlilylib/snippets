@@ -2,9 +2,9 @@
 
 \registerTemplate lalily.vocal.init
 #(define-music-function (parser location piece options)(list? list?)
-   (let* ((localsym (assoc-get 'localsym options '(global) #f)) ; symbol for 
-          (deepsym (assoc-get 'deepsym options 'global-voice #f))
-          (deepm #{ \getMusicDeep { \dynamicUp \autoBeamOff } #deepsym #}))
+   (let* ((localsym (assoc-get 'localsym options '(global) #f)) ; symbol for
+           (deepsym (assoc-get 'deepsym options 'global-voice #f))
+           (deepm #{ \getMusicDeep { \dynamicUp \autoBeamOff } #deepsym #}))
      #{
        \getMusic $deepm $localsym
      #}))
@@ -67,12 +67,21 @@
 \addatree lalily_vocal_group_default bas.clef "bass"
 \registerTemplate lalily.vocal.group
 #(define-music-function (parser location piece options)(list? list?)
-   (let ((groupmod (ly:assoc-get 'groupmod options #f #f))
+   (let ((staff-mods (ly:assoc-get 'staff-mods options #f #f))
+         (group-mods (ly:assoc-get 'group-mods options #f #f))
          (staffs (ly:assoc-get 'staffs options lalily_vocal_group_default #f))
          (mensur (ly:assoc-get 'mensur options #f)))
+     (define (get-staff-mods opt-staff-mods)
+       (cond
+        ((and (ly:context-mod? staff-mods)(ly:context-mod? opt-staff-mods))
+         #{ \with { $opt-staff-mods $staff-mods } #})
+        ((ly:context-mod? opt-staff-mods) opt-staff-mods)
+        ((ly:context-mod? staff-mods) staff-mods)
+        (else #f)
+        ))
      #{
        \new StaffGroup \with {
-         $(if (ly:context-mod? groupmod) groupmod)
+         $(if (ly:context-mod? group-mods) group-mods)
          \consists \editionEngraver $piece
          \override BarLine.allow-span-bar = $(if mensur #t #f )
          \override BarLine.transparent = $(if mensur #t #f )
@@ -85,7 +94,10 @@
                                     ))
                           (opts (assoc-set-all!
                                  (get-default-options (create-music-path #f key) location)
-                                 (cons `(vocname . ,vocname)(cdr staff))
+                                 (assoc-set-all! (cdr staff)
+                                   `((vocname . ,vocname)
+                                     (staff-mods . ,(get-staff-mods (assoc-get 'staff-mods (cdr staff)))))
+                                   )
                                  ))
                           (instr (ly:assoc-get 'instrument opts #f #f))
                           (templ (cond

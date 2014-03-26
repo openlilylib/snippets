@@ -13,7 +13,9 @@
      \addalist acc-trmp output-concert-pitch ##f
      \callTemplate LY_ROOT.lalily.instrument.trumpet trumpet #acc-trmp
      
-     \createScore LY_UP
+     \clralist choir
+     \addalist choir staff-mods \with { midiInstrument = "choir aahs" }
+     \createScoreWithOptions LY_UP #choir
      
      \clralist acc-pno
      \callTemplate LY_ROOT.lalily.piano piano #acc-pno
