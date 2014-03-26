@@ -1,5 +1,6 @@
 \version "2.18.0"
 \include "example-satb.ly"
+\include "input-shorthands/sizeContext/definitions.ily"
 
 % TODO comments
 
@@ -8,7 +9,7 @@
    #{
      <<
      \clralist acc-trmp
-     \addalist acc-trmp staff-mods \with { instrumentName = "Trumpet (Bb)" }
+     \addalist acc-trmp staff-mods \with { instrumentName = "Trumpet (Bb)" \sizeContext #1 }
      \addalist acc-trmp input-concert-pitch ##t
      \addalist acc-trmp output-concert-pitch ##f
      \callTemplate LY_ROOT.lalily.instrument.trumpet trumpet #acc-trmp
