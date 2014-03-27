@@ -34,9 +34,10 @@
          } \new Voice = $vocname \with {
            $(if (ly:context-mod? voice-mods) voice-mods #{ \with {} #})
          } <<
-           \getMusicDeep #'meta
+           \getMusicDeep {} #'meta
            { \callTemplate init #'() #'() \clef $clef \getMusic music }
          >>
+
          % TODO repeats
          $(if (list? verses)
               (make-music 'SimultaneousMusic

@@ -20,7 +20,7 @@
            $(if (ly:context-mod? rmods) rmods)
            \consists \editionEngraver \musicPath right
          } <<
-           \keepWithTag #'piano-right \getMusicDeep #'meta
+           \keepWithTag #'piano-right \getMusicDeep {} #'meta
            \keepWithTag #'piano-right { \getMusic {} global \getMusic right }
          >>
          \new Dynamics \with {
@@ -32,7 +32,7 @@
            $(if (ly:context-mod? lmods) lmods)
            \consists \editionEngraver \musicPath left
          } <<
-           \keepWithTag #'piano-left \getMusicDeep #'meta
+           \keepWithTag #'piano-left \getMusicDeep {} #'meta
            \keepWithTag #'piano-left { \getMusic {} global \clef $lclef \getMusic left }
          >>
          \new Dynamics \with {

@@ -474,9 +474,10 @@
   (define-music-function (parser location proc path)
     ((procedure? (lambda (p l) (has-music p (ly:make-moment 0 0) l))) list?)
     (let ((p (create-music-path #f path)))
-      (if (proc p location) (get-music p location) (make-music 'SimultaneousMusic 'void #t)))))
+      (if (proc p location) (get-music p location) (make-music 'SimultaneousMusic 'void #t))
+      )))
 (define-public getMusicDeep
-  (define-music-function (parser location defm skey)((ly:music? #f) scheme?)
+  (define-music-function (parser location defm skey)(ly:music? symbol?)
     (let ((p (create-music-path #f '())))
       (get-music-deep p skey defm location))))
 (define-public collectMusic

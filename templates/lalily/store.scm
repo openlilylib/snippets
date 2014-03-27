@@ -117,7 +117,8 @@
                     (load-music path location)
                     (let ((p (tree-get music-tree path)))
                       (add-template-ref path 'need)
-                      (if (ly:music? p) (ly:music-deep-copy p)
+                      (if (ly:music? p)
+                          (ly:music-deep-copy p)
                           (begin
                            (if location (ly:input-message location "unknown music '~A'" (glue-list path "/"))
                                (ly:message "unknown music '~A'" (glue-list path "/")))
