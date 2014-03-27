@@ -28,7 +28,7 @@
        % write music in instrument transposition (default)
        \addalist acc-trmp output-concert-pitch ##f
        % call trumpet template on path trumpet with options
-       \callTemplate LY_ROOT.lalily.instrument.trumpet trumpet #acc-trmp
+       \callTemplate LY_ROOT.lalily.instrument.brass.trumpet trumpet #acc-trmp
 
        % prepare options for modded integration of the choir
        \clralist choir
