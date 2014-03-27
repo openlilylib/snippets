@@ -1,4 +1,4 @@
-`TBD` copy and adapt code from [lalily](https://github.com/jpvoigt/lalily)
+TODO issue: putMusic/getMusic doesn't work reliable in 2.19.3!
 
 creating templates for lilypond
 ===============================
