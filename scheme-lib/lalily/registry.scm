@@ -16,9 +16,11 @@
 ;;;; along with lalily.  If not, see <http://www.gnu.org/licenses/>.
 
 
+; store values by path
+
 (define-module (scheme-lib lalily registry))
 
-(use-modules (lily)(oop goops)(scheme-lib lalily storage))
+(use-modules (lily)(scheme-lib lalily storage))
 
 (define-public (get-registry-val key . def) #f)
 (define-public (set-registry-val key val) #f)

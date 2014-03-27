@@ -16,6 +16,8 @@
 ;;;; along with lalily.  If not, see <http://www.gnu.org/licenses/>.
 
 
+; helper-functions
+
 (define-module (scheme-lib lalily parser-location))
 
 (use-modules
