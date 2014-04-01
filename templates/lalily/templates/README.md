@@ -7,7 +7,9 @@ Every file ending with `.ily` is included by definitions.ily
 
 * lalily.instrument
     the base template for any instruments.
+    
     music: #'() = current path
+    
     options:
 	* name : the Staff-name (not the display name)
 	* init-voice : any musical statements to initialize the voice [{}]
@@ -23,7 +25,9 @@ Every file ending with `.ily` is included by definitions.ily
 	   TODO: other templates
 * lalily.instrument.group
     template to group multiple instruments.
+    
     music: per a-list entry (TODO example)
+    
     options:
 	* groupmod : context-modifications added to the StaffGroup
 	* staffs : association list with staff-options
@@ -45,11 +49,13 @@ predefined instruments (more to come)
 
 * lalily.piano
     piano template
+    
     music:
       * right: right hand
       * left: left hand
       * dynamics: centered dynamics (optional)
       * pedal: dynamics context for pedal (optional)
+      
     options:
       * context-mods: PianoStaff context-mods
       * right-mods: right Staff context-mods
@@ -61,9 +67,11 @@ predefined instruments (more to come)
 
 * lalily.vocal
     voice template
+    
     music:
       * music: melody/notes
       * lyrics: lyrics
+    
     options:
       * clef ["G"]
       * vocname: Voice context name (for lyricsto) MANDATORY
@@ -75,7 +83,9 @@ predefined instruments (more to come)
       * verses: lyric verses
 * lalily.vocal.group
     voice group template
+    
     music: per a-list entry (staffs)
+    
     options:
       staff-mods: Staff context-modifications for all Staffs
       group-mods: StaffGroup context-modifications
