@@ -42,3 +42,19 @@
          } \getMusic {} pedal
        >>
      #}))
+
+\registerTemplate lalily.piano.voice
+#(define-music-function (parser location piece options)(list? list?)
+   (let* ((verses (ly:assoc-get 'verses options #f #f))
+          (voice-loc (assoc-get 'voice options '(voice) #f))
+          (piano-loc (assoc-get 'piano options '(piano) #f))
+          (voice-opts (assoc-set-all! options (get-default-options (create-music-path #f voice-loc) location)))
+          (piano-opts (assoc-set-all! options (get-default-options (create-music-path #f piano-loc) location)))
+          )
+     (if (not (string? (assoc-get 'vocname voice-opts)))(set! voice-opts (assoc-set! voice-opts 'vocname "melody")))
+     #{
+       <<
+         \callTemplate LY_ROOT.lalily.vocal $voice-loc #voice-opts
+         \callTemplate LY_ROOT.lalily.piano $piano-loc #piano-opts
+       >>
+     #}))
