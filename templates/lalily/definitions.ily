@@ -133,7 +133,7 @@ lalilyTest =
 
 % create one score based on current music folder
 lalilyScore =
-#(define-scheme-function (parser location options)(list?)
+#(define-void-function (parser location options)(list?)
    (let* ((domidi (ly:assoc-get 'midi options #f #f))
           (extra (ly:assoc-get 'extra options '() #f))
           (addopt (ly:assoc-get 'options options '() #f))
@@ -172,7 +172,7 @@ lalilyScore =
 
 % create one bookpart containing named music folders
 lalilyBookpart =
-#(define-scheme-function (parser location options)(list?)
+#(define-void-function (parser location options)(list?)
    (let* ((options (assoc-set-all! (get-music-folder-options location) options))
           (cbp (ly:parser-lookup parser '$current-bookpart))
           (keys (ly:assoc-get 'keys options (ly:assoc-get 'keys (get-music-folder-options location)) #f))
@@ -238,7 +238,7 @@ lalilyBookpart =
 
 % create one bookpart based on current music folder
 lalilyBookpartScore =
-#(define-scheme-function (parser location options)(list?)
+#(define-void-function (parser location options)(list?)
    (let* ((cbp (ly:parser-lookup parser '$current-bookpart))
           (print-all-headers (ly:assoc-get 'print-all-headers options #f #f))
           (domidi (ly:assoc-get 'midi options #f #f))
@@ -293,7 +293,7 @@ lalilyBookpartScore =
      ))
 
 lalilyBookparts =
-#(define-scheme-function (parser location options)(list?)
+#(define-void-function (parser location options)(list?)
    (let* ((lbpf (ly:music-function-extract lalilyBookpartScore))
           (keys (ly:assoc-get 'keys options (ly:assoc-get 'keys (get-music-folder-options location)) #f))
           (mus (ly:assoc-get 'music options
@@ -319,7 +319,7 @@ lalilyBookparts =
 % test versions of above commands, executed only, if test predicate is met
 % default: name of location equals name of parser output
 lalilyTestScore =
-#(define-scheme-function (parser location options)(list?)
+#(define-void-function (parser location options)(list?)
    (if ((get-registry-val lalily:test-predicate lalily-test-location?) parser location)
        (begin
         ((ly:music-function-extract lalilyScore) parser location options)
@@ -327,7 +327,7 @@ lalilyTestScore =
         ))
    )
 lalilyTestBookpart =
-#(define-scheme-function (parser location options)(list?)
+#(define-void-function (parser location options)(list?)
    (if ((get-registry-val lalily:test-predicate lalily-test-location?) parser location)
        (begin
         ((ly:music-function-extract lalilyBookpart) parser location options)
@@ -335,7 +335,7 @@ lalilyTestBookpart =
         ))
    )
 lalilyTestBookpartScore =
-#(define-scheme-function (parser location options)(list?)
+#(define-void-function (parser location options)(list?)
    (if ((get-registry-val lalily:test-predicate lalily-test-location?) parser location)
        (begin
         ((ly:music-function-extract lalilyBookpartScore) parser location options)
@@ -343,7 +343,7 @@ lalilyTestBookpartScore =
         ))
    )
 lalilyTestBookparts =
-#(define-scheme-function (parser location options)(list?)
+#(define-void-function (parser location options)(list?)
    (if ((get-registry-val lalily:test-predicate lalily-test-location?) parser location)
        (begin
         ((ly:music-function-extract lalilyBookparts) parser location options)
