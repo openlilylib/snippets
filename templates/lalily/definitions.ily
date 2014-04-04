@@ -23,33 +23,33 @@
 
 
 #(define-public (set-book-headers! book header)
-  (let ((bookhead (ly:book-header book)))
-    (if (or (not bookhead)(list? bookhead))
-        (begin
-         (set! bookhead (make-module))
-         (ly:book-set-header! book bookhead)
-         ))
-    (if (not (list? header))
-        (set! header
-              (assoc-get 'header (get-music-folder-options (if (ly:input-location? header) header #f)) '())
-              ))
-    (for-each (lambda (p)
-                (if (pair? p)
-                    (let ((key (car p))
-                          (val (cdr p)))
-                      (module-define! bookhead key val)))) header)
-    ))
+   (let ((bookhead (ly:book-header book)))
+     (if (or (not bookhead)(list? bookhead))
+         (begin
+          (set! bookhead (make-module))
+          (ly:book-set-header! book bookhead)
+          ))
+     (if (not (list? header))
+         (set! header
+               (assoc-get 'header (get-music-folder-options (if (ly:input-location? header) header #f)) '())
+               ))
+     (for-each (lambda (p)
+                 (if (pair? p)
+                     (let ((key (car p))
+                           (val (cdr p)))
+                       (module-define! bookhead key val)))) header)
+     ))
 #(define-public (set-score-headers! score header)
-  (let ((scorehead (ly:score-header score)))
-    (if (or (not scorehead)(list? scorehead))(let ((mod (make-module))) (set! scorehead mod) (ly:score-set-header! score scorehead)))
-    (if (not (list? header)) (set! header (assoc-get 'header (get-music-folder-options
-                                                              (if (ly:input-location? header) header #f)) '())))
-    (for-each (lambda (p)
-                (if (pair? p)
-                    (let ((key (car p))
-                          (val (cdr p)))
-                      (module-define! scorehead key val)))) header)
-    ))
+   (let ((scorehead (ly:score-header score)))
+     (if (or (not scorehead)(list? scorehead))(let ((mod (make-module))) (set! scorehead mod) (ly:score-set-header! score scorehead)))
+     (if (not (list? header)) (set! header (assoc-get 'header (get-music-folder-options
+                                                               (if (ly:input-location? header) header #f)) '())))
+     (for-each (lambda (p)
+                 (if (pair? p)
+                     (let ((key (car p))
+                           (val (cdr p)))
+                       (module-define! scorehead key val)))) header)
+     ))
 
 
 #(define (add-sco-mup parser pre-markup score post-markup)
@@ -211,6 +211,7 @@ lalilyBookpart =
                                (add-music parser #{ \tocCollection $title #}))))
 
      (if print-all-headers (set! options (assoc-set! options 'clear-headers headers)))
+
      (for-each
       (lambda (music)
         (cond ((eq? (last music) 'PAGE-BREAK!)
