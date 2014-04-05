@@ -1,22 +1,44 @@
+\include "definitions.ily"
 
-stanzaII = \markup {
+stanzaII = \markup \column {
+  Supercalifragilisticexpialidocious!
   Supercalifragilisticexpialidocious!
 }
-stanzaIII = \markup {
-  La la
+stanzaIII = \markup \column{
+  "La la la laaaaaa"
+  "pam pam pam paaam"
 }
-stanzaIV = \markup {
+stanzaIV = \markup \column {
+  foo
+  foo
   foo
 }
 stanzaV = \markup {
   bar
 }
 
-spaceAfterNumber = \markup \hspace #0.8
-% it would be good if this was stretchable.
-spaceBetweenStanzas = \markup \vspace #2
+\markup "Stanzas in a single column:"
+\markup \draw-hline
+\markup \vspace #2
 
-% must be included after the variables are defined.
-\include "definitions.ily"
+\markup \stanzas-in-one-column { \stanzaII \stanzaIII \stanzaIV \stanzaV }
 
-\stanzas
+\markup \vspace #2
+\markup "Stanzas in two columns:"
+\markup \draw-hline
+\markup \vspace #2
+
+\markup \stanzas-in-two-columns { \stanzaII \stanzaIII } { \stanzaIV \stanzaV }
+
+\markup \vspace #2
+\markup "Stanzas in two columns with some settings overridden:"
+\markup \draw-hline
+\markup \vspace #2
+
+\markup
+\override #'(text-scaling . (0.8 . 1))
+\override #'(line-spacing . 0.75)
+\override #'(number-hdist . 3)
+\override #'(stanza-vdist . 0.5)
+\override #'(first-number . 1)
+\stanzas-in-two-columns { \stanzaII \stanzaIII } { \stanzaIV \stanzaV }
