@@ -1,5 +1,5 @@
 \version "2.18.0"
-\include "definitions.ily"
+\include "general-tools/readComment/definitions.ily"
 
 text = \readComment
 %{
@@ -17,10 +17,10 @@ No one knows, if it is evil or just some kind of short intermission.
 
 %}
 
-\markuplist {
-  \override-lines #'(tex-height . 55) % 55mm for tex output
-  \override-lines #'(font-name . "Century Schoolbook L")
-  \xelatexInclude #text
-  \score { \relative c'' { c4 b gis g } \addlyrics { where is your mind? } \layout {} }
-}
-
+#(begin
+  (display "If wrapped in a latex document, it can be compiled with pdflatex,")(newline)
+  (display "then turned to an EPS-file and included in a markup.")(newline)
+  (display "One might use markdown and pandoc to produce the PDF.")(newline)
+  (newline)
+  (display text)
+)
