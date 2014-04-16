@@ -76,8 +76,9 @@
 % produce piano part part-combining sopranos and altos for the right and tenors and basses for the left hand
 % ... this is only a demo - if you want to create a piano-reduction, this will only be the starting-point for the work todo!
 % TODO There is a warning about breathing signs in 2.19?
-\putMusic piano.right { \set Staff.printPartCombineTexts = ##f \partcombine \getMusic LY_UP.sop.music \getMusic LY_UP.alt.music }
-\putMusic piano.left { \set Staff.printPartCombineTexts = ##f \partcombine \getMusic LY_UP.ten.music \getMusic LY_UP.bas.music }
+\putMusic piano.global { \set Staff.printPartCombineTexts = ##f }
+\putMusic piano.right { \partcombine \getMusic LY_UP.sop.music \getMusic LY_UP.alt.music }
+\putMusic piano.left { \partcombine \getMusic LY_UP.ten.music \getMusic LY_UP.bas.music }
 
 % sheet edition-tag is already active from example-input ...
 \editionMod sheet 9 0/1 Score.A \break
