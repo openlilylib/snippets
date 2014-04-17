@@ -18,6 +18,12 @@
 % just another tweak on several times
 \editionMMod fullscore #'((1 1/4)(1 3/4)(2 2/4)) my.test.Staff.A \once \override NoteHead.color = #green
 
+% this places the system, starting with measure 7, absolutely
+\editionMod fullscore 7 0/1 my.test.Score.A {
+  \break
+  \overrideProperty Score.NonMusicalPaperColumn.line-break-system-details #'((Y-offset . 70)(X-offset . 5))
+}
+
 \layout {
   \context {
     \Score
@@ -42,6 +48,6 @@
     % add edition engraver to this voice and inherit id-path from parent context: #'(my test) from parent Staff
     %\consists \editionEngraver ##f
     % ... but it is already done by the layout block
-  } \relative c'' { c4 bes a( g) f e d c }
+  } \relative c'' { c4 bes a( g) f e d c \repeat unfold 20 { bes a c b } }
 >>
 
