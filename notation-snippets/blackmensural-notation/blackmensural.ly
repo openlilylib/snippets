@@ -1,10 +1,31 @@
-\version "2.12.0"
+\version "2.17.97"
+
 %% ========================================================
-%  blackmensural.ly – Black Mensural Notation for Lilypond 
+%  blackmensural.ly – Black Mensural Notation for Lilypond
 %  Version 0.1, January 2011
 %  (C) Lukas Pietsch
 %  Released under the GNU General Public License
 %% ========================================================
+
+%{
+  Result message of convert-ly from 2.12 to 2.18
+  convert-ly (GNU LilyPond) 2.18.0
+
+  convert-ly: Processing `'...
+  Applying conversion: 2.12.3, 2.13.0, 2.13.1, 2.13.4,
+  Not smart enough to convert beatGrouping.
+    beatGrouping with a specified context must now be accomplished with
+   \overrideBeamSettings.
+  Please refer to the manual for details, and update manually.
+  2.13.10, 2.13.16, 2.13.18, 2.13.20, 2.13.27, 2.13.29,
+  Not smart enough to convert beatLength.
+  Use baseMoment and beatStructure.
+  Please refer to the manual for details, and update manually.
+  2.13.31, 2.13.36, 2.13.39, 2.13.40, 2.13.42, 2.13.44, 2.13.46,
+  Vertical spacing changes might affect user-defined contexts.
+  Please refer to the manual for details, and update manually.
+  2.13.48, 2.13.51, 2.14.0, 2.15.7, 2.15.9, 2.15.10, 2.15.16, 2.15.17, 2.15.18, 2.15.19, 2.15.20, 2.15.25, 2.15.32, 2.15.39, 2.15.40, 2.15.42, 2.15.43, 2.16.0, 2.17.0, 2.17.4, 2.17.5, 2.17.6, 2.17.11, 2.17.14, 2.17.15, 2.17.18, 2.17.19, 2.17.20, 2.17.25, 2.17.27, 2.17.29, 2.17.97
+%}
 
 %% ===============================================
 %  Context type definitions
@@ -12,29 +33,29 @@
 
 %% some settings on score level
 mensuralTightSetting = {
-  \override Score.SpacingSpanner #'base-shortest-duration = #(ly:make-moment 1 2)
-  \override Score.SpacingSpanner #'common-shortest-duration = #(ly:make-moment 1 2)
-  \override Score.SpacingSpanner #'shortest-duration-space = #1.5
-  \override Score.SpacingSpanner #'spacing-increment = #0.05
-  \override NoteSpacing    #'stem-spacing-correction = #0.0
-  \override Score.BarLine #'stencil = #empty-stencil
-  \override Score.BarNumber #'stencil = #empty-stencil
+  \override Score.SpacingSpanner.base-shortest-duration = #(ly:make-moment 1/2)
+  \override Score.SpacingSpanner.common-shortest-duration = #(ly:make-moment 1/2)
+  \override Score.SpacingSpanner.shortest-duration-space = #1.5
+  \override Score.SpacingSpanner.spacing-increment = #0.05
+  \override NoteSpacing.stem-spacing-correction = #0.0
+  \override Score.BarLine.stencil = #empty-stencil
+  \override Score.BarNumber.stencil = #empty-stencil
 }
 
 \layout {
-    ragged-right = ##t 
+    ragged-right = ##t
     \context {
       \Voice
       \name BlackMensuralVoice  %% adapted from MensuralVoice definition
       \alias Voice
-      \remove Beam_engraver 
+      \remove Beam_engraver
       \remove Stem_engraver
-      \override Stem #'transparent = ##t
-      \override Flag #'transparent = ##t
-      \override Beam #'transparent = ##t
-      \override Accidental #'stencil = #empty-stencil
-      \override Accidental #'font-size = #-2
-      \override Accidental #'X-offset = #-2
+      \override Stem.transparent = ##t
+      \override Flag.transparent = ##t
+      \override Beam.transparent = ##t
+      \override Accidental.stencil = #empty-stencil
+      \override Accidental.font-size = #-2
+      \override Accidental.X-offset = #-2
     }
     \context {
       \Staff
@@ -51,35 +72,35 @@ mensuralTightSetting = {
       %% We can not remove Bar_engraver; otherwise clefs and custodes will
       %% not show up any more among other line breaking issues.
       %% Instead, we make the grob invisible
-      \override BarLine #'stencil = #empty-stencil
-      %\override BarLine #'transparent = ##t
+      \override BarLine.stencil = #empty-stencil
+      %\override BarLine.transparent = ##t
 
-      \override StaffSymbol #'thickness = #0.6
-      \override KeySignature #'font-size = #-2
-      \override TimeSignature #'font-size = #-2
+      \override StaffSymbol.thickness = #0.6
+      \override KeySignature.font-size = #-2
+      \override TimeSignature.font-size = #-2
 
       %% Choose c clef on 3rd line as default.
       clefGlyph = #"clefs.vaticana.do"
       middleCClefPosition = #0
       middleCPosition = #0
       clefPosition = #0
-      clefOctavation = #0
+      clefTransposition = #0
 
       %% Select mensural style font.
-      \override NoteHead #'style = #'mensural   % will be further overridden
-      \override TimeSignature #'style = #'mensural
-      \override KeySignature #'style = #'mensural
-      \override Accidental #'glyph-name-alist = #alteration-mensural-glyph-name-alist
-      \override Custos #'style = #'mensural
-      \override Custos #'neutral-position = #3
-      \override Custos #'neutral-direction = #DOWN
-      \override Dots #'font-size = #-3
+      \override NoteHead.style = #'mensural   % will be further overridden
+      \override TimeSignature.style = #'mensural
+      \override KeySignature.style = #'mensural
+      \override Accidental.glyph-name-alist = #alteration-mensural-glyph-name-alist
+      \override Custos.style = #'mensural
+      \override Custos.neutral-position = #3
+      \override Custos.neutral-direction = #DOWN
+      \override Dots.font-size = #-3
 
       %% Accidentals are valid only once (same as
-      %% #(set-accidental-style 'forget))
+      %% \accidentalStyle forget)
       extraNatural = ##f
       autoAccidentals = #`(Staff ,(make-accidental-rule 'same-octave -1))
-      autoCautionaries = #'()  
+      autoCautionaries = #'()
       printKeyCancellation = ##f
 
 
@@ -213,7 +234,7 @@ noobliqua = #(define-music-function (parser location mymusic) (ly:music?)
 signata = #(define-music-function (parser location stencilfunction mymusic) (ly:stencil? ly:music?)
  (make-music 'SequentialMusic
    'elements (list
-      (make-music                         ; =   \override NoteHead #'stencil = #stencilfunction
+      (make-music                         ; =   \override NoteHead.stencil = #stencilfunction
         'ContextSpeccedMusic
         'context-type 'Bottom
         'element
@@ -244,7 +265,7 @@ coloratio = #(define-music-function (parser location col mymusic) (symbol? ly:mu
   (begin
     (music-map                 ; iterate through all the music
       (lambda (event)
-        (cond 
+        (cond
           ;; for notes: use our custom color flag
           ((memq 'note-event (ly:music-property event 'types))
             (set-mensural-flag! event 'color col))
@@ -266,11 +287,11 @@ coloratio = #(define-music-function (parser location col mymusic) (symbol? ly:mu
 %  input processing. It does no processing of its own, but
 %  only adds "applyContext" callbacks at the beginning and
 %  end of the ligature in the input stream. These, together
-%  with the "applyOutput" callbacks inserted by the 
+%  with the "applyOutput" callbacks inserted by the
 %  \mensura command, will later get executed during translation.
 %% =========================================================
 ligatura = #(define-music-function (parser location mymusic) (ly:music?)
-     (make-music              
+     (make-music
       'SequentialMusic
       'elements
       (list
@@ -285,7 +306,7 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
         (make-music
           'ApplyContext
           'context-type 'Bottom
-          'procedure finish_ligature) 
+          'procedure finish_ligature)
 
         ;; ugly workaround to get horizontal spacing right:
         ;; insert an invisible breathing mark as a dummy grob
@@ -319,21 +340,21 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
   (let* ((ifs   (ly:grob-interfaces grob))
         (cause (ly:grob-property grob 'cause))
         (type  (cdr (assq 'name (ly:grob-property grob 'meta ))))
-        (queue (ly:context-property  
+        (queue (ly:context-property
                  context
                  'mensural_ligature_queue ))
         (inligature (if queue #t #f))
        )
     ;(display (format #f "We got a ~a\n" type))
     (if inligature
-      (cond 
+      (cond
         ((eq? type 'NoteHead)
           (begin
-            (ly:context-set-property! 
-              context 
-              'mensural_ligature_queue 
+            (ly:context-set-property!
+              context
+              'mensural_ligature_queue
               (append queue (list grob)))))
-        ((eq? type 'Dots)                           
+        ((eq? type 'Dots)
           ;; discard the standard dot grob, but mark the parent note with a flag
           ;; so that the ligature creation procedure can add it as part of the ligature stencil.
           (let* ((lastnote (car (last-pair queue)))
@@ -378,18 +399,18 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
     (else #f)))
 
 #(define (start_ligature context)
-  (ly:context-set-property! 
-    context 
-    'mensural_ligature_queue 
+  (ly:context-set-property!
+    context
+    'mensural_ligature_queue
     '()))
 
 %% ========================================================
 %  This procedure will be called after the last notehead
-%  grob of each ligature, through ApplyContext. 
+%  grob of each ligature, through ApplyContext.
 %  It recovers the stored grobs from the custom
 %  context property 'mensural_ligature_queue, calculates
 %  a single postscript stencil for the ligature, assigns
-%  this stencil to one of the note grobs, and makes the 
+%  this stencil to one of the note grobs, and makes the
 %  others invisible.
 %% =========================================================
 #(define (finish_ligature context)
@@ -415,14 +436,14 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
          (notewidth 0.75)
          (noteheight 0.75)
          (linewidth 0.11)
-         (rightX (* notewidth (+ imaxall 1)))  
+         (rightX (* notewidth (+ imaxall 1)))
          (curX rightX)
          (firstpos (car ypositions))
-         (posref 
+         (posref
            (lambda (i)
              (list-ref ypositions i)))
-         (add-postscript   
-           (lambda (ps) 
+         (add-postscript
+           (lambda (ps)
              (set! postscript (string-append postscript ps))))
          (shift-postscript
            (lambda (dX dY)
@@ -447,8 +468,8 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
           (if (assq-ref (list-ref flags i) 'plica)
             (begin
               (set! imax (- i 1))
-              ; also check whether the preceding note is manually forced to be folded in 
-              (if (and 
+              ; also check whether the preceding note is manually forced to be folded in
+              (if (and
                    (> i 0)
                    (assq-ref (list-ref flags (- i 1)) 'pes))
                   (set! foldpes #t)
@@ -486,7 +507,7 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
                  (nextflag  (if atverylast #f (list-ref flags (+ i 1))))
 
                  (descending (if atverylast (< thispos prevpos) (< nextpos thispos)))
-                 (descended  (if atfirst descending (< thispos prevpos))) 
+                 (descended  (if atfirst descending (< thispos prevpos)))
 
                  (singlebr (and atfirst atlast (eq? thisval 'br)))
                  (singlelg (and atfirst atlast (eq? thisval 'lg)))
@@ -501,7 +522,7 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
                                    (not (and (= i 1)(eq? prevval 'sb)))
                                    (eq? thisval 'br))
                               (assq-ref prevflag 'obliqua)     ; manually set obliqua
-                              (and (assq-ref nextflag 'pes)    ; 
+                              (and (assq-ref nextflag 'pes)    ;
                                    descended
                                    (not descending)
                                    (not (assq-ref prevflag 'noobliqua))
@@ -517,21 +538,21 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
                  (pesbottom (or
                               (and atpenult                     ;automatic fold-in pes in ascending cum-perf
                                    foldpes                      ;(old style)
-                                   (not descending) 
+                                   (not descending)
                                    (not obliquaB)
                                    (eq? nextval 'lg)
                                    (not (eq? thisval 'sb))
                                    (not (assq-ref nextflag 'plica))
                                    (not (assq-ref nextflag 'nopes)))
-                              (and (not descending)            ;manually tweaked fold-in pes 
+                              (and (not descending)            ;manually tweaked fold-in pes
                                    (not obliquaB)
                                    (not (eq? thisval 'sb))
                                    (assq-ref nextflag 'pes))))
                  (pestop    (or
                               (and atlast                      ;automatic fold-in pes
                                    (not atfirst)
-                                   foldpes 
-                                   (not descended) 
+                                   foldpes
+                                   (not descended)
                                    (eq? thisval 'lg)
                                    (not (eq? prevval 'sb))
                                    (not (assq-ref thisflag 'plica))
@@ -540,7 +561,7 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
                                    (assq-ref thisflag 'pes))))
                  (plica      (and atlast (assq-ref thisflag 'plica) (< imax imaxall)))
                  (skipplica  (and atverylast (assq-ref prevflag 'plica)))
-                 (opposita   (and atfirst 
+                 (opposita   (and atfirst
                                   (< i imax)
                                   (eq? thisval 'sb)))
                  (online     (= 0 (modulo (inexact->exact (* 2 thispos)) 2)))
@@ -549,16 +570,16 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
                  (processdot (lambda (flag offset)
                                (if (assq-ref flag 'punctum)
                                  (let ((y (cdr offset)))
-                                   (while 
+                                   (while
                                      (< linewidth (abs (- y (inexact->exact y))))
                                      (set! y (+ y 0.05)))
                                    (add-postscript
-                                     (format #f "gsave newpath ~a ~a ~a 0 360 arc fill grestore " 
+                                     (format #f "gsave newpath ~a ~a ~a 0 360 arc fill grestore "
                                        (car offset) y (* 1.3 linewidth)))))))
                 )
 
              ;; connector lines and relative y positioning
-             (if atverylast 
+             (if atverylast
                (shift-postscript 0 (- thispos ymiddle))
                (shift-postscript 0 (- thispos nextpos)))
              (if (or inmiddle atfirst)
@@ -584,7 +605,7 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
                            ;use additional plica note on the side; early-1200s style; Apel 248f.
                            (begin
                              (shift-postscript (* 0.8 notewidth) 0)
-                             (add-postscript 
+                             (add-postscript
                                (ps_notehead 'pes thiscolor (* plicadir -0.8 notewidth) (* plicadir -0.8 noteheight)))
                              (add-postscript (ps_virga (* -0.4 notewidth) (* plicadir longplica) thiscolor))
                              (add-postscript (ps_virga (*  0.4 notewidth) (* plicadir longplica) thiscolor)))
@@ -596,9 +617,9 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
                                     (if (eq? thisval 'lg)
                                       (if (and (= plicadir 1) alternate) noplica shortplica)
                                       (if alternate shortplica longplica))))
-                                  (rightplica (* plicadir 
-                                    (if (eq? thisval 'lg) 
-                                      longplica  
+                                  (rightplica (* plicadir
+                                    (if (eq? thisval 'lg)
+                                      longplica
                                       shortplica))))
                               (add-postscript (ps_virga (* (- linewidth 1) notewidth) leftplica thiscolor))
                               (if (!= rightplica 0)
@@ -608,7 +629,7 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
                            (add-postscript (ps_virga 0 (* plicadir longplica) thiscolor))))))))
 
                ; alternative longa stroke of initial ascending
-               ((and 
+               ((and
                   atfirst
                   (not descending)
                   (not obliquaA)
@@ -620,7 +641,7 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
                ((or
                  (eq? thisval 'mx)
                  singlelg
-                 (and 
+                 (and
                    (eq? thisval 'lg)
                    (not (assq-ref thisflag 'obliqua))
                    (or
@@ -639,9 +660,9 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
                        (add-postscript (ps_virga 0 ylength thiscolor)))))
 
                ; exceptional forms: non-paired semibreve; Apel 100
-               ((and 
+               ((and
                  (= i 1)
-                 (eq? prevval 'sb) 
+                 (eq? prevval 'sb)
                  (not (eq? thisval 'sb)))
                  (let ((virga (if (eq? thisval 'lg) -1.5 1.5)))
                    (add-postscript (ps_virga 0 virga thiscolor))))
@@ -651,7 +672,7 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
 
 
              ;; main note shapes
-             (cond 
+             (cond
                (skipplica i)
 
                (currens
@@ -685,9 +706,9 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
                (pesbottom
                     (let* ((ycorr (if (< (- nextpos thispos) 1) -0.15 0)))
                       (shift-postscript (- linewidth (* 0.5 notewidth)) ycorr)
-                      (add-postscript (ps_notehead 
-                                      'pes thiscolor 
-                                      (* -1 notewidth) 
+                      (add-postscript (ps_notehead
+                                      'pes thiscolor
+                                      (* -1 notewidth)
                                       (* -1 noteheight)))
                       (processdot thisflag (dotatside (* 0.5 notewidth)))
                       (shift-postscript (* -0.5 notewidth) (- 0 ycorr))))
@@ -720,7 +741,7 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
               ;; cum-opp-prop.: use initial upward stroke
               (opposita
                 (add-postscript (ps_virga 0 2.2 thiscolor)))
-              ((and 
+              ((and
                  atfirst
                  (not atlast)
                  descending
@@ -744,14 +765,14 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
 
 
 
-        (set! postscript 
+        (set! postscript
 
           (string-append
             (format #f "gsave currentpoint translate ~a 0 moveto currentpoint translate ~a setlinewidth 1 setlinecap " rightX linewidth)
             postscript
             " grestore"))
-        (set! mystencil 
-          (ly:make-stencil 
+        (set! mystencil
+          (ly:make-stencil
             (list 'embedded-ps postscript)
             (cons curX rightX)
             (cons 0 0)))
@@ -761,14 +782,14 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
               (accqueue   (ly:context-property context 'mensural_accidentals_queue )))
           (if (eq? accqueue #f) (set! accqueue '()))
           (map (lambda (entry)
-            (set! accstencil 
-              (ly:stencil-add 
-                accstencil 
+            (set! accstencil
+              (ly:stencil-add
+                accstencil
                 (ly:stencil-translate-axis (cdr entry) (- (car entry) ymiddle) 1))))
             accqueue)
           (if (> (length accqueue) 0)
-            (set! mystencil 
-              (ly:stencil-combine-at-edge 
+            (set! mystencil
+              (ly:stencil-combine-at-edge
                 mystencil 0 -1 accstencil 0.2)))
           (ly:context-set-property! context 'mensural_accidentals_queue '()))
 
@@ -787,10 +808,10 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
               (ly:grob-set-property! thisnote 'stencil mystencil)
               (ly:grob-set-property! thisnote 'stencil empty-stencil))))
 
-        ;reset queue 
-        (ly:context-set-property! 
+        ;reset queue
+        (ly:context-set-property!
           (ly:context-property-where-defined context 'mensural_ligature_queue)
-          'mensural_ligature_queue 
+          'mensural_ligature_queue
           #f)))))
 
 
@@ -803,9 +824,9 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
 %% ==============================================
 #(define-public (make-mensural-note-stencil
                   notehead-type   ; one of 'quadrata, 'rhombus, 'obliqua, 'pes
-                  color-type      ; one of 'black, 'white, 'halfblack, 'blackhollow, 
+                  color-type      ; one of 'black, 'white, 'halfblack, 'blackhollow,
                                   ;        'red, 'halfred, 'redhollow
-                                  ;        'gray, 'halfgray 
+                                  ;        'gray, 'halfgray
                   width height    ; desired dimensions, measured in staff space
                   . additions)    ; optional list of keys defined in mensural_flags below
                                   ; e.g. 'stem_above, 'flag_above_right etc.
@@ -831,7 +852,7 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
          (outerps (outerfunc width height))
          (innerps (innerfunc width height))
          )
-    
+
     (case color
       ((gray halfgray)
         (string-append
@@ -887,7 +908,7 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
 #(define-public (ps_flag type color)
    (let* ((postscript (if (string? type) type (assq-ref mensural_flags type)))
           (ps_linestyle "1 setlinecap 0.11 setlinewidth ")
-          (ps_color 
+          (ps_color
             (case color
               ((red redhollow)
                "0.7 0 0 setrgbcolor ")
@@ -899,15 +920,15 @@ ligatura = #(define-music-function (parser location mymusic) (ly:music?)
 %% ====================================================
 %  Rests
 %% ====================================================
-%% We need to fix Lilypond's buggy treatment of large 
+%% We need to fix Lilypond's buggy treatment of large
 %% mensural rests. Lilypond thinks a single three-space
 %% line is a Mx rest, when in reality it's a perfect
 %% Lg rest. A Mx rest is a combination of two or three
-%% vertical lines, which may be either two-space or 
+%% vertical lines, which may be either two-space or
 %% three-space long.
 %% ====================================================
 #(define (large_rest_stencil value modus maximodus imperfect)
-  (let* ((lines (cond 
+  (let* ((lines (cond
                  ((eq? value -2) 1)
                  ((or imperfect (eq? maximodus #f)) 2)
                  (else 3)))
@@ -951,11 +972,11 @@ pausa = #(define-music-function (parser location position music) (number? ly:mus
 
 
 %% ==================================================
-%  Plica function 
+%  Plica function
 %  (lplica: to be called from within a ligature)
 %  takes a pair of notes, treats the second as a kind
 %  of grace note subtracting its duration from the first,
-%  and marks the first with the 'plica tag for later 
+%  and marks the first with the 'plica tag for later
 %  formatting.
 %% ==================================================
 lplica = #(define-music-function (parser location noteA noteB) (ly:music? ly:music?)
@@ -972,14 +993,14 @@ lplica = #(define-music-function (parser location noteA noteB) (ly:music? ly:mus
         (numC (if (= denA denB)
                   (- numA numB)
                   (- (* numA denB) (* numB denA))))
-        (denC (if (= denA denB) 
+        (denC (if (= denA denB)
                   denA
                   (* denA denB)))
         (numF (* numC denA))
         (denF (* denC numA)))
     (set-mensural-flag! neA 'plica #t)
     (make-music 'SequentialMusic
-      'elements (list 
+      'elements (list
       (ly:music-compress noteA (ly:make-moment numF denF))
       noteB))))
 
@@ -987,7 +1008,7 @@ plica = #(define-music-function (parser location noteA noteB) (ly:music? ly:musi
 #{
   \ligatura { \lplica $noteA $noteB }
 #})
-   
+
 %% ===================================================
 %  postscript definitions for note shape primitives
 %% ===================================================
@@ -1005,7 +1026,7 @@ plica = #(define-music-function (parser location noteA noteB) (ly:music? ly:musi
 1.05 -0.3 moveto
 0 -0.3 0 -0.5 0 -0.3 curveto
 0 0.25 lineto
-0 0.45 0 0.45 1.05 0.45 curveto " 
+0 0.45 0 0.45 1.05 0.45 curveto "
     (* -0.2 (/ ydiff (- (abs width) 0.4)))
     (/ width 2.0)
     (* (/ ydiff 2.0) (/ (abs width) (- (abs width) 0.4)))
@@ -1055,7 +1076,7 @@ closepath ")
 0 0.5 moveto
 0 -0.5 lineto
 -0.5 0 lineto
-0 0.5 lineto closepath ")    
+0 0.5 lineto closepath ")
 
 %% ===================================================
 %  quadrata shapes (brevis and above)
@@ -1077,7 +1098,7 @@ closepath ")
 -0.48 -0.5 -0.5 -0.48 -0.5 -0.45 curveto
 closepath " width height))
 
-#(define (ps_quadrata_inner_side width height) 
+#(define (ps_quadrata_inner_side width height)
   (format #f
 "~a ~a scale 
 -0.5 0.4 moveto
@@ -1088,7 +1109,7 @@ closepath " width height))
 0.5 -0.46 0.46 -0.5 0.4 -0.5 curveto
 -0.4 -0.5 lineto
 -0.46 -0.5 -0.5 -0.46 -0.5 -0.4 curveto
-closepath " 
+closepath "
     (/ (- width (* 0.4 height)) width)
     0.65))
 
@@ -1101,7 +1122,7 @@ closepath "
 0 -0.5 lineto
 0.4 -0.5 lineto
 0.46 -0.5 0.5 -0.46 0.5 -0.4 curveto
-closepath " 
+closepath "
     (/ (- width (* 0.3 height)) width)
     0.76))
 
@@ -1147,19 +1168,19 @@ closepath " yshift width height)))
 %% ==============================================
 #(define mensural_notehead_contour_funcs
   (list
-    (cons 'quadrata 
-       (list ps_quadrata_outer_side 
-        ps_quadrata_inner_side 
+    (cons 'quadrata
+       (list ps_quadrata_outer_side
+        ps_quadrata_inner_side
         ps_quadrata_half_inner_side))
-    (cons 'rhombus 
+    (cons 'rhombus
        (list ps_rhombus_outer_side
         ps_rhombus_inner_side
         ps_rhombus_half_inner_side))
-    (cons 'pes 
-       (list ps_pes_outer_side 
+    (cons 'pes
+       (list ps_pes_outer_side
         ps_pes_inner_side
         ps_pes_half_inner_side))
-    (cons 'obliqua 
+    (cons 'obliqua
       (list ps_obliqua_outer_side
        ps_obliqua_inner_side
        ps_obliqua_inner_side))
@@ -1267,7 +1288,7 @@ closepath " yshift width height)))
 
   (dovetail_above . "0.45 1.19 moveto -0.45 -0.65 rlineto -0.45 0.65 rlineto stroke ")
 
-  (pigtail_above_right . 
+  (pigtail_above_right .
     "newpath 0 0.51 moveto
     0.0733 0 rlineto
     0 0.7263 rlineto 
@@ -1294,13 +1315,13 @@ closepath " yshift width height)))
      0.45 -0.7 rlineto
     stroke ")
 
-  (fishhook_below_right . 
+  (fishhook_below_right .
     "newpath 0.0 -0.5 moveto
     0 -0.8 rlineto
     0 -0.55 0.7 -0.55 0.7 0 rcurveto
     stroke ")
 
-  (fishhook_below_left . 
+  (fishhook_below_left .
     "newpath 0.0. -0.5 moveto
     0 -0.8 rlineto
     0 -0.55 -0.7 -0.55 -0.7 0 rcurveto
@@ -1493,19 +1514,19 @@ clavis = #(define-music-function (parser location type line ) (symbol? number? )
     ((ly:stencil? sign)
       sign)
     ; sign is a glyph name
-    ((string? sign) 
+    ((string? sign)
       (lambda (grob) (grob-interpret-markup grob (markup (#:musicglyph sign)))))
     ; sign is a markup expression
     ((markup? sign)
       (lambda (grob) (grob-interpret-markup grob sign)))
     ; sign is a number pair
     ((number-pair? sign)
-      (lambda (grob) (grob-interpret-markup grob 
+      (lambda (grob) (grob-interpret-markup grob
         ;; TODO: fix vertical alignment of denominator
         (markup (make-column-markup (list
           (number->string (car sign))
           (number->string (cdr sign))))))))
-      
+
     ; sign is a rational number
     ((rational? sign)
       (let* ((num (numerator sign))
@@ -1518,7 +1539,7 @@ clavis = #(define-music-function (parser location type line ) (symbol? number? )
             ;; TODO: fix vertical alignment of denominator
             (markup (make-column-markup (list marknum markden))))))))
     ; if #f has been passed in: print nothing
-    (else 
+    (else
       empty-stencil)))
 
 %% ==============================================
@@ -1530,7 +1551,7 @@ proportio = #(define-music-function (parser location prop music) (rational? ly:m
           (mom (ly:make-moment den num))
           (stencil (signature_stencil prop))
           (sign (list
-            (make-music                     ; = \override Staff.TimeSignature #'stencil = 
+            (make-music                     ; = \override Staff.TimeSignature.stencil =
               'ContextSpeccedMusic
               'context-type 'Staff
               'element (
@@ -1540,17 +1561,17 @@ proportio = #(define-music-function (parser location prop music) (rational? ly:m
                   'symbol 'TimeSignature
                   'grob-property-path '(stencil)
                   'grob-value stencil))
-            (make-music                     
+            (make-music
               'ContextSpeccedMusic
               'context-type 'Staff
               'descend-only #t
               'element (
-                make-music 
+                make-music
                   'ContextSpeccedMusic
                   'context-type 'Timing
-                  'element 
+                  'element
                     (make-music
-                      'PropertySet 
+                      'PropertySet
                       'symbol 'timeSignatureFraction
                       'value '(4 . 4))))))
         )
@@ -1576,7 +1597,7 @@ proportio = #(define-music-function (parser location prop music) (rational? ly:m
             (set! hasrhythmicchild #t))))
         elements))
     hasrhythmicchild))
-    
+
 
 %% ==============================================
 %  mensura command
@@ -1587,21 +1608,21 @@ mensura = #(define-music-function (parser location vals music) (list? ly:music?)
           (sign      (assq-ref vals 'sign))
           (prolatio  (assq-ref vals 'prolatio))
           (tempus    (assq-ref vals 'tempus))
-          ; if neither tempus nor prolatio are explicitly set, assume an 
+          ; if neither tempus nor prolatio are explicitly set, assume an
           ; ars-antiqua-style mensuration on modus level (1mx = 2lg = 6br)
           (usetempus (if (or (assq 'prolatio vals) (assq 'tempus vals)) #t #f))
           (modus     (if (assq 'modus vals) (assq-ref vals 'modus) (if usetempus #t #f)))
           (maximodus (assq-ref vals 'maximodus))
-          (beat      (if usetempus 
-                         (ly:make-moment 1 2)          ;basic beat unit is the minim (1/2)
-                         (ly:make-moment 2 1)))        ;basic beat unit is the breve
+          (beat      (if usetempus
+                         (ly:make-moment 1/2)          ;basic beat unit is the minim (1/2)
+                         (ly:make-moment 2/1)))        ;basic beat unit is the breve
 
           (dimin     (or (assq-ref vals 'diminutio) 1))
           (beatgroup  (if usetempus (if prolatio 3 2) 3))
           (groupcount (if usetempus (if tempus   3 2) 2))
           (measurelength (ly:moment-mul beat (ly:make-moment (* beatgroup groupcount) 1)))
-          (beatlist   (if tempus 
-                          (list beatgroup beatgroup beatgroup) 
+          (beatlist   (if tempus
+                          (list beatgroup beatgroup beatgroup)
                           (list beatgroup beatgroup)))
           (fakesign   (cond
                          ((and prolatio tempus (= dimin 2)) '(9 . 8))
@@ -1614,14 +1635,14 @@ mensura = #(define-music-function (parser location vals music) (list? ly:music?)
                          (usetempus                         '(4 . 4))
                          (else #f))) ;dummy setting
           (glyphname (if fakesign
-            (string-append 
-              "timesig.mensural" 
+            (string-append
+              "timesig.mensural"
               (number->string (car fakesign))
               (number->string (cdr fakesign)))
             ""))
           (signstencil
             (signature_stencil
-              (cond 
+              (cond
                 ; signature has been explicitly set to false: print nothing
                 ((and (pair? (assq 'sign vals)) (not sign))
                   #f)
@@ -1632,42 +1653,42 @@ mensura = #(define-music-function (parser location vals music) (list? ly:music?)
                   sign))))
           (unflagged_sm (assq-ref vals 'unflagged_sm))
           (basecolor  (or (assq-ref vals 'color) 'black))
-          (noteglyphs 
+          (noteglyphs
             (list
               (cons 'mx (lambda (color)
-                (or (assq-ref vals 'mx) 
-                    (make-mensural-note-stencil 
+                (or (assq-ref vals 'mx)
+                    (make-mensural-note-stencil
                        'quadrata color 1.7 0.75 (ps_virga 0.85  -1.4 color)))))    ;mx
               (cons 'lg (lambda (color)
-                (or (assq-ref vals 'lg) 
-                    (make-mensural-note-stencil 
+                (or (assq-ref vals 'lg)
+                    (make-mensural-note-stencil
                        'quadrata color 0.85 0.75 (ps_virga 0.425 -1.4 color)))))   ;lg
               (cons 'br (lambda (color)
-                (or (assq-ref vals 'br) 
-                    (make-mensural-note-stencil 
+                (or (assq-ref vals 'br)
+                    (make-mensural-note-stencil
                        'quadrata color 0.85 0.75 ))))                              ;br
-              (cons 'sb (lambda (color) 
-                (or (assq-ref vals 'sb) 
-                    (make-mensural-note-stencil 
+              (cons 'sb (lambda (color)
+                (or (assq-ref vals 'sb)
+                    (make-mensural-note-stencil
                        'rhombus  color 0.8 1.1 ))))                                ;sb
-              (cons 'mn (lambda (color) 
-                (or (assq-ref vals 'mn) 
-                (make-mensural-note-stencil 
+              (cons 'mn (lambda (color)
+                (or (assq-ref vals 'mn)
+                (make-mensural-note-stencil
                        'rhombus  color 0.8 1.1 'stem_above))))                     ;mn
-              (cons 'sm (lambda (color) 
-                (or (assq-ref vals 'sm) 
+              (cons 'sm (lambda (color)
+                (or (assq-ref vals 'sm)
                         (if unflagged_sm                                          ;sm
                           (make-mensural-note-stencil
                             'rhombus
                             (case color (( black ) 'blackhollow ) (( white blackhollow hollow ) 'black) (else color))
                             0.8 1.1
                             'stem_above)
-                          (make-mensural-note-stencil 
-                            'rhombus  
-                            color 
-                            0.8 1.1 
+                          (make-mensural-note-stencil
+                            'rhombus
+                            color
+                            0.8 1.1
                             'flag_above_right)))))
-              (cons 'fu (lambda (color) 
+              (cons 'fu (lambda (color)
                 (or (assq-ref vals 'fu)                                   ;fu
                         (if unflagged_sm
                           (make-mensural-note-stencil
@@ -1675,12 +1696,12 @@ mensura = #(define-music-function (parser location vals music) (list? ly:music?)
                             (case color (( black ) 'blackhollow ) (( white blackhollow hollow ) 'black) (else color))
                             0.8 1.1
                             'flag_above_right)
-                          (make-mensural-note-stencil 
+                          (make-mensural-note-stencil
                            'rhombus
-                           color 
-                           0.8 1.1 
+                           color
+                           0.8 1.1
                            'double_flag_above_right)))))
-              (cons 'sf (lambda (color) 
+              (cons 'sf (lambda (color)
                 (or (assq-ref vals 'sf)                                   ;semifusa
                         (if unflagged_sm
                           (make-mensural-note-stencil
@@ -1688,10 +1709,10 @@ mensura = #(define-music-function (parser location vals music) (list? ly:music?)
                             (case color (( black ) 'blackhollow ) (( white blackhollow hollow ) 'black) (else color))
                             0.8 1.1
                             'double_flag_above_right)
-                          (make-mensural-note-stencil 
+                          (make-mensural-note-stencil
                            'rhombus
-                           color 
-                           0.8 1.1 
+                           color
+                           0.8 1.1
                            'triple_flag_above_right)))))
              ))
              (notesettings
@@ -1731,7 +1752,7 @@ mensura = #(define-music-function (parser location vals music) (list? ly:music?)
                 (ly:grob::stencil-width grob)
                 (ly:rest::width grob)))))
 
-          (result (list 
+          (result (list
             (make-music
               'ContextSpeccedMusic
               'context-type 'Bottom
@@ -1750,7 +1771,7 @@ mensura = #(define-music-function (parser location vals music) (list? ly:music?)
                 'symbol 'mensural_ligature_queue
                 'value #f))
 
-            ;(make-music                         ; =   \override NoteHead #'X-extent = #widthfunction
+            ;(make-music                         ; =   \override NoteHead.X-extent = #widthfunction
             ;  'ContextSpeccedMusic
             ;  'context-type 'Bottom
             ;  'element
@@ -1760,7 +1781,7 @@ mensura = #(define-music-function (parser location vals music) (list? ly:music?)
             ;    'symbol 'NoteHead
             ;    'grob-property-path (list 'X-extent)
             ;    'grob-value widthfunction))
-            (make-music                         ; =   \override Rest #'X-extent = #widthfunction
+            (make-music                         ; =   \override Rest.X-extent = #widthfunction
               'ContextSpeccedMusic
               'context-type 'Bottom
               'element
@@ -1770,7 +1791,7 @@ mensura = #(define-music-function (parser location vals music) (list? ly:music?)
                 'grob-property-path (list 'X-extent)
                 'grob-value widthfunction))
 
-            (make-music                         ; =   \override NoteHead #'stencil = #notestencilfunction
+            (make-music                         ; =   \override NoteHead.stencil = #notestencilfunction
               'ContextSpeccedMusic
               'context-type 'Bottom
               'element
@@ -1780,7 +1801,7 @@ mensura = #(define-music-function (parser location vals music) (list? ly:music?)
                 'grob-property-path (list 'stencil)
                 'grob-value notestencilfunction))
 
-            (make-music                         ; =   \override Rest #'stencil = #reststencilfunction
+            (make-music                         ; =   \override Rest.stencil = #reststencilfunction
               'ContextSpeccedMusic
               'context-type 'Bottom
               'element
@@ -1792,7 +1813,7 @@ mensura = #(define-music-function (parser location vals music) (list? ly:music?)
 
 
            (make-music
-              'ContextSpeccedMusic              ; = \override Rest #'style = #'mensural
+              'ContextSpeccedMusic              ; = \override Rest.style = #'mensural
               'context-type 'Bottom
               'element
               (make-music
@@ -1800,7 +1821,7 @@ mensura = #(define-music-function (parser location vals music) (list? ly:music?)
                 'symbol 'Rest
                 'grob-property-path (list 'style)
                 'grob-value 'mensural))
-            (make-music                     ; = \override Staff.TimeSignature #'stencil = #signstencil
+            (make-music                     ; = \override Staff.TimeSignature.stencil = #signstencil
               'ContextSpeccedMusic
               'context-type 'Staff
               'element (
@@ -1809,22 +1830,22 @@ mensura = #(define-music-function (parser location vals music) (list? ly:music?)
                   'symbol 'TimeSignature
                   'grob-property-path '(stencil)
                   'grob-value signstencil))
-            (make-music                     
+            (make-music
               'ContextSpeccedMusic
               'context-type 'Staff
               'descend-only #t
               'element (
-                make-music 
+                make-music
                   'ContextSpeccedMusic
                   'context-type 'Timing
                   'element (
                     make-music
                       'SequentialMusic
-                      'elements (append 
+                      'elements (append
                         (if (pair? fakesign)
                           (list
                             (make-music
-                              'PropertySet 
+                              'PropertySet
                               'symbol 'timeSignatureFraction
                               'value fakesign))
                           '())
@@ -1849,14 +1870,14 @@ mensura = #(define-music-function (parser location vals music) (list? ly:music?)
    ;; now process the actual music, setting durations according to tempus/prolatio
    (music-map
      (lambda (event)
-       (cond 
+       (cond
          ;;every chord of the music needs to be prefixed
          ;;with an ApplyOutput call to our mensural_processing function
          ((rhythmicchord? event)
            (begin
              ;(display "prefixing an event-chord:\n")
-             (make-music          
-               'SequentialMusic    
+             (make-music
+               'SequentialMusic
                'elements
                (list
                  (make-music
@@ -1887,14 +1908,14 @@ mensura = #(define-music-function (parser location vals music) (list? ly:music?)
                    (set! newfactor (cons (* fprol ftemp fmod) 8)))
                (( br )  ; breve
                  (set! newfactor (cons (* fprol ftemp) 4)))
-               (( sb )   ; semibreve 
+               (( sb )   ; semibreve
                  (set! newfactor (cons fprol 2))))
              (set! newfactor (multiply newfactor durfactor))
-             (ly:music-set-property! 
-               event 
-               'duration 
+             (ly:music-set-property!
+               event
+               'duration
                (ly:make-duration durlog dots (car newfactor) (cdr newfactor)))
-          
+
 
 
          event))
@@ -1904,23 +1925,23 @@ mensura = #(define-music-function (parser location vals music) (list? ly:music?)
 
    ; apply proportion
    (if (!= dimin 1)
-     (set! newmusic 
+     (set! newmusic
        (ly:music-compress newmusic
 		     (ly:make-moment (denominator dimin) (numerator dimin)))))
 
    ; insert the time sig code together with the modified music
-   (make-music 
+   (make-music
      'SequentialMusic
-     'elements (append 
-      result 
-      (list 
+     'elements (append
+      result
+      (list
         newmusic
       )))
    ))
 
 linea = #(define-music-function (parser location type) (string?)
 #{
-  \once \override Staff.BarLine #'stencil = #ly:bar-line::print
+  \once \override Staff.BarLine.stencil = #ly:bar-line::print
   \bar $type
 #})
 
@@ -1940,8 +1961,8 @@ accidens = #(define-music-function (parser location note) (ly:music?)
             (set! result
                   (make-music
                     'SequentialMusic
-                    'elements (append (list 
-                      (make-music 
+                    'elements (append (list
+                      (make-music
                         'ContextSpeccedMusic
                         'context-type 'Bottom
                         'element (make-music
@@ -1958,7 +1979,7 @@ accidens = #(define-music-function (parser location note) (ly:music?)
                           'once #t
                           'symbol 'Accidental
                           'grob-property-path '(glyph-name-alist)
-                          'grob-value 
+                          'grob-value
                             (case notename
                               ((3 0 4) '((0    . "accidentals.flat")(1/2 . "accidentals.natural")))    ; c,f,g
                               (else    '((-1/2 . "accidentals.flat")(0   . "accidentals.natural"))))   ; b,e,a,d
@@ -1972,3 +1993,22 @@ accidens = #(define-music-function (parser location note) (ly:music?)
 
 
 
+
+
+%{
+convert-ly (GNU LilyPond) 2.18.0  convert-ly: Processing `'...
+Applying conversion: 2.12.3, 2.13.0, 2.13.1, 2.13.4,  Not smart enough
+to convert beatGrouping.     beatGrouping with a specified context
+must now be accomplished with    \overrideBeamSettings. Please refer
+to the manual for details, and update manually. 2.13.10, 2.13.16,
+2.13.18, 2.13.20, 2.13.27, 2.13.29,  Not smart enough to convert
+beatLength. Use baseMoment and beatStructure. Please refer to the
+manual for details, and update manually. 2.13.31, 2.13.36, 2.13.39,
+2.13.40, 2.13.42, 2.13.44, 2.13.46,  Vertical spacing changes might
+affect user-defined contexts. Please refer to the manual for details,
+and update manually. 2.13.48, 2.13.51, 2.14.0, 2.15.7, 2.15.9,
+2.15.10, 2.15.16, 2.15.17, 2.15.18, 2.15.19, 2.15.20, 2.15.25,
+2.15.32, 2.15.39, 2.15.40, 2.15.42, 2.15.43, 2.16.0, 2.17.0, 2.17.4,
+2.17.5, 2.17.6, 2.17.11, 2.17.14, 2.17.15, 2.17.18, 2.17.19, 2.17.20,
+2.17.25, 2.17.27, 2.17.29, 2.17.97
+%}
