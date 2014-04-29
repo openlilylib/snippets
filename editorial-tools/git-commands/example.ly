@@ -78,3 +78,9 @@
        #{ \markup \bold "does have" #})))
 
 \markup \concat { "Repository " \isClean " uncommitted changes" }
+\markup \vspace #0.25
+\markup \italic \justify {
+  (Please note that the 'gitIsClean' function only returns a
+  boolean value. If you want to display information such as the
+  above you will have to create the markup yourself.)
+}
