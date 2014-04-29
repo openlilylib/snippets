@@ -22,10 +22,6 @@
   %{
     TODO: complete a useful set of commands.
     Wishlist:
-    - Determine if git status is clean
-      (i.e. if the given commit represents the state of the score)
-      Approach: If 'git status --porcelain' returns empty
-        the repo is clean
     - Autocommit on LilyPond run
       !!!Is that a useful function? Or rather a dangerous one?
     - Print full commit message
@@ -78,3 +74,7 @@ gitBranch = \markup { \strsystem "git rev-parse --abbrev-ref HEAD" }
 % of the counting of merge commits
 gitRevisionNumber = \markup { \strsystem "git log --oneline | wc -l" }
 
+% Return ##t if the repository is clean, i.e. if it
+% doesn't have any uncommitted changes
+#(define (gitIsClean)
+   (eof-object? (strsystem_internal "git status --porcelain")))
