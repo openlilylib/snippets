@@ -39,11 +39,15 @@
 \markup \vspace #0.5
 
 \markup "Latest commit (full message, doesn't work yet):"
-\markup \gitFullCommit 
+\markup \gitFullCommit
 \markup \vspace #0.5
 
 \markup "Latest commit (date/time):"
 \markup \bold \gitDateTime
+\markup \vspace #0.5
+
+\markup "Latest commit (author):"
+\markup \bold \gitAuthor
 \markup \vspace #0.5
 
 \markup"Parent commit (committish): "
@@ -55,11 +59,11 @@
 \markup \vspace #0.5
 
 \markup "Current branch:"
-\markup \bold \gitBranch 
+\markup \bold \gitBranch
 \markup \vspace #0.5
 
 \markup "Number of commits on this branch:"
-\markup\bold \gitRevisionNumber 
+\markup\bold \gitRevisionNumber
 \markup \vspace #0.5
 
 % gitIsClean determines whether the current repository is clean,

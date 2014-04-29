@@ -69,6 +69,8 @@ gitFullCommit = \markup { \strsystem "git log --pretty=full HEAD" }
 % Print date and time of the latest commit
 gitDateTime = \markup { \strsystem "git show -s --format=%ci HEAD" }
 
+gitAuthor = \markup { \strsystem "git show -s --format=%an HEAD" }
+
 % Print the (short) committish of the latest commit
 gitParentCommitish = \markup { \strsystem "git rev-parse --short HEAD~1" }
 
