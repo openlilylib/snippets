@@ -26,6 +26,11 @@
       !!!Is that a useful function? Or rather a dangerous one?
     - Print full commit message
       The initial attempt doesn't work and only shows one line with the committish
+    - Print diff against the current commit
+      This may be interesting for a really detailed documentation
+      because in the majority of cases the commit will only be done
+      *after* the compilation was successful.
+      Of course such a diff should usually be printed on an empty (last) page.
     FIXME: Gracefully handle missing Git installation
            Gracefully handle the file not being in a repository
   %}
