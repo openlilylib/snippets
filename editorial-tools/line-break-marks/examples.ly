@@ -12,6 +12,7 @@
    This can be used at barlines or anywhere between.
 %}
 
+\markup \vspace #1
 {
   s1*2 \mark \default
   s1*2 \lineBreakMark

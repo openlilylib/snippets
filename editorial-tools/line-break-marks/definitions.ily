@@ -17,7 +17,7 @@
   %}
 }
 
-lineBreakMark = { 
+lineBreakMark = {
   \once \override Score.RehearsalMark.padding = #0
   \mark \markup {
     \override #'(on . 0.25)
