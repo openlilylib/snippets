@@ -47,10 +47,11 @@
 % Read a command, execute it as a shell command and return
 % the command's result as a string
 % NOTE: This function only reads the first line of the command
-% and only returns the first line of the result!
+% and returns the whole result as one single string
+% (in case of multiline results the caller has to split that)
 #(define (strsystem_internal cmd)
    (let* ((port (open-input-pipe cmd))
-          (str (read-line port)))
+          (str (read-delimited "" port)))
      (close-pipe port)
      str))
 
