@@ -66,6 +66,9 @@ gitCommit = \markup { \strsystem "git log --oneline HEAD" }
 %TODO: This doesn't work yet
 gitFullCommit = \markup { \strsystem "git log --pretty=full HEAD" }
 
+% Print date and time of the latest commit
+gitDateTime = \markup { \strsystem "git show -s --format=%ci HEAD" }
+
 % Print the (short) committish of the latest commit
 gitParentCommitish = \markup { \strsystem "git rev-parse --short HEAD~1" }
 

@@ -42,6 +42,10 @@
 \markup \gitFullCommit 
 \markup \vspace #0.5
 
+\markup "Latest commit (date/time):"
+\markup \bold \gitDateTime
+\markup \vspace #0.5
+
 \markup"Parent commit (committish): "
 \markup \bold \gitParentCommitish
 \markup \vspace #0.5
