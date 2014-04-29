@@ -66,6 +66,13 @@ gitCommit = \markup { \strsystem "git log --oneline HEAD" }
 %TODO: This doesn't work yet
 gitFullCommit = \markup { \strsystem "git log --pretty=full HEAD" }
 
+% Print the (short) committish of the latest commit
+gitParentCommitish = \markup { \strsystem "git rev-parse --short HEAD~1" }
+
+% Print the oneline commit message of the latest commit
+gitParentCommit = \markup { \strsystem "git log --oneline HEAD~1" }
+
+
 % Print the branch the repository is currently on
 gitBranch = \markup { \strsystem "git rev-parse --abbrev-ref HEAD" }
 

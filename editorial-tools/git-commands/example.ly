@@ -42,6 +42,14 @@
 \markup \gitFullCommit 
 \markup \vspace #0.5
 
+\markup"Parent commit (committish): "
+\markup \bold \gitParentCommitish
+\markup \vspace #0.5
+
+\markup "Parent commit (shortlog):"
+\markup \bold \gitParentCommit
+\markup \vspace #0.5
+
 \markup "Current branch:"
 \markup \bold \gitBranch 
 \markup \vspace #0.5
