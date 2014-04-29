@@ -54,42 +54,45 @@
      (close-pipe port)
      str))
 
-#(define-markup-command (strsystem layout props cmd) (markup?)
+#(define-markup-command (gitCommand layout props cmd) (markup?)
+   ;(display cmd)(newline)
+   (let ((gitcmd (string-append "git " cmd)))
    (interpret-markup layout props
-     (strsystem_internal cmd)))
+     (strsystem_internal gitcmd))))
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Actual commands
 
 % Print the (short) committish of the latest commit
-gitCommitish = \markup { \strsystem "git rev-parse --short HEAD" }
+gitCommitish = \markup { \gitCommand "rev-parse --short HEAD" }
 
 % Print the oneline commit message of the latest commit
-gitCommit = \markup { \strsystem "git log --oneline HEAD" }
+gitCommit = \markup { \gitCommand "log --oneline HEAD^1..HEAD" }
 
 % Print the full commit message of the latest commit
 %TODO: This doesn't work yet
-gitFullCommit = \markup { \strsystem "git log --pretty=full HEAD" }
+gitFullCommit = \markup { \gitCommand "log --pretty=full HEAD^1..HEAD" }
 
 % Print date and time of the latest commit
-gitDateTime = \markup { \strsystem "git show -s --format=%ci HEAD" }
+gitDateTime = \markup { \gitCommand "show -s --format=%ci HEAD" }
 
-gitAuthor = \markup { \strsystem "git show -s --format=%an HEAD" }
+gitAuthor = \markup { \gitCommand "show -s --format=%an HEAD" }
 
 % Print the (short) committish of the latest commit
-gitParentCommitish = \markup { \strsystem "git rev-parse --short HEAD~1" }
+gitParentCommitish = \markup { \gitCommand "rev-parse --short HEAD" }
 
 % Print the oneline commit message of the latest commit
-gitParentCommit = \markup { \strsystem "git log --oneline HEAD~1" }
+gitParentCommit = \markup { \gitCommand "log --oneline HEAD^1..HEAD" }
 
 
 % Print the branch the repository is currently on
-gitBranch = \markup { \strsystem "git rev-parse --abbrev-ref HEAD" }
+gitBranch = \markup { \gitCommand "rev-parse --abbrev-ref HEAD" }
 
 % Print the number of commits that lead to the
 % current commit. This may not be reliable because
 % of the counting of merge commits
-gitRevisionNumber = \markup { \strsystem "git log --oneline | wc -l" }
+gitRevisionNumber = \markup { \gitCommand "log --oneline | wc -l" }
 
 % Return ##t if the repository is clean, i.e. if it
 % doesn't have any uncommitted changes
