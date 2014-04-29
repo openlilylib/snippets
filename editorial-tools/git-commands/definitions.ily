@@ -80,6 +80,8 @@ gitDateTime = \markup { \gitCommand "show -s --format=%ci HEAD" }
 
 gitAuthor = \markup { \gitCommand "show -s --format=%an HEAD" }
 
+gitEmail = \markup { \gitCommand "show -s --format=%ae HEAD" }
+
 % Print the (short) committish of the latest commit
 gitParentCommitish = \markup { \gitCommand "rev-parse --short HEAD" }
 

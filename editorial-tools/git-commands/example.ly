@@ -50,6 +50,10 @@
 \markup \bold \gitAuthor
 \markup \vspace #0.5
 
+\markup "Latest commit (email):"
+\markup \bold \gitEmail
+\markup \vspace #0.5
+
 \markup"Parent commit (committish): "
 \markup \bold \gitParentCommitish
 \markup \vspace #0.5
