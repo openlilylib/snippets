@@ -93,3 +93,23 @@
 }
 
 %\markup \getgitresult "git status"
+
+\pageBreak
+
+\markup \bold "Printing the full Git diff"
+\markup \vspace #0.5
+\markup \justify {
+  In some cases it may be interesting to print out a full diff
+  against the latest commit. Usually one compiles scores
+  \italic after modifying them and \italic before committing them.
+  So if you really need to have a detailed documentation in the
+  printout you can supply the full diff as an additional resource.
+  Of course it will make sense to provide it on a separat (last)
+  page in order not to disturb the score layout. 
+  Please note that you're responsible yourself for any formatting.
+}
+
+\markup \vspace #1
+\markup 
+  \override #'(baseline-skip . 2)
+  \tiny \typewriter \gitDiff

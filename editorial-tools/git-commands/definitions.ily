@@ -24,13 +24,6 @@
     Wishlist:
     - Autocommit on LilyPond run
       !!!Is that a useful function? Or rather a dangerous one?
-    - Print full commit message
-      The initial attempt doesn't work and only shows one line with the committish
-    - Print diff against the current commit
-      This may be interesting for a really detailed documentation
-      because in the majority of cases the commit will only be done
-      *after* the compilation was successful.
-      Of course such a diff should usually be printed on an empty (last) page.
     FIXME: Gracefully handle missing Git installation
            Gracefully handle the file not being in a repository
   %}
@@ -76,10 +69,6 @@ gitCommitish = \markup { \gitCommand "rev-parse --short HEAD" }
 % Print the oneline commit message of the latest commit
 gitCommit = \markup { \gitCommand "log --oneline HEAD^1..HEAD" }
 
-% Print the full commit message of the latest commit
-%TODO: This doesn't work yet
-gitFullCommit = \markup { \gitCommand "log --pretty=full HEAD^1..HEAD" }
-
 % Print date and time of the latest commit
 gitDateTime = \markup { \gitCommand "show -s --format=%ci HEAD" }
 
@@ -106,3 +95,14 @@ gitRevisionNumber = \markup { \gitCommand "log --oneline | wc -l" }
 % doesn't have any uncommitted changes
 #(define (gitIsClean)
    (eof-object? (strsystem_internal  "git status --porcelain")))
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% "Verbose" commands
+
+% Print the full commit message of the latest commit
+gitFullCommit = \markup { \gitCommand "log --pretty=full HEAD^1..HEAD" }
+
+% Print a full diff between current HEAD and the working tree
+gitDiff = \markup { \gitCommand "diff" }
+
