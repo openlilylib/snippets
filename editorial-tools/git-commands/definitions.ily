@@ -55,11 +55,16 @@
      (close-pipe port)
      str))
 
+% execute a Git command and return its result as a \markup \column
+% with one or more lines in it. If the result is empty an error
+% will be raised about unexpected #<eof>
+% Pass the function a git command without "git "
 #(define-markup-command (gitCommand layout props cmd) (markup?)
-   ;(display cmd)(newline)
-   (let ((gitcmd (string-append "git " cmd)))
-   (interpret-markup layout props
-     (strsystem_internal gitcmd))))
+   (let* ((result (string-split
+                   (strsystem_internal (string-append "git " cmd))
+                   #\newline)))
+       (interpret-markup layout props
+         #{ \markup \column #result #})))
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -100,4 +105,4 @@ gitRevisionNumber = \markup { \gitCommand "log --oneline | wc -l" }
 % Return ##t if the repository is clean, i.e. if it
 % doesn't have any uncommitted changes
 #(define (gitIsClean)
-   (eof-object? (strsystem_internal "git status --porcelain")))
+   (eof-object? (strsystem_internal  "git status --porcelain")))

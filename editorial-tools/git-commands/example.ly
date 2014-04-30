@@ -38,8 +38,11 @@
 \markup \bold \gitCommit
 \markup \vspace #0.5
 
-\markup "Latest commit (full message, doesn't work yet):"
-\markup \gitFullCommit
+\markup "Latest commit (full message):"
+\markup \vspace #0.25
+\markup \small \typewriter \gitFullCommit
+\markup \vspace #0.25
+\markup \italic "(the formatting with typewriter font has been done manually)"
 \markup \vspace #0.5
 
 \markup "Latest commit (date/time):"
@@ -88,3 +91,5 @@
   boolean value. If you want to display information such as the
   above you will have to create the markup yourself.)
 }
+
+%\markup \getgitresult "git status"
