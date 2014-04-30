@@ -46,7 +46,7 @@
    (let* ((port (open-input-pipe cmd))
           (str (read-delimited "" port)))
      (close-pipe port)
-     str))
+     (if (eof-object? str) "" str)))
 
 % execute a Git command and return its result as a \markup \column
 % with one or more lines in it. If the result is empty an error
@@ -94,7 +94,7 @@ gitRevisionNumber = \markup { \gitCommand "log --oneline | wc -l" }
 % Return ##t if the repository is clean, i.e. if it
 % doesn't have any uncommitted changes
 #(define (gitIsClean)
-   (eof-object? (strsystem_internal  "git status --porcelain")))
+   (eq? "" (strsystem_internal  "git status --porcelain")))
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
