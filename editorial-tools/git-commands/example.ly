@@ -105,11 +105,12 @@
   So if you really need to have a detailed documentation in the
   printout you can supply the full diff as an additional resource.
   Of course it will make sense to provide it on a separat (last)
-  page in order not to disturb the score layout. 
-  Please note that you're responsible yourself for any formatting.
+  page or even in a separate score or bookpart in order not to
+  disturb the score layout. Please note that you're responsible
+  yourself for any formatting.
 }
 
 \markup \vspace #1
-\markup 
+\markup
   \override #'(baseline-skip . 2)
   \tiny \typewriter \gitDiff
