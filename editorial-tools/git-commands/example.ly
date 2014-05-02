@@ -58,7 +58,7 @@
 \markup \vspace #0.5
 
 \markup"Parent commit (committish): "
-\markup \bold \gitParentCommitish
+\markup \bold \gitParentCommittish
 \markup \vspace #0.5
 
 \markup "Parent commit (shortlog):"

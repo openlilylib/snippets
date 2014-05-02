@@ -77,10 +77,10 @@ gitAuthor = \markup { \gitCommand "show -s --format=%an HEAD" }
 gitEmail = \markup { \gitCommand "show -s --format=%ae HEAD" }
 
 % Print the (short) committish of the latest commit
-gitParentCommitish = \markup { \gitCommand "rev-parse --short HEAD" }
+gitParentCommittish = \markup { \gitCommand "rev-parse --short HEAD^1" }
 
 % Print the oneline commit message of the latest commit
-gitParentCommit = \markup { \gitCommand "log --oneline HEAD^1..HEAD" }
+gitParentCommit = \markup { \gitCommand "log --oneline HEAD~2..HEAD~1" }
 
 
 % Print the branch the repository is currently on
