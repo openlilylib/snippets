@@ -27,7 +27,9 @@ Limitations
   this snippet uses and transforms the slur engraver.  This implies that
   you cannot, for instance, start a pull-off right after a bend release.
   This is one of the reasons why a bend engraver is needed (see
-  issue 1196 above).
+  issue 1196 above). However, you can work around this problem by adding
+  an hidden grace note  where the pull-off should start; you may have to
+  use the `\shape` command to adjust the slur shape.
 * If you use Staff and TabStaff, you may have to add some more padding
   in order to avoid collisions between the bending interval number and
   the staff:
