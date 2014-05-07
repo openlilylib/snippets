@@ -29,11 +29,11 @@ tocCollection = #tocItem
   \markuplist \table-of-contents
 }
 
-\clratree opts
+\optionsInit opts
 % if we define an option 'keys', the bookpart will loop through all music-folders current.music.folder.<key>
-\setatree opts keys #'(altatrinita psalmXLVI)
+\optionsAdd opts keys #'(altatrinita psalmXLVI)
 % alternatively, we can define a list with music-folders
-%\setatree opts music #'((music choral altatrinita) (music choral psalmXLVI))
+%\optionsAdd opts music #'((music choral altatrinita) (music choral psalmXLVI))
 % create a bookpart containing all declared scores
 \lalilyBookpart #opts
 % lalilyTestBookpart will only act, if output-name and location match - if this is not included

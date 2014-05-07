@@ -17,17 +17,17 @@
    #}))
 
 % setup options ...
-\clratree opts
-\addatree opts choir.staff-mods \with { midiInstrument = "choir aahs" }
-\addatree opts choir.staffs.cantus.staff-mods \with { instrumentName = "Cantus" }
-\addatree opts choir.staffs.cantus.clef "G"
-\addatree opts choir.staffs.tenor.staff-mods \with { instrumentName = "Tenor" }
-\addatree opts choir.staffs.tenor.clef "G_8"
-\addatree opts choir.staffs.bass.staff-mods \with { instrumentName = "Bass" }
-\addatree opts choir.staffs.bass.clef "bass"
-\addatree opts continuo.name "continuo"
-\addatree opts continuo.clef "bass"
-\addatree opts continuo.staff-mods \with {
+\optionsInit opts
+\optionsAdd opts choir.staff-mods \with { midiInstrument = "choir aahs" }
+\optionsAdd opts choir.staffs.cantus.staff-mods \with { instrumentName = "Cantus" }
+\optionsAdd opts choir.staffs.cantus.clef "G"
+\optionsAdd opts choir.staffs.tenor.staff-mods \with { instrumentName = "Tenor" }
+\optionsAdd opts choir.staffs.tenor.clef "G_8"
+\optionsAdd opts choir.staffs.bass.staff-mods \with { instrumentName = "Bass" }
+\optionsAdd opts choir.staffs.bass.clef "bass"
+\optionsAdd opts continuo.name "continuo"
+\optionsAdd opts continuo.clef "bass"
+\optionsAdd opts continuo.staff-mods \with {
          instrumentName = \markup { \override #'(baseline-skip . 2) \right-column { Basso Continuo } }
          midiInstrument = "church organ"
 }
