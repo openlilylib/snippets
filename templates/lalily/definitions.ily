@@ -21,6 +21,12 @@
 \include "general-tools/scheme-wrapper/a-list-access/definitions.ily"
 \includePattern "templates" ".*\\.ily"
 
+#(define-public optionsInit clratree)
+#(define-public optionsGet getatree)
+#(define-public optionsSet setatree)
+#(define-public optionsAdd addatree)
+#(define-public optionsRemove rematree)
+
 
 #(define-public (set-book-headers! book header)
    (let ((bookhead (ly:book-header book)))

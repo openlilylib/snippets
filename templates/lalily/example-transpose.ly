@@ -2,8 +2,8 @@
 \include "example-satb.ly"
 
 % prepare options
-\clratree opts
-\addatree opts mirror-path #'(..)
+\optionsInit opts
+\optionsAdd opts mirror-path #'(..)
 
 % we inluded example-satb and the music-folder is still set to music.choral.altatrinita
 % \musicPath G sets it to music.choral.altatrinita.G
