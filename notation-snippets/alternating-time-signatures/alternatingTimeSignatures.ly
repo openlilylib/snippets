@@ -5,9 +5,9 @@
    ;; derived from
    ;; http://lilypond.1069038.n5.nabble.com/Mixed-Time-Signatures-Non-regular-alternantion-between-5-8-and-8-8-td18617.html
    (let ((numOne (number->string (car one)))
-          (denOne (number->string (cdr one)))
+          (denOne (number->string (cadr one)))
           (numTwo (number->string (car two)))
-          (denTwo (number->string (cdr two))))
+          (denTwo (number->string (cadr two))))
    (grob-interpret-markup grob
      (markup #:override '(baseline-skip . 0) #:number
 ;TODO: #:line is a list of columns,
@@ -22,7 +22,7 @@
 alternatingTimeSignatures =
 #(define-music-function (parser location timesigs)(list?)
    (_i "Print alternating time signatures. The argument is a Scheme list
-of (currently two) pairs. Each pair describes one fraction to be printed.
+of (currently two) lists. Each list describes one fraction to be printed.
 When the function has executed the first of the given time signatures
 will be the effective @code{\\time}, while the second is simply graphical.
 When using it you will have to use @code{\\omit Score.TimeSignature}
@@ -31,16 +31,17 @@ perform any checks regarding the used time signatures, so you're
 responsible yourself to write correct music. To return to normal
 use of time signatures use @code{\\revert Score.TimeSignature.stencil}.")
    (let* ((sigOne (car timesigs))
-          (sigTwo (cadr timesigs)))
+          (sigTwo (cadr timesigs))
+          (dispSig (cons (caar timesigs) (cdar timesigs))))
      #{
        \override Score.TimeSignature.stencil =
          #(custom-time-signature sigOne sigTwo)
-       \time #sigOne
+       \time 3/8
      #}
      ))
 
 \relative c' {
-  \alternatingTimeSignatures #'((3 . 8) (4 . 8))
+  \alternatingTimeSignatures #'((3 8) (4 8))
   c8 d e
   \omit Score.TimeSignature
   \time 4/8
@@ -59,7 +60,7 @@ use of time signatures use @code{\\revert Score.TimeSignature.stencil}.")
 
 \relative c' {
   \override TupletNumber.text = #tuplet-number::calc-fraction-text
-  \alternatingTimeSignatures #'((3 . 4) (4 . 7))
+  \alternatingTimeSignatures #'((3 4) (4 7))
   c4 d e
   \omit Score.TimeSignature
   \time 4/7
