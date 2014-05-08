@@ -19,7 +19,7 @@ use of time signatures use @code{\\undo \\omit Score.TimeSignature}.")
            (grob-interpret-markup grob
              #{ \markup \override #'(baseline-skip . 0)
                 \number
-                #(map (lambda (x) #{ \markup \column #(map number->string x) #})
+                #(map (lambda (x) #{ \markup \center-column #(map number->string x) #})
                    timesigs)
              #}))
         \time #firstsig #}))
@@ -71,7 +71,7 @@ use of time signatures use @code{\\undo \\omit Score.TimeSignature}.")
       % the lower voice 4/4, so the relation is 31/28
       \tuplet 5/4 {
         \scaleDurations 31/28 {
-          f4 d b cis fis
+          f4 d b \tuplet 3/2 { cis d fis }
         }
       }
       g
