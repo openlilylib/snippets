@@ -31,8 +31,9 @@ use of time signatures use @code{\\undo \\omit Score.TimeSignature}.")
   \omit Score.TimeSignature
   \time 4/8
   f g a b
+  \time 5/8
+  c g c, f e
   \time 3/8
-  c g c,
   d e f
   g a b
   \time 4/8
@@ -49,11 +50,34 @@ use of time signatures use @code{\\undo \\omit Score.TimeSignature}.")
   c4 d e
   \omit Score.TimeSignature
   \time 4/7
-  \tupletSpan 4*16/7
-  \tuplet 7/4 {
-    f e f fis
-    g a ais b
-  }
-  \time 3/4
-  c4 g c,
+  <<
+    {
+      \tupletSpan 4*16/7
+      \tuplet 7/4 {
+        \voiceOne
+        f e f fis
+        g a ais b
+      }
+      \time 3/4
+      c4 g
+    }
+    \new Voice {
+      \voiceTwo
+      \scaleDurations 4/7 { s2 }
+      % the lower music is actually shorter than the upper,
+      % but I think the notation should be simplified here.
+      % We use \scaleDurations for this, with a little math.
+      % The upper voice spans 6/7 + 1/4 = 31/28
+      % the lower voice 4/4, so the relation is 31/28
+      \tuplet 5/4 {
+        \scaleDurations 31/28 {
+          f4 d b cis fis
+        }
+      }
+      g
+
+    }
+  >>
+  
+   c,
 }
