@@ -1,22 +1,19 @@
-
-
 \version "2.19.6"
-#(define ((custom-time-signature one two) grob)
-   ;; derived from
-   ;; http://lilypond.1069038.n5.nabble.com/Mixed-Time-Signatures-Non-regular-alternantion-between-5-8-and-8-8-td18617.html
-   (let ((numOne (number->string (car one)))
-          (denOne (number->string (cadr one)))
-          (numTwo (number->string (car two)))
-          (denTwo (number->string (cadr two))))
+
+%#(define (make-column sigs)
+% ;  (display sig)(newline)
+%;   (display (cadr sig))(newline)
+   
+%   (make-column-markup (3 3))
+%)
+
+#(define ((custom-time-signature sigs) grob)
    (grob-interpret-markup grob
      (markup #:override '(baseline-skip . 0) #:number
-;TODO: #:line is a list of columns,
-; so it's easy to extend this with more items.
-; will take a list of pairs, convert all items to strings
-; and create the list of #:column items.
-; Then simply pass this list to #:line
-       (#:line ((#:column (numOne denOne))
-                (#:column (numTwo denTwo))))))))
+        (make-line-markup
+	   (map (lambda (x)
+		 (make-column-markup (map number->string x)))
+	    sigs)))))
 
 
 alternatingTimeSignatures =
@@ -35,13 +32,13 @@ use of time signatures use @code{\\revert Score.TimeSignature.stencil}.")
           (dispSig (cons (caar timesigs) (cdar timesigs))))
      #{
        \override Score.TimeSignature.stencil =
-         #(custom-time-signature sigOne sigTwo)
+         #(custom-time-signature timesigs)
        \time 3/8
      #}
      ))
 
 \relative c' {
-  \alternatingTimeSignatures #'((3 8) (4 8))
+  \alternatingTimeSignatures #'((3 8) (4 8) (5 8))
   c8 d e
   \omit Score.TimeSignature
   \time 4/8
