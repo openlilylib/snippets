@@ -11,7 +11,7 @@ before the next use of @code{\\time}. Please note that this does not
 perform any checks regarding the used time signatures, so you're
 responsible yourself to write consistent music. To return to normal
 use of time signatures use @code{\\undo \\omit Score.TimeSignature}.")
-   (let ((firstsig (cons
+   (let ((first-effective-timesig (cons
                     (caar timesigs)
                     (cadar timesigs))))
      #{ \once\override Staff.TimeSignature.stencil =
@@ -22,7 +22,7 @@ use of time signatures use @code{\\undo \\omit Score.TimeSignature}.")
                 #(map (lambda (x) #{ \markup \center-column #(map number->string x) #})
                    timesigs)
              #}))
-        \time #firstsig #}))
+        \time #first-effective-timesig #}))
 
 
 \relative c' {
@@ -39,8 +39,8 @@ use of time signatures use @code{\\undo \\omit Score.TimeSignature}.")
   \time 4/8
   c b a b
   \undo \omit Score.TimeSignature
-  \time 5/8
-  c b a g f
+  \time 6/8
+  c b a g f e
 
 }
 
