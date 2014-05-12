@@ -27,8 +27,9 @@ bach = \relative c'' { b a c h }
 %%% create demo score
 \score {
   \new Staff \with {
+    % we have to ensure, the key-engraver acts after transposition is done
     \remove "Key_engraver"
-    \consists #autoTranspose
+    \consists \autoTranspose
     \consists "Key_engraver"
     % if music and print are equal, do nothing
     % else transpose according to transp (up or down)
