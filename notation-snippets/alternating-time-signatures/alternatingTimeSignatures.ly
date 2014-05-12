@@ -14,7 +14,8 @@ use of time signatures use @code{\\undo \\omit Score.TimeSignature}.")
    (let ((firstsig (cons
                     (caar timesigs)
                     (cadar timesigs))))
-     #{ \once\override Staff.TimeSignature.stencil =
+;     (ly:warning-located location "Test")
+#{ \once\override Staff.TimeSignature.stencil =
         #(lambda (grob)
            (grob-interpret-markup grob
              #{ \markup \override #'(baseline-skip . 0)
@@ -81,3 +82,12 @@ use of time signatures use @code{\\undo \\omit Score.TimeSignature}.")
   
    c,
 }
+
+<<
+  
+  \new RhythmicStaff {
+    \alternatingTimeSignatures #'((3 8) (5 8))
+    r4 r4
+  }
+  \new Staff { c'4 c' }
+>>
