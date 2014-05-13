@@ -20,6 +20,22 @@
   \time 3/8
 }
 
+\markup "Using \\gould-irreg"
+
+\relative c' {
+  \once \override Score.TimeSignature.stencil = 
+    \gould-irreg #'((6 8)(5 4)(7 4))
+  \time 6/8
+  c8 c c c c c
+  \omit Score.TimeSignature
+  \time 7/4
+  c2 c c c4
+  \time 5/4
+  c2. c2
+  \undo \omit Score.TimeSignature
+  \time 3/8
+}
+
 \markup "Using \\alternatingTimeSignatures"
 
 \relative c' {

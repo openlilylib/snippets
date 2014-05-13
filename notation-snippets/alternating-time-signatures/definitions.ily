@@ -38,13 +38,40 @@ fractionList =
    (_i "Generate a list of time signature markups that can be used
 to override TimeSignature.stencil in order to indicate irregularly
 changing meters.")
-  (lambda (grob)
+   (lambda (grob)
      (grob-interpret-markup grob
-             #{ \markup \override #'(baseline-skip . 0)
-                \number
-                #(map (lambda (x) #{ \markup \center-column #(map number->string x) #})
-                   timesigs)
-             #})))
+       #{ \markup \override #'(baseline-skip . 0)
+          \number
+          #(map (lambda (x) #{ \markup \center-column #(map number->string x) #})
+             timesigs)
+       #})))
+
+% It's recommended in Behind Bars to use hyphen
+% between time signatures for irregular alternation
+gould-irreg =
+#(define-scheme-function (parser location timesigs) (list?)
+   (_i "Generate a list of time signature markups that can be used
+to override TimeSignature.stencil in order to indicate irregularly
+changing meters.")
+   (lambda (grob)
+     (grob-interpret-markup grob
+       #{ \markup \override #'(baseline-skip . 0)
+          \number
+          #(map (lambda (x)
+                  #{ \markup {
+                    \center-column #(map number->string x)
+                    #(if (eq? x (last timesigs))
+                         "" (markup
+                             #:line
+                             (#:override
+                              (cons (quote thickness) 3.4)
+                              (#:draw-line (cons -0.9 0)))))
+                  } #})
+             timesigs)
+       #})))
+
+#(define (last lst)
+   (car (reverse lst)))
 
 % This is a function to make it more accessible in standard cases
 alternatingTimeSignatures =
