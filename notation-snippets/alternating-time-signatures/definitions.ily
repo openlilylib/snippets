@@ -53,6 +53,7 @@ gould-irreg =
    (_i "Generate a list of time signature markups that can be used
 to override TimeSignature.stencil in order to indicate irregularly
 changing meters.")
+   (let ((lastsig (car (reverse timesigs))))
    (lambda (grob)
      (grob-interpret-markup grob
        #{ \markup \override #'(baseline-skip . 0)
@@ -60,7 +61,7 @@ changing meters.")
           #(map (lambda (x)
                   #{ \markup {
                     \center-column #(map number->string x)
-                    #(if (eq? x (last timesigs))
+                    #(if (eq? x lastsig)
                          "" (markup
                              #:line
                              (#:override
@@ -68,10 +69,7 @@ changing meters.")
                               (#:draw-line (cons -0.9 0)))))
                   } #})
              timesigs)
-       #})))
-
-#(define (last lst)
-   (car (reverse lst)))
+       #}))))
 
 % This is a function to make it more accessible in standard cases
 alternatingTimeSignatures =
