@@ -20,11 +20,27 @@
   \time 3/8
 }
 
-\markup "Using \\gould-irreg"
+\markup "Using \\gould-irreg with hyphens"
 
 \relative c' {
   \once \override Score.TimeSignature.stencil = 
-    \gould-irreg #'((6 8)(5 4)(7 4))
+    \gould-irreg #'((6 8)(5 4)(7 4)) ##t
+  \time 6/8
+  c8 c c c c c
+  \omit Score.TimeSignature
+  \time 7/4
+  c2 c c c4
+  \time 5/4
+  c2. c2
+  \undo \omit Score.TimeSignature
+  \time 3/8
+}
+
+\markup "Using \\gould-irreg without hyphens"
+
+\relative c' {
+  \once \override Score.TimeSignature.stencil = 
+    \gould-irreg #'((6 8)(5 4)(7 4)) ##f
   \time 6/8
   c8 c c c c c
   \omit Score.TimeSignature

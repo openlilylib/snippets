@@ -49,7 +49,7 @@ changing meters.")
 % It's recommended in Behind Bars to use hyphen
 % between time signatures for irregular alternation
 gould-irreg =
-#(define-scheme-function (parser location timesigs) (list?)
+#(define-scheme-function (parser location timesigs hyphen) (list? boolean?)
    (_i "Generate a list of time signature markups that can be used
 to override TimeSignature.stencil in order to indicate irregularly
 changing meters.")
@@ -62,13 +62,15 @@ changing meters.")
            #(map (lambda (x)
                    #{ \markup {
                      \center-column #(map number->string x)
-                     #(if (eq? x lastsig)
-                          ""
-                          (markup
-                           #:line
-                           (#:override
-                            (cons (quote thickness) 3.4)
-                            (#:draw-line (cons -0.9 0)))))
+                     #(if hyphen
+                          (if (eq? x lastsig)
+                              ""
+                              (markup
+                               #:line
+                               (#:override
+                                (cons (quote thickness) 3.4)
+                                (#:draw-line (cons -0.9 0)))))
+                          "")
                       }
                    #}) timesigs)
          #}))))
