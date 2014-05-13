@@ -36,7 +36,7 @@
 #(translator-property-description 'print-concert-pitch boolean? "print it in concert pitch")
 
 % engraver to automatically transpose music
-autoTranspose =
+autoTransposeEngraver =
 #(lambda (context)
    (let ((base (ly:make-pitch 0 0 0)) ; pitch c'
           (lasttransp (ly:context-property context 'instrumentTransposition))) ; last instrument transposition
@@ -82,3 +82,15 @@ autoTranspose =
       )
      ))
 
+autoTranspose = \with {
+    % we have to ensure, the key-engraver acts after transposition is done
+    \remove "Key_engraver"
+    \consists \autoTransposeEngraver
+    \consists "Key_engraver"
+    % if music and print are equal, do nothing
+    % else transpose according to transp (up or down)
+    music-concert-pitch = ##t
+    print-concert-pitch = ##f
+    % TODO: if music is given in instrument-pitch, but shall be printed in concert-pitch,
+    %   midi pitch is false - instrumentTransposition should be "turned off" for midi(?)
+}

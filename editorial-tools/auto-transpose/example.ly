@@ -27,22 +27,15 @@ bach = \relative c'' { b a c h }
 %%% create demo score
 \score {
   \new Staff \with {
-    % we have to ensure, the key-engraver acts after transposition is done
-    \remove "Key_engraver"
-    \consists \autoTranspose
-    \consists "Key_engraver"
-    % if music and print are equal, do nothing
-    % else transpose according to transp (up or down)
-    music-concert-pitch = ##t
-    print-concert-pitch = ##f
-    % if music is given in instrument-pitch, but shall be printed in concert-pitch,
-    %   midi pitch is false - instrumentTransposition should be "turned off" for midi(?)
+    \autoTranspose
   } {
     \key f \major
     \bach
     \instrumentSwitch "b-clarinet"
+    \key f \major
     \bach
     \instrumentSwitch "eb-clarinet"
+    \key f \major
     \bach
   }
   \layout {}
