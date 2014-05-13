@@ -33,27 +33,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % This is the core function that should go into LilyPond
+% It's recommended in Behind Bars to use hyphen
+% between time signatures for irregular alternation,
+% but we want that to be optional
 fractionList =
 #(define-scheme-function (parser location timesigs) (list?)
-   (_i "Generate a list of time signature markups that can be used
-to override TimeSignature.stencil in order to indicate irregularly
-changing meters.")
-   (lambda (grob)
-     (grob-interpret-markup grob
-       #{ \markup \override #'(baseline-skip . 0)
-          \number
-          #(map (lambda (x) #{ \markup \center-column #(map number->string x) #})
-             timesigs)
-       #})))
-
-% It's recommended in Behind Bars to use hyphen
-% between time signatures for irregular alternation
-gould-irreg =
-#(define-scheme-function (parser location timesigs hyphen) (list? boolean?)
-   (_i "Generate a list of time signature markups that can be used
-to override TimeSignature.stencil in order to indicate irregularly
-changing meters.")
-   (let ((lastsig (car (reverse timesigs))))
+   (_i "A list of time signature markups to override TimeSignature.stencil with
+in order to indicate irregularly changing meters.  If the first list element is
+#t then hyphens are printed between the time signatures.")
+   (let* ((lastsig (car (reverse timesigs))) ;; last time signature, no hyphen after that
+           (first-elem (car timesigs))       ;; first list element, either a list or #t
+           (hyphen (and (boolean? first-elem)
+                        first-elem))         ;; #t if the first list element is #t
+           (used-signatures (if hyphen
+                                (cdr timesigs)
+                                timesigs)))  ;; timesigs stripped of a possible boolean
      (lambda (grob)
        (grob-interpret-markup grob
          #{
@@ -69,10 +63,10 @@ changing meters.")
                                #:line
                                (#:override
                                 (cons (quote thickness) 3.4)
-                                (#:draw-line (cons -0.9 0)))))
+                                (#:draw-line (cons 0.9 0)))))
                           "")
                       }
-                   #}) timesigs)
+                   #}) used-signatures)
          #}))))
 
 % This is a function to make it more accessible in standard cases
