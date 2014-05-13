@@ -20,34 +20,16 @@
   \time 3/8
 }
 
-\markup "Using \\gould-irreg with hyphens"
+\markup "Using \\fractionList directly (with hyphens)"
 
 \relative c' {
   \once \override Score.TimeSignature.stencil = 
-    \gould-irreg #'((6 8)(5 4)(7 4)) ##t
+    \fractionList #'(#t (6 8)(5 4))
   \time 6/8
   c8 c c c c c
   \omit Score.TimeSignature
-  \time 7/4
-  c2 c c c4
   \time 5/4
-  c2. c2
-  \undo \omit Score.TimeSignature
-  \time 3/8
-}
-
-\markup "Using \\gould-irreg without hyphens"
-
-\relative c' {
-  \once \override Score.TimeSignature.stencil = 
-    \gould-irreg #'((6 8)(5 4)(7 4)) ##f
-  \time 6/8
-  c8 c c c c c
-  \omit Score.TimeSignature
-  \time 7/4
-  c2 c c c4
-  \time 5/4
-  c2. c2
+  c4 c c c c
   \undo \omit Score.TimeSignature
   \time 3/8
 }
@@ -78,7 +60,7 @@
 
 \relative c' {
   \override TupletNumber.text = #tuplet-number::calc-fraction-text
-  \alternatingTimeSignatures #'((3 4) (4 7))
+  \alternatingTimeSignatures #'(#t (3 4) (4 7))
   c4 d e
   \omit Score.TimeSignature
   \time 4/7

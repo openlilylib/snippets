@@ -22,9 +22,7 @@
 
     - Check the sublists for validity:
       - one number: issue a warning
-      - one string: create a column from that (-> use case: hyphen)
-        (saw comment https://github.com/openlilylib/snippets/commit/b1cceaadd43dda8f162e2fa0591bce68fd1af277#commitcomment-6286137
-         so it seems better to create that for an empty sublist?)
+      - more than two numbers
   %}
 }
 
@@ -41,13 +39,12 @@ fractionList =
    (_i "A list of time signature markups to override TimeSignature.stencil with
 in order to indicate irregularly changing meters.  If the first list element is
 #t then hyphens are printed between the time signatures.")
-   (let* ((lastsig (car (reverse timesigs))) ;; last time signature, no hyphen after that
-           (first-elem (car timesigs))       ;; first list element, either a list or #t
-           (hyphen (and (boolean? first-elem)
-                        first-elem))         ;; #t if the first list element is #t
-           (used-signatures (if hyphen
-                                (cdr timesigs)
-                                timesigs)))  ;; timesigs stripped of a possible boolean
+   (let* ((hyphen (and (boolean? (car timesigs))
+                       (car timesigs)))         ;; #t if the first list element is #t
+          (used-signatures
+           (if hyphen
+               (cdr timesigs)
+               timesigs)))                      ;; timesigs stripped of a possible boolean
      (lambda (grob)
        (grob-interpret-markup grob
          #{
@@ -57,7 +54,7 @@ in order to indicate irregularly changing meters.  If the first list element is
                    #{ \markup {
                      \center-column #(map number->string x)
                      #(if hyphen
-                          (if (eq? x lastsig)
+                          (if (eq? x (last timesigs))
                               ""
                               (markup
                                #:line
@@ -72,10 +69,15 @@ in order to indicate irregularly changing meters.  If the first list element is
 % This is a function to make it more accessible in standard cases
 alternatingTimeSignatures =
 #(define-music-function (parser location timesigs) (list?)
-   (let ((first-effective-timesig
-          (cons
-           (caar timesigs)
-           (cadar timesigs))))
+   (let* ((hyphen (and (boolean? (car timesigs))
+                       (car timesigs)))         ;; #t if the first list element is #t
+          (used-signatures (if hyphen
+                               (cdr timesigs)
+                               timesigs))
+          (first-effective-timesig
+           (cons
+            (caar used-signatures)
+            (cadar used-signatures))))
      #{
        \once \override Score.TimeSignature.stencil = \fractionList #timesigs
        \time #first-effective-timesig
