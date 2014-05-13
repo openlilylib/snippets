@@ -30,5 +30,6 @@ There are some TODOs:
     1. do nothing
 	2. transpose from concert to instrument pitch
 	3. transpose from instrument to concert pitch
+    This might also be an initial parameter for the engraver, so we needn't define extra context-properties
 * TBC
 
