@@ -32,6 +32,14 @@
 % here goes the snippet: %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
+#(define (validate-timesigs timesigs)
+   ; This is a stub
+   ; the function should return true
+   ; if and only if timesigs consists
+   ; of a list of lists with exactly
+   ; two numbers each
+   #t)
+
 % This is the core function that should go into LilyPond
 % It's recommended in Behind Bars to use hyphen
 % between time signatures for irregular alternation,
@@ -51,6 +59,7 @@ in order to indicate irregularly changing meters.  If the first list element is
                (if hyphen
                    (cdr timesigs)
                    timesigs)))                      ;; timesigs stripped of a possible boolean
+         (if (validate-timesigs used-signatures)
          (lambda (grob)
            (grob-interpret-markup grob
              #{
@@ -72,7 +81,9 @@ in order to indicate irregularly changing meters.  If the first list element is
                               "")
                           }
                        #}) used-signatures)
-             #}))))
+             #}))
+         (ly:input-message location "Error in \\fractionList.
+ Please use time signatures with two elements."))))
      fractionList)
 
 % This is a function to make it more accessible in standard cases
