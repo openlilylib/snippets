@@ -9,7 +9,7 @@
 \markup "Using \\fractionList directly"
 
 \relative c' {
-  \once \override Score.TimeSignature.stencil = 
+  \once \override Score.TimeSignature.stencil =
     \fractionList #'((6 8)(5 4))
   \time 6/8
   c8 c c c c c
@@ -23,7 +23,7 @@
 \markup "Using \\fractionList directly (with hyphens)"
 
 \relative c' {
-  \once \override Score.TimeSignature.stencil = 
+  \once \override Score.TimeSignature.stencil =
     \fractionList #'(#t (6 8)(5 4))
   \time 6/8
   c8 c c c c c
@@ -92,7 +92,7 @@
 
     }
   >>
-  
+
    c,
 }
 
@@ -109,4 +109,13 @@ indicated time signatures."
   c4 c c c
   \undo \omit Score.TimeSignature
   \time 5/4
+}
+
+\markup "Malformed time signature lists produce errors"
+
+\relative c' {
+  \alternatingTimeSignatures #'((6 5 4)(4 4))
+  c1
+  \alternatingTimeSignatures #'((5 4)(1))
+  c1
 }

@@ -32,13 +32,11 @@
 % here goes the snippet: %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-#(define (validate-timesigs timesigs)
-   ; This is a stub
-   ; the function should return true
-   ; if and only if timesigs consists
-   ; of a list of lists with exactly
-   ; two numbers each
-   #t)
+#(define (true-list? checks)
+   (if (= 1 (length checks))
+       (car checks)
+       (and (car checks)
+            (true-list? (cdr checks)))))
 
 % This is the core function that should go into LilyPond
 % It's recommended in Behind Bars to use hyphen
@@ -59,30 +57,32 @@ in order to indicate irregularly changing meters.  If the first list element is
                (if hyphen
                    (cdr timesigs)
                    timesigs)))                      ;; timesigs stripped of a possible boolean
-         (if (validate-timesigs used-signatures)
-         (lambda (grob)
-           (grob-interpret-markup grob
-             #{
-               \markup \override #'(baseline-skip . 0)
-               \number
-               #(map (lambda (x)
-                       #{ \markup {
-                         \center-column #(map number->string x)
-                         #(if hyphen
-                              (if (eq? x (last timesigs))
-                                  ""
-                                  (markup
-                                   #:line
-                                   (#:hspace -0.25
-                                   (#:override
-                                    (cons (quote thickness) 3.4)
-                                    (#:draw-line (cons 0.9 0)))
-                                    #:hspace -0.15)))
-                              "")
-                          }
-                       #}) used-signatures)
-             #}))
-         (ly:input-message location "Error in \\fractionList.
+         (if (true-list? (map (lambda sig           ;; check for well-formed timesig lists
+                                (and (list? (car sig))
+                                     (= 2 (length (car sig))))) used-signatures))
+             (lambda (grob)
+               (grob-interpret-markup grob
+                 #{
+                   \markup \override #'(baseline-skip . 0)
+                   \number
+                   #(map (lambda (x)
+                           #{ \markup {
+                             \center-column #(map number->string x)
+                             #(if hyphen
+                                  (if (eq? x (last timesigs))
+                                      ""
+                                      (markup
+                                       #:line
+                                       (#:hspace -0.25
+                                         (#:override
+                                          (cons (quote thickness) 3.4)
+                                          (#:draw-line (cons 0.9 0)))
+                                         #:hspace -0.15)))
+                                  "")
+                              }
+                           #}) used-signatures)
+                 #}))
+             (ly:input-message location "Error in \\fractionList.
  Please use time signatures with two elements."))))
      fractionList)
 
