@@ -64,9 +64,11 @@ in order to indicate irregularly changing meters.  If the first list element is
                                   ""
                                   (markup
                                    #:line
+                                   (#:hspace -0.25
                                    (#:override
                                     (cons (quote thickness) 3.4)
-                                    (#:draw-line (cons 0.9 0)))))
+                                    (#:draw-line (cons 0.9 0)))
+                                    #:hspace -0.15)))
                               "")
                           }
                        #}) used-signatures)
