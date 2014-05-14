@@ -82,8 +82,8 @@ in order to indicate irregularly changing meters.  If the first list element is
                               }
                            #}) used-signatures)
                  #}))
-             (ly:input-message location "Error in \\fractionList.
- Please use time signatures with two elements."))))
+             (ly:input-message location (_i "Error in \\fractionList.
+ Please use time signatures with two elements.")))))
      fractionList)
 
 % This is a function to make it more accessible in standard cases
