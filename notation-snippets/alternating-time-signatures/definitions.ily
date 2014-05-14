@@ -1,5 +1,7 @@
 \version "2.18.2"
 
+\include "../../general-tools/lilypond-version-predicates/definitions.ily"
+
 \header {
   snippet-title = "Print (irregularly) changing meters"
   snippet-author = "Urs Liska"
@@ -34,37 +36,42 @@
 % It's recommended in Behind Bars to use hyphen
 % between time signatures for irregular alternation,
 % but we want that to be optional
+%
+% For LilyPond versions before 2.19.7 the function fractionList
+% is defined, for later versions the built-in function is used
 fractionList =
-#(define-scheme-function (parser location timesigs) (list?)
-   (_i "A list of time signature markups to override TimeSignature.stencil with
+#(if (lilypond-less-than? '(2 19 7))
+     (define-scheme-function (parser location timesigs) (list?)
+       (_i "A list of time signature markups to override TimeSignature.stencil with
 in order to indicate irregularly changing meters.  If the first list element is
 #t then hyphens are printed between the time signatures.")
-   (let* ((hyphen (and (boolean? (car timesigs))
-                       (car timesigs)))         ;; #t if the first list element is #t
-          (used-signatures
-           (if hyphen
-               (cdr timesigs)
-               timesigs)))                      ;; timesigs stripped of a possible boolean
-     (lambda (grob)
-       (grob-interpret-markup grob
-         #{
-           \markup \override #'(baseline-skip . 0)
-           \number
-           #(map (lambda (x)
-                   #{ \markup {
-                     \center-column #(map number->string x)
-                     #(if hyphen
-                          (if (eq? x (last timesigs))
-                              ""
-                              (markup
-                               #:line
-                               (#:override
-                                (cons (quote thickness) 3.4)
-                                (#:draw-line (cons 0.9 0)))))
-                          "")
-                      }
-                   #}) used-signatures)
-         #}))))
+       (let* ((hyphen (and (boolean? (car timesigs))
+                           (car timesigs)))         ;; #t if the first list element is #t
+              (used-signatures
+               (if hyphen
+                   (cdr timesigs)
+                   timesigs)))                      ;; timesigs stripped of a possible boolean
+         (lambda (grob)
+           (grob-interpret-markup grob
+             #{
+               \markup \override #'(baseline-skip . 0)
+               \number
+               #(map (lambda (x)
+                       #{ \markup {
+                         \center-column #(map number->string x)
+                         #(if hyphen
+                              (if (eq? x (last timesigs))
+                                  ""
+                                  (markup
+                                   #:line
+                                   (#:override
+                                    (cons (quote thickness) 3.4)
+                                    (#:draw-line (cons 0.9 0)))))
+                              "")
+                          }
+                       #}) used-signatures)
+             #}))))
+     fractionList)
 
 % This is a function to make it more accessible in standard cases
 alternatingTimeSignatures =
