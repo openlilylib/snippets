@@ -18,13 +18,6 @@
   %{
     TODO:
     - Complete documentation
-    - incorporate \fractionList to LilyPond
-      and once that's finished use a version switch that only
-      defines the function with earlier LilyPond versions.#
-
-    - Check the sublists for validity:
-      - one number: issue a warning
-      - more than two numbers
   %}
 }
 
