@@ -26,7 +26,7 @@ If the instrument is switched, the auto-transpose will follow.
 There are some TODOs:
 
 * If the music is given in instrument pitch and shall be displayed, the `instrumentTransposition` property still has to be set, but that leads to incorrect MIDI-pitch.
-* We only need one context-property beside `ìnstrumentTransposition`, which says:
+* We only need one context-property beside `instrumentTransposition`, which says:
     1. do nothing
 	2. transpose from concert to instrument pitch
 	3. transpose from instrument to concert pitch
