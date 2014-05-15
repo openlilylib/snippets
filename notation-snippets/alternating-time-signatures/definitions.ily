@@ -4,20 +4,35 @@
 
 \header {
   snippet-title = "Print (irregularly) changing meters"
-  snippet-author = "Urs Liska"
+  snippet-author = "Urs Liska, Peter Bjuhr"
   snippet-description = \markup {
     This snippet allows you to print a list of time signatures
     indicating (irregularly) changing meters.
+    I defines a function that is built into LilyPond as of 2.19.7
+    and adds a convenience function around it.
+    
+    Use 'fractionList' to override a TimeSignature's stencil
+    or 'alternatingTimeSignatures' to do that and automatically
+    set the first time signature to be effective.
+    
+    The functions expect a list of two-number lists as argument.
+    Each sublist is interpreted as a time signature fraction.
+    If a sublist does _not_ contain two numbers, a console
+    warning will be printed, and the result of the function
+    may be undefined.
+    
+    Elaine Gould suggests to print a hyphen between the
+    time signatures, and this can be realized by passing a
+    single "#t" as the first element of the argument list.
   }
   % add comma-separated tags to make searching more effective:
   tags = "polymetrics, time signature"
   % is this snippet ready?  See meta/status-values.md
-  status = "unfinished, buggy"
-
-
+  status = "ready"
+  
   %{
     TODO:
-    - Complete documentation
+    - make the appearance of the hyphen configurable
   %}
 }
 
