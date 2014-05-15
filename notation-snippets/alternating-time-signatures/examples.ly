@@ -111,7 +111,7 @@ indicated time signatures."
   \time 5/4
 }
 
-\markup "Malformed time signature lists produce errors"
+\markup "Malformed time signature lists produce errors (see console output)"
 
 \relative c' {
   \alternatingTimeSignatures #'((6 5 4)(4 4))

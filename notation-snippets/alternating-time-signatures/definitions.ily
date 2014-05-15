@@ -25,12 +25,6 @@
 % here goes the snippet: %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-#(define (true-list? checks)
-   (if (= 1 (length checks))
-       (car checks)
-       (and (car checks)
-            (true-list? (cdr checks)))))
-
 % This is the core function that should go into LilyPond
 % It's recommended in Behind Bars to use hyphen
 % between time signatures for irregular alternation,
@@ -50,9 +44,11 @@ in order to indicate irregularly changing meters.  If the first list element is
                (if hyphen
                    (cdr timesigs)
                    timesigs)))                      ;; timesigs stripped of a possible boolean
-         (if (true-list? (map (lambda sig           ;; check for well-formed timesig lists
-                                (and (list? (car sig))
-                                     (= 2 (length (car sig))))) used-signatures))
+         (if (memv #f (map (lambda sig           ;; check for well-formed timesig lists
+                             (and (list? (car sig))
+                                  (= 2 (length (car sig))))) used-signatures))
+              (ly:input-message location (_i "Error in \\fractionList.
+ Please use time signatures with two elements."))
              (lambda (grob)
                (grob-interpret-markup grob
                  #{
@@ -75,8 +71,7 @@ in order to indicate irregularly changing meters.  If the first list element is
                               }
                            #}) used-signatures)
                  #}))
-             (ly:input-message location (_i "Error in \\fractionList.
- Please use time signatures with two elements.")))))
+             )))
      fractionList)
 
 % This is a function to make it more accessible in standard cases
