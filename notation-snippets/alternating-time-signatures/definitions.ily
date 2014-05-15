@@ -10,17 +10,17 @@
     indicating (irregularly) changing meters.
     I defines a function that is built into LilyPond as of 2.19.7
     and adds a convenience function around it.
-    
+
     Use 'fractionList' to override a TimeSignature's stencil
     or 'alternatingTimeSignatures' to do that and automatically
     set the first time signature to be effective.
-    
+
     The functions expect a list of two-number lists as argument.
     Each sublist is interpreted as a time signature fraction.
     If a sublist does _not_ contain two numbers, a console
     warning will be printed, and the result of the function
     may be undefined.
-    
+
     Elaine Gould suggests to print a hyphen between the
     time signatures, and this can be realized by passing a
     single "#t" as the first element of the argument list.
@@ -29,7 +29,7 @@
   tags = "polymetrics, time signature"
   % is this snippet ready?  See meta/status-values.md
   status = "ready"
-  
+
   %{
     TODO:
     - make the appearance of the hyphen configurable
@@ -41,29 +41,25 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % This is the core function that should go into LilyPond
-% It's recommended in Behind Bars to use hyphen
-% between time signatures for irregular alternation,
-% but we want that to be optional
 %
 % For LilyPond versions before 2.19.7 the function fractionList
 % is defined, for later versions the built-in function is used
 fractionList =
 #(if (lilypond-less-than? '(2 19 7))
      (define-scheme-function (parser location timesigs) (list?)
-       (_i "A list of time signature markups to override TimeSignature.stencil with
-in order to indicate irregularly changing meters.  If the first list element is
-#t then hyphens are printed between the time signatures.")
-       (let* ((hyphen (and (boolean? (car timesigs))
-                           (car timesigs)))         ;; #t if the first list element is #t
-              (used-signatures
-               (if hyphen
-                   (cdr timesigs)
-                   timesigs)))                      ;; timesigs stripped of a possible boolean
-         (if (memv #f (map (lambda sig           ;; check for well-formed timesig lists
-                             (and (list? (car sig))
-                                  (= 2 (length (car sig))))) used-signatures))
-              (ly:input-message location (_i "Error in \\fractionList.
- Please use time signatures with two elements."))
+       (let* (;; #t if the first list element is a #t,
+               ;; #f if it is anything else (i.e. a list)
+               (hyphen (and (boolean? (car timesigs))
+                            (car timesigs)))
+               ;; = timesigs stripped off a possible leading boolean
+               (used-signatures
+                (if hyphen
+                    (cdr timesigs)
+                    timesigs)))
+         ;; Check for well-formedness of the used-signatures list:
+         ;; #t if all list elements are lists with two elements
+         (if (every (lambda (sig) (eqv? 2 (length+ sig))) used-signatures)
+             ;; generate the list of time signatures
              (lambda (grob)
                (grob-interpret-markup grob
                  #{
@@ -71,10 +67,15 @@ in order to indicate irregularly changing meters.  If the first list element is
                    \number
                    #(map (lambda (x)
                            #{ \markup {
+                             % create a column from one input sublist
                              \center-column #(map number->string x)
+                             % process the hyphen if requested
                              #(if hyphen
                                   (if (eq? x (last timesigs))
+                                      ;; do not print a hyphen after the last column
                                       ""
+                                      ;; generate the hyphen
+                                      ; TODO: make appearance configurable
                                       (markup
                                        #:line
                                        (#:hspace -0.25
@@ -86,21 +87,26 @@ in order to indicate irregularly changing meters.  If the first list element is
                               }
                            #}) used-signatures)
                  #}))
-             )))
+             (ly:input-message location (_i "Error in \\fractionList.
+ Please use time signatures with two elements.")))))
+     ;; use built-in fractionList for LP >= 2.19.7
      fractionList)
 
 % This is a function to make it more accessible in standard cases
 alternatingTimeSignatures =
 #(define-music-function (parser location timesigs) (list?)
-   (let* ((hyphen (and (boolean? (car timesigs))
-                       (car timesigs)))         ;; #t if the first list element is #t
-          (used-signatures (if hyphen
-                               (cdr timesigs)
-                               timesigs))
-          (first-effective-timesig
-           (cons
-            (caar used-signatures)
-            (cadar used-signatures))))
+   (let* (;; code for stripping off hyphen variable has to be copied
+           (hyphen (and (boolean? (car timesigs))
+                        (car timesigs)))
+           (used-signatures (if hyphen
+                                (cdr timesigs)
+                                timesigs))
+           ;; determine the first time signature from the list
+           (first-effective-timesig
+            (cons
+             (caar used-signatures)
+             (cadar used-signatures))))
+     ;; override the stencil and apply the first time signature
      #{
        \once \override Score.TimeSignature.stencil = \fractionList #timesigs
        \time #first-effective-timesig
