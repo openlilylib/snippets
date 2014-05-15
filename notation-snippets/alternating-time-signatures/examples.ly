@@ -111,6 +111,20 @@ indicated time signatures."
   \time 5/4
 }
 
+\markup "If you're daring you can even pass floating point numbers to \\fractionList"
+
+\relative c' {
+  \once \override Score.TimeSignature.stencil =
+    \fractionList #'(#t (3.5 4)(5 4))
+  \time 7/8
+  c8[ c] c[ c] c[ c] c
+  \omit Score.TimeSignature
+  \time 5/4
+  c4 c c c c
+  \undo \omit Score.TimeSignature
+  \time 3/8
+}
+
 \markup "Malformed time signature lists produce errors (see console output)"
 
 \relative c' {
