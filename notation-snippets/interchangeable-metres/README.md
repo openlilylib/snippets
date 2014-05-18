@@ -11,8 +11,9 @@ examples is the first.)
 It was indeed the alternative with the parenthesis that first caught 
 my attention. But after some more thought I find it potentially 
 ambigous. I would rather use the parenthesis for e g a passage 
-that is quite indiffent between 3/4 and 6/8.
-![Excerpt from Leonard Bernstein: "America", West Side Story](https://github.com/openlilylib/snippets/blob/master/notation-snippets/interchangeable-metres/america.png)
+that is quite undetermined between 3/4 and 6/8.
+![Excerpt from Leonard Bernstein: America, West Side Story](./america.png)
+
 <caption>Excerpt from Leonard Bernstein: "America", West Side Story</caption
 
 I would instead recommend the use of the equal sign which I think is
