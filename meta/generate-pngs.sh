@@ -62,6 +62,7 @@ done )
 if [ -n "$versions_missing" ]; then
     echo "The following LilyPond versions have to be compiled:"
     echo $versions_missing
+    echo ""
 fi
 
 # download lilypond sources if necessary:
@@ -81,6 +82,7 @@ if [[ -n "$versions_missing" && ! -f ../build-lily.sh ]]; then
     wget http://raw.github.com/janek-warchol/cli-tools/master/lilypond/build-lily.sh || \
     die "Failed to download LilyPond building script."
     cd $working_dir
+    chmod +x ../build-lily.sh
 fi
 
 # compile lilyponds
