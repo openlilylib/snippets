@@ -4,12 +4,12 @@ This is a LilyPond script providing partial support for Bravura and other future
 
 ## Usage ##
 
-**Current version:** SMuFL 0.9
+**Current version:** SMuFL 0.99
 
 #### Installing font files ####
 
-You will need a copy of the Bravura font first. You can either take the files from the `bravura-0.9` folder or from
-[the SMuFL website](http://www.smufl.org/fonts/).  Install the font by copying `bravura-0.9/otf/Bravura.otf` into the directory `/usr/share/lilypond/<version>/fonts/otf/` of your LilyPond installation.  (If you are running lilypond
+You will need a copy of the Bravura font first. You can either take the files from the `bravura-0.99` folder or from
+[the SMuFL website](http://www.smufl.org/fonts/).  Install the font by copying `bravura-0.99/otf/Bravura.otf` into the directory `/usr/share/lilypond/<version>/fonts/otf/` of your LilyPond installation.  (If you are running lilypond
 from source code, copy the file to `out/share/lilypond/current/fonts/otf/` subdir of lilypond build).
 
 
