@@ -7,12 +7,17 @@
   there shouldn't be separate args for this.
 
   why it's not possible to put all \newInstrument definitions in one layout block?
+  It would be much more convenient.
 
-  handle code for Midi contexts (when i tried it didn't work...)
+  make newInstrument handle creating Midi contexts (when i tried it didn't work...
+  right now they are handled separately, which is bad.)
+  
+  make \addLyrics smarter so that it could be used with these predefined instruments
+  (see comment in simple-example.ly)
 
   (for later)
   think how to handle two voices (eg SA) on one staff
-  -> what about ambitus in that case? Probably shoul be moved to voice.
+  -> what about ambitus in that case? Probably should be moved to voice.
   (for later)
   define other instruments
 %}
