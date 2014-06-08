@@ -1,3 +1,5 @@
+\version "2.19.3"
+
 \include "definitions.ily"
 
 stanzaII = \markup \column {
@@ -21,14 +23,16 @@ stanzaV = \markup {
 \markup \draw-hline
 \markup \vspace #2
 
-\markup \stanzas-in-one-column { \stanzaII \stanzaIII \stanzaIV \stanzaV }
+\markup \stanzas { \stanzaII \stanzaIII \stanzaIV \stanzaV }
 
 \markup \vspace #2
 \markup "Stanzas in two columns:"
 \markup \draw-hline
 \markup \vspace #2
 
-\markup \stanzas-in-two-columns { \stanzaII \stanzaIII } { \stanzaIV \stanzaV }
+\markup
+\override #'(column-count . 2)
+\stanzas { \stanzaII \stanzaIII \stanzaIV \stanzaV }
 
 \markup \vspace #2
 \markup "Stanzas in two columns with some settings overridden:"
@@ -41,4 +45,5 @@ stanzaV = \markup {
 \override #'(number-hdist . 3)
 \override #'(stanza-vdist . 0.5)
 \override #'(first-number . 1)
-\stanzas-in-two-columns { \stanzaII \stanzaIII } { \stanzaIV \stanzaV }
+\override #'(column-count . 2)
+\stanzas { \stanzaII \stanzaIII \stanzaIV \stanzaV }
