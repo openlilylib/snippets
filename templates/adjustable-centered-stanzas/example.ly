@@ -40,10 +40,8 @@ stanzaV = \markup {
 \markup \vspace #2
 
 \markup
-\override #'(text-scaling . (0.8 . 1))
-\override #'(line-spacing . 0.75)
-\override #'(number-hdist . 3)
-\override #'(stanza-vdist . 0.5)
+\override #'(horizontal-spacing . 0.3)
+\override #'(vertical-spacing . 0.6)
 \override #'(first-number . 1)
 \override #'(column-count . 2)
 \stanzas { \stanzaII \stanzaIII \stanzaIV \stanzaV }

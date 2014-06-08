@@ -18,15 +18,8 @@
 % here goes the snippet: %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%{
-  TODO:
-  There's a lot of ugly code duplication here - these functions should be merged
-  into one generic function that would take the number of columns to use as an
-  argument.
-%}
-
 %% Two definitions for splitting a list in equal sized sublists.
-%% They differ how the case is handled, if a remaining rest can't be divided
+%% They differ how the case is handled, if a remainaining rest can't be divided
 %%
 %% In this example the list should be divided into three parts:
 %% The first may do:  (split-lst '(1 2 3 4) 3) -> ((1 2) (3) (4))
@@ -70,63 +63,47 @@
      (helper lst '() val n)))
 
 #(define (insert-separator lst separator)
-   "
- Inserts @var{separator} between every element of @var{lst}, returning this
- new list.
-"
-   (define (helper l1 l2 to-insert)
-     (if (null? (cdr l1))
-         (reverse (cons (car l1) l2))
-         (helper (cdr l1) (append (list to-insert (car l1)) l2) to-insert)))
-   (helper lst '() separator))
+   "Inserts @var{separator} between elements of @var{lst},
+returning this new list."
+   (define (helper accum remain)
+     (if (null? (cdr remain))
+         (reverse (cons (car remain) accum))
+         (helper (append (list separator (car remain)) accum) (cdr remain))))
+   (helper '() lst))
 
-#(define (add-to-begin-end-of-list lst add)
-   "
- Returns a new list with @var{add} as first and last element of @var{lst}.
-"
-   (cons add (append lst (list add))))
+#(define (enclose-list lst elem)
+   "Add @var{elem} to the beginning and end of @var{lst}."
+   (cons elem (append lst (list elem))))
 
 #(define-markup-command (stanzas layout props stanza-list)
    (markup-list?)
-   #:properties ((stanza-vdist 1)
-                 (number-hdist 1)
+   #:properties ((vertical-spacing 1.5)
+                 (horizontal-spacing 1.5)
                  (first-number 2)
                  (column-count 1)
-                 (text-scaling '(1 . 1))
-                 (line-spacing 1))
-   (let* ((counted-stanza-list
+                 (extra-scaling '(1 . 1)))
+   (let* ((null-mrkp #{ \markup \null #})
+          (stanza-vdist #{ \markup \vspace #vertical-spacing #})
+          (number-hdist #{ \markup \hspace #horizontal-spacing #})
+          (lily-default-baseline-skip 3)
+          (line-spacing (* lily-default-baseline-skip
+                          (min 1 (+ 0.6 (* 0.4 vertical-spacing)))))
+          (horizontal-compression (min 1 (+ 0.75 (* 0.25 horizontal-spacing))))
+          (counted-stanza-list
            (map
             (lambda (e)
               (cons (+ first-number (cdr e) -1) (car e)))
             (count-list stanza-list)))
-          (null-mrkp #{ \markup \null #})
-          (vertical-space #{ \markup \vspace #stanza-vdist #})
           (mrkps-for-columns (split-lst counted-stanza-list column-count))
           (make-stanza-text-markup
            (lambda (mrkp)
              #{
-               \markup %\column {
-               %\line
-               {
+               \markup \line {
                  \bold #(string-append (number->string (car mrkp)) ".")
-                 \hspace #number-hdist
+                 #number-hdist
                  #(cdr mrkp)
                }
-               %  }
              #}))
-          ;; Alternative procedure to get stanza-numbers above the text
-          ;; TODO: appropiate calculation of line-width for this use-case
-          ;(make-stanza-text-markup
-          ;  (lambda (mrkp)
-          ;    #{
-          ;      \markup \center-column {
-          ;          \override #'(line-width . 40)
-          ;          \fill-line {
-          ;            \italic #(string-append (number->string (car mrkp)) ".")
-          ;          }
-          ;          #(cdr mrkp)
-          ;        }
-          ;    #}))
           (raw-mrkp-lists
            (map
             (lambda (m)
@@ -136,7 +113,7 @@
           (mrkp-list-with-vertical-space
            (map
             (lambda (m)
-              (insert-separator m vertical-space))
+              (insert-separator m stanza-vdist))
             raw-mrkp-lists))
           ;; makes column-markups
           (ready-columned-mrkp-list
@@ -144,23 +121,23 @@
             (lambda (m)
               (make-column-markup m))
             mrkp-list-with-vertical-space))
-          ;; insert null-markup at start/end and between every element
+          ;; insert null-markup at start, end, and between columns
           (ready-to-use
-           (add-to-begin-end-of-list
+           (enclose-list
             (insert-separator ready-columned-mrkp-list null-mrkp)
             null-mrkp)))
      (interpret-markup layout props
        #{
          \markup {
            \justify-line
+           % By default match the font size of the lyrics. We don't use \large
+           % because of https://code.google.com/p/lilypond/issues/detail?id=3947
+           \scale #`(1.12 . 1.12)
            % Adjust the distace between text lines (for cramped spacing).
-           % 3 is the default value (it's independent from font size)
-           \override #`(baseline-skip . ,(* 3 line-spacing))
-           \scale #'(1.12 . 1.12) % by default match the size of the lyrics
-           % We don't use \large, \small etc. because these commands
-           % don't scale the distance between lines correctly.
-           % First number - horizontal factor, 2nd - vertical.
-           %\box % only inserted for better viewing
-           \scale #text-scaling #ready-to-use
+           \override #`(baseline-skip . ,line-spacing)
+           % Compress text horizontally (for cramped spacing).
+           \scale #`(,horizontal-compression . 1)
+           % \box % useful for debugging
+           \scale #extra-scaling #ready-to-use
          }
        #})))
