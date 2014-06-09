@@ -23,14 +23,14 @@ stanzaV = \markup {
 \markup \draw-hline
 \markup \vspace #2
 
-\markup \stanzas #1 { \stanzaII \stanzaIII \stanzaIV \stanzaV }
+\markup \stanzas-in-columns #1 { \stanzaII \stanzaIII \stanzaIV \stanzaV }
 
 \markup \vspace #2
 \markup "Stanzas in two columns:"
 \markup \draw-hline
 \markup \vspace #2
 
-\markup \stanzas #2 { \stanzaII \stanzaIII \stanzaIV \stanzaV }
+\markup \stanzas-in-columns #2 { \stanzaII \stanzaIII \stanzaIV \stanzaV }
 
 \markup \vspace #2
 \markup "Stanzas in two columns with some settings overridden:"
@@ -41,4 +41,4 @@ stanzaV = \markup {
 \override #'(horizontal-spacing . 0.3)
 \override #'(vertical-spacing . 0.6)
 \override #'(first-number . 1)
-\stanzas #2 { \stanzaII \stanzaIII \stanzaIV \stanzaV }
+\stanzas-in-columns #2 { \stanzaII \stanzaIII \stanzaIV \stanzaV }

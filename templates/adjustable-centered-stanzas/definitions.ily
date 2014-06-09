@@ -59,7 +59,7 @@ Roundings may happen:
    "Add @var{elem} at the beginning and end of @var{lst}."
    (cons elem (append lst (list elem))))
 
-#(define-markup-command (stanzas layout props column-count stanza-list)
+#(define-markup-command (stanzas-in-columns layout props column-count stanza-list)
    (number? markup-list?)
    #:properties ((vertical-spacing 1.5)
                  (horizontal-spacing 1.5)
