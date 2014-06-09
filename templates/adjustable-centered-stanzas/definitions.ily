@@ -18,6 +18,20 @@
 % here goes the snippet: %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%{
+Possible improvements:
+- punctuation after stanza number could be parametrized
+- a property for specifying number placement could be added (top or left)
+- first parameter could be changed into a list that would
+  specify exactly how many stanzas should be in each column
+  (like this: '(2 3 2) ).  This could be useful if the stanzas
+  have uneven heights and the user wants to balance total height
+  of the columns.
+
+However, i don't think we have to make these changes until we
+have a proof that they are really needed.
+%}
+
 #(define (split-lst lst n)
    "Returns @var{lst} split into equal-sized sublists:
 (split-lst '(1 2 3 4) 2) -> '((1 2)(3 4))
@@ -42,7 +56,7 @@ Roundings may happen:
    (helper '() lst))
 
 #(define (enclose-list lst elem)
-   "Add @var{elem} to the beginning and end of @var{lst}."
+   "Add @var{elem} at the beginning and end of @var{lst}."
    (cons elem (append lst (list elem))))
 
 #(define-markup-command (stanzas layout props column-count stanza-list)
