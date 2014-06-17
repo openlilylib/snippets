@@ -4,12 +4,12 @@ This is a LilyPond script providing partial support for Bravura and other future
 
 ## Usage ##
 
-**Current version:** SMuFL 0.99
+**Current version:** SMuFL 1.0
 
 #### Installing font files ####
 
-You will need a copy of the Bravura font first. You can either take the files from the `bravura-0.99` folder or from
-[the SMuFL website](http://www.smufl.org/fonts/).  Install the font by copying `bravura-0.99/otf/Bravura.otf` into the directory `/usr/share/lilypond/<version>/fonts/otf/` of your LilyPond installation.  (If you are running lilypond
+You will need a copy of the Bravura font first. You can either take the files from the `bravura-1.0` folder or from
+[the SMuFL website](http://www.smufl.org/fonts/).  Install the font by copying `bravura-1.0/otf/Bravura.otf` into the directory `/usr/share/lilypond/<version>/fonts/otf/` of your LilyPond installation.  (If you are running lilypond
 from source code, copy the file to `out/share/lilypond/current/fonts/otf/` subdir of lilypond build).
 
 
@@ -67,11 +67,9 @@ If you want access to LilySMuFL's new commands, but don't want to slow down comp
 
 Without it, `\niente` will look a bit strange.
 
-## Updating ##
+## Conversion (for developers) ##
 
-SMuFL changes its character codes with the 0.x updates, and LilySMuFL is ideally forward-compatible with these changes. To try out a SMuFL update, first update `Bravura.otf`. Then download the JSON metadata file from [the SMuFL website](http://www.smufl.org/download/), replace the existing `glyphnames.json` in this directory, and run `python3 glyphnames.py`. This will update `smufldata.ily`, and now LilySMuFL is at least partially functional. You may need to delete `~/.lilypond-fonts.cache-2/` if LilyPond has trouble recognizing the new font.
-
-Starting with the upcoming SMuFL 1.0, expected to be released within the next few months, this process will no longer be necessary.
+Provided is a script `glyphnames.py` for converting glyph JSON data into a LilyPond-readable Scheme format. This was necessary for every 0.x update, but it will probably not be needed until a large update like 2.0. To use the script in an update, download the JSON metadata file from [the SMuFL website](http://www.smufl.org/download/), replace the existing `glyphnames.json` in this directory, and run `python3 glyphnames.py`. This will update `smufldata.ily`. You may need to delete `~/.lilypond-fonts.cache-2/` if LilyPond has trouble recognizing the new font.
 
 ## To-do list ##
 
