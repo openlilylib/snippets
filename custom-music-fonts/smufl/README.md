@@ -48,11 +48,13 @@ To revert things back to normal, use `\bravuraOff` or `\smuflOff`.
 
 ## Commands ##
 
-To invoke a glyph by name like `\musicglyph`, use the markup command `\smuflglyph`. `\smuflglyph #"segno"`, for example, will print a segno sign in the Bravura font. `\smuflglyph` is **not** compatible wih `\musicglyph`, and manual conversion may be necessary. Sorry!
+To invoke a glyph by name like `\musicglyph`, use the markup command `\smuflglyph`. `\smuflglyph #"segno"`, for example, will print a segno sign in the Bravura font. `\smuflglyph` is **not** compatible wih `\musicglyph`, and manual conversion will be necessary.
+
+`\smuflglyph-compat` works exactly like `\smuflglyph`, but if the string passed to it is not a valid SMuFL name, it will behave as `\musicglyph`.
 
 `\smuflchar` is the same as `\smuflglyph`, but it takes a Unicode code point in place of a glyph name.
 
-`\smufllig` takes a list of glyph names (in the form of strings, not symbols) and concatenates them together. This is useful because it can create ligatures; there is no way to do so using the other two commands:
+`\smufllig` takes a list of glyph names (in the form of strings, not symbols) and concatenates them together. This is useful because it can create ligatures; there is no way to do so using the other commands:
 
     % Wrong:
     \concat { \smuflglyph #"gClefLigatedNumberAbove" \smuflglyph #"tuplet5" }
