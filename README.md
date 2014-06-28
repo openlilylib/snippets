@@ -38,6 +38,9 @@ Then you will be able to `\include` the snippets with a path relative to
 the repository root directory - for example, 
 `\include "debugging-layout/display-grob-anchors/definitions.ily"`
 will allow you to use `\printAnchors` function defined in the snippet.
+Frescobaldi also supports autocompletion if you have added the repository
+in the preferences. So typing `\include "debu` will already give you the
+appropriate completion suggestion.
 
 
 Contributing
