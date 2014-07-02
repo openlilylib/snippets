@@ -203,13 +203,19 @@
                          (set! mods `(,@mods ,mod))
                          ))
                       ((or
+                        (eq? 'OttavaMusic (ly:music-property m 'name))
+                        )
+                       ; TODO which music types can be made available this way? (car of \once!)
+                       (set! mods `(,@mods ,(context-mod-from-music parser m)))
+                       #t
+                       )
+                      ((or
                         (eq? 'TextScriptEvent (ly:music-property m 'name))
                         (eq? 'LineBreakEvent (ly:music-property m 'name))
                         (eq? 'PageBreakEvent (ly:music-property m 'name))
                         (eq? 'PageTurnEvent (ly:music-property m 'name))
                         (eq? 'ApplyOutputEvent (ly:music-property m 'name))
 
-                        (eq? 'OttavaMusic (ly:music-property m 'name))
                         (eq? 'PartCombineForceEvent (ly:music-property m 'name))
                         (eq? 'ExtenderEvent (ly:music-property m 'name))
                         (eq? 'HyphenEvent (ly:music-property m 'name))
@@ -502,6 +508,24 @@
          )) mposl)
     ))
 
+;%%% the key function "editionModList"
+(define (limemom? v)(and (list? v)(every memom? v)))
+(define-public editionModList
+  (define-void-function (parser location edition path mod mposl)
+    (string-or-symbol? list? music-or-contextmod? limemom?)
+    "Add modification to edition at all positions in mposl"
+    (let ((path (create-music-path #f path)))
+      (for-each
+       (lambda (p)
+         (let ((takt (car p))
+               (pos (cdr p)))
+           (if (list? pos)(set! pos (car pos)))
+           (if (fraction? pos)(set! pos (fraction->moment pos)))
+           (if (rational? pos)
+               (set! pos (ly:make-moment (numerator pos)(denominator pos))))
+           (add-edmod edition takt pos path mod)
+           )) mposl)
+      )))
 
 
 
