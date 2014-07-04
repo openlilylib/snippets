@@ -42,35 +42,35 @@ versionCommentB =
 \markup { \vspace #3 }
 
 {
-  \tempo "Comparing with: 2.16.0"
+  \tempo "Comparing with: 2.18.0"
   s1
-  \versionCommentA #'(2 16 0)
-  \versionCommentB #'(2 16 0)
+  \versionCommentA #'(2 18 0)
+  \versionCommentB #'(2 18 0)
 }
 
 \markup { \vspace #2 }
 
 {
-  \tempo "Comparing with: 2.16.2"
+  \tempo "Comparing with: 2.18.2"
   s1
-  \versionCommentA #'(2 16 2)
-  \versionCommentB #'(2 16 2)
+  \versionCommentA #'(2 18 2)
+  \versionCommentB #'(2 18 2)
 }
 
 \markup { \vspace #2 }
 
 {
-  \tempo "Comparing with: 2.17.5"
+  \tempo "Comparing with: 2.19.5"
   s1
-  \versionCommentA #'(2 17 5)
-  \versionCommentB #'(2 17 5)
+  \versionCommentA #'(2 19 5)
+  \versionCommentB #'(2 19 5)
 }
 
 \markup { \vspace #2 }
 
 {
-  \tempo "Comparing with: 2.17.16"
+  \tempo "Comparing with: 2.19.16"
   s1
-  \versionCommentA #'(2 17 16)
-  \versionCommentB #'(2 17 16)
+  \versionCommentA #'(2 19 16)
+  \versionCommentB #'(2 19 16)
 }
