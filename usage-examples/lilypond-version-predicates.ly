@@ -1,6 +1,6 @@
 \version "2.16.0" % This should also work with older versions 
 
-\include "./definitions.ily"
+\include "oll/lilypond-version-predicates.ily"
 
 
 \header {
