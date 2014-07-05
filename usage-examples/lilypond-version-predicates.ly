@@ -1,4 +1,4 @@
-\version "2.16.0" % This should also work with older versions 
+\version "2.16.0" % This should also work with older versions
 
 \include "oll/lilypond-version-predicates.ily"
 
@@ -12,7 +12,7 @@
   ragged-right = ##f
 }
 
-versionCommentA = 
+versionCommentA =
 #(define-music-function (parser location ver)
    (list?)
    (cond ((lilypond-greater-than-or-equal? ver)
@@ -20,7 +20,7 @@ versionCommentA =
          ((lilypond-less-than-or-equal? ver)
           #{ s^ \markup {#(lilypond-version) is less or equals that.} #})))
 
-versionCommentB = 
+versionCommentB =
 #(define-music-function (parser location ver)
    (list?)
    (cond ((lilypond-greater-than? ver)
