@@ -22,7 +22,7 @@ directory structure:
 from end-user LilyPond files.  
 `/usage-examples` contains documentation examples, exactly one `.ly` file corresponding to the `.ily`
 files below `/library/oll`.  
-`\includes` will contain files that are needed by any snippets in the library but shouldn't be exposed
+`/includes` will contain files that are needed by any snippets in the library but shouldn't be exposed
 to end-user files.
 
 ---
