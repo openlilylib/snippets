@@ -1,7 +1,7 @@
 \version "2.16.0" % This should also work with older versions
 
 \include "oll/lilypond-version-predicates.ily"
-
+\include "../includes/example-format.ily"
 
 \header {
   title = "LilyPond Version Predicates"
