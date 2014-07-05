@@ -9,11 +9,13 @@ directory structure:
 ```
 /includes
 /library
-  /custom-music-fonts
   /oll
     - includable-files.ily
-  /stylesheets
-    - new structure to be discussed
+    /music-fonts
+    /stylesheets
+      - new structure to be discussed
+    /templates
+      - new structure to be discussed
 /usage-examples
   - documentation-files.ly
 ```
