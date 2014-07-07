@@ -1,9 +1,12 @@
 \version "2.16.2" % absolutely necessary!
 
 \header {
-  snippet-title = "Predicates for LilyPond Version numbers"
+  snippet-title = "Predicates for LilyPond version numbers"
+  snippet-short-description = \markup {
+    Compare the currently running LilyPond version
+    against a given version. }
   snippet-author = "Urs Liska"
-  snippet-description = \markup {
+  snippet-description = {
     This snippet provides a set of predicates (or comparison
     operators) for LilyPond version numbers.
     This is useful for implementing switches in functions
@@ -14,10 +17,11 @@
     as a three element list) as argument and
     compare that to the version number of the running LilyPond.
   }
-  % add comma-separated tags to make searching more effective:
-  tags = "Program flow, LilyPond versions"
-  % is this snippet ready?  See meta/status-values.md
+  snippet-category = "helpers"
+  tags = "program-flow,compatibility,lilypond-version"
   status = "ready"
+
+  snippet-todo = "Typechecking for the ver-list argument"
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -26,9 +30,9 @@
 
 #(define (calculate-version ver-list)
    ;; take a LilyPond version number as a three element list
-   ;; and calculate a integer representation
-   (+ (* 1000000 (first ver-list)) 
-      (* 1000 (second ver-list)) 
+   ;; and calculate an integer representation
+   (+ (* 1000000 (first ver-list))
+      (* 1000 (second ver-list))
       (third ver-list)))
 
 #(define (lilypond-greater-than? ref-version)
@@ -50,5 +54,3 @@
 #(define (lilypond-equals? ref-version)
    (= (calculate-version (ly:version))
       (calculate-version ref-version)))
-
-
