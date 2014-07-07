@@ -18,7 +18,7 @@
     compare that to the version number of the running LilyPond.
   }
   snippet-category = "helpers"
-  tags = "program-flow,compatibility,lilypond-version"
+  tags = "control-flow,conditionals,compatibility,lilypond-version"
   status = "ready"
 
   snippet-todo = "Typechecking for the ver-list argument"
