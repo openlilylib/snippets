@@ -7,15 +7,19 @@
 % Statement: I used a lovely sacred tune here and added a trumpet solo to it.
 %            I don't want to harm anybodies feelings about this! This is for demo purposes only!
 
+% use another global staff size (this has to be done early! - TODO)
+#(set-global-staff-size 16)
+
+
 % prepare a template
 \registerTemplate choir-accomp
 #(define-music-function (parser location piece options)(list? list?)
    #{
      <<
        % prepare options for trumpet
-       \clralist acc-trmp
+       \optionsInit acc-trmp
        % add Staff context-modification
-       \addalist acc-trmp staff-mods \with {
+       \optionsAdd acc-trmp staff-mods \with {
          % give it a name
          instrumentName = "Trumpet (Bb)"
          % make it a little bit bigger (see input-shorthands/sizeContext/definitions.ily)
@@ -24,32 +28,48 @@
          \RemoveEmptyStaves
        }
        % read music in concert pitch (default)
-       \addalist acc-trmp input-concert-pitch ##t
+       \optionsAdd acc-trmp input-concert-pitch ##t
        % write music in instrument transposition (default)
-       \addalist acc-trmp output-concert-pitch ##f
+       \optionsAdd acc-trmp output-concert-pitch ##f
        % call trumpet template on path trumpet with options
        \callTemplate LY_ROOT.lalily.instrument.brass.trumpet trumpet #acc-trmp
 
        % prepare options for modded integration of the choir
-       \clralist choir
+       \optionsInit choir
        % all Staff context will receive these modifications
-       \addalist choir staff-mods \with { midiInstrument = "choir aahs" \sizeContext #-1 }
+       \optionsAdd choir staff-mods \with { midiInstrument = "choir aahs" \sizeContext #-1 }
        % use registered template and options from upper folder to create choir part
        \createScoreWithOptions LY_UP #choir
 
        % prepare options for piano part
-       \clralist acc-pno
+       \optionsInit acc-pno
        % call piano template on path piano
        \callTemplate LY_ROOT.lalily.piano piano #acc-pno
      >>
    #})
 
-% use another global staff size
-#(set-global-staff-size 16)
-
 % -> current path is music.choral.altatrinita, \musicPath accomp returns music.choral.altatrinita.accomp
 % now bind template choir-accomp to music-folder music.choral.altatrinita.accomp with empty options
-\setDefaultTemplate \musicPath accomp choir-accomp #'()
+%\setDefaultTemplate \musicPath accomp choir-accomp #'()
+
+% the use of the lalily.group template is much easier than writing a template, so it is used instead
+% to achieve the same effect as in the custom template above, we prepare the following options
+\optionsInit opts
+\optionsAdd opts part.trumpet.template \Path lalily.instrument.brass.trumpet
+\optionsAdd opts part.trumpet.staff-mods \with {
+         % give it a name
+         instrumentName = "Trumpet (Bb)"
+         % make it a little bit bigger (see input-shorthands/sizeContext/definitions.ily)
+         \sizeContext #1
+         % remove empty staves
+         \RemoveEmptyStaves
+       }
+\optionsAdd opts part.choir.template \Path lalily.mirror
+\optionsAdd opts part.choir.mirror-path #'(.. ..)
+\optionsAdd opts part.choir.staff-mods \with { midiInstrument = "choir aahs" \sizeContext #-1 }
+\optionsAdd opts part.piano.template \Path lalily.piano
+\setDefaultTemplate \musicPath accomp lalily.group #opts
+
 % inherit all headers (title,composer etc.) from music-folder above = music.choral.altatrinita
 \inheritAllHeaders LY_UP
 % TODO prepare paper so that music looks at least OK ... now it looks "urg"
