@@ -1,33 +1,20 @@
 \version "2.18.0"
 \include "templates/lalily/definitions.ily"
 
-% combine choir and continuo
-\registerTemplate lalily.vocal.group-cont
-#(define-music-function (parser location piece options)(list? list?)
-   ; extract choir and continuo options
-   (let ((choir (assoc-get 'choir options '() #f))
-         (cont (assoc-get 'continuo options '() #f)))
-   #{
-     <<
-       % create choir staff group
-       \callTemplate LY_ROOT.lalily.vocal.group choir #choir
-       % create continuo part ... just one instrument without figured-bass
-       \callTemplate LY_ROOT.lalily.instrument continuo #cont
-     >>
-   #}))
-
 % setup options ...
 \optionsInit opts
-\optionsAdd opts choir.staff-mods \with { midiInstrument = "choir aahs" }
-\optionsAdd opts choir.staffs.cantus.staff-mods \with { instrumentName = "Cantus" }
-\optionsAdd opts choir.staffs.cantus.clef "G"
-\optionsAdd opts choir.staffs.tenor.staff-mods \with { instrumentName = "Tenor" }
-\optionsAdd opts choir.staffs.tenor.clef "G_8"
-\optionsAdd opts choir.staffs.bass.staff-mods \with { instrumentName = "Bass" }
-\optionsAdd opts choir.staffs.bass.clef "bass"
-\optionsAdd opts continuo.name "continuo"
-\optionsAdd opts continuo.clef "bass"
-\optionsAdd opts continuo.staff-mods \with {
+\optionsAdd opts part.choir.template \Path lalily.vocal.group
+\optionsAdd opts part.choir.staff-mods \with { midiInstrument = "choir aahs" }
+\optionsAdd opts part.choir.staffs.cantus.staff-mods \with { instrumentName = "Cantus" }
+\optionsAdd opts part.choir.staffs.cantus.clef "G"
+\optionsAdd opts part.choir.staffs.tenor.staff-mods \with { instrumentName = "Tenor" }
+\optionsAdd opts part.choir.staffs.tenor.clef "G_8"
+\optionsAdd opts part.choir.staffs.bass.staff-mods \with { instrumentName = "Bass" }
+\optionsAdd opts part.choir.staffs.bass.clef "bass"
+\optionsAdd opts part.continuo.template \Path lalily.instrument
+\optionsAdd opts part.continuo.name "continuo"
+\optionsAdd opts part.continuo.clef "bass"
+\optionsAdd opts part.continuo.staff-mods \with {
          instrumentName = \markup { \override #'(baseline-skip . 2) \right-column { Basso Continuo } }
          midiInstrument = "church organ"
 }
@@ -35,7 +22,7 @@
 % set current music folder
 \setMusicFolder music.choral.psalmXLVI
 % bind template to current music-folder
-\setTemplate lalily.vocal.group-cont
+\setTemplate lalily.group
 % bind options to current music folder
 \setOptions #'() #opts
 % bind title to current music-folder

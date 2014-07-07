@@ -1,6 +1,6 @@
 \version "2.18.0"
 
-% show all included template-files
+% show all automatic includes
 includePatternVerbose = ##t
 
 \include "definitions.ily"
@@ -13,13 +13,13 @@ includePatternVerbose = ##t
 
 % alternatively you prepare options and set them:
 %
-% \clralist opts
+% \optionsInit opts
 % % instrument transposition e flat (b flat is default for template lalily.instrument.trumpet)
-% \addalist opts transposition #(ly:make-pitch -1 2 -1/2)
+% \optionsAdd opts transposition #(ly:make-pitch -1 2 -1/2)
 % % music input in concert pitch (default #t)
-% \addalist opts input-concert-pitch ##t
+% \optionsAdd opts input-concert-pitch ##t
 % % music output in instrument transposition (default #f)
-% \addalist opts output-concert-pitch ##f
+% \optionsAdd opts output-concert-pitch ##f
 % \setOptions #'() #opts
 %
 % or you combine setMusicFolder, setTemplate and setOptions (with a prepared a-list) to

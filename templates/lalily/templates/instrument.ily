@@ -1,4 +1,4 @@
-\version "2.17.29"
+\version "2.18.0"
 
 #(define-public (naturalize-pitch p)
    (let ((o (ly:pitch-octave p))

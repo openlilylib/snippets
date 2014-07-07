@@ -1,8 +1,10 @@
 \version "2.18.0"
 \include "templates/lalily/definitions.ily"
 
+% init options
+\optionsInit opts % ... we don't need them right now
 % set current music folder and assign a template with options to it
-\setDefaultTemplate music.choral.altatrinita lalily.vocal.group #'()
+\setDefaultTemplate music.choral.altatrinita lalily.vocal.group #opts
 % set title for current (formerly set) music folder
 \setTitle "Alta Trinita Beata"
 % TODO set composer for current music folder with #'(name . life)
