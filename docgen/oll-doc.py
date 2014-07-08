@@ -4,7 +4,7 @@
 import sys, os
 from PyQt4 import QtCore,  QtGui
 
-class AppInfo:
+class AppInfo(QtCore.QObject):
     def __init__(self, path):
         # determine the root paths of the different operations
         self.root = os.path.abspath(os.path.join(os.path.dirname(path), ".."))
