@@ -49,7 +49,17 @@ class MainWindow(QtGui.QMainWindow):
         if appInfo.missingExamples:
             self.resultList.addItem("\nSnippets without example:")
             self.resultList.addItems(appInfo.missingExamples)
+
+        # create, read and parse snippets
+        self.snippets = snippets.Snippets().snippets
         
+        # TEMPORARY!
+        # Add the content of the definitions to the listview
+        self.resultList.addItem("")
+        for sn in self.snippets:
+            for line in self.snippets[sn].definition.filecontent:
+                self.resultList.addItem(line.rstrip('\n'))
+
         self.setCentralWidget(self.centralWidget)
     
     def createWidgets(self):
