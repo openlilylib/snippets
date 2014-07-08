@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-4.6.dtd">
 <!-- eric4 project file for project oll-doc -->
-<!-- Saved: 2014-07-08, 16:00:31 -->
+<!-- Saved: 2014-07-08, 19:08:26 -->
 <!-- Copyright (C) 2014 Urs Liska, ul@openlilylib.org -->
 <Project version="4.6">
   <Language></Language>
@@ -13,7 +13,6 @@
   <Email>ul@openlilylib.org</Email>
   <Sources>
     <Source>__init__.py</Source>
-    <Source>oll-doc.py</Source>
   </Sources>
   <Forms>
   </Forms>
