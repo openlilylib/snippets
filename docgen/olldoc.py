@@ -3,6 +3,7 @@
 
 import sys, os
 from PyQt4 import QtCore,  QtGui
+import snippets
 
 class AppInfo(QtCore.QObject):
     """Stores global information about the application
