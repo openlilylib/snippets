@@ -40,9 +40,29 @@ class MainWindow(QtGui.QMainWindow):
     def __init__(self, *args):
         QtGui.QMainWindow.__init__(self, *args)
         self.setWindowTitle("openlilylib documentation generator")
+        self.createComponents()
+        self.createLayout()
         
-        self.createWidgets()
+        # create, read and parse snippets
+        self.snippets = snippets.Snippets().snippets
         
+        # TEMPORARY
+        self.temporaryDisplay()
+        
+    
+    def createComponents(self):
+        self.labelOverview = QtGui.QLabel("Elements in " + appInfo.defPath + ":")
+        self.resultList = QtGui.QListWidget()
+
+    def createLayout(self):
+        centralWidget = QtGui.QWidget()
+        centralLayout = QtGui.QVBoxLayout()
+        centralLayout.addWidget(self.labelOverview)
+        centralLayout.addWidget(self.resultList)
+        centralWidget.setLayout(centralLayout)
+        self.setCentralWidget(centralWidget)
+    
+    def temporaryDisplay(self):
         # display list of defined snippets and missing examples
         self.resultList.addItem("Defined snippets:")
         self.resultList.addItems(appInfo.definitions)
@@ -50,27 +70,11 @@ class MainWindow(QtGui.QMainWindow):
             self.resultList.addItem("\nSnippets without example:")
             self.resultList.addItems(appInfo.missingExamples)
 
-        # create, read and parse snippets
-        self.snippets = snippets.Snippets().snippets
-        
-        # TEMPORARY!
         # Add the content of the definitions to the listview
         self.resultList.addItem("")
         for sn in self.snippets:
             for line in self.snippets[sn].definition.filecontent:
                 self.resultList.addItem(line.rstrip('\n'))
-
-        self.setCentralWidget(self.centralWidget)
-    
-    def createWidgets(self):
-        self.labelOverview = QtGui.QLabel("Elements in " + appInfo.defPath + ":")
-        self.resultList = QtGui.QListWidget()
-
-        self.centralWidget = QtGui.QWidget()
-        centralLayout = QtGui.QVBoxLayout()
-        centralLayout.addWidget(self.labelOverview)
-        centralLayout.addWidget(self.resultList)
-        self.centralWidget.setLayout(centralLayout)
 
 def main(argv):
     global appInfo, mainWindow
