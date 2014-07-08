@@ -5,8 +5,12 @@ import sys, os
 from PyQt4 import QtCore,  QtGui
 
 class AppInfo(QtCore.QObject):
+    """Stores global information about the application
+    and the content of the openlilylib directories."""
+    
     def __init__(self, path):
         # determine the root paths of the different operations
+        # based on the argument representing the path of the application.
         self.root = os.path.abspath(os.path.join(os.path.dirname(path), ".."))
         self.scriptPath = os.path.join(self.root, "docgen")
         self.docPath = os.path.join(self.root, "doc")
@@ -38,7 +42,7 @@ class MainWindow(QtGui.QMainWindow):
         
         self.createWidgets()
         
-        # display list of defined snippets
+        # display list of defined snippets and missing examples
         self.resultList.addItem("Defined snippets:")
         self.resultList.addItems(appInfo.definitions)
         if appInfo.missingExamples:
