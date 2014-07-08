@@ -1,13 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8
 
-import sys
+import sys, os
 from PyQt4 import QtCore,  QtGui
 
+class AppInfo:
+    def __init__(self, path):
+        self.root = os.path.abspath(os.path.join(os.path.dirname(path), ".."))
+        self.scriptPath = os.path.join(self.root, "docgen")
+        self.docPath = os.path.join(self.root, "doc")
+        self.defPath = os.path.join(self.root, "library", "oll")
+        self.xmpPath = os.path.join(self.root, "usage-examples")
+    
 class MainWindow(QtGui.QMainWindow):
     def __init__(self, *args):
         QtGui.QMainWindow.__init__(self, *args)
-        self.labelHelloWorld = QtGui.QLabel("Hello World!")
+        self.labelHelloWorld = QtGui.QLabel(appInfo.xmpPath)
         self.setWindowTitle("openlilylib documentation generator")
         
         centralWidget = QtGui.QWidget()
@@ -18,7 +26,9 @@ class MainWindow(QtGui.QMainWindow):
         self.setCentralWidget(centralWidget)
 
 def main(argv):
+    global appInfo
     app = QtGui.QApplication(argv)
+    appInfo = AppInfo(argv[0])
     mainwindow = MainWindow()
     mainwindow.show()
     sys.exit(app.exec_())
