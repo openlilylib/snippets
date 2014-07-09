@@ -8,3 +8,6 @@
 *.zip
 
 *.pyc
+
+# temporarily disable tracking of generated documentation:
+doc/*
