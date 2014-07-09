@@ -4,8 +4,8 @@
 \include "../includes/oll-example.ily"
 
 \header {
-  title = "LilyPond Version Predicates"
-  subtitle = \markup {Score compiled with LilyPond #(lilypond-version)}
+  title = \markup \fromproperty #'header:snippet-title
+  subtitle = \markup \fromproperty #'header:snippet-short-description
 }
 
 \paper {
@@ -38,6 +38,10 @@ versionCommentB =
   Compile this file with different versions of LilyPond
   and see how the output markups change.
 }
+
+\markup { \vspace #3 }
+
+\markup \bold { Compiled with LilyPond #(lilypond-version) }
 
 \markup { \vspace #3 }
 
