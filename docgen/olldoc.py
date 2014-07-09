@@ -17,24 +17,6 @@ class AppInfo(QtCore.QObject):
         self.docPath = os.path.join(self.root, "doc")
         self.defPath = os.path.join(self.root, "library", "oll")
         self.xmpPath = os.path.join(self.root, "usage-examples")
-        
-        # populate lists with (filtered) contents of some directories
-        self.definitions = self.readDirectory(self.defPath, ['.ily'])
-        self.examples = self.readDirectory(self.xmpPath, ['.ly'])
-        
-        # list all definitions without a matching example
-        tmp = set(self.examples)
-        self.missingExamples = [xmp for xmp in self.definitions if xmp not in tmp]
-    
-    def readDirectory(self, dir, exts = []):
-        """Read in the given dir and return a list with
-        all entries matching the given exts filter"""
-        result = []
-        for item in os.listdir(dir):
-            (file, ext) = os.path.splitext(item) 
-            if ext in exts:
-                result.append(file)
-        return result
     
 class MainWindow(QtGui.QMainWindow):
     def __init__(self, *args):
@@ -44,7 +26,8 @@ class MainWindow(QtGui.QMainWindow):
         self.createLayout()
         
         # create, read and parse snippets
-        self.snippets = snippets.Snippets().snippets
+        self.snippets = snippets.Snippets()
+        self.snippets.read()
         
         # TEMPORARY
         self.temporaryDisplay()
@@ -65,15 +48,20 @@ class MainWindow(QtGui.QMainWindow):
     def temporaryDisplay(self):
         # display list of defined snippets and missing examples
         self.resultList.addItem("Defined snippets:")
-        self.resultList.addItems(appInfo.definitions)
-        if appInfo.missingExamples:
-            self.resultList.addItem("\nSnippets without example:")
-            self.resultList.addItems(appInfo.missingExamples)
-
+        for sn in self.snippets.names:
+            item = sn if self.snippets.byName(sn).hasExample() else sn + " - example missing!"
+            self.resultList.addItem(item)
+        
+        self.resultList.addItem("")
+        self.resultList.addItem("Missing examples:")
+        self.resultList.addItems(self.snippets.missingExamples())
+        
         # Add the content of the definitions to the listview
         self.resultList.addItem("")
-        for sn in self.snippets:
-            for line in self.snippets[sn].definition.filecontent:
+        self.resultList.addItem("Add snippets content")
+        self.resultList.addItem("")
+        for sn in self.snippets.names:
+            for line in self.snippets.byName(sn).definition.filecontent:
                 self.resultList.addItem(line.rstrip('\n'))
 
 def main(argv):
