@@ -56,6 +56,16 @@ class MainWindow(QtGui.QMainWindow):
         self.resultList.addItem("Missing examples:")
         self.resultList.addItems(self.snippets.missingExamples())
         
+        self.resultList.addItem("")
+        self.resultList.addItem("Categories:")
+        for c in self.snippets.categories:
+            self.resultList.addItem(c)
+        
+        self.resultList.addItem("")
+        self.resultList.addItem("Tags:")
+        for t in self.snippets.tags:
+            self.resultList.addItem(t)
+
         # Add the content of the definitions to the listview
         self.resultList.addItem("")
         self.resultList.addItem("Add snippets content")
