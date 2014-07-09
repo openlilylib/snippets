@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-4.6.dtd">
-<!-- eric4 project file for project oll-doc -->
-<!-- Saved: 2014-07-08, 19:08:26 -->
+<!-- eric4 project file for project olldoc -->
+<!-- Saved: 2014-07-09, 09:27:00 -->
 <!-- Copyright (C) 2014 Urs Liska, ul@openlilylib.org -->
 <Project version="4.6">
-  <Language></Language>
+  <Language>en</Language>
   <ProgLanguage mixed="0">Python</ProgLanguage>
   <ProjectType>Qt4</ProjectType>
-  <Description>Application to generate (and edit) documentation for the openlilylib library.</Description>
+  <Description></Description>
   <Version>0.1</Version>
   <Author>Urs Liska</Author>
   <Email>ul@openlilylib.org</Email>
   <Sources>
+    <Source>olldoc.py</Source>
     <Source>__init__.py</Source>
+    <Source>snippets.py</Source>
   </Sources>
   <Forms>
   </Forms>
@@ -24,7 +26,7 @@
   </Interfaces>
   <Others>
   </Others>
-  <MainScript>oll-doc.py</MainScript>
+  <MainScript>olldoc.py</MainScript>
   <Vcs>
     <VcsType>None</VcsType>
   </Vcs>
