@@ -8,8 +8,9 @@
     This is a common notation to indicate line breaks in the
     original source (e.g. when editing sketches and drafts).
   }
+  snippet-category = "editorial-tools"
   % add comma-separated tags to make searching more effective:
-  tags = "editorial,markup,line breaks"
+  tags = "markup,line breaks"
   status = "ready"
   %{ TODO:
      Make appearance of line configurable through variables

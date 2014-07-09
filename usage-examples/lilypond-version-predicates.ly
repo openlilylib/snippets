@@ -1,18 +1,18 @@
-\version "2.16.0" % This should also work with older versions 
+\version "2.16.0" % This should also work with older versions
 
-\include "./definitions.ily"
-
+\include "oll/lilypond-version-predicates.ily"
+\include "../includes/oll-example.ily"
 
 \header {
-  title = "LilyPond Version Predicates"
-  subtitle = \markup {Score compiled with LilyPond #(lilypond-version)}
+  title = \markup \fromproperty #'header:snippet-title
+  subtitle = \markup \fromproperty #'header:snippet-short-description
 }
 
 \paper {
   ragged-right = ##f
 }
 
-versionCommentA = 
+versionCommentA =
 #(define-music-function (parser location ver)
    (list?)
    (cond ((lilypond-greater-than-or-equal? ver)
@@ -20,7 +20,7 @@ versionCommentA =
          ((lilypond-less-than-or-equal? ver)
           #{ s^ \markup {#(lilypond-version) is less or equals that.} #})))
 
-versionCommentB = 
+versionCommentB =
 #(define-music-function (parser location ver)
    (list?)
    (cond ((lilypond-greater-than? ver)
@@ -41,36 +41,40 @@ versionCommentB =
 
 \markup { \vspace #3 }
 
+\markup \bold { Compiled with LilyPond #(lilypond-version) }
+
+\markup { \vspace #3 }
+
 {
-  \tempo "Comparing with: 2.16.0"
+  \tempo "Comparing with: 2.18.0"
   s1
-  \versionCommentA #'(2 16 0)
-  \versionCommentB #'(2 16 0)
+  \versionCommentA #'(2 18 0)
+  \versionCommentB #'(2 18 0)
 }
 
 \markup { \vspace #2 }
 
 {
-  \tempo "Comparing with: 2.16.2"
+  \tempo "Comparing with: 2.18.2"
   s1
-  \versionCommentA #'(2 16 2)
-  \versionCommentB #'(2 16 2)
+  \versionCommentA #'(2 18 2)
+  \versionCommentB #'(2 18 2)
 }
 
 \markup { \vspace #2 }
 
 {
-  \tempo "Comparing with: 2.17.5"
+  \tempo "Comparing with: 2.19.5"
   s1
-  \versionCommentA #'(2 17 5)
-  \versionCommentB #'(2 17 5)
+  \versionCommentA #'(2 19 5)
+  \versionCommentB #'(2 19 5)
 }
 
 \markup { \vspace #2 }
 
 {
-  \tempo "Comparing with: 2.17.16"
+  \tempo "Comparing with: 2.19.16"
   s1
-  \versionCommentA #'(2 17 16)
-  \versionCommentB #'(2 17 16)
+  \versionCommentA #'(2 19 16)
+  \versionCommentB #'(2 19 16)
 }

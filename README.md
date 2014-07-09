@@ -1,3 +1,40 @@
+# Reorganization note
+
+**(please remove this note before finally merging the `reorganization` branch).**
+
+We are reorganizating the repository in order to create a more scalable and maintainable library.
+One can consider this process finished when all content of the old top-level directories has moved into the new
+directory structure:
+
+```
+/includes
+/library
+  /oll
+    - includable-files.ily
+    /music-fonts
+    /stylesheets
+      - new structure to be discussed
+    /templates
+      - new structure to be discussed
+/usage-examples
+  - documentation-files.ly
+```
+
+`/library` should be added to LilyPond's include path so the subdirectories below can be `\include`d
+from end-user LilyPond files.  
+`/usage-examples` contains documentation examples, exactly one `.ly` file corresponding to the `.ily`
+files below `/library/oll`.  
+`/includes` will contain files that are needed by any snippets in the library but shouldn't be exposed
+to end-user files.
+
+---
+
+Snippets should be moved to the new structure one by one, using pull requests even by team members with
+push access.  Before actually moving files we will have to reconsider the metadata structure requirements
+because in the future documentation will be auto-generated using that metadata.
+
+---
+
 What's this?
 ============
 
