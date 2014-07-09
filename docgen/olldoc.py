@@ -30,7 +30,9 @@ class MainWindow(QtGui.QMainWindow):
         self.snippets.read()
         
         # TEMPORARY
-        self.temporaryDisplay()
+        self.temporaryFileDump()
+        self.resultList.addItem("Processed snippets")
+        self.resultList.addItem("See results in /doc/categories.txt")
         
     
     def createComponents(self):
@@ -45,39 +47,39 @@ class MainWindow(QtGui.QMainWindow):
         centralWidget.setLayout(centralLayout)
         self.setCentralWidget(centralWidget)
     
-    def temporaryDisplay(self):
-        # display list of defined snippets and missing examples
-        self.resultList.addItem("Defined snippets:")
-        for sn in self.snippets.names:
-            item = sn if self.snippets.byName(sn).hasExample() else sn + " - example missing!"
-            self.resultList.addItem(item)
+    def temporaryFileDump(self):
+        numsnippets = ' (' + str(len(self.snippets.snippets) - 
+                                 len(self.snippets.missingExamples())) + ')' 
+        sns = ['Snippets' + numsnippets, '========', '']
+        for s in self.snippets.names:
+            if self.snippets.byName(s).hasExample():
+                sns.append('- ' + s)
         
-        self.resultList.addItem("")
-        self.resultList.addItem("Missing examples:")
-        self.resultList.addItems(self.snippets.missingExamples())
-        
-        self.resultList.addItem("")
-        self.resultList.addItem("Categories:")
+        numcats = ' (' + str(len(self.snippets.categories)) + ')'
+        cats = ['Categories' + numcats, '==========', '']
         for c in self.snippets.categories:
-            self.resultList.addItem(c)
+            cats.append(c + ' (' + str(len(self.snippets.categories[c])) + ')')
             for i in self.snippets.categories[c]:
-                self.resultList.addItem('- ' + i)
-        
-        self.resultList.addItem("")
-        self.resultList.addItem("Tags:")
-        for t in self.snippets.tagnames:
-            self.resultList.addItem(t)
+                cats.append('- ' + i)
+                
+        numtags = ' (' + str(len(self.snippets.tagnames)) + ')'
+        tags = ['Tags' + numtags,  '====', '']
+        for t in self.snippets.tags:
+            tags.append(t + ' (' + str(len(self.snippets.tags[t])) + ')')
             for i in self.snippets.tags[t]:
-                self.resultList.addItem('- ' + i)
-
-        # Add the content of the definitions to the listview
-        self.resultList.addItem("")
-        self.resultList.addItem("Add snippets content")
-        self.resultList.addItem("")
-        for sn in self.snippets.names:
-            for line in self.snippets.byName(sn).definition.filecontent:
-                self.resultList.addItem(line.rstrip('\n'))
-
+                tags.append('- ' + i)
+            tags.append('')
+        
+        outfile = os.path.join(appInfo.docPath, 'categories.txt')
+        f = open(outfile, 'w')
+        try:
+            f.write("openlilylib contents\nList used categories and tags.\n\n")
+            f.write('\n'.join(sns) + '\n\n')
+            f.write('\n'.join(cats) + '\n\n')
+            f.write('\n'.join(tags) + '\n')
+        finally:
+            f.close()
+        
 def main(argv):
     global appInfo, mainWindow
     app = QtGui.QApplication(argv)
