@@ -60,11 +60,15 @@ class MainWindow(QtGui.QMainWindow):
         self.resultList.addItem("Categories:")
         for c in self.snippets.categories:
             self.resultList.addItem(c)
+            for i in self.snippets.categories[c]:
+                self.resultList.addItem('- ' + i)
         
         self.resultList.addItem("")
         self.resultList.addItem("Tags:")
-        for t in self.snippets.tags:
+        for t in self.snippets.tagnames:
             self.resultList.addItem(t)
+            for i in self.snippets.tags[t]:
+                self.resultList.addItem('- ' + i)
 
         # Add the content of the definitions to the listview
         self.resultList.addItem("")

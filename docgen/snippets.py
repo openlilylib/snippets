@@ -22,6 +22,11 @@ class SnippetFile(QtCore.QObject):
     def parseFile(self):
         raise Exception("SnippetFile.parseFile() has to be " +
                         "implemented in subclasses")
+    
+    def tagList(self, tagstring):
+        """Return a list of tags stripped from whitespace.
+        Argument is a comma-separated list."""
+        return [ t.strip() for t in tagstring.split(',')]
 
 class SnippetDefinition(SnippetFile):
     """Definition of a snippet"""
@@ -31,9 +36,17 @@ class SnippetDefinition(SnippetFile):
     def parseFile(self):
         #TODO: parse the definition file
         #TEMPORARY!!!
-        self.owner.addToCategory("Test-Kategorie")
-        self.owner.addToTags("erster-tag")
-        self.owner.addToTags("zweiter-tag")
+        self.readCategoryTags()
+        
+    def readCategoryTags(self):
+        #TODO: Implement this correctly.
+        # for now it serves only to get a list of used categories
+        for line in self.filecontent:
+            line = line.strip()
+            if line.startswith("snippet-category"):
+                self.owner.addToCategory(line[line.find('\"')+1:-1])
+            if line.startswith("tags"):
+                self.owner.addToTags(self.tagList(line[line.find('\"')+1:-1]))
         
 class SnippetExample(SnippetFile):
     """Usage example for a snippet"""
@@ -63,8 +76,8 @@ class Snippet(QtCore.QObject):
     def addToCategory(self, catname):
         self.owner.addToCategory(self.name, catname)
     
-    def addToTags(self, tagname):
-        self.owner.addToTags(self.name, tagname)
+    def addToTags(self, tags):
+        self.owner.addToTags(self.name, tags)
         
     def hasExample(self):
         """return true if an example is defined."""
@@ -76,17 +89,26 @@ class Snippets(QtCore.QObject):
         self.snippets = {}
         self.names = []
         self.categories = {}
+        self.catnames = []
         self.tags = {}
+        self.tagnames = []
 
     def addToCategory(self, name, category):
-        if not self.categories.get(name):
+        if not self.categories.get(category):
             self.categories[category] = []
+            self.catnames.append(category)
+            self.catnames.sort()
         self.categories[category].append(name)
+        self.categories[category].sort()
         
-    def addToTags(self, name, tag):
-        if not self.tags.get(name):
-            self.tags[tag] = []
-        self.tags[tag].append(name)
+    def addToTags(self, name, tagstoadd):
+        for t in tagstoadd:
+            if not self.tags.get(t):
+                self.tags[t] = []
+                self.tagnames.append(t)
+                self.tagnames.sort()
+            self.tags[t].append(name)
+            self.tags[t].sort()
         
     def byName(self, name):
         """Return a Snippets object if it is defined."""
