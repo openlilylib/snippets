@@ -63,7 +63,7 @@ def main(argv):
     app = QtGui.QApplication(argv)
     appInfo = AppInfo(argv[0])
     mainWindow = MainWindow()
-    mainWindow.show()
+    mainWindow.showMaximized()
     sys.exit(app.exec_())
 
 if __name__ == "__main__":
