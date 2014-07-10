@@ -24,29 +24,62 @@ class MainWindow(QtGui.QMainWindow):
         self.setWindowTitle("openlilylib documentation generator")
         self.createComponents()
         self.createLayout()
+        self.createConnects()
         
-        # create, read and parse snippets
-        self.snippets = snippets.Snippets()
-        self.snippets.read()
+        self.snippets = None
+        self.readSnippets()
         
         # TEMPORARY
         self.temporaryFileDump()
-        self.resultList.addItem("Processed snippets")
-        self.resultList.addItem("See results in /doc/categories.txt")
+        
         
     
     def createComponents(self):
         self.labelOverview = QtGui.QLabel("Elements in " + appInfo.defPath + ":")
-        self.resultList = QtGui.QListWidget()
+        self.labelSnippets = QtGui.QLabel("Defined Snippets:")
+        self.labelCategories = QtGui.QLabel("Used Categories:")
+        self.labelTags = QtGui.QLabel("Used Tags:")
+        
+        self.teSnippets = QtGui.QTextEdit()
+        self.teCategories = QtGui.QTextEdit()
+        self.teTags = QtGui.QTextEdit()
+        
+        self.pbReread = QtGui.QPushButton("Read again")
+        self.pbExit = QtGui.QPushButton("Exit")
+        
+    def createConnects(self):
+        self.pbReread.clicked.connect(self.readSnippets)
+        self.pbExit.clicked.connect(self.close)
 
     def createLayout(self):
         centralWidget = QtGui.QWidget()
-        centralLayout = QtGui.QVBoxLayout()
-        centralLayout.addWidget(self.labelOverview)
-        centralLayout.addWidget(self.resultList)
+        centralLayout = cl = QtGui.QGridLayout()
+
+        cl.addWidget(self.labelOverview, 0, 0, 1, 3)
+        cl.addWidget(self.labelSnippets, 2, 0)
+        cl.addWidget(self.labelCategories, 2, 1)
+        cl.addWidget(self.labelTags, 2, 2)
+        cl.addWidget(self.teSnippets, 3, 0)
+        cl.addWidget(self.teCategories, 3, 1)
+        cl.addWidget(self.teTags, 3, 2)
+        cl.addWidget(self.pbReread, 5, 0)
+        cl.addWidget(self.pbExit, 5, 2)
         centralWidget.setLayout(centralLayout)
-        self.setCentralWidget(centralWidget)
+        self.setCentralWidget(centralWidget)#
     
+    def readSnippets(self):
+        # create, read and parse snippets
+        if not self.snippets:
+            self.snippets = snippets.Snippets()
+        self.snippets.read()
+        #TEMPORARY
+        self.temporaryDisplay()
+    
+    def temporaryDisplay(self):
+        self.teSnippets.setText('\n'.join(self.snippets.displaySnippets()))
+        self.teCategories.setText('\n'.join(self.snippets.displayCategories()))
+        self.teTags.setText('\n'.join(self.snippets.displayTags()))
+
     def temporaryFileDump(self):
         outfile = os.path.join(appInfo.docPath, 'categories.txt')
         f = open(outfile, 'w')

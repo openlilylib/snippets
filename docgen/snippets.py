@@ -86,12 +86,8 @@ class Snippet(QtCore.QObject):
 class Snippets(QtCore.QObject):
     """Object holding a dictionary of snippets"""
     def __init__(self):
-        self.snippets = {}
-        self.names = []
-        self.categories = {}
-        self.catnames = []
-        self.tags = {}
-        self.tagnames = []
+        super(Snippets, self).__init__()
+        self.initLists()
 
     def addToCategory(self, name, category):
         if not self.categories.get(category):
@@ -114,6 +110,14 @@ class Snippets(QtCore.QObject):
         """Return a Snippets object if it is defined."""
         return self.snippets[name] if self.snippets[name] else None
     
+    def initLists(self):
+        self.snippets = {}
+        self.names = []
+        self.categories = {}
+        self.catnames = []
+        self.tags = {}
+        self.tagnames = []
+    
     def missingExamples(self):
         result = []
         for d in self.names:
@@ -123,6 +127,7 @@ class Snippets(QtCore.QObject):
     
     def read(self):
         """Read in all snippets and their examples."""
+        self.initLists()
         self.names = self.readDirectory(__main__.appInfo.defPath, ['.ily'])
         xmps = self.readDirectory(__main__.appInfo.xmpPath, ['.ly'])
         
@@ -130,7 +135,6 @@ class Snippets(QtCore.QObject):
         for d in self.names:
             self.snippets[d] = Snippet(self, d)
         # read all examples, ignore missing ones
-        print "xmps:", xmps
         for x in xmps:
             self.snippets[x].addExample()
 
