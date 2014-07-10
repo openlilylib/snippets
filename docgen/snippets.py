@@ -144,3 +144,36 @@ class Snippets(QtCore.QObject):
                 result.append(file)
         result.sort()
         return result
+
+    # TEMPORARY
+    # Create lists of the different items
+    # to be used in preliminary visualization
+    def displayCategories(self):
+        numcats = ' (' + str(len(self.categories)) + ')'
+        result = ['Categories' + numcats, '==========', '']
+        for c in self.categories:
+            result.append(c + ' (' + str(len(self.categories[c])) + ')')
+            for i in self.categories[c]:
+                result.append('- ' + i)
+            result.append('')
+        return result
+
+    def displaySnippets(self):        
+        numsnippets = ' (' + str(len(self.snippets) - 
+                                 len(self.missingExamples())) + ')' 
+        result = ['Snippets' + numsnippets, '========', '']
+        for s in self.names:
+            if self.byName(s).hasExample():
+                result.append('- ' + s)
+        return result
+
+    def displayTags(self):
+        numtags = ' (' + str(len(self.tagnames)) + ')'
+        result = ['Tags' + numtags,  '====', '']
+        for t in self.tags:
+            result.append(t + ' (' + str(len(self.tags[t])) + ')')
+            for i in self.tags[t]:
+                result.append('- ' + i)
+            result.append('')
+        return result
+        

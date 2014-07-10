@@ -48,35 +48,13 @@ class MainWindow(QtGui.QMainWindow):
         self.setCentralWidget(centralWidget)
     
     def temporaryFileDump(self):
-        numsnippets = ' (' + str(len(self.snippets.snippets) - 
-                                 len(self.snippets.missingExamples())) + ')' 
-        sns = ['Snippets' + numsnippets, '========', '']
-        for s in self.snippets.names:
-            if self.snippets.byName(s).hasExample():
-                sns.append('- ' + s)
-        
-        numcats = ' (' + str(len(self.snippets.categories)) + ')'
-        cats = ['Categories' + numcats, '==========', '']
-        for c in self.snippets.categories:
-            cats.append(c + ' (' + str(len(self.snippets.categories[c])) + ')')
-            for i in self.snippets.categories[c]:
-                cats.append('- ' + i)
-                
-        numtags = ' (' + str(len(self.snippets.tagnames)) + ')'
-        tags = ['Tags' + numtags,  '====', '']
-        for t in self.snippets.tags:
-            tags.append(t + ' (' + str(len(self.snippets.tags[t])) + ')')
-            for i in self.snippets.tags[t]:
-                tags.append('- ' + i)
-            tags.append('')
-        
         outfile = os.path.join(appInfo.docPath, 'categories.txt')
         f = open(outfile, 'w')
         try:
             f.write("openlilylib contents\nList used categories and tags.\n\n")
-            f.write('\n'.join(sns) + '\n\n')
-            f.write('\n'.join(cats) + '\n\n')
-            f.write('\n'.join(tags) + '\n')
+            f.write('\n'.join(self.snippets.displaySnippets()) + '\n\n')
+            f.write('\n'.join(self.snippets.displayCategories()) + '\n\n')
+            f.write('\n'.join(self.snippets.displayTags()) + '\n')
         finally:
             f.close()
         
