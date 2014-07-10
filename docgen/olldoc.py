@@ -36,6 +36,7 @@ class MainWindow(QtGui.QMainWindow):
     
     def createComponents(self):
         self.labelOverview = QtGui.QLabel("Elements in " + appInfo.defPath + ":")
+        self.labelBrowse = QtGui.QLabel("Browse Snippets:")
         self.labelSnippets = QtGui.QLabel("Defined Snippets:")
         self.labelCategories = QtGui.QLabel("Used Categories:")
         self.labelTags = QtGui.QLabel("Used Tags:")
@@ -44,26 +45,37 @@ class MainWindow(QtGui.QMainWindow):
         self.teCategories = QtGui.QTextEdit()
         self.teTags = QtGui.QTextEdit()
         
+        self.tvNavigate = QtGui.QTreeView()
+        self.modelNavigate = QtGui.QStandardItemModel()
+        self.modelNavigate.setHorizontalHeaderLabels(['Browse snippets'])
+        self.tvNavigate.setModel(self.modelNavigate)
+        self.tvNavigate.setUniformRowHeights(True)
+        self.tvNavigate.header().hide()
+
         self.pbReread = QtGui.QPushButton("Read again")
         self.pbExit = QtGui.QPushButton("Exit")
         
     def createConnects(self):
         self.pbReread.clicked.connect(self.readSnippets)
         self.pbExit.clicked.connect(self.close)
+        
+        self.tvNavigate.clicked.connect(self.rowClicked)
 
     def createLayout(self):
         centralWidget = QtGui.QWidget()
         centralLayout = cl = QtGui.QGridLayout()
 
         cl.addWidget(self.labelOverview, 0, 0, 1, 3)
-        cl.addWidget(self.labelSnippets, 2, 0)
-        cl.addWidget(self.labelCategories, 2, 1)
-        cl.addWidget(self.labelTags, 2, 2)
-        cl.addWidget(self.teSnippets, 3, 0)
-        cl.addWidget(self.teCategories, 3, 1)
-        cl.addWidget(self.teTags, 3, 2)
+        cl.addWidget(self.labelBrowse, 2, 0)
+        cl.addWidget(self.tvNavigate, 3, 0)
+        cl.addWidget(self.labelSnippets, 2, 1)
+        cl.addWidget(self.labelCategories, 2, 2)
+        cl.addWidget(self.labelTags, 2, 3)
+        cl.addWidget(self.teSnippets, 3, 1)
+        cl.addWidget(self.teCategories, 3, 2)
+        cl.addWidget(self.teTags, 3, 3)
         cl.addWidget(self.pbReread, 5, 0)
-        cl.addWidget(self.pbExit, 5, 2)
+        cl.addWidget(self.pbExit, 5, 3)
         centralWidget.setLayout(centralLayout)
         self.setCentralWidget(centralWidget)#
     
@@ -74,7 +86,39 @@ class MainWindow(QtGui.QMainWindow):
         self.snippets.read()
         #TEMPORARY
         self.temporaryDisplay()
+        self.displayTree()
     
+    def displayTree(self):
+        self.modelNavigate.clear()
+
+        byName = QtGui.QStandardItem('By Name')
+        for sn in self.snippets.names:
+            byName.appendRow(QtGui.QStandardItem(sn))
+        self.modelNavigate.appendRow(byName)
+
+        byCategory = QtGui.QStandardItem('By Category')
+        for c in self.snippets.catnames:
+            cat = QtGui.QStandardItem(c)
+            byCategory.appendRow(cat)
+            for s in self.snippets.categories[c]:
+                cat.appendRow(QtGui.QStandardItem(s))
+        self.modelNavigate.appendRow(byCategory)
+        
+        byTag = QtGui.QStandardItem('By Tag')
+        for t in self.snippets.tagnames:
+            tag = QtGui.QStandardItem(t)
+            byTag.appendRow(tag)
+            for s in self.snippets.tags[t]:
+                tag.appendRow(QtGui.QStandardItem(s))
+        self.modelNavigate.appendRow(byTag)
+
+    def rowClicked(self, index):
+        #TODO: continue to work here. Doesn't really make sense so far
+        row = index.row()
+        parent = index.parent()
+        snippet = self.modelNavigate.data(self.modelNavigate.index(row, 0, parent), QtCore.Qt.UserRole)
+        print "row clicked:", snippet
+        
     def temporaryDisplay(self):
         self.teSnippets.setText('\n'.join(self.snippets.displaySnippets()))
         self.teCategories.setText('\n'.join(self.snippets.displayCategories()))
