@@ -155,7 +155,7 @@ class Snippets(QtCore.QObject):
     def displayCategories(self):
         numcats = ' (' + str(len(self.categories)) + ')'
         result = ['Categories' + numcats, '==========', '']
-        for c in self.categories:
+        for c in self.catnames:
             result.append(c + ' (' + str(len(self.categories[c])) + ')')
             for i in self.categories[c]:
                 result.append('- ' + i)
@@ -174,7 +174,7 @@ class Snippets(QtCore.QObject):
     def displayTags(self):
         numtags = ' (' + str(len(self.tagnames)) + ')'
         result = ['Tags' + numtags,  '====', '']
-        for t in self.tags:
+        for t in self.tagnames:
             result.append(t + ' (' + str(len(self.tags[t])) + ')')
             for i in self.tags[t]:
                 result.append('- ' + i)
