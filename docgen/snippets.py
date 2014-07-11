@@ -2,6 +2,7 @@
 # -*- coding: utf-8
 
 import os
+import re
 from PyQt4 import QtCore
 
 import __main__
@@ -14,11 +15,27 @@ class SnippetFile(QtCore.QObject):
         super(SnippetFile, self).__init__()
         self.owner = owner
         self.filename = filename
+        self.version = None
+        self.headercontent = []
+        self.bodycontent = []
         f = open(self.filename)
         self.filecontent = f.readlines()
         f.close()
         self.parseFile()
     
+    def checkVersion(self, line):
+        result = None
+        if line.strip().startswith('\\version'):
+            result = self.getFieldString(line)
+        return result
+        
+    def getFieldString(self, line):
+        """Return the part of 'line' between quotation marks if present."""
+        result = re.search('\"(.*)\"', line)
+        if result:
+            result = result.group(1)
+        return result
+        
     def parseFile(self):
         raise Exception("SnippetFile.parseFile() has to be " +
                         "implemented in subclasses")
@@ -34,6 +51,36 @@ class SnippetDefinition(SnippetFile):
         super(SnippetDefinition, self).__init__(owner, filename)
     
     def parseFile(self):
+        i = 0
+        while i < len(self.filecontent):
+            line = self.filecontent[i]
+            # Check for version string
+            if not self.version:
+                self.version = self.checkVersion(line)
+            
+            if line.strip().startswith('\\header'):
+                # Get the content of the \header section.
+                # ATTENTION: The section is considered finished when
+                # a line is encountered that has a '}' as its first character
+                # and no more content (except whitespace) after that.
+                i += 1
+                while not self.filecontent[i].rstrip() == '}':
+                    self.headercontent.append(self.filecontent[i])
+                    i += 1
+                
+                # After the header the first line containing anything
+                # except whitespace and comments is considered as starting
+                # the snippet body.
+                i += 1
+                while ((self.filecontent[i].strip() == '') 
+                            or self.filecontent[i].strip().startswith('%')):
+                    i += 1
+                self.bodycontent = self.filecontent[i:]
+                break
+                
+            # this is only executed until a header is found.
+            i += 1
+        
         #TODO: parse the definition file
         #TEMPORARY!!!
         self.readCategoryTags()
