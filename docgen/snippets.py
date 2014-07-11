@@ -127,12 +127,9 @@ class Snippets(QtCore.QObject):
     def initLists(self):
         self.snippets = {}
         self.names = []
-        self.categories = {}
-        self.catnames = []
-        self.tags = {}
-        self.tagnames = []
-        self.authors = {}
-        self.authornames = []
+        self.categories = {'names': []}
+        self.tags = {'names': []}
+        self.authors = {'names': []}
     
     def missingExamples(self):
         result = []

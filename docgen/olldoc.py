@@ -95,7 +95,7 @@ class MainWindow(QtGui.QMainWindow):
         self.modelNavigate.appendRow(byName)
 
         byCategory = QtGui.QStandardItem('By Category')
-        for c in self.snippets.catnames:
+        for c in self.snippets.categories['names']:
             numsnippets = ' (' + str(len(self.snippets.categories[c])) + ')'
             cat = QtGui.QStandardItem(c + numsnippets)
             byCategory.appendRow(cat)
@@ -104,7 +104,7 @@ class MainWindow(QtGui.QMainWindow):
         self.modelNavigate.appendRow(byCategory)
         
         byTag = QtGui.QStandardItem('By Tag')
-        for t in self.snippets.tagnames:
+        for t in self.snippets.tags['names']:
             numsnippets = ' (' + str(len(self.snippets.tags[t])) + ')'
             tag = QtGui.QStandardItem(t + numsnippets)
             byTag.appendRow(tag)
@@ -113,7 +113,7 @@ class MainWindow(QtGui.QMainWindow):
         self.modelNavigate.appendRow(byTag)
         
         byAuthor = QtGui.QStandardItem('By Author')
-        for a in self.snippets.authornames:
+        for a in self.snippets.authors['names']:
             numsnippets = ' (' + str(len(self.snippets.authors[a])) + ')'
             author = QtGui.QStandardItem(a + numsnippets)
             byAuthor.appendRow(author)
