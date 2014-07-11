@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Tasks SYSTEM "Tasks-4.2.dtd">
+<!-- eric4 tasks file for project olldoc -->
+<!-- Saved: 2014-07-11, 15:09:17 -->
+<Tasks version="4.2">
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: parse the definition file</Summary>
+    <Description></Description>
+    <Created>2014-07-11, 15:09:11</Created>
+    <Resource>
+      <Filename>snippets.py</Filename>
+      <Linenumber>37</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: Implement this correctly.</Summary>
+    <Description></Description>
+    <Created>2014-07-11, 15:09:11</Created>
+    <Resource>
+      <Filename>snippets.py</Filename>
+      <Linenumber>42</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: parse the example file</Summary>
+    <Description></Description>
+    <Created>2014-07-11, 15:09:11</Created>
+    <Resource>
+      <Filename>snippets.py</Filename>
+      <Linenumber>59</Linenumber>
+    </Resource>
+  </Task>
+</Tasks>
