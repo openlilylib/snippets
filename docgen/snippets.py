@@ -105,9 +105,16 @@ class SnippetDefinition(SnippetFile):
         line = self.headercontent[i].strip()
         fieldName = line[:line.find('=')-1].strip()
         fieldContent = self.getFieldString(line)
-        #if not fieldContent:
+        if not fieldContent:
+            fieldContent = [line[line.find('=')+2:].strip()]
+            i += 1
+            while not self.headercontent[i].strip() == '}':
+                fieldContent.append(self.headercontent[i].strip())
+                i += 1
             
-        #print fieldName
+            
+            
+        print fieldName
         self.headerFields[fieldName] = fieldContent
         i += 1
         return i
