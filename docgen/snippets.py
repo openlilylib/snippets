@@ -11,7 +11,7 @@ class SnippetFile(QtCore.QObject):
     Has a filename and a filecontent field
     and an abstract parseFile() method."""
     def __init__(self, owner, filename):
-        super(SnippetFile, self)
+        super(SnippetFile, self).__init__()
         self.owner = owner
         self.filename = filename
         f = open(self.filename)
@@ -43,6 +43,8 @@ class SnippetDefinition(SnippetFile):
         # for now it serves only to get a list of used categories
         for line in self.filecontent:
             line = line.strip()
+            if line.startswith("snippet-author"):
+                self.owner.addToAuthors(self.tagList(line[line.find('\"')+1:-1]))
             if line.startswith("snippet-category"):
                 self.owner.addToCategory(line[line.find('\"')+1:-1])
             if line.startswith("tags"):
@@ -61,7 +63,7 @@ class Snippet(QtCore.QObject):
     """Object representing a single snippet.
     Contains a definition and an example object."""
     def __init__(self, owner, name):
-        super(Snippet, self)
+        super(Snippet, self).__init__()
         self.owner = owner
         self.name = name
         defFilename = os.path.join(__main__.appInfo.defPath, name) + '.ily'
@@ -73,11 +75,14 @@ class Snippet(QtCore.QObject):
         xmpFilename = os.path.join(__main__.appInfo.xmpPath, self.name) + '.ly'
         self.example = SnippetExample(self, xmpFilename)
     
+    def addToAuthors(self, authors):
+        self.owner.addTo(self.owner.authors, self.name, authors)
+        
     def addToCategory(self, catname):
-        self.owner.addToCategory(self.name, catname)
+        self.owner.addTo(self.owner.categories, self.name, catname)
     
     def addToTags(self, tags):
-        self.owner.addToTags(self.name, tags)
+        self.owner.addTo(self.owner.tags, self.name, tags)
         
     def hasExample(self):
         """return true if an example is defined."""
@@ -86,33 +91,34 @@ class Snippet(QtCore.QObject):
 class Snippets(QtCore.QObject):
     """Object holding a dictionary of snippets"""
     def __init__(self):
-        self.snippets = {}
-        self.names = []
-        self.categories = {}
-        self.catnames = []
-        self.tags = {}
-        self.tagnames = []
+        super(Snippets, self).__init__()
+        self.initLists()
 
-    def addToCategory(self, name, category):
-        if not self.categories.get(category):
-            self.categories[category] = []
-            self.catnames.append(category)
-            self.catnames.sort()
-        self.categories[category].append(name)
-        self.categories[category].sort()
-        
-    def addToTags(self, name, tagstoadd):
-        for t in tagstoadd:
-            if not self.tags.get(t):
-                self.tags[t] = []
-                self.tagnames.append(t)
-                self.tagnames.sort()
-            self.tags[t].append(name)
-            self.tags[t].sort()
-        
+    def addTo(self, target, snippet, entry):
+        if isinstance(entry, list):
+            for e in entry:
+                self.addToTarget(target, snippet, e)
+        else:
+            self.addToTarget(target, snippet, entry)
+    
+    def addToTarget(self, target, snippet, entry):
+        if not target.get(entry):
+            target[entry] = []
+            target['names'].append(entry)
+            target['names'].sort()
+        target[entry].append(snippet)
+        target[entry].sort()
+
     def byName(self, name):
         """Return a Snippets object if it is defined."""
-        return self.snippets[name] if self.snippets[name] else None
+        return self.snippets.get(name, None)
+        
+    def initLists(self):
+        self.snippets = {}
+        self.names = []
+        self.categories = {'names': []}
+        self.tags = {'names': []}
+        self.authors = {'names': []}
     
     def missingExamples(self):
         result = []
@@ -123,6 +129,7 @@ class Snippets(QtCore.QObject):
     
     def read(self):
         """Read in all snippets and their examples."""
+        self.initLists()
         self.names = self.readDirectory(__main__.appInfo.defPath, ['.ily'])
         xmps = self.readDirectory(__main__.appInfo.xmpPath, ['.ly'])
         
@@ -130,7 +137,6 @@ class Snippets(QtCore.QObject):
         for d in self.names:
             self.snippets[d] = Snippet(self, d)
         # read all examples, ignore missing ones
-        print "xmps:", xmps
         for x in xmps:
             self.snippets[x].addExample()
 
@@ -144,3 +150,36 @@ class Snippets(QtCore.QObject):
                 result.append(file)
         result.sort()
         return result
+
+    # TEMPORARY
+    # Create lists of the different items
+    # to be used in preliminary visualization
+    def displayCategories(self):
+        numcats = ' (' + str(len(self.categories)) + ')'
+        result = ['Categories' + numcats, '==========', '']
+        for c in self.categories['names']:
+            result.append(c + ' (' + str(len(self.categories[c])) + ')')
+            for i in self.categories[c]:
+                result.append('- ' + i)
+            result.append('')
+        return result
+
+    def displaySnippets(self):        
+        numsnippets = ' (' + str(len(self.snippets) - 
+                                 len(self.missingExamples())) + ')' 
+        result = ['Snippets' + numsnippets, '========', '']
+        for s in self.names:
+            if self.byName(s).hasExample():
+                result.append('- ' + s)
+        return result
+
+    def displayTags(self):
+        numtags = ' (' + str(len(self.tags['names'])) + ')'
+        result = ['Tags' + numtags,  '====', '']
+        for t in self.tags['names']:
+            result.append(t + ' (' + str(len(self.tags[t])) + ')')
+            for i in self.tags[t]:
+                result.append('- ' + i)
+            result.append('')
+        return result
+        
