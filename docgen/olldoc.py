@@ -111,6 +111,14 @@ class MainWindow(QtGui.QMainWindow):
             for s in self.snippets.tags[t]:
                 tag.appendRow(QtGui.QStandardItem(s))
         self.modelNavigate.appendRow(byTag)
+        
+        byAuthor = QtGui.QStandardItem('By Author')
+        for a in self.snippets.authornames:
+            author = QtGui.QStandardItem(a)
+            byAuthor.appendRow(author)
+            for s in self.snippets.authors[a]:
+                author.appendRow(QtGui.QStandardItem(s))
+        self.modelNavigate.appendRow(byAuthor)
 
     def rowClicked(self, index):
         #TODO: continue to work here. Doesn't really make sense so far

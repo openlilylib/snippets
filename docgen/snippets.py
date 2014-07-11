@@ -43,6 +43,9 @@ class SnippetDefinition(SnippetFile):
         # for now it serves only to get a list of used categories
         for line in self.filecontent:
             line = line.strip()
+            if line.startswith("snippet-author"):
+                print self.tagList(line)
+                self.owner.addToAuthors(self.tagList(line[line.find('\"')+1:-1]))
             if line.startswith("snippet-category"):
                 self.owner.addToCategory(line[line.find('\"')+1:-1])
             if line.startswith("tags"):
@@ -73,6 +76,9 @@ class Snippet(QtCore.QObject):
         xmpFilename = os.path.join(__main__.appInfo.xmpPath, self.name) + '.ly'
         self.example = SnippetExample(self, xmpFilename)
     
+    def addToAuthors(self, authors):
+        self.owner.addToAuthors(self.name, authors)
+        
     def addToCategory(self, catname):
         self.owner.addToCategory(self.name, catname)
     
@@ -89,6 +95,15 @@ class Snippets(QtCore.QObject):
         super(Snippets, self).__init__()
         self.initLists()
 
+    def addToAuthors(self, name, authors):
+        for a in authors:
+            if not self.authors.get(a):
+                self.authors[a] = []
+                self.authornames.append(a)
+                self.authornames.sort()
+            self.authors[a].append(name)
+            self.authors[a].sort()
+    
     def addToCategory(self, name, category):
         if not self.categories.get(category):
             self.categories[category] = []
@@ -117,6 +132,8 @@ class Snippets(QtCore.QObject):
         self.catnames = []
         self.tags = {}
         self.tagnames = []
+        self.authors = {}
+        self.authornames = []
     
     def missingExamples(self):
         result = []
