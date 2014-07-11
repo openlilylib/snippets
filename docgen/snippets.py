@@ -44,7 +44,6 @@ class SnippetDefinition(SnippetFile):
         for line in self.filecontent:
             line = line.strip()
             if line.startswith("snippet-author"):
-                print self.tagList(line)
                 self.owner.addToAuthors(self.tagList(line[line.find('\"')+1:-1]))
             if line.startswith("snippet-category"):
                 self.owner.addToCategory(line[line.find('\"')+1:-1])
@@ -123,8 +122,8 @@ class Snippets(QtCore.QObject):
         
     def byName(self, name):
         """Return a Snippets object if it is defined."""
-        return self.snippets[name] if self.snippets[name] else None
-    
+        return self.snippets.get(name, None)
+        
     def initLists(self):
         self.snippets = {}
         self.names = []
