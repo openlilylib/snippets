@@ -11,7 +11,7 @@ class SnippetFile(QtCore.QObject):
     Has a filename and a filecontent field
     and an abstract parseFile() method."""
     def __init__(self, owner, filename):
-        super(SnippetFile, self)
+        super(SnippetFile, self).__init__()
         self.owner = owner
         self.filename = filename
         f = open(self.filename)
@@ -61,7 +61,7 @@ class Snippet(QtCore.QObject):
     """Object representing a single snippet.
     Contains a definition and an example object."""
     def __init__(self, owner, name):
-        super(Snippet, self)
+        super(Snippet, self).__init__()
         self.owner = owner
         self.name = name
         defFilename = os.path.join(__main__.appInfo.defPath, name) + '.ily'
