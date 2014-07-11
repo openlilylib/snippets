@@ -76,13 +76,13 @@ class Snippet(QtCore.QObject):
         self.example = SnippetExample(self, xmpFilename)
     
     def addToAuthors(self, authors):
-        self.owner.addToAuthors(self.name, authors)
+        self.owner.addTo(self.owner.authors, self.name, authors)
         
     def addToCategory(self, catname):
-        self.owner.addToCategory(self.name, catname)
+        self.owner.addTo(self.owner.categories, self.name, catname)
     
     def addToTags(self, tags):
-        self.owner.addToTags(self.name, tags)
+        self.owner.addTo(self.owner.tags, self.name, tags)
         
     def hasExample(self):
         """return true if an example is defined."""
@@ -94,32 +94,21 @@ class Snippets(QtCore.QObject):
         super(Snippets, self).__init__()
         self.initLists()
 
-    def addToAuthors(self, name, authors):
-        for a in authors:
-            if not self.authors.get(a):
-                self.authors[a] = []
-                self.authornames.append(a)
-                self.authornames.sort()
-            self.authors[a].append(name)
-            self.authors[a].sort()
+    def addTo(self, target, snippet, entry):
+        if isinstance(entry, list):
+            for e in entry:
+                self.addToTarget(target, snippet, e)
+        else:
+            self.addToTarget(target, snippet, entry)
     
-    def addToCategory(self, name, category):
-        if not self.categories.get(category):
-            self.categories[category] = []
-            self.catnames.append(category)
-            self.catnames.sort()
-        self.categories[category].append(name)
-        self.categories[category].sort()
-        
-    def addToTags(self, name, tagstoadd):
-        for t in tagstoadd:
-            if not self.tags.get(t):
-                self.tags[t] = []
-                self.tagnames.append(t)
-                self.tagnames.sort()
-            self.tags[t].append(name)
-            self.tags[t].sort()
-        
+    def addToTarget(self, target, snippet, entry):
+        if not target.get(entry):
+            target[entry] = []
+            target['names'].append(entry)
+            target['names'].sort()
+        target[entry].append(snippet)
+        target[entry].sort()
+
     def byName(self, name):
         """Return a Snippets object if it is defined."""
         return self.snippets.get(name, None)
@@ -168,7 +157,7 @@ class Snippets(QtCore.QObject):
     def displayCategories(self):
         numcats = ' (' + str(len(self.categories)) + ')'
         result = ['Categories' + numcats, '==========', '']
-        for c in self.catnames:
+        for c in self.categories['names']:
             result.append(c + ' (' + str(len(self.categories[c])) + ')')
             for i in self.categories[c]:
                 result.append('- ' + i)
@@ -185,9 +174,9 @@ class Snippets(QtCore.QObject):
         return result
 
     def displayTags(self):
-        numtags = ' (' + str(len(self.tagnames)) + ')'
+        numtags = ' (' + str(len(self.tags['names'])) + ')'
         result = ['Tags' + numtags,  '====', '']
-        for t in self.tagnames:
+        for t in self.tags['names']:
             result.append(t + ' (' + str(len(self.tags[t])) + ')')
             for i in self.tags[t]:
                 result.append('- ' + i)
