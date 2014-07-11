@@ -51,6 +51,7 @@ class SnippetFile(QtCore.QObject):
 class SnippetDefinition(SnippetFile):
     """Definition of a snippet"""
     def __init__(self, owner, filename):
+        self.headerFields = {}
         super(SnippetDefinition, self).__init__(owner, filename)
     
     def parseFile(self):
@@ -84,21 +85,38 @@ class SnippetDefinition(SnippetFile):
             # this is only executed until a header is found.
             i += 1
         
-        #TODO: parse the definition file
-        #TEMPORARY!!!
-        self.readCategoryTags()
-        
-    def readCategoryTags(self):
-        #TODO: Implement this correctly.
-        # for now it serves only to get a list of used categories
-        for line in self.filecontent:
-            line = line.strip()
-            if line.startswith("snippet-author"):
-                self.owner.addToAuthors(self.tagList(line[line.find('\"')+1:-1]))
-            if line.startswith("snippet-category"):
-                self.owner.addToCategory(line[line.find('\"')+1:-1])
-            if line.startswith("tags"):
-                self.owner.addToTags(self.tagList(line[line.find('\"')+1:-1]))
+        self.parseHeader()
+
+    def parseHeader(self):
+        i = 0
+        # read in fields
+        while i < len(self.headercontent):
+            i = self.readField(i)
+        # handle the comma-separated-list fields
+        self.splitFields(['snippet-author', 'tags'])
+        # add snippet to lists for browsing by type
+        self.owner.addToAuthors(self.headerFields['snippet-author'])
+        self.owner.addToCategory(self.headerFields['snippet-category'])
+        self.owner.addToTags(self.headerFields['tags'])
+
+    def readField(self, i):
+        while not re.search('(.*) =', self.headercontent[i]):
+            i +=1
+        line = self.headercontent[i].strip()
+        fieldName = line[:line.find('=')-1].strip()
+        fieldContent = self.getFieldString(line)
+        #if not fieldContent:
+            
+        #print fieldName
+        self.headerFields[fieldName] = fieldContent
+        i += 1
+        return i
+
+    def splitFields(self, fields):
+        """Split fields that are given as comma-separated lists
+        into Python lists."""
+        for f in fields:
+            self.headerFields[f] = self.tagList(self.headerFields[f])
         
 class SnippetExample(SnippetFile):
     """Usage example for a snippet"""
