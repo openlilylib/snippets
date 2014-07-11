@@ -51,7 +51,22 @@ class SnippetFile(QtCore.QObject):
 class SnippetDefinition(SnippetFile):
     """Definition of a snippet"""
     def __init__(self, owner, filename):
-        self.headerFields = {}
+        # Define expected header fields
+        # Fields that are still None after parsing
+        # have not been defined in the snippet
+        self.headerFields = {
+            'snippet-title': None,
+            'snippet-short-description': None,
+            'snippet-author': None,
+            'snippet-source': None,
+            'snippet-description': None,
+            'snippet-category': None,
+            'tags': None,
+            'status': None,
+            'first-lilypond-version': None,
+            'last-lilypond-version': None,
+            'snippet-todo': None }
+            
         super(SnippetDefinition, self).__init__(owner, filename)
     
     def parseFile(self):
@@ -112,9 +127,6 @@ class SnippetDefinition(SnippetFile):
                 fieldContent.append(self.headercontent[i].strip())
                 i += 1
             
-            
-            
-        print fieldName
         self.headerFields[fieldName] = fieldContent
         i += 1
         return i
