@@ -16,11 +16,14 @@ class SnippetFile(QtCore.QObject):
         self.owner = owner
         self.filename = filename
         self.version = None
+        self.filecontent = None
         self.headercontent = []
         self.bodycontent = []
-        f = open(self.filename)
-        self.filecontent = f.readlines()
-        f.close()
+        try:
+            f = open(self.filename)
+            self.filecontent = f.readlines()
+        finally:
+            f.close()
         self.parseFile()
     
     def checkVersion(self, line):
