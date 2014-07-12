@@ -12,16 +12,22 @@ squeezeNotation = {
   
   % TODO: should use narrow accidentals when they're available,
   % http://code.google.com/p/lilypond/issues/detail?id=2203
+  % TODO: only make the override if the stencil exists
+  % (currently the function fails when the stencil is empty).
   \temporary \override Staff.Accidental #'stencil =
   #(lambda (grob)
      (ly:stencil-scale (ly:accidental-interface::print grob) 0.92 1))
   
   % TODO: design a narrow notehead glyph??
+  % TODO: only make the override if the stencil exists
+  % (currently the function fails when the stencil is empty).
   \temporary \override Staff.NoteHead #'stencil =
   #(lambda (grob)
      (ly:stencil-scale (ly:note-head::print grob) 0.96 1.02))
   
   % also, change tracking between letters (there is some snippet doing this)
+  % TODO: only make the override if the stencil exists
+  % (currently the function fails when the stencil is empty).
   \temporary \override Lyrics.LyricText #'stencil =
   #(lambda (grob)
      (ly:stencil-scale (lyric-text::print grob) 0.92 1))
