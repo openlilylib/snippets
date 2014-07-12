@@ -10,6 +10,8 @@
 squeezeNotation = {
   \temporary \override Staff.AccidentalPlacement #'right-padding = #-0.05
   
+  % TODO: also override LedgerLineSpanner.minimum-length-fraction
+  
   % TODO: should use narrow accidentals when they're available,
   % http://code.google.com/p/lilypond/issues/detail?id=2203
   % TODO: only make the override if the stencil exists
