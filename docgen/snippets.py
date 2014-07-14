@@ -121,7 +121,7 @@ class SnippetDefinition(SnippetFile):
         fieldName = line[:line.find('=')-1].strip()
         fieldContent = self.getFieldString(line)
         if not fieldContent:
-            fieldContent = [line[line.find('=')+2:].strip()]
+            fieldContent = []
             i += 1
             while not self.headercontent[i].strip() == '}':
                 fieldContent.append(self.headercontent[i].strip())
@@ -135,7 +135,12 @@ class SnippetDefinition(SnippetFile):
         """Split fields that are given as comma-separated lists
         into Python lists."""
         for f in fields:
-            self.headerFields[f] = self.tagList(self.headerFields[f])
+            lst = self.tagList(self.headerFields[f])
+            # if there is only one entry use a simple string
+            if len(lst) == 1:
+                lst = lst[0]
+            self.headerFields[f] = lst
+            
         
 class SnippetExample(SnippetFile):
     """Usage example for a snippet"""
