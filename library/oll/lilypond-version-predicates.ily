@@ -23,6 +23,13 @@
   status = "ready"
 
   snippet-todo = "Typechecking for the ver-list argument"
+
+  test-field = "rrr"
+  test-field-2 = \markup {
+    This is a
+    multiline
+    test field entry
+  }
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -117,6 +117,8 @@ class SnippetDefinition(SnippetFile):
     def readField(self, i):
         while not re.search('(.*) =', self.headercontent[i]):
             i +=1
+            if i == len(self.headercontent):
+                return i
         line = self.headercontent[i].strip()
         fieldName = line[:line.find('=')-1].strip()
         fieldContent = self.getFieldString(line)

@@ -55,7 +55,11 @@ class MetadataWidget(QtGui.QFrame):
             'first-lilypond-version', 
             'last-lilypond-version', 
             'snippet-description', 
+            'status', 
             'snippet-todo']
+        
+        # list containing names of non-standard fields contained in the file.
+        self.custFieldNames = []
         
         # create labels, line and text edits
         for f in self.stdFieldNames:
@@ -73,14 +77,14 @@ class MetadataWidget(QtGui.QFrame):
     def createLayout(self):
         """Line and text edits are shown alternatingly
         but initially added both to the layout."""
-        layout = QtGui.QGridLayout()
+        self.layout = QtGui.QGridLayout()
         row = 0
         for f in self.stdFieldNames:
-            layout.addWidget(self.hfLabels[f], row, 0)
-            layout.addWidget(self.hfLineEdits[f], row, 1)
-            layout.addWidget(self.hfTextEdits[f], row + 1, 0, 1, 2)
+            self.layout.addWidget(self.hfLabels[f], row, 0)
+            self.layout.addWidget(self.hfLineEdits[f], row, 1)
+            self.layout.addWidget(self.hfTextEdits[f], row + 1, 0, 1, 2)
             row += 2
-        self.setLayout(layout)
+        self.setLayout(self.layout)
     
     def createConnects(self):
         pass
@@ -89,6 +93,7 @@ class MetadataWidget(QtGui.QFrame):
         """Set the content of the data widget corresponding
         to the field name. Determine whether it is a single line
         or multiline entry and fill/show the right widget."""
+        
         
         te = self.hfTextEdits[fieldName]
         le = self.hfLineEdits[fieldName]
@@ -122,9 +127,38 @@ class MetadataWidget(QtGui.QFrame):
         else:
             self.snippet = snippet
 
+        # First populate the standard fields
         row = 0
         for f in self.stdFieldNames:
             self.setDataWidget(f, row)
+            row += 2
+        
+        # remove non-standard fields existing in the previously opened snippet
+        for f in self.custFieldNames:
+            self.layout.removeWidget(self.hfLabels[f])
+            self.hfLabels[f].close()
+            self.layout.removeWidget(self.hfTextEdits[f])
+            self.hfTextEdits[f].close()
+            self.layout.removeWidget(self.hfLineEdits[f])
+            self.hfLineEdits[f].close()
+        self.custFieldNames = []
+        
+        # add UI elements for any non-standard header fields
+        for f in snippet.definition.headerFields:
+            if not f in self.stdFieldNames:
+                self.custFieldNames.append(f)
+                self.hfLabels[f] = QtGui.QLabel(f + ':')
+                self.hfLineEdits[f] = QtGui.QLineEdit()
+                self.hfLineEdits[f].setReadOnly(True)
+                self.hfTextEdits[f] = QtGui.QPlainTextEdit()
+                self.hfTextEdits[f].setReadOnly(True)
+        self.custFieldNames.sort()
+        print self.custFieldNames
+        for f in self.custFieldNames:
+            self.layout.addWidget(self.hfLabels[f], row, 0)
+            self.setDataWidget(f, row)
+            self.layout.addWidget(self.hfLineEdits[f], row, 1)
+            self.layout.addWidget(self.hfTextEdits[f], row + 1, 0, 1, 2)
             row += 2
             
         self.show()
