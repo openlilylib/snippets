@@ -137,6 +137,12 @@ class MainWindow(QtGui.QMainWindow):
                 author.appendRow(QtGui.QStandardItem(s))
         self.modelBrowse.appendRow(byAuthor)
 
+    def showSnippet(self, snippet):
+        self.metadataWidget.showSnippet(snippet)
+        self.teDefinition.setText(''.join(snippet.definition.bodycontent))
+        self.teExample.setText(''.join(snippet.example.filecontent))
+        self.wvDocView.setHtml(snippet.htmlDocumentation())
+        
     def snippetRowClicked(self, index):
         """When clicking on a row with a snippet name
         'open' that snippet and show its data."""
@@ -146,9 +152,7 @@ class MainWindow(QtGui.QMainWindow):
         name = unicode(self.modelBrowse.itemFromIndex(index).text())
         snippet = self.snippets.byName(name)
         if snippet is not None:
-            self.metadataWidget.showSnippet(snippet)
-            self.teDefinition.setText(''.join(snippet.definition.bodycontent))
-            self.teExample.setText(''.join(snippet.example.filecontent))
+            self.showSnippet(snippet)
 
 def main(argv):
     global appInfo, mainWindow
