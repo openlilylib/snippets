@@ -108,7 +108,7 @@ class SnippetDefinition(SnippetFile):
         while i < len(self.headercontent):
             i = self.readField(i)
         # handle the comma-separated-list fields
-        self.splitFields(['snippet-author', 'tags'])
+        self.splitFields(['snippet-author', 'tags', 'status'])
         # add snippet to lists for browsing by type
         self.owner.addToAuthors(self.headerFields['snippet-author'])
         self.owner.addToCategory(self.headerFields['snippet-category'])
@@ -121,10 +121,10 @@ class SnippetDefinition(SnippetFile):
         fieldName = line[:line.find('=')-1].strip()
         fieldContent = self.getFieldString(line)
         if not fieldContent:
-            fieldContent = []
+            fieldContent = ""
             i += 1
             while not self.headercontent[i].strip() == '}':
-                fieldContent.append(self.headercontent[i].strip())
+                fieldContent += self.headercontent[i].strip() + '\n'
                 i += 1
             
         self.headerFields[fieldName] = fieldContent
