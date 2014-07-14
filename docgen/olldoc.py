@@ -5,6 +5,7 @@ import sys, os
 from PyQt4 import QtCore,  QtGui
 import snippets
 import metadata
+import docview
 
 class AppInfo(QtCore.QObject):
     """Stores global information about the application
@@ -53,6 +54,10 @@ class MainWindow(QtGui.QMainWindow):
         self.teExample = QtGui.QTextEdit()
         self.teExample.setReadOnly(True)
 
+        # Documentation Viewer
+        self.wvDocView = docview.DocView()
+        self.wvDocView.setHtml("<html><body><p>No snippet opened yet</p></body></html>")
+        
         # Buttons
         self.pbReread = QtGui.QPushButton("Read again")
         self.pbExit = QtGui.QPushButton("Exit")
@@ -83,6 +88,8 @@ class MainWindow(QtGui.QMainWindow):
         # usage example column
         cl.addWidget(self.labelExample, 2, 2)
         cl.addWidget(self.teExample, 3, 2)
+        # doc viewer
+        cl.addWidget(self.wvDocView, 3, 3)
         # button row
         cl.addWidget(self.pbReread, 5, 0)
         cl.addWidget(self.pbExit, 5, 2)
@@ -98,7 +105,7 @@ class MainWindow(QtGui.QMainWindow):
         self.snippets.read()
         #TEMPORARY
         self.displayTree()
-    
+            
     def displayTree(self):
         """Build a tree for browsing the library
         by snippet name, category, tag, author."""

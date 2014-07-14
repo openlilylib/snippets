@@ -180,6 +180,31 @@ class Snippet(QtCore.QObject):
     def hasExample(self):
         """return true if an example is defined."""
         return True if (self.example is not None) else False
+    
+    def htmlDocumentation(self):
+        import htmltemplates as tmpl
+        hf = self.definition.headerFields
+        
+        html = tmpl.detailDocHead
+        #html += tmpl.snippetTitle(hf['snippet-title'])
+        html += tmpl.headerFieldDoc(self, 'snippet-title')
+        html += tmpl.headerFieldDoc(self, 'snippet-short-description')
+        html += tmpl.headerFieldDoc(self, 'snippet-author')
+        html += "<hr />\n"
+        html += tmpl.headerFieldDoc(self, 'snippet-source')
+        html += tmpl.headerFieldDoc(self, 'snippet-category')
+        html += tmpl.headerFieldDoc(self, 'tags')
+        html += "<hr />\n"
+        html += tmpl.headerFieldDoc(self, 'snippet-description')
+        html += '<hr />\n<p>LilyPond Compatibility: (TODO when not specified)</p>'
+        html += tmpl.headerFieldDoc(self, 'first-lilypond-version')
+        html += tmpl.headerFieldDoc(self, 'last-lilypond-version')
+        html += tmpl.headerFieldDoc(self, 'status')
+        html += tmpl.headerFieldDoc(self, 'snippet-todo')
+        
+        html += tmpl.detailDocEnd
+        
+        return html
 
 class Snippets(QtCore.QObject):
     """Object holding a dictionary of snippets"""
