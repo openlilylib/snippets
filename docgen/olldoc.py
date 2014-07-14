@@ -30,9 +30,6 @@ class MainWindow(QtGui.QMainWindow):
         self.snippets = None
         self.readSnippets()
         
-        # TEMPORARY
-        self.temporaryFileDump()
-        
     def createComponents(self):
         self.labelOverview = QtGui.QLabel("Library directory: " + appInfo.defPath)
 
@@ -69,33 +66,31 @@ class MainWindow(QtGui.QMainWindow):
     def createLayout(self):
         centralWidget = QtGui.QWidget()
         centralLayout = cl = QtGui.QGridLayout()
+        
+        # layout for the snippet definition column
         snDefinitionLayout = sl = QtGui.QVBoxLayout()
-        snMetadataLayout = sm = QtGui.QGridLayout()
-        
-        
         cl.addLayout(sl, 3, 1)
-        #sl.addLayout(sm)
         sl.addWidget(self.metadataWidget)
         sl.addWidget(self.teDefinition)
 
+        # organize main window layout
         cl.addWidget(self.labelOverview, 0, 0, 1, 3)
+        # browser column
         cl.addWidget(self.labelBrowse, 2, 0)
         cl.addWidget(self.tvBrowse, 3, 0)
+        # definition column
         cl.addWidget(self.labelDefinition, 2, 1)
-#        cl.addWidget(self.teDefinition, 3, 1)
+        # usage example column
         cl.addWidget(self.labelExample, 2, 2)
         cl.addWidget(self.teExample, 3, 2)
+        # button row
         cl.addWidget(self.pbReread, 5, 0)
         cl.addWidget(self.pbExit, 5, 2)
+        
+        # complete layout
         centralWidget.setLayout(centralLayout)
         self.setCentralWidget(centralWidget)
     
-    def displaySnippetMetadata(self, snippet):
-        dfn = snippet.definition
-        self.leIncludeName.setText(snippet.name)
-        self.leSnippetTitle.setText(dfn.headerFields['snippet-title'])
-        self.leShortDesc.setText(' '.join(dfn.headerFields['snippet-short-description']))
-        
     def readSnippets(self):
         # create, read and parse snippets
         if not self.snippets:
@@ -105,6 +100,8 @@ class MainWindow(QtGui.QMainWindow):
         self.displayTree()
     
     def displayTree(self):
+        """Build a tree for browsing the library
+        by snippet name, category, tag, author."""
         self.modelBrowse.clear()
 
         numsnippets = ' (' + str(len(self.snippets.snippets)) + ')'
@@ -141,6 +138,11 @@ class MainWindow(QtGui.QMainWindow):
         self.modelBrowse.appendRow(byAuthor)
 
     def snippetRowClicked(self, index):
+        """When clicking on a row with a snippet name
+        'open' that snippet and show its data."""
+        
+        # determine the content of the clicked row
+        # and lookup a snippet if it exists.
         name = unicode(self.modelBrowse.itemFromIndex(index).text())
         snippet = self.snippets.byName(name)
         if snippet is not None:
@@ -148,17 +150,6 @@ class MainWindow(QtGui.QMainWindow):
             self.teDefinition.setText(''.join(snippet.definition.bodycontent))
             self.teExample.setText(''.join(snippet.example.filecontent))
 
-    def temporaryFileDump(self):
-        outfile = os.path.join(appInfo.docPath, 'categories.txt')
-        f = open(outfile, 'w')
-        try:
-            f.write("openlilylib contents\nList used categories and tags.\n\n")
-            f.write('\n'.join(self.snippets.displaySnippets()) + '\n\n')
-            f.write('\n'.join(self.snippets.displayCategories()) + '\n\n')
-            f.write('\n'.join(self.snippets.displayTags()) + '\n')
-        finally:
-            f.close()
-        
 def main(argv):
     global appInfo, mainWindow
     app = QtGui.QApplication(argv)
