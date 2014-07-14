@@ -136,6 +136,7 @@ class SnippetDefinition(SnippetFile):
         into Python lists."""
         for f in fields:
             lst = self.tagList(self.headerFields[f])
+            lst.sort()
             # if there is only one entry use a simple string
             if len(lst) == 1:
                 lst = lst[0]
