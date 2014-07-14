@@ -55,6 +55,7 @@ class MetadataWidget(QtGui.QFrame):
             'first-lilypond-version', 
             'last-lilypond-version', 
             'snippet-description', 
+            'status', 
             'snippet-todo']
         
         # create labels, line and text edits
