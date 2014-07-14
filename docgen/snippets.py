@@ -2,6 +2,7 @@
 # -*- coding: utf-8
 
 import os
+import re
 from PyQt4 import QtCore
 
 import __main__
@@ -14,11 +15,30 @@ class SnippetFile(QtCore.QObject):
         super(SnippetFile, self).__init__()
         self.owner = owner
         self.filename = filename
-        f = open(self.filename)
-        self.filecontent = f.readlines()
-        f.close()
+        self.version = None
+        self.filecontent = None
+        self.headercontent = []
+        self.bodycontent = []
+        try:
+            f = open(self.filename)
+            self.filecontent = f.readlines()
+        finally:
+            f.close()
         self.parseFile()
     
+    def checkVersion(self, line):
+        result = None
+        if line.strip().startswith('\\version'):
+            result = self.getFieldString(line)
+        return result
+        
+    def getFieldString(self, line):
+        """Return the part of 'line' between quotation marks if present."""
+        result = re.search('\"(.*)\"', line)
+        if result:
+            result = result.group(1)
+        return result
+        
     def parseFile(self):
         raise Exception("SnippetFile.parseFile() has to be " +
                         "implemented in subclasses")
@@ -31,24 +51,96 @@ class SnippetFile(QtCore.QObject):
 class SnippetDefinition(SnippetFile):
     """Definition of a snippet"""
     def __init__(self, owner, filename):
+        # Define expected header fields
+        # Fields that are still None after parsing
+        # have not been defined in the snippet
+        self.headerFields = {
+            'snippet-title': None,
+            'snippet-short-description': None,
+            'snippet-author': None,
+            'snippet-source': None,
+            'snippet-description': None,
+            'snippet-category': None,
+            'tags': None,
+            'status': None,
+            'first-lilypond-version': None,
+            'last-lilypond-version': None,
+            'snippet-todo': None }
+            
         super(SnippetDefinition, self).__init__(owner, filename)
     
     def parseFile(self):
-        #TODO: parse the definition file
-        #TEMPORARY!!!
-        self.readCategoryTags()
+        i = 0
+        while i < len(self.filecontent):
+            line = self.filecontent[i]
+            # Check for version string
+            if not self.version:
+                self.version = self.checkVersion(line)
+            
+            if line.strip().startswith('\\header'):
+                # Get the content of the \header section.
+                # ATTENTION: The section is considered finished when
+                # a line is encountered that has a '}' as its first character
+                # and no more content (except whitespace) after that.
+                i += 1
+                while not self.filecontent[i].rstrip() == '}':
+                    self.headercontent.append(self.filecontent[i])
+                    i += 1
+                
+                # After the header the first line containing anything
+                # except whitespace and comments is considered as starting
+                # the snippet body.
+                i += 1
+                while ((self.filecontent[i].strip() == '') 
+                            or self.filecontent[i].strip().startswith('%')):
+                    i += 1
+                self.bodycontent = self.filecontent[i:]
+                break
+                
+            # this is only executed until a header is found.
+            i += 1
         
-    def readCategoryTags(self):
-        #TODO: Implement this correctly.
-        # for now it serves only to get a list of used categories
-        for line in self.filecontent:
-            line = line.strip()
-            if line.startswith("snippet-author"):
-                self.owner.addToAuthors(self.tagList(line[line.find('\"')+1:-1]))
-            if line.startswith("snippet-category"):
-                self.owner.addToCategory(line[line.find('\"')+1:-1])
-            if line.startswith("tags"):
-                self.owner.addToTags(self.tagList(line[line.find('\"')+1:-1]))
+        self.parseHeader()
+
+    def parseHeader(self):
+        i = 0
+        # read in fields
+        while i < len(self.headercontent):
+            i = self.readField(i)
+        # handle the comma-separated-list fields
+        self.splitFields(['snippet-author', 'tags'])
+        # add snippet to lists for browsing by type
+        self.owner.addToAuthors(self.headerFields['snippet-author'])
+        self.owner.addToCategory(self.headerFields['snippet-category'])
+        self.owner.addToTags(self.headerFields['tags'])
+
+    def readField(self, i):
+        while not re.search('(.*) =', self.headercontent[i]):
+            i +=1
+        line = self.headercontent[i].strip()
+        fieldName = line[:line.find('=')-1].strip()
+        fieldContent = self.getFieldString(line)
+        if not fieldContent:
+            fieldContent = []
+            i += 1
+            while not self.headercontent[i].strip() == '}':
+                fieldContent.append(self.headercontent[i].strip())
+                i += 1
+            
+        self.headerFields[fieldName] = fieldContent
+        i += 1
+        return i
+
+    def splitFields(self, fields):
+        """Split fields that are given as comma-separated lists
+        into Python lists."""
+        for f in fields:
+            lst = self.tagList(self.headerFields[f])
+            # if there is only one entry use a simple string
+            if len(lst) == 1:
+                lst = lst[0]
+            self.headerFields[f] = lst
+            
         
 class SnippetExample(SnippetFile):
     """Usage example for a snippet"""

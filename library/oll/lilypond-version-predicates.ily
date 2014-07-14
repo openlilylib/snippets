@@ -4,9 +4,10 @@
   snippet-title = "Predicates for LilyPond version numbers"
   snippet-short-description = \markup {
     Compare the currently running LilyPond version
-    against a given version. }
+    against a given version.
+  }
   snippet-author = "Urs Liska"
-  snippet-description = {
+  snippet-description = \markup {
     This snippet provides a set of predicates (or comparison
     operators) for LilyPond version numbers.
     This is useful for implementing switches in functions
