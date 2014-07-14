@@ -8,7 +8,7 @@
 }
 
 %{ Usage:
-   Enter \ļineBreakMark whereever you want the dashed line to appear
+   Enter \lineBreakMark whereever you want the dashed line to appear
    This can be used at barlines or anywhere between.
 %}
 
