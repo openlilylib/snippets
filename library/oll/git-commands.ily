@@ -12,6 +12,7 @@
     The snippet has been started from an example given as a comment
     on the Scores of Beauty blog (see 'snippet-source').
   }
+  snippet-category = "project-management"
   % add comma-separated tags to make searching more effective:
   tags = "versioning,project history, archiving"
   % is this snippet ready?  See meta/status-values.md
