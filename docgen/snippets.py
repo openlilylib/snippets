@@ -6,6 +6,7 @@ import re
 from PyQt4 import QtCore
 
 import __main__
+import htmltemplates as tmpl
 
 class SnippetFile(QtCore.QObject):
     """Snippet file (both definition and usage example.
@@ -99,7 +100,7 @@ class SnippetDefinition(SnippetFile):
                 
             # this is only executed until a header is found.
             i += 1
-        
+
         self.parseHeader()
 
     def parseHeader(self):
@@ -108,7 +109,7 @@ class SnippetDefinition(SnippetFile):
         while i < len(self.headercontent):
             i = self.readField(i)
         # handle the comma-separated-list fields
-        self.splitFields(['snippet-author', 'tags'])
+        self.splitFields(['snippet-author', 'tags', 'status'])
         # add snippet to lists for browsing by type
         self.owner.addToAuthors(self.headerFields['snippet-author'])
         self.owner.addToCategory(self.headerFields['snippet-category'])
@@ -123,10 +124,10 @@ class SnippetDefinition(SnippetFile):
         fieldName = line[:line.find('=')-1].strip()
         fieldContent = self.getFieldString(line)
         if not fieldContent:
-            fieldContent = []
+            fieldContent = ""
             i += 1
             while not self.headercontent[i].strip() == '}':
-                fieldContent.append(self.headercontent[i].strip())
+                fieldContent += self.headercontent[i].strip() + '\n'
                 i += 1
             
         self.headerFields[fieldName] = fieldContent
@@ -138,6 +139,7 @@ class SnippetDefinition(SnippetFile):
         into Python lists."""
         for f in fields:
             lst = self.tagList(self.headerFields[f])
+            lst.sort()
             # if there is only one entry use a simple string
             if len(lst) == 1:
                 lst = lst[0]
@@ -181,6 +183,20 @@ class Snippet(QtCore.QObject):
     def hasExample(self):
         """return true if an example is defined."""
         return True if (self.example is not None) else False
+    
+    def htmlDetailPage(self):
+        """Return HTML for a documentation detail page."""
+        hf = self.definition.headerFields
+        
+        html = tmpl.detailDocHead
+        html += tmpl.titleDoc(self)
+        html += tmpl.headerFieldDoc(self, 'snippet-description')
+        html += tmpl.metaDoc(self)
+        html += tmpl.statusDoc(self)
+        html += tmpl.definitionBody(self)
+        html += tmpl.detailDocEnd
+        
+        return html
 
 class Snippets(QtCore.QObject):
     """Object holding a dictionary of snippets"""

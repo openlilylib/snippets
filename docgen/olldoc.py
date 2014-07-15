@@ -2,9 +2,10 @@
 # -*- coding: utf-8
 
 import sys, os
-from PyQt4 import QtCore,  QtGui
+from PyQt4 import QtCore,  QtGui, QtWebKit
 import snippets
 import metadata
+import docview
 
 class AppInfo(QtCore.QObject):
     """Stores global information about the application
@@ -43,16 +44,20 @@ class MainWindow(QtGui.QMainWindow):
         self.tvBrowse.header().hide()
 
         # Snippet Definition
-        self.labelDefinition = QtGui.QLabel("Snippet Definition:")
-        self.metadataWidget = metadata.MetadataWidget(self)
-        self.teDefinition = QtGui.QTextEdit()
-        self.teDefinition.setReadOnly(True)
+        # This is kept as a reminder. The MetadataWidget
+        # will later be used as an _editor_
+#        self.metadataWidget = metadata.MetadataWidget(self)
 
         # Snippet's Usage Example
         self.labelExample = QtGui.QLabel("Usage Example:")
         self.teExample = QtGui.QTextEdit()
         self.teExample.setReadOnly(True)
 
+        # Documentation Viewer
+        self.wvDocView = docview.DocView()
+        self.wvDocView.settings().setUserStyleSheetUrl(QtCore.QUrl.fromLocalFile(os.path.join(appInfo.docPath, 'css', 'detailPage.css')))
+        self.wvDocView.setHtml("<html><body><p>No snippet opened yet</p></body></html>")
+        
         # Buttons
         self.pbReread = QtGui.QPushButton("Read again")
         self.pbExit = QtGui.QPushButton("Exit")
@@ -66,26 +71,20 @@ class MainWindow(QtGui.QMainWindow):
     def createLayout(self):
         centralWidget = QtGui.QWidget()
         centralLayout = cl = QtGui.QGridLayout()
-        
-        # layout for the snippet definition column
-        snDefinitionLayout = sl = QtGui.QVBoxLayout()
-        cl.addLayout(sl, 3, 1)
-        sl.addWidget(self.metadataWidget)
-        sl.addWidget(self.teDefinition)
 
         # organize main window layout
         cl.addWidget(self.labelOverview, 0, 0, 1, 3)
         # browser column
         cl.addWidget(self.labelBrowse, 2, 0)
         cl.addWidget(self.tvBrowse, 3, 0)
-        # definition column
-        cl.addWidget(self.labelDefinition, 2, 1)
+        # doc viewer
+        cl.addWidget(self.wvDocView, 3, 2)
         # usage example column
-        cl.addWidget(self.labelExample, 2, 2)
-        cl.addWidget(self.teExample, 3, 2)
+        cl.addWidget(self.labelExample, 2, 3)
+        cl.addWidget(self.teExample, 3, 3)
         # button row
         cl.addWidget(self.pbReread, 5, 0)
-        cl.addWidget(self.pbExit, 5, 2)
+        cl.addWidget(self.pbExit, 5, 3)
         
         # complete layout
         centralWidget.setLayout(centralLayout)
@@ -98,7 +97,7 @@ class MainWindow(QtGui.QMainWindow):
         self.snippets.read()
         #TEMPORARY
         self.displayTree()
-    
+            
     def displayTree(self):
         """Build a tree for browsing the library
         by snippet name, category, tag, author."""
@@ -107,7 +106,8 @@ class MainWindow(QtGui.QMainWindow):
         numsnippets = ' (' + str(len(self.snippets.snippets)) + ')'
         byName = QtGui.QStandardItem('By Name' + numsnippets)
         for sn in self.snippets.names:
-            byName.appendRow(QtGui.QStandardItem(sn))
+            byName.appendRow(QtGui.QStandardItem(sn))        # usage example column
+
         self.modelBrowse.appendRow(byName)
 
         byCategory = QtGui.QStandardItem('By Category')
@@ -137,6 +137,11 @@ class MainWindow(QtGui.QMainWindow):
                 author.appendRow(QtGui.QStandardItem(s))
         self.modelBrowse.appendRow(byAuthor)
 
+    def showSnippet(self, snippet):
+        self.teExample.setText(''.join(snippet.example.filecontent))
+        html = snippet.htmlDetailPage()
+        self.wvDocView.setHtml(html)
+        
     def snippetRowClicked(self, index):
         """When clicking on a row with a snippet name
         'open' that snippet and show its data."""
@@ -146,9 +151,7 @@ class MainWindow(QtGui.QMainWindow):
         name = unicode(self.modelBrowse.itemFromIndex(index).text())
         snippet = self.snippets.byName(name)
         if snippet is not None:
-            self.metadataWidget.showSnippet(snippet)
-            self.teDefinition.setText(''.join(snippet.definition.bodycontent))
-            self.teExample.setText(''.join(snippet.example.filecontent))
+            self.showSnippet(snippet)
 
 def main(argv):
     global appInfo, mainWindow

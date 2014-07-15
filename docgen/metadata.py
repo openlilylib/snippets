@@ -48,13 +48,13 @@ class MetadataWidget(QtGui.QFrame):
         self.stdFieldNames = [
             'snippet-title', 
             'snippet-short-description', 
+            'snippet-description', 
             'snippet-author', 
             'snippet-source', 
             'snippet-category', 
             'tags', 
             'first-lilypond-version', 
             'last-lilypond-version', 
-            'snippet-description', 
             'status', 
             'snippet-todo']
         
