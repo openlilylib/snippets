@@ -1,0 +1,59 @@
+body {
+
+}
+
+h1 {
+	font-family: sans
+}
+	
+
+div {
+	border: 1px solid;
+	padding: 0.5em;
+	margin-bottom: 1em;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	padding-top: 0em;
+}
+
+div#title {
+	background-color: #203010;
+	color: rgb(240, 250, 230);
+	padding-top: 0em;
+}
+
+div#meta, div#status, div#lilypond {
+	background-color: rgb(240, 250, 230);
+}
+
+div#title div,
+div#meta div,
+div#status div {
+	margin: 0px;
+	border: 0px;
+}
+
+div.snippet-author {
+	}
+
+div.snippet-description {
+	-moz-border-radius:0px;
+	-webkit-border-radius:0px;
+	border-radius:0px;
+	border: 0px;
+	margin-bottom: 0px;
+}
+
+pre.lilypond {
+	background-color: rgb(240, 250, 230);
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	padding: 1em;
+}
+
+span.field-description {
+	font-family: sans-serif;
+	font-weight: bold;
+}

@@ -11,3 +11,4 @@
 
 # temporarily disable tracking of generated documentation:
 doc/*
+!/doc/css/
