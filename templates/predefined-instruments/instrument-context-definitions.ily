@@ -82,18 +82,19 @@ Ideally, this function should take the following arguments:
 TODOs
 Right now the function has some quirks (roughly in order of importance):
 
-  1) parentstaff and parentvoice should be derived from parentname,
-  there shouldn't be separate args for this.
+  1) The function should not require specifying parentstaff and parentvoice
+  contexts - they should be inferred from "parentname" argument
 
-  2) make newInstrument handle creating Midi contexts (when i tried it didn't work...
-  right now they are handled separately, which is bad.)
+  2) The function should handle creating appropriate Midi contexts (when i tried 
+  it didn't work... right now they are written manually.)
   
-  3) make \addLyrics smarter so that it could be used with these predefined instruments
-  (see comment in simple-example.ly)
+  3) make \addLyrics smarter so that it could be used with e.g. SopranoStaff with
+  SopranoVoice (see comment in simple-example.ly)
 
-  4) it'd be good if all \newInstrument definitions could be put in one \layout block.
+  4) make it so that all \newInstrument calls could be put in one \layout block.
 
-  Other improvements, refactoring etc. are also welcome.
+  Other improvements, refactoring etc. are also welcome.  I expect that the function
+  could be written in a much more elegant way.
 
   (for later)
   think how to handle two voices (eg SA) on one staff
