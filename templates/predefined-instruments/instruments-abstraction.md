@@ -1,3 +1,7 @@
+Below are my ideas for future developments that may follow predefined instrument
+contexts.  However, this won't happen before the function for easy creating custom
+contexts is finished and accepted into widespread use.
+
 After creating custom contexts, i'd like to push the idea even further
 and create a new abstraction layer: instruments.  An instrument has the
 following properties:

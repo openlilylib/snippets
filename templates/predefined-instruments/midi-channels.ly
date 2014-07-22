@@ -14,7 +14,9 @@ altomelody = \relative f' {
 }
 \score {
   \new ChoirStaff <<
-    % broken!  need to add WomenStaff definition
+    % FIXME
+    % two staves appear, while only one is wanted.
+    % probably i have to add WomenStaff definition
     \new SopranoStaff <<
       \new SopranoVoice {
         \voiceOne

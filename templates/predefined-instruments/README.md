@@ -14,6 +14,8 @@ This should help you.  The idea is that instead of writing
       \dynamicUp
       \set Staff.instrumentName = "Tenor"
       \set Staff.shortInstrumentName = "T"
+      \set Staff.midiInstrument = "choir aahs"
+      % etc...
       
       \music
     }
@@ -59,10 +61,8 @@ and [overriding-example.ly](overriding-example.ly)
 files.  Imagine how much boilerplate code would be needed to write
 these examples with plain LilyPond!
 
-Note: as of 2014-03-18, this is work-in-progress.
-The definitions of various vocal staves provide a proof of concept
-that demonstrates that the approach is valid.  There is an initial
-version of a function for generating all these contexts.
+Note: as of 2014-07-22, this is work-in-progress.
+There is an initial version of a function for generating predefined contexts.
 This function should be improved (I suppose that someone more experienced
-with Scheme and LilyPond internals should look at it)
-and all contexts defined using it.
+with Scheme and LilyPond internals should look at it) and all common "instruments"
+defined using it.

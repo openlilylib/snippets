@@ -1,7 +1,85 @@
 \version "2.19.1"
 
 %{
-  TODO (roughly in order of importance):
+As written in the README (see https://github.com/openlilylib/openlilylib/blob/master/templates/predefined-instruments/),
+the goal of this extension is to provide users with predefined contexts
+that can be used for creating \score blocks easily (see simple-example.ly
+for a demonstration).
+
+Of course, I could have defined all these contexts manually, but there
+would be too much boilerplate and code duplication that way.  Just look
+at the code needed to define a single new "instrument" (Staff + Voice
+contexts, both in \layout and in \midi):
+
+\layout {
+  \context {
+    \ChoirStaff
+    \accepts "SopranoStaff"
+  }
+  \context {
+    \Staff   % "inherit" all settings and overrides from Staff context
+    \name "SopranoStaff"
+    \alias "Staff"   % make overrides for Staff also work with SopranoStaff
+    \accepts "SopranoVoice"
+    \defaultchild "SopranoVoice"
+    \description "predefined template for soprano staff"
+
+    \consists "Ambitus_engraver"
+    \dynamicUp
+    \tupletUp
+    instrumentName = "Soprano"
+    shortInstrumentName = "S"
+    \clef G
+  }
+  \context {
+    % even if there are no specific Voice-level settings for this instrument,
+    % we want to create a special Voice-like context so that the user will be
+    % able to issue Voice-level overrides for this instrument.
+    \Voice
+    \name "SopranoVoice"
+    \alias "Voice"
+    \description "predefined template for soprano voice"
+  }
+}
+
+\midi {
+  \context {
+    \ChoirStaff
+    \accepts "SopranoStaff"
+  }
+  \context {
+    \Staff
+    \name "SopranoStaff"
+    \alias "Staff"
+    \accepts "SopranoVoice"
+    \defaultchild "SopranoVoice"
+  }
+  \context {
+    \Voice
+    \name "SopranoVoice"
+    \alias "Voice"
+  }
+}
+
+This is 45 lines of code, only 6 of which contain actual business logic
+for the new instrument.  Therefore, we need a function that will automate
+the process of creating new contexts; it should also help with creation
+of "context hierarchies".  For example, just as DrumVoice is a context
+that inherits settings from Voice, we would like to be able to easily
+define a VocalStaff (together with accompanying VocalVoice) together
+with Soprano/Alto/etc. Staves(Voices) that would "inherit" from
+VocalStaff(Voice).
+
+Ideally, this function should take the following arguments:
+- name of the new "instrument"
+- name of "instrument" from which we inherit settings - this may be
+  an optional argument (with the default being to inherit from Staff
+  and Voice contexts respectively)
+- name of the group type this instrument belongs to (i'm not really sure about this)
+- setting for staff and voice contexts.
+
+TODOs
+Right now the function has some quirks (roughly in order of importance):
 
   1) parentstaff and parentvoice should be derived from parentname,
   there shouldn't be separate args for this.
@@ -14,12 +92,16 @@
 
   4) it'd be good if all \newInstrument definitions could be put in one \layout block.
 
+  Other improvements, refactoring etc. are also welcome.
+
   (for later)
   think how to handle two voices (eg SA) on one staff
   -> what about ambitus in that case? Probably should be moved to voice.
   (for later)
   define other instruments
 %}
+
+
 newInstrument =
 #(define-scheme-function
   (parser location name parentstaff parentvoice parentname grouping staffsettings voicesettings)
@@ -64,7 +146,7 @@ newInstrument =
   }
   \with { }
 }
-% Why i cannot put this in one \layout????
+% Why i cannot put definitions of multiple contexts in one \layout????
 \layout {
   \newInstrument "Soprano" \VocalStaff \VocalVoice "Vocal" \ChoirStaff
   \with {
