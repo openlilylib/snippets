@@ -1,6 +1,7 @@
 \version "2.19.1"
 
-%{
+%{ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% DESCRIPTION
+
 As written in the README (see https://github.com/openlilylib/openlilylib/blob/master/templates/predefined-instruments/),
 the goal of this extension is to provide users with predefined contexts
 that can be used for creating \score blocks easily (see simple-example.ly
@@ -101,6 +102,7 @@ Right now the function has some quirks (roughly in order of importance):
   define other instruments
 %}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FUNCTION DEFINITION
 
 newInstrument =
 #(define-scheme-function
@@ -134,6 +136,8 @@ newInstrument =
         }
       }
     #}))
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% "INSTRUMENT" DEFINTIONS
 
 \layout {
   \newInstrument "Vocal" \Staff \Voice "" \ChoirStaff
@@ -184,7 +188,7 @@ newInstrument =
   \with { }
 }
 
-
+% ugh, this should be handled by newInstrument function, too.
 \midi {
   \context {
     \ChoirStaff
