@@ -54,7 +54,8 @@ newInstrument =
     #}))
 
 \layout {
-  \newInstrument "Vocal" \Staff \Voice "" \ChoirStaff \with {
+  \newInstrument "Vocal" \Staff \Voice "" \ChoirStaff
+  \with {
     \consists "Ambitus_engraver"
     instrumentName = "Vocals"
     shortInstrumentName = "Voc."
@@ -65,7 +66,8 @@ newInstrument =
 }
 % Why i cannot put this in one \layout????
 \layout {
-  \newInstrument "Soprano" \VocalStaff \VocalVoice "Vocal" \ChoirStaff \with {
+  \newInstrument "Soprano" \VocalStaff \VocalVoice "Vocal" \ChoirStaff
+  \with {
     instrumentName = "Soprano"
     shortInstrumentName = "S"
     \clef G
@@ -73,7 +75,8 @@ newInstrument =
   \with { }
 }
 \layout {
-  \newInstrument "Alto" \VocalStaff \VocalVoice "Vocal" \ChoirStaff \with {
+  \newInstrument "Alto" \VocalStaff \VocalVoice "Vocal" \ChoirStaff
+  \with {
     instrumentName = "Alto"
     shortInstrumentName = "A"
     \clef G
@@ -81,7 +84,8 @@ newInstrument =
   \with { }
 }
 \layout {
-  \newInstrument "Tenor" \VocalStaff \VocalVoice "Vocal" \ChoirStaff \with {
+  \newInstrument "Tenor" \VocalStaff \VocalVoice "Vocal" \ChoirStaff
+  \with {
     instrumentName = "Tenor"
     shortInstrumentName = "T"
     \clef "G_8"
@@ -89,7 +93,8 @@ newInstrument =
   \with { }
 }
 \layout {
-  \newInstrument "Bass" \VocalStaff \VocalVoice "Vocal" \ChoirStaff \with {
+  \newInstrument "Bass" \VocalStaff \VocalVoice "Vocal" \ChoirStaff
+  \with {
     instrumentName = "Bass"
     shortInstrumentName = "B"
     \clef F
