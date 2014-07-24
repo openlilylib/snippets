@@ -1,0 +1,77 @@
+Gonville
+
+a font of musical symbols, compatible with GNU Lilypond
+
+Introduction
+
+Gonville is a font of symbols for typesetting music: clefs, note heads, quaver
+tails, and so on. It is compatible with GNU Lilypond.
+
+I designed it because Lilypond's standard font (Feta) was not to my taste: I 
+found it to be (variously) over-ornate, strangely proportioned, and subtly not 
+like the music I was used to reading. Music set in Feta looks to me like 
+strangely stylised music; music set in Gonville just looks to me like music, 
+so I can read it without being distracted so much.
+
+Unfortunately, at the time of writing this, Lilypond contains no configuration
+option to select a different music font, so installing and using Gonville is 
+not completely trivial: you have to make a copy of the whole Lilypond data 
+directory, replace the fonts within that copy, and then set an environment 
+variable pointing to the copied directory. I've tried to make that as easy as 
+possible by providing a Unix shell script to construct the modified data 
+directory.
+
+What is not supported
+
+Gonville has been tested against Lilypond version 2.10.33 (the version shipped 
+in Debian 5.0), 2.12.2 and 2.13.5. It is possible that it will not work 
+properly with other versions, if the Lilypond developers choose to add new 
+glyphs or change the names under which they expect to find the existing ones. 
+I intend to try to keep Gonville up to date; if you find a problem with a 
+later version of Lilypond, let me know the details and I'll see what I can do.
+
+There are a few parts of the standard Lilypond font which I have not attempted
+to reproduce, so music using those features cannot be typeset in Gonville. The 
+missing elements are:
+
+- The longa note (twice as long as a breve). Unused in modern music.
+- Ancient music notation: any of Lilypond's non-default styles such as 
+  mensural, neomensural, petrucci and so on.
+- The set of differently shaped note heads for each note of the scale (enabled 
+  using shapeNoteStyles).
+
+Licence
+
+The Gonville font files themselves may be used without restriction. You don't 
+even have to preserve a copyright notice or anything. Use freely and enjoy.
+
+In particular, this means that you may embed the Gonville font or portions of
+it in PostScript, PDF, SVG or other document file formats without incurring 
+any constraint whatsoever on your subsequent use or licensing of those files.
+
+(On the other hand, if you're using the Gonville outlines in a context where 
+they might be mistaken for your own work, e.g. incorporating them into a music 
+typesetting program, it would be polite to give me credit for the design.)
+
+The source code that generates the font files (if you download the source 
+archive below, or look in the Subversion repository) is distributed under the 
+MIT licence.
+
+For more details, see the file called LICENCE in the distribution archive.
+
+The Subversion URL you need is svn://svn.tartarus.org/sgt/gonville. So you 
+could use a checkout command such as this:
+
+svn co svn://svn.tartarus.org/sgt/gonville
+
+Alternatively, you can browse the Subversion repository on the WWW, here.
+
+Feedback
+
+Please report problems to anakin@pobox.com.
+
+You might find it helpful to read this article before reporting a bug.
+
+(comments to anakin@pobox.com) 
+(thanks to chiark for hosting this page) 
+(last modified on Mon Sep 19 20:44:26 2011)
