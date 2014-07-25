@@ -172,3 +172,15 @@ foobar = {
   }
 }
 
+\score {
+  { \foobar }
+  \layout {
+    \set PianoStaff.instrumentName = "Ross"
+    #(define font-defaults
+       '((font-family . ross) (font-encoding . fetaMusic)))
+    \override Staff.TimeSignature.font-family = #'ross
+    \override Staff.TrillSpanner.font-family = #'ross
+    \override Staff.DynamicText.font-family = #'ross
+  }
+}
+
