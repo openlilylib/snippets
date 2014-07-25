@@ -3,7 +3,7 @@
 \include "context-creating-function.ily"
 
 \layout {
-  \newInstrument "Vocal" \Staff \Voice "" \ChoirStaff
+  \newLayoutInstrument "Vocal" \Staff \Voice "" \ChoirStaff
   \with {
     \consists "Ambitus_engraver"
     instrumentName = "Vocals"
@@ -13,9 +13,19 @@
   }
   \with { }
 }
-% Why i cannot put definitions of multiple contexts in one \layout????
+\midi {
+  \newMidiInstrument "Vocal" \Staff \Voice "" \ChoirStaff
+  \with {
+    \remove "Staff_performer"
+  }
+  \with {
+    \consists "Staff_performer"
+    midiInstrument = "voice oohs"
+  }
+}
+
 \layout {
-  \newInstrument "Soprano" \VocalStaff \VocalVoice "Vocal" \ChoirStaff
+  \newLayoutInstrument "Soprano" \VocalStaff \VocalVoice "Vocal" \ChoirStaff
   \with {
     instrumentName = "Soprano"
     shortInstrumentName = "S"
@@ -23,8 +33,14 @@
   }
   \with { }
 }
+\midi {
+  \newMidiInstrument "Soprano" \VocalStaff \VocalVoice "Vocal" \ChoirStaff
+  \with { }
+  \with { }
+}
+
 \layout {
-  \newInstrument "Alto" \VocalStaff \VocalVoice "Vocal" \ChoirStaff
+  \newLayoutInstrument "Alto" \VocalStaff \VocalVoice "Vocal" \ChoirStaff
   \with {
     instrumentName = "Alto"
     shortInstrumentName = "A"
@@ -32,8 +48,14 @@
   }
   \with { }
 }
+\midi {
+  \newMidiInstrument "Alto" \VocalStaff \VocalVoice "Vocal" \ChoirStaff
+  \with { }
+  \with { }
+}
+
 \layout {
-  \newInstrument "Tenor" \VocalStaff \VocalVoice "Vocal" \ChoirStaff
+  \newLayoutInstrument "Tenor" \VocalStaff \VocalVoice "Vocal" \ChoirStaff
   \with {
     instrumentName = "Tenor"
     shortInstrumentName = "T"
@@ -41,8 +63,14 @@
   }
   \with { }
 }
+\midi {
+  \newMidiInstrument "Tenor" \VocalStaff \VocalVoice "Vocal" \ChoirStaff
+  \with { }
+  \with { }
+}
+
 \layout {
-  \newInstrument "Bass" \VocalStaff \VocalVoice "Vocal" \ChoirStaff
+  \newLayoutInstrument "Bass" \VocalStaff \VocalVoice "Vocal" \ChoirStaff
   \with {
     instrumentName = "Bass"
     shortInstrumentName = "B"
@@ -50,80 +78,8 @@
   }
   \with { }
 }
-
-% ugh, this should be handled by newInstrument function, too.
 \midi {
-  \context {
-    \ChoirStaff
-    \accepts "VocalStaff"
-    \accepts "SopranoStaff"
-    \accepts "AltoStaff"
-    \accepts "TenorStaff"
-    \accepts "BassStaff"
-  }
-
-  \context {
-    \Staff
-    \name "VocalStaff"
-    \alias "Staff"
-    \accepts "VocalVoice"
-    \defaultchild "VocalVoice"
-    \remove "Staff_performer"
-  }
-  \context {
-    \VocalStaff
-    \name "SopranoStaff"
-    \alias "VocalStaff"
-    \accepts "SopranoVoice"
-    \defaultchild "SopranoVoice"
-  }
-  \context {
-    \VocalStaff
-    \name "AltoStaff"
-    \alias "VocalStaff"
-    \accepts "AltoVoice"
-    \defaultchild "AltoVoice"
-  }
-  \context {
-    \VocalStaff
-    \name "TenorStaff"
-    \alias "VocalStaff"
-    \accepts "TenorVoice"
-    \defaultchild "TenorVoice"
-  }
-  \context {
-    \VocalStaff
-    \name "BassStaff"
-    \alias "VocalStaff"
-    \accepts "BassVoice"
-    \defaultchild "BassVoice"
-  }
-
-  \context {
-    \Voice
-    \name "VocalVoice"
-    \alias "Voice"
-    \consists "Staff_performer"
-    midiInstrument = "voice oohs"
-  }
-  \context {
-    \VocalVoice
-    \name "SopranoVoice"
-    \alias "VocalVoice"
-  }
-  \context {
-    \VocalVoice
-    \name "AltoVoice"
-    \alias "VocalVoice"
-  }
-  \context {
-    \VocalVoice
-    \name "TenorVoice"
-    \alias "VocalVoice"
-  }
-  \context {
-    \VocalVoice
-    \name "BassVoice"
-    \alias "VocalVoice"
-  }
+  \newMidiInstrument "Bass" \VocalStaff \VocalVoice "Vocal" \ChoirStaff
+  \with { }
+  \with { }
 }

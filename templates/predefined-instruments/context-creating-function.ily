@@ -105,7 +105,7 @@ Right now the function has some quirks (roughly in order of importance):
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FUNCTION DEFINITION
 
-newInstrument =
+newLayoutInstrument =
 #(define-scheme-function
   (parser location name parentstaff parentvoice parentname grouping staffsettings voicesettings)
   (string? ly:context-def? ly:context-def? string? ly:context-def? ly:context-mod? ly:context-mod?)
@@ -124,6 +124,40 @@ newInstrument =
           \name #staffname
           \alias #parentstaffname
           \accepts #voicename % is it possible to make it accept Voices of derived instruments?
+          \defaultchild #voicename
+
+          #staffsettings
+        }
+        \context {
+          #parentvoice
+          \name #voicename
+          \alias #parentvoicename
+
+          #voicesettings
+        }
+      }
+    #}))
+
+%% UGH!!! CODE DUPLICATION!!! UUUUUUUGH!!!
+newMidiInstrument =
+#(define-scheme-function
+  (parser location name parentstaff parentvoice parentname grouping staffsettings voicesettings)
+  (string? ly:context-def? ly:context-def? string? ly:context-def? ly:context-mod? ly:context-mod?)
+  (let ((staffname (string-append name "Staff"))
+        (voicename (string-append name "Voice"))
+        (parentstaffname (string-append parentname "Staff"))
+        (parentvoicename (string-append parentname "Voice")))
+    #{
+      \midi {
+        \context {
+          #grouping
+          \accepts #staffname
+        }
+        \context {
+          #parentstaff
+          \name #staffname
+          \alias #parentstaffname
+          \accepts #voicename
           \defaultchild #voicename
 
           #staffsettings
