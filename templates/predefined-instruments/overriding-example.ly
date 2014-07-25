@@ -20,9 +20,9 @@ text = \lyricmode {
 
 \score {
   \new ChoirStaff <<
-    % cannot use \addlyrics because it's dumb
-    % and would create a plain Voice
     \new SopranoVoice = sop \sopranomelody
+    % cannot use  \addlyrics \text  because it would result
+    % in ordinary Voice being created (instead of SopranoVoice)
     \new Lyrics \lyricsto sop \text
 
     \new AltoVoice = alt \altomelody

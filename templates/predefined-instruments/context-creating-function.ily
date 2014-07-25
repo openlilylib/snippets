@@ -79,19 +79,16 @@ Ideally, this function should take the following arguments:
 - name of the group type this instrument belongs to (i'm not really sure about this)
 - setting for staff and voice contexts.
 
-TODOs
-Right now the function has some quirks (roughly in order of importance):
+TODO:
+1) make \addLyrics smarter so that it could be used here (see overriding-example.ly)
+2) remove code duplication; general cleanup.
 
-  1) make \addLyrics smarter so that it could be used with e.g. SopranoStaff with
-  SopranoVoice (see comment in simple-example.ly)
+(for later)
+think how to handle two voices (eg SA) on one staff
+-> what about ambitus in that case? Probably should be moved to voice.
 
-  2) remove code duplication; general cleanup.
-
-  (for later)
-  think how to handle two voices (eg SA) on one staff
-  -> what about ambitus in that case? Probably should be moved to voice.
-  (for later)
-  define other instruments
+(for later)
+define other instruments
 %}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FUNCTION DEFINITION
