@@ -82,19 +82,10 @@ Ideally, this function should take the following arguments:
 TODOs
 Right now the function has some quirks (roughly in order of importance):
 
-  1) The function should not require specifying parentstaff and parentvoice
-  contexts - they should be inferred from "parentname" argument
-
-  2) The function should handle creating appropriate Midi contexts (when i tried
-  it didn't work... right now they are written manually.)
-
-  3) make \addLyrics smarter so that it could be used with e.g. SopranoStaff with
+  1) make \addLyrics smarter so that it could be used with e.g. SopranoStaff with
   SopranoVoice (see comment in simple-example.ly)
 
-  4) make it so that all \newInstrument calls could be put in one \layout block.
-
-  Other improvements, refactoring etc. are also welcome.  I expect that the function
-  could be written in a much more elegant way.
+  2) remove code duplication; general cleanup.
 
   (for later)
   think how to handle two voices (eg SA) on one staff
@@ -105,69 +96,67 @@ Right now the function has some quirks (roughly in order of importance):
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FUNCTION DEFINITION
 
-newLayoutInstrument =
+% Create a new xxxStaff and xxxVoice contexts with specified settings,
+% derived from specified yyyStaff and yyyVoice contexts.
+newInstrument =
 #(define-scheme-function
-  (parser location name parentstaff parentvoice parentname grouping staffsettings voicesettings)
-  (string? ly:context-def? ly:context-def? string? ly:context-def? ly:context-mod? ly:context-mod?)
-  (let ((staffname (string-append name "Staff"))
-        (voicename (string-append name "Voice"))
-        (parentstaffname (string-append parentname "Staff"))
-        (parentvoicename (string-append parentname "Voice")))
-    #{
-      \layout {
-        \context {
-          #grouping
-          \accepts #staffname
-        }
-        \context {
-          #parentstaff
-          \name #staffname
-          \alias #parentstaffname
-          \accepts #voicename % is it possible to make it accept Voices of derived instruments?
-          \defaultchild #voicename
+  (parser location name parent-name group-name staff-settings voice-settings)
+  (string? string? string? ly:context-mod? ly:context-mod?)
+  (let* ((staff-name (string-append name "Staff"))
+         (voice-name (string-append name "Voice"))
+         (parent-name (if (string=? parent-name "default") "" parent-name))
+         (parent-staff-name (string-append parent-name "Staff"))
+         (parent-voice-name (string-append parent-name "Voice")))
+    (ly:parser-define! parser '$defaultlayout
+      #{
+        \layout {
+          \context {
+            $(module-ref (current-module) (string->symbol group-name))
+            \accepts #staff-name
+          }
+          \context {
+            $(module-ref (current-module) (string->symbol parent-staff-name))
+            \name #staff-name
+            \alias #parent-staff-name
+            % is it possible to make it accept Voices of derived instruments?
+            \accepts #voice-name
+            \defaultchild #voice-name
 
-          #staffsettings
-        }
-        \context {
-          #parentvoice
-          \name #voicename
-          \alias #parentvoicename
+            #staff-settings
+          }
+          \context {
+            $(module-ref (current-module) (string->symbol parent-voice-name))
+            \name #voice-name
+            \alias #parent-voice-name
 
-          #voicesettings
+            #voice-settings
+          }
         }
-      }
-    #}))
+      #})
+    ;; UGH! code duplication!
+    (ly:parser-define! parser '$defaultmidi
+      #{
+        \midi {
+          \context {
+            $(module-ref (current-module) (string->symbol group-name))
+            \accepts #staff-name
+          }
+          \context {
+            $(module-ref (current-module) (string->symbol parent-staff-name))
+            \name #staff-name
+            \alias #parent-staff-name
+            % is it possible to make it accept Voices of derived instruments?
+            \accepts #voice-name
+            \defaultchild #voice-name
 
-%% UGH!!! CODE DUPLICATION!!! UUUUUUUGH!!!
-newMidiInstrument =
-#(define-scheme-function
-  (parser location name parentstaff parentvoice parentname grouping staffsettings voicesettings)
-  (string? ly:context-def? ly:context-def? string? ly:context-def? ly:context-mod? ly:context-mod?)
-  (let ((staffname (string-append name "Staff"))
-        (voicename (string-append name "Voice"))
-        (parentstaffname (string-append parentname "Staff"))
-        (parentvoicename (string-append parentname "Voice")))
-    #{
-      \midi {
-        \context {
-          #grouping
-          \accepts #staffname
-        }
-        \context {
-          #parentstaff
-          \name #staffname
-          \alias #parentstaffname
-          \accepts #voicename
-          \defaultchild #voicename
+            #staff-settings
+          }
+          \context {
+            $(module-ref (current-module) (string->symbol parent-voice-name))
+            \name #voice-name
+            \alias #parent-voice-name
 
-          #staffsettings
+            #voice-settings
+          }
         }
-        \context {
-          #parentvoice
-          \name #voicename
-          \alias #parentvoicename
-
-          #voicesettings
-        }
-      }
-    #}))
+      #})))
