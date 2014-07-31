@@ -7,80 +7,20 @@ the goal of this extension is to provide users with predefined contexts
 that can be used for creating \score blocks easily (see simple-example.ly
 for a demonstration).
 
-Of course, I could have defined all these contexts manually, but there
-would be too much boilerplate and code duplication that way.  Just look
-at the code needed to define a single new "instrument" (Staff + Voice
-contexts, both in \layout and in \midi):
+Since defining such contexts manually is a *LOT* of work (30-40 lines of
+boilerplate for each instrument), below is a function that automates the
+process of creating new contexts.
 
-\layout {
-  \context {
-    \ChoirStaff
-    \accepts "SopranoStaff"
-  }
-  \context {
-    \Staff   % "inherit" all settings and overrides from Staff context
-    \name "SopranoStaff"
-    \alias "Staff"   % make overrides for Staff also work with SopranoStaff
-    \accepts "SopranoVoice"
-    \defaultchild "SopranoVoice"
-    \description "predefined template for soprano staff"
+This function allows to add new contexts into a sort of hierarchy:
+just as DrumStaff and DrumVoice are contexts that inherit settings from
+Staff and Voice, we can define e.g. a VocalStaff (with accompanying
+VocalVoice), Soprano/Alto/... Staves (and Voices) inheriting from
+VocalStaff(Voice), etc.
 
-    \consists "Ambitus_engraver"
-    \dynamicUp
-    \tupletUp
-    instrumentName = "Soprano"
-    shortInstrumentName = "S"
-    \clef G
-  }
-  \context {
-    % even if there are no specific Voice-level settings for this instrument,
-    % we want to create a special Voice-like context so that the user will be
-    % able to issue Voice-level overrides for this instrument.
-    \Voice
-    \name "SopranoVoice"
-    \alias "Voice"
-    \description "predefined template for soprano voice"
-  }
-}
-
-\midi {
-  \context {
-    \ChoirStaff
-    \accepts "SopranoStaff"
-  }
-  \context {
-    \Staff
-    \name "SopranoStaff"
-    \alias "Staff"
-    \accepts "SopranoVoice"
-    \defaultchild "SopranoVoice"
-  }
-  \context {
-    \Voice
-    \name "SopranoVoice"
-    \alias "Voice"
-  }
-}
-
-This is 45 lines of code, only 6 of which contain actual business logic
-for the new instrument.  Therefore, we need a function that will automate
-the process of creating new contexts; it should also help with creation
-of "context hierarchies".  For example, just as DrumVoice is a context
-that inherits settings from Voice, we would like to be able to easily
-define a VocalStaff (together with accompanying VocalVoice) together
-with Soprano/Alto/etc. Staves(Voices) that would "inherit" from
-VocalStaff(Voice).
-
-Ideally, this function should take the following arguments:
-- name of the new "instrument"
-- name of "instrument" from which we inherit settings - this may be
-  an optional argument (with the default being to inherit from Staff
-  and Voice contexts respectively)
-- name of the group type this instrument belongs to (i'm not really sure about this)
-- setting for staff and voice contexts.
 
 TODO:
-1) make \addLyrics smarter so that it could be used here (see overriding-example.ly)
+1) make \addLyrics smarter so that it could be used with these custom contexts
+   (see overriding-example.ly)
 2) remove code duplication; general cleanup.
 
 (for later)
@@ -89,6 +29,7 @@ think how to handle two voices (eg SA) on one staff
 
 (for later)
 define other instruments
+
 %}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FUNCTION DEFINITION
