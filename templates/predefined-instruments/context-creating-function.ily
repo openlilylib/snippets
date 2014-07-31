@@ -97,8 +97,11 @@ define other instruments
 % derived from specified yyyStaff and yyyVoice contexts.
 newInstrument =
 #(define-scheme-function
-  (parser location name parent-name staff-settings voice-settings)
-  (string? string? ly:context-mod? ly:context-mod?)
+  (parser location name staff-settings voice-settings parent-name)
+  (string?
+   (ly:context-mod? #{ \with {} #})
+   (ly:context-mod? #{ \with {} #})
+   string?)
   (let* ((staff-name (string-append name "Staff"))
          (voice-name (string-append name "Voice"))
          (parent-name (if (string=? parent-name "default") "" parent-name))

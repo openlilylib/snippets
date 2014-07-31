@@ -2,7 +2,7 @@
 
 \include "context-creating-function.ily"
 
-\newInstrument "Vocal" "default"
+\newInstrument "Vocal"
 \with {
   \consists "Ambitus_engraver"
   instrumentName = "Vocals"
@@ -15,35 +15,36 @@
   \consists "Staff_performer"
   midiInstrument = "voice oohs"
 }
+"default"
 
-\newInstrument "Soprano" "Vocal"
+\newInstrument "Soprano"
 \with {
   instrumentName = "Soprano"
   shortInstrumentName = "S"
   \clef G
 }
-\with { }
+"Vocal"
 
-\newInstrument "Alto" "Vocal"
+\newInstrument "Alto"
 \with {
   instrumentName = "Alto"
   shortInstrumentName = "A"
   \clef G
 }
-\with { }
+"Vocal"
 
-\newInstrument "Tenor" "Vocal"
+\newInstrument "Tenor"
 \with {
   instrumentName = "Tenor"
   shortInstrumentName = "T"
-    \clef "G_8"
+  \clef "G_8"
 }
-\with { }
+"Vocal"
 
-\newInstrument "Bass" "Vocal"
+\newInstrument "Bass"
 \with {
-    instrumentName = "Bass"
-    shortInstrumentName = "B"
-    \clef F
+  instrumentName = "Bass"
+  shortInstrumentName = "B"
+  \clef F
 }
-\with { }
+"Vocal"
