@@ -97,8 +97,8 @@ define other instruments
 % derived from specified yyyStaff and yyyVoice contexts.
 newInstrument =
 #(define-scheme-function
-  (parser location name parent-name group-name staff-settings voice-settings)
-  (string? string? string? ly:context-mod? ly:context-mod?)
+  (parser location name parent-name staff-settings voice-settings)
+  (string? string? ly:context-mod? ly:context-mod?)
   (let* ((staff-name (string-append name "Staff"))
          (voice-name (string-append name "Voice"))
          (parent-name (if (string=? parent-name "default") "" parent-name))
@@ -108,7 +108,10 @@ newInstrument =
       #{
         \layout {
           \context {
-            $(module-ref (current-module) (string->symbol group-name))
+            % I don't know why, but this code makes ChoirStaffs accept new
+            % instrument as well.  See this question asked on the mailing list:
+            % http://lists.gnu.org/archive/html/bug-lilypond/2014-07/msg00129.html
+            \StaffGroup
             \accepts #staff-name
           }
           \context {
@@ -135,7 +138,7 @@ newInstrument =
       #{
         \midi {
           \context {
-            $(module-ref (current-module) (string->symbol group-name))
+            \StaffGroup
             \accepts #staff-name
           }
           \context {
