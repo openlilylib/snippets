@@ -59,6 +59,10 @@ newInstrument =
             \accepts #staff-name
           }
           \context {
+            \ChoirStaff
+            \accepts #staff-name
+          }
+          \context {
             $(module-ref (current-module) (string->symbol parent-staff-name))
             \name #staff-name
             \alias #parent-staff-name
@@ -83,6 +87,10 @@ newInstrument =
         \midi {
           \context {
             \StaffGroup
+            \accepts #staff-name
+          }
+          \context {
+            \ChoirStaff
             \accepts #staff-name
           }
           \context {
