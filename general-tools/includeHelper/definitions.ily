@@ -21,7 +21,7 @@ includePattern =
 #(define-void-function (parser location idir pattern)(string? string?)
                        (let ((dirname (string-append (location-extract-path location) idir))
                              (includefiles '())
-                             (pattern-regexp (make-regexp pattern))
+                             (pattern-regexp (make-regexp pattern)))
 
                              (if (or (= (string-length dirname) 0)
                                      (not (eq? #\/ (string-ref dirname (- (string-length dirname) 1)))))
