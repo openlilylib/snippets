@@ -1,6 +1,6 @@
 \version "2.16.2"
 
-\include "oll-base.ily"
+%\include "oll-base.ily"
 
 \header {
   oll-title = "Git repository information"
@@ -21,16 +21,16 @@
     (i.e. whether the score represents the state of a commit or contains
     modifications in the working tree).
 
-    The generic command \ollCommand gitCommand can be used to issue arbitrary Git
+    The generic command gitCommand can be used to issue arbitrary Git
     commands. For a list of defined commands see the usage example.
   }
   oll-usage = \markup \justify {
-    The generic function \ollCommand gitCommand can be used to invoke a Git
+    The generic function gitCommand can be used to invoke a Git
     command and print its result. The command expects a string with the Git
     command without the \typewriter git keyword, e.g. \typewriter
     { rev-parse --short HEAD }. Please note that only the first line of that
-    command will be considered. The result is returned as a \ollCommand markup
-    \ollCommand column{}. Please be very careful with commands that might
+    command will be considered. The result is returned as a markup
+    column{}. Please be very careful with commands that might
     actually \italic modify the repository because no checks will be done
     whatsoever. You're on your own risk here!
 
