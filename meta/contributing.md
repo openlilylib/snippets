@@ -34,10 +34,10 @@ All snippets should have a usage example.  In some cases (for example
 snippets from "simple-examples" category), the snippet itself will
 provide an example, but in case of "advanced" snippets the example
 should be placed in a separate file.  This is because we want the
-snippets to be "indcludeable": if a snippet defines some useful function,
+snippets to be "includeable": if a snippet defines some useful function,
 we want to just download an `.ily` file with the definition and `\include` it,
 without having to remove usage examples from the included file.
-Such mutli-file snippets should always be placed in their own subdirectories.
+Such multi-file snippets should always be placed in their own subdirectories.
 
 If your snippet is complex and needs lots of explanation, we recommend
 writing it in a [Markdown](http://en.wikipedia.org/wiki/Markdown)-
