@@ -19,6 +19,18 @@
 
 together = { \tag #'together <>^\markup \bold "a2" }
 
+ensureSync =
+#(define-music-function (parser location m1 m2) (ly:music? ly:music?)
+   #{
+     <<
+       % ensure that following music will be synchronized
+       % both in score and parts even when m1 and m2 have
+       % different length.
+       #(skip-of-length m1)
+       #(skip-of-length m2)
+     >>
+   #})
+
 soloI =
 #(define-music-function (parser location mus) (ly:music?)
    #{
@@ -38,6 +50,7 @@ sharedStems =
        \tag divII { #m2 }
        \tag together <>^\markup \bold "div"
        \tag together << #m1 #m2 >>
+       \ensureSync #m1 #m2
      >>
    #})
 
@@ -48,6 +61,7 @@ voiceDivisi =
        \tag divI  { #m1 }
        \tag divII { #m2 }
        \tag together << { \dynamicUp #m1 } \\ { \dynamicDown #m2 } >>
+       \ensureSync #m1 #m2
      >>
    #})
 
@@ -60,6 +74,7 @@ staffDivisi =
        \tag divII { #m2 }
        \tag together #(skip-of-length m1)
        \tag together #(skip-of-length m2)
+       \ensureSync #m1 #m2
      >>
      \set Staff.keepAliveInterfaces = #'()
    #})
