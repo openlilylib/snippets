@@ -22,7 +22,8 @@ scaleVerticalSpacingPageLayout =
 #(define-scheme-function (parser location arg) (number-or-list?)
    "Multiplies the default values of the flexible vertical spacing paper 
     variables by the amounts specified in @{arg}, a number or alist. 
-    Returns a paper block."
+    Returns a paper block. See:
+    http://lilypond.org/doc/v2.18/Documentation/notation/flexible-vertical-spacing-paper-variables"
    (let*
     ;; Get scaling factors from arg.
     ((all (or (assq-ref arg 'all) (if (number? arg) arg)))
@@ -73,7 +74,8 @@ scaleVerticalSpacingInSystems =
 #(define-scheme-function (parser location arg) (number-or-list?)
    "Multiplies the default values of the grob-properties that affect 
     flexible vertical spacing within systems by the amounts specified 
-    in @{arg}, a number or alist.  Returns a layout block."
+    in @{arg}, a number or alist.  Returns a layout block. See:
+    http://lilypond.org/doc/v2.18/Documentation/notation/flexible-vertical-spacing-within-systems"
    ;; FretBoards do not set any grob-properties in VerticalAxisGroup,
    ;; so there's nothing to scale for them, so they are not included.
    (let*
