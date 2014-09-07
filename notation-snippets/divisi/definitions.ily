@@ -79,6 +79,21 @@ staffDivisi =
      \set Staff.keepAliveInterfaces = #'()
    #})
 
+clearTags =
+#(define-music-function (parser location tags music)
+   (symbol-list-or-symbol? ly:music?)
+   (_i "Remove the tags in @var{tags} from @var{music}, leaving the music
+in place. @var{tags} may be either a single symbol or a list of symbols.")
+   (for-some-music
+    (lambda (m)
+      (let ((oldtags (ly:music-property m 'tags)))
+        (if (pair? oldtags)
+            (ly:music-set-property! m 'tags
+              (remove (lambda (t) (memq t tags)) oldtags)))
+        #f)) ;for-some-music recurses into 'm' iff we return #f
+    music)
+   music)
+
 divisibleStaff =
 #(define-music-function (parser location name music) (string? ly:music?)
    (let ((nameI (string-append name " I"))
@@ -95,7 +110,7 @@ divisibleStaff =
            instrumentName = #nameI
            shortInstrumentName = #nameI
          }
-         \keepWithTag divI \music
+         \clearTags divI \removeWithTag together.divII \music
 
          \new Staff \with {
            \override VerticalAxisGroup.remove-first = ##t
@@ -105,13 +120,13 @@ divisibleStaff =
            instrumentName = #nameII
            shortInstrumentName = #nameII
          }
-         \keepWithTag divII \music
+         \clearTags divII \removeWithTag together.divI \music
 
          \new Staff \with {
            instrumentName = #name
            shortInstrumentName = #name
            \override VerticalAxisGroup.remove-layer = 2
          }
-         \keepWithTag together \music
+         \clearTags together \removeWithTag divI.divII \music
        >>
      #}))
