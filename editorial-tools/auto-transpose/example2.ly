@@ -31,8 +31,9 @@ bach = \relative c'' { b a c h }
 \editionMod transp 2 0/1 switch.instrument.Staff.A \instrumentSwitch "b-clarinet"
 \editionMod transp 3 0/1 switch.instrument.Staff.A \instrumentSwitch "eb-clarinet" 
 \editionMod transp 4 2/4 switch.instrument.Staff.A \instrumentSwitch "b-clarinet" 
+\editionMod transp 5 0/4 switch.instrument.Staff.A \set Staff.instrumentTransposition = #(ly:make-pitch 0 0 0)
 
-music = { $bach $bach $bach <>_"repeat unfold" \repeat unfold 4 c''4 d'' }
+music = { $bach $bach $bach <>_"repeat unfold" \repeat unfold 4 c''4 \repeat unfold 4 d'' }
 global = { \key f \major s1 \key f \major s1 \key f \major s1 }
 \score {
   \new Staff \with {

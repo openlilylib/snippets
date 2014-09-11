@@ -63,7 +63,11 @@ autoTransposeEngraver =
                    (ly:music-transpose m (ly:pitch-diff tp ap)))
                   ((not (ly:pitch? ap))
                    (ly:music-transpose m tp))
-                  ))
+                  )
+                 (if (ly:pitch? ap)
+                     (begin
+                     (ly:music-transpose m (ly:pitch-diff base tp))
+                     ))) % TODO
              (ly:music-set-property! m 'auto-transpose tp)
              ))
 
