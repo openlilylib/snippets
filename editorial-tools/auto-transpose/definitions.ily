@@ -48,15 +48,25 @@ autoTransposeEngraver =
               (tonic (ly:context-property context 'tonic))) ; key-signature tonic
 
          (define (do-transp m)
-           (cond
-            ; music in concert-pitch / display in instrument pitch
-            ((and mcp (not pcp) (ly:pitch? transp))
-             (ly:music-transpose m (ly:pitch-diff base transp)))
-            ; music in instrument pitch / display in concert pitch
-            ((and (not mcp) pcp (ly:pitch? transp))
-             (ly:music-transpose m transp))
-            ))
-         
+           (let ((ap (ly:music-property m 'auto-transpose))
+                 (tp
+                  (cond
+                   ((and mcp (not pcp) (ly:pitch? transp))
+                    (ly:pitch-diff base transp))
+                   ((and (not mcp) pcp (ly:pitch? transp))
+                    transp)
+                   (else #f)))
+                 )
+             (if (ly:pitch? tp)
+                 (cond
+                  ((and (ly:pitch? ap)(not (equal? ap tp)))
+                   (ly:music-transpose m (ly:pitch-diff tp ap)))
+                  ((not (ly:pitch? ap))
+                   (ly:music-transpose m tp))
+                  ))
+             (ly:music-set-property! m 'auto-transpose tp)
+             ))
+
          ; TODO: if instrument transposition changed, produce key signature
          (if (not (equal? transp lasttransp))
              (let ((key-sig (make-music 'KeyChangeEvent 'pitch-alist keysig 'tonic tonic)))
@@ -64,11 +74,11 @@ autoTransposeEngraver =
                  (ly:make-stream-event 'key-change-event `((music-cause . ,key-sig)) ))
                ))
          (set! lasttransp transp)
-         
+
          ; execute transposition
          (do-transp music)
          ))
-     
+
      ; create engraver
      (make-engraver
       (listeners
@@ -83,14 +93,14 @@ autoTransposeEngraver =
      ))
 
 autoTranspose = \with {
-    % we have to ensure, the key-engraver acts after transposition is done
-    \remove "Key_engraver"
-    \consists \autoTransposeEngraver
-    \consists "Key_engraver"
-    % if music and print are equal, do nothing
-    % else transpose according to transp (up or down)
-    music-concert-pitch = ##t
-    print-concert-pitch = ##f
-    % TODO: if music is given in instrument-pitch, but shall be printed in concert-pitch,
-    %   midi pitch is false - instrumentTransposition should be "turned off" for midi(?)
+  % we have to ensure, the key-engraver acts after transposition is done
+  \remove "Key_engraver"
+  \consists \autoTransposeEngraver
+  \consists "Key_engraver"
+  % if music and print are equal, do nothing
+  % else transpose according to transp (up or down)
+  music-concert-pitch = ##t
+  print-concert-pitch = ##f
+  % TODO: if music is given in instrument-pitch, but shall be printed in concert-pitch,
+  %   midi pitch is false - instrumentTransposition should be "turned off" for midi(?)
 }
