@@ -25,15 +25,24 @@ bach = \relative c'' { b a c h }
      (instrumentCueName . "Kl")
      (midiInstrument . "clarinet"))
 
+\addInstrumentDefinition #"concert-pitch"
+  #`((instrumentTransposition . #f)
+     (shortInstrumentName . "C")
+     (clefGlyph . "clefs.G")
+     (middleCPosition . -6)
+     (clefPosition . -2)
+     (instrumentCueName . "C")
+     (midiInstrument . "clarinet"))
+
 %%% create demo score
 
 \addEdition transp
 \editionMod transp 2 0/1 switch.instrument.Staff.A \instrumentSwitch "b-clarinet"
 \editionMod transp 3 0/1 switch.instrument.Staff.A \instrumentSwitch "eb-clarinet" 
 \editionMod transp 4 2/4 switch.instrument.Staff.A \instrumentSwitch "b-clarinet" 
-\editionMod transp 5 0/4 switch.instrument.Staff.A \set Staff.instrumentTransposition = #(ly:make-pitch 0 0 0)
+\editionMod transp 5 0/4 switch.instrument.Staff.A \instrumentSwitch "concert-pitch"
 
-music = { $bach $bach $bach <>_"repeat unfold" \repeat unfold 4 c''4 \repeat unfold 4 d'' }
+music = { $bach $bach $bach <>_"repeat unfold c''" \repeat unfold 4 c''4 <>_"repeat unfold d''" \repeat unfold 4 d'' }
 global = { \key f \major s1 \key f \major s1 \key f \major s1 }
 \score {
   \new Staff \with {
