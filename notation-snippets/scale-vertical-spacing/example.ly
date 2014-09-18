@@ -4,91 +4,20 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This example shows how "Scale vertical spacing" can be used.
-% The implementation is in the file
+% The implementation and some basic documentation is in the file
 % `definitions.ily`.
-% Documentation (if any) should be in `README.md`.
 
-% A1. scale all page layout variables by the same amount
+% scale all page layout variables by the same amount
+
 \scaleVerticalSpacingPageLayout #1.5
 
-%{
+% scale all "in-system" properties by the same amount,
+% except for lyrics, which is scaled by a different amount
 
-% A2. scale specific page layout variables
-\scaleVerticalSpacingPageLayout
-#'((all . 1)
-   (system-system . 1)
-   (score-system . 1)
-   (markup-system . 1)
-   (score-markup . 1)
-   (markup-markup . 1)
-   (top-system . 1)
-   (top-markup . 1)
-   (last-bottom . 1))
-
-%}
-
-% B1. scale all properties by the same amount
-\scaleVerticalSpacingInSystems #1.5
-
-%{
-
-% B2. scale properties for specific contexts
-% (or of the StaffGrouper grob, which is not a context)
 \scaleVerticalSpacingInSystems
-#'((all . 1)
-   (staff-grouper . 1)
-   (staff . 1)
-   (chord-names . 1)
-   (dynamics . 1)
-   (figured-bass . 1)
-   (lyrics . 1)
-   (note-names . 1))
+#'((all . 1.5)
+   (lyrics . 1.15))
 
-% B3. scale specific properties within specific contexts
-% (or of the StaffGrouper grob, which is not a context)
-\scaleVerticalSpacingInSystems
-#'((all . 1)
-   (staff-grouper-staff-staff . 1)
-   (staff-grouper-staffgroup-staff . 1)
-   (staff-default-staff-staff . 1) ;; same as (staff . 1)
-   (chord-names-nonstaff-relatedstaff . 1)
-   (chord-names-nonstaff-nonstaff . 1)
-   (dynamics-nonstaff-relatedstaff . 1) ;; same as (dynamics . 1)
-   (figured-bass-nonstaff-relatedstaff . 1)
-   (figured-bass-nonstaff-nonstaff . 1)
-   (lyrics-nonstaff-relatedstaff . 1)
-   (lyrics-nonstaff-nonstaff . 1)
-   (lyrics-nonstaff-unrelatedstaff . 1)
-   (note-names-nonstaff-relatedstaff . 1)
-   (note-names-nonstaff-nonstaff . 1)
-   (note-names-nonstaff-unrelatedstaff . 1))
-
-% B2 & B3
-\scaleVerticalSpacingInSystems
-#'((all . 1)
-   (staff-grouper . 1)
-   (staff . 1)
-   (chord-names . 1)
-   (dynamics . 1)
-   (figured-bass . 1)
-   (lyrics . 1)
-   (note-names . 1)
-   (staff-grouper-staff-staff . 1)
-   (staff-grouper-staffgroup-staff . 1)
-   (staff-default-staff-staff . 1) ;; same as (staff . 1)
-   (chord-names-nonstaff-relatedstaff . 1)
-   (chord-names-nonstaff-nonstaff . 1)
-   (dynamics-nonstaff-relatedstaff . 1) ;; same as (dynamics . 1)
-   (figured-bass-nonstaff-relatedstaff . 1)
-   (figured-bass-nonstaff-nonstaff . 1)
-   (lyrics-nonstaff-relatedstaff . 1)
-   (lyrics-nonstaff-nonstaff . 1)
-   (lyrics-nonstaff-unrelatedstaff . 1)
-   (note-names-nonstaff-relatedstaff . 1)
-   (note-names-nonstaff-nonstaff . 1)
-   (note-names-nonstaff-unrelatedstaff . 1))
-
-%}
 
 % EXAMPLE MUSIC
 
