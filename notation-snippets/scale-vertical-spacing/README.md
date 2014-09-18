@@ -1,5 +1,4 @@
-Scale Vertical Spacing
----------------------
+## Scale Vertical Spacing
 
 This snippet provides an easier way to adjust vertical spacing by letting you scale the default vertical spacing settings.  It provides two functions:
 
@@ -11,73 +10,73 @@ These functions should be placed at the top level of a file, where layout blocks
 
 They take a single argument.  The argument can simply be a number, which is then used to scale _all_ applicable vertical spacing properties by that amount. 
 
-	\scaleVerticalSpacingPageLayout #1.5
-	\scaleVerticalSpacingInSystems #1.4
+    \scaleVerticalSpacingPageLayout #1.5
+    \scaleVerticalSpacingInSystems #1.4
 
 This may be sufficient in some cases, but for more control and flexibility the argument can be an "association list" that specifies different scaling values for different items.
 
-	% scale specific page layout variables by specific amounts
-	
-	\scaleVerticalSpacingPageLayout
-	#'((all . 1.1)
-	   (system-system . 1.2)
-	   (score-system . 1.3)
-	   (markup-system . 1.4)
-	   (score-markup . 1.5)
-	   (markup-markup . 1.6)
-	   (top-system . 1.7)
-	   (top-markup . 1.8)
-	   (last-bottom . 1.9))
+    % scale specific page layout variables by specific amounts
+    
+    \scaleVerticalSpacingPageLayout
+    #'((all . 1.1)
+       (system-system . 1.2)
+       (score-system . 1.3)
+       (markup-system . 1.2)
+       (score-markup . 1.3)
+       (markup-markup . 1.2)
+       (top-system . 1.3)
+       (top-markup . 1.2)
+       (last-bottom . 1.3))
 
-	% scale the properties of specific contexts (and/or properties of the StaffGrouper grob, which is not a context)
-	
-	\scaleVerticalSpacingInSystems
-	#'((all . 1.1)
-	   (staff-grouper . 1.2)
-	   (staff . 1.3)
-	   (chord-names . 1.4)
-	   (dynamics . 1.5)
-	   (figured-bass . 1.6)
-	   (lyrics . 1.7)
-	   (note-names . 1.8))
+    % scale the properties of specific contexts (and/or properties of the StaffGrouper grob, which is not a context)
+    
+    \scaleVerticalSpacingInSystems
+    #'((all . 1.1)
+       (staff-grouper . 1.2)
+       (staff . 1.3)
+       (chord-names . 1.2)
+       (dynamics . 1.3)
+       (figured-bass . 1.2)
+       (lyrics . 1.3)
+       (note-names . 1.2))
 
 The value for `all` sets the scaling factor for all of the different items (just like providing a single number as an argument).  The value for all is replaced by any more specific settings.  For example:
 
-	\scaleVerticalSpacingInSystems
-	#'((all . 1.4)
-	   (staff-grouper . 1)
-	   (lyrics . 1.2))
+    \scaleVerticalSpacingInSystems
+    #'((all . 1.4)
+       (staff-grouper . 1)
+       (lyrics . 1.2))
 
 This keeps the default staff-grouper spacing, but scales everything else by 1.4, except for lyrics, which is scaled by 1.2.
 
 With `scaleVerticalSpacingInSystems` you can get even more detailed and specify different scaling factors for specific context properties:
 
-	% scale specific properties within specific contexts (and/or of the StaffGrouper grob, which is not a context)
-	
-	\scaleVerticalSpacingInSystems
-	#'((all . 1)
-	   (staff-grouper-staff-staff . 1)
-	   (staff-grouper-staffgroup-staff . 1)
-	   (staff-default-staff-staff . 1) ;; same as (staff . 1)
-	   (chord-names-nonstaff-relatedstaff . 1)
-	   (chord-names-nonstaff-nonstaff . 1)
-	   (dynamics-nonstaff-relatedstaff . 1) ;; same as (dynamics . 1)
-	   (figured-bass-nonstaff-relatedstaff . 1)
-	   (figured-bass-nonstaff-nonstaff . 1)
-	   (lyrics-nonstaff-relatedstaff . 1)
-	   (lyrics-nonstaff-nonstaff . 1)
-	   (lyrics-nonstaff-unrelatedstaff . 1)
-	   (note-names-nonstaff-relatedstaff . 1)
-	   (note-names-nonstaff-nonstaff . 1)
-	   (note-names-nonstaff-unrelatedstaff . 1))
+    % scale specific properties within specific contexts (and/or of the StaffGrouper grob, which is not a context)
+    
+    \scaleVerticalSpacingInSystems
+    #'((all . 1.1)
+       (staff-grouper-staff-staff . 1.2)
+       (staff-grouper-staffgroup-staff . 1.3)
+       (staff-default-staff-staff . 1.2) ;; same as (staff . 1.2)
+       (chord-names-nonstaff-relatedstaff . 1.3)
+       (chord-names-nonstaff-nonstaff . 1.2)
+       (dynamics-nonstaff-relatedstaff . 1.3) ;; same as (dynamics . 1.3)
+       (figured-bass-nonstaff-relatedstaff . 1.2)
+       (figured-bass-nonstaff-nonstaff . 1.3)
+       (lyrics-nonstaff-relatedstaff . 1.2)
+       (lyrics-nonstaff-nonstaff . 1.3)
+       (lyrics-nonstaff-unrelatedstaff . 1.2)
+       (note-names-nonstaff-relatedstaff . 1.3)
+       (note-names-nonstaff-nonstaff . 1.2)
+       (note-names-nonstaff-unrelatedstaff . 1.3))
 
 
 Again, more specific settings trump more general settings.  The following will scale everything by 1.5, except for lyrics context properties which will be scaled by 1.3, except for the `Lyrics.nonstaff-nonstaff-spacing` property, which will not be scaled at all.
 
-	\scaleVerticalSpacingInSystems
-	#'((all . 1.5)
-	   (lyrics . 1.3)
-	   (lyrics-nonstaff-nonstaff . 1))
+    \scaleVerticalSpacingInSystems
+    #'((all . 1.5)
+       (lyrics . 1.3)
+       (lyrics-nonstaff-nonstaff . 1))
 
 ### Background
 
@@ -109,159 +108,155 @@ In other words, they are not meant to provide a "smart" high-level algorithm tha
 
 ### Appendix: Default Settings
 
-You don't need to know these, but here they are.
-
-**Page Layout Variables**
+You don't need to know these, but here they are for reference.
 
 <table>
-	<tr>
-		<th>property</th>
-		<th>basic-distance</th>
-		<th>minimum-distance</th>
-		<th>padding</th>
-	</tr>
-	<tr>
-		<td>system-system-spacing</td>
-		<td>12</td>
-		<td>8</td>
-		<td>1</td>
-	</tr>
-	<tr>
-		<td>score-system-spacing</td>
-		<td>14</td>
-		<td>8</td>
-		<td>1</td>
-	</tr>
-	<tr>
-		<td>markup-system-spacing</td>
-		<td>5</td>
-		<td>0</td>
-		<td>0.5</td>
-	</tr>
-	<tr>
-		<td>score-markup-spacing</td>
-		<td>12</td>
-		<td>0</td>
-		<td>0.5</td>
-	</tr>
-	<tr>
-		<td>markup-markup-spacing</td>
-		<td>1</td>
-		<td>0</td>
-		<td>0.5</td>
-	</tr>
-	<tr>
-		<td>top-system-spacing</td>
-		<td>1</td>
-		<td>0</td>
-		<td>1</td>
-	</tr>
-	<tr>
-		<td>top-markup-spacing</td>
-		<td>0</td>
-		<td>0</td>
-		<td>1</td>
-	</tr>
-	<tr>
-		<td>last-bottom-spacing</td>
-		<td>1</td>
-		<td>0</td>
-		<td>1</td>
-	</tr>
+    <tr>
+        <th>Page Layout Variables</th>
+        <th>basic-distance</th>
+        <th>minimum-distance</th>
+        <th>padding</th>
+    </tr>
+    <tr>
+        <td>system-system-spacing</td>
+        <td>12</td>
+        <td>8</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>score-system-spacing</td>
+        <td>14</td>
+        <td>8</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>markup-system-spacing</td>
+        <td>5</td>
+        <td>0</td>
+        <td>0.5</td>
+    </tr>
+    <tr>
+        <td>score-markup-spacing</td>
+        <td>12</td>
+        <td>0</td>
+        <td>0.5</td>
+    </tr>
+    <tr>
+        <td>markup-markup-spacing</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0.5</td>
+    </tr>
+    <tr>
+        <td>top-system-spacing</td>
+        <td>1</td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>top-markup-spacing</td>
+        <td>0</td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>last-bottom-spacing</td>
+        <td>1</td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
 </table>
-
-**In-System Context and Grob Properties**
 
 <table>
-	<tr>
-		<th>property</th>
-		<th>basic-distance</th>
-		<th>minimum-distance</th>
-		<th>padding</th>
-	</tr>
-	<tr>
-		<td>StaffGrouper.staff-staff-spacing</td>
-		<td>9</td>
-		<td>7</td>
-		<td>1</td>
-	</tr>
-	<tr>
-		<td>StaffGrouper.staffgroup-staff-spacing</td>
-		<td>10.5</td>
-		<td>8</td>
-		<td>1</td>
-	</tr>
-	<tr>
-		<td>Staff -- VerticalAxisGroup.default-staff-staff-spacing</td>
-		<td>9</td>
-		<td>8</td>
-		<td>1</td>
-	</tr>
-	<tr>
-		<td>ChordNames -- VerticalAxisGroup.nonstaff-relatedstaff-spacing</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0.5</td>
-	</tr>
-	<tr>
-		<td>ChordNames -- VerticalAxisGroup.nonstaff-nonstaff-spacing</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0.5</td>
-	</tr>
-	<tr>
-		<td>Dynamics -- VerticalAxisGroup.nonstaff-relatedstaff-spacing</td>
-		<td>5</td>
-		<td>0</td>
-		<td>0.5</td>
-	</tr>
-	<tr>
-		<td>FiguredBass -- VerticalAxisGroup.nonstaff-relatedstaff-spacing</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0.5</td>
-	</tr>
-	<tr>
-		<td>FiguredBass -- VerticalAxisGroup.nonstaff-nonstaff-spacing</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0.5</td>
-	</tr>
-	<tr>
-		<td>Lyrics -- VerticalAxisGroup.nonstaff-relatedstaff-spacing</td>
-		<td>5.5</td>
-		<td>0</td>
-		<td>0.5</td>
-	</tr>
-	<tr>
-		<td>Lyrics -- VerticalAxisGroup.nonstaff-nonstaff-spacing</td>
-		<td>0</td>
-		<td>2.8</td>
-		<td>0.2</td>
-	</tr>
-	<tr>
-		<td>Lyrics -- VerticalAxisGroup.nonstaff-unrelatedstaff-spacing</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0.5</td>
-	</tr>
-	<tr>
-		<td>NoteNames -- VerticalAxisGroup.nonstaff-relatedstaff-spacing</td>
-		<td>5.5</td>
-		<td>0</td>
-		<td>0.5</td>
-	</tr>
-	<tr>
-		<td>NoteNames -- VerticalAxisGroup.nonstaff-nonstaff-spacing</td>
-		<td>0</td>
-		<td>2.8</td>
-		<td>0.2</td>
-	</tr>
-	<tr>
-		<td>NoteNames -- VerticalAxisGroup.nonstaff-unrelatedstaff-spacing</td>
-		<td>0</td>
-		<td>0</td>
-		<td>1.5</td>
-	</tr>
+    <tr>
+        <th>In-System Context and Grob Properties</th>
+        <th>basic-distance</th>
+        <th>minimum-distance</th>
+        <th>padding</th>
+    </tr>
+    <tr>
+        <td>StaffGrouper.staff-staff-spacing</td>
+        <td>9</td>
+        <td>7</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>StaffGrouper.staffgroup-staff-spacing</td>
+        <td>10.5</td>
+        <td>8</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>Staff -> VerticalAxisGroup.default-staff-staff-spacing</td>
+        <td>9</td>
+        <td>8</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>ChordNames -> VerticalAxisGroup.nonstaff-relatedstaff-spacing</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0.5</td>
+    </tr>
+    <tr>
+        <td>ChordNames -> VerticalAxisGroup.nonstaff-nonstaff-spacing</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0.5</td>
+    </tr>
+    <tr>
+        <td>Dynamics -> VerticalAxisGroup.nonstaff-relatedstaff-spacing</td>
+        <td>5</td>
+        <td>0</td>
+        <td>0.5</td>
+    </tr>
+    <tr>
+        <td>FiguredBass -> VerticalAxisGroup.nonstaff-relatedstaff-spacing</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0.5</td>
+    </tr>
+    <tr>
+        <td>FiguredBass -> VerticalAxisGroup.nonstaff-nonstaff-spacing</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0.5</td>
+    </tr>
+    <tr>
+        <td>Lyrics -> VerticalAxisGroup.nonstaff-relatedstaff-spacing</td>
+        <td>5.5</td>
+        <td>0</td>
+        <td>0.5</td>
+    </tr>
+    <tr>
+        <td>Lyrics -> VerticalAxisGroup.nonstaff-nonstaff-spacing</td>
+        <td>0</td>
+        <td>2.8</td>
+        <td>0.2</td>
+    </tr>
+    <tr>
+        <td>Lyrics -> VerticalAxisGroup.nonstaff-unrelatedstaff-spacing</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0.5</td>
+    </tr>
+    <tr>
+        <td>NoteNames -> VerticalAxisGroup.nonstaff-relatedstaff-spacing</td>
+        <td>5.5</td>
+        <td>0</td>
+        <td>0.5</td>
+    </tr>
+    <tr>
+        <td>NoteNames -> VerticalAxisGroup.nonstaff-nonstaff-spacing</td>
+        <td>0</td>
+        <td>2.8</td>
+        <td>0.2</td>
+    </tr>
+    <tr>
+        <td>NoteNames -> VerticalAxisGroup.nonstaff-unrelatedstaff-spacing</td>
+        <td>0</td>
+        <td>0</td>
+        <td>1.5</td>
+    </tr>
 </table>
-			
+            
