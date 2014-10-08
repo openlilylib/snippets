@@ -1,4 +1,4 @@
-\version "2.18.2"
+\version "2.19.15"
 \include "editorial-tools/auto-transpose/definitions.ily"
 \include "deutsch.ly"
 

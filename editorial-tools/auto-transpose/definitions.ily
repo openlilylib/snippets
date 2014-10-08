@@ -74,8 +74,9 @@ autoTransposeEngraver =
          ; TODO: if instrument transposition changed, produce key signature
          (if (not (equal? transp lasttransp))
              (let ((key-sig (make-music 'KeyChangeEvent 'pitch-alist keysig 'tonic tonic)))
-               (ly:broadcast (ly:context-event-source context)
-                 (ly:make-stream-event 'key-change-event `((music-cause . ,key-sig)) ))
+               (ly:message "is there a key signature in measure ~A? Transposition changed!" (ly:context-property context 'currentBarNumber))
+               ;(ly:broadcast (ly:context-event-source context)
+               ;  (ly:make-stream-event 'key-change-event `((music-cause . ,key-sig)) ))
                ))
          (set! lasttransp transp)
 
