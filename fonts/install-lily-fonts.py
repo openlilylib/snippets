@@ -75,7 +75,7 @@ def walk_indir():
             name, ext = os.path.splitext(f)
             if ext == '.otf':
                 link_name = os.path.join(otf_dir, f)
-            if ext == '.svg':
+            if ext == '.svg' or ext == '.woff':
                 link_name = os.path.join(svg_dir, f)
             if link_name:
                 link_target = os.path.join(dirName, f)
