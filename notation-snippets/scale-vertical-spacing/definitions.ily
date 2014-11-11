@@ -14,191 +14,257 @@
   status = "ready"
 }
 
-% Custom type predicate:
-#(define (number-or-list? x)
-   (or (number? x) (list? x)))
+% custom type predicate:
+#(define (number-or-association-list-of-symbols-and-numbers? x)
+   (or (number? x)
+       (and
+        (list? x)
+        (every symbol? (map car x))
+        (every number? (map cdr x)))))
+
+
+#(define (validate-input input valid-input-list caller)
+   "Give a warning if an invalid property name is given as input."
+   (if (list? input)
+       (for-each
+        (lambda (x)
+          (if (not (memq (car x) valid-input-list))
+              (ly:warning (_ "invalid property name supplied to ~S: ~S") caller (car x))))
+        input)))
+
+
+#(define (make-scaled-props-single-num defaults input)
+   "Takes an alist of default settings and multiplies the values by input, a 
+    single number, and returns a new alist."
+   (map
+    (lambda (prop)
+      (cons (car prop)
+        (map
+         (lambda (p) (cons (car p) (* input (cdr p))))
+         (cdr prop))))
+    defaults))
+
+
+#(define (make-scaled-props defaults props-list input prop-lookup)
+   "Takes an alist of default settings and multiplies the values by the
+    scale factors in input, an alist of scale factors, and returns a new alist.
+    prop-lookup is an alist that allows for two tiers of props for ...InSystems,
+    and is simply #f for ...PageLayout."
+   (let* ((page-layout (not (list? prop-lookup)))
+          (all (assq-ref input 'all))
+          (fallback (if page-layout 1 #f))
+          ;; make a complete set of scaling factors for all props,
+          ;; scaling factors are set by a cascade from the highest
+          ;; priority source to the least using (or ... )
+          (scale-factor-alist
+           (map
+            (lambda (prop)
+              (cons prop
+                (or
+                 (assq-ref input prop)
+                 (and (list? prop-lookup) (assq-ref input (assq-ref prop-lookup prop)))
+                 all
+                 fallback)))
+            props-list))
+          ;; for ...InSystems remove any items not set by user (fallback is #f) since
+          ;; \layout output is conditional and can be an incomplete set of props
+          ;; for ...PageLayout a full set of props are needed since \paper output isn't
+          ;; conditional, so just scale by 1 for props unset by user (fallback is 1)
+          (scale-factor-alist2
+           (if page-layout
+               scale-factor-alist
+               (filter
+                (lambda (p) (not (equal? #f (cdr p))))
+                scale-factor-alist))))
+     ;; multiply defaults by scaling factors and return the new props alist
+     (map
+      (lambda (prop)
+        (let* ((prop-name (car prop))
+               (mult (cdr prop))
+               (dfs (assq-ref defaults prop-name)))
+          (cons prop-name
+            (map
+             (lambda (df)
+               (cons (car df) (* mult (cdr df))))
+             dfs))))
+      scale-factor-alist2)))
+
 
 scaleVerticalSpacingPageLayout =
-#(define-scheme-function (parser location arg) (number-or-list?)
-   "Multiplies the default values of the flexible vertical spacing paper 
-    variables by the amounts specified in @{arg}, a number or alist. 
+#(define-scheme-function (parser location input)
+   (number-or-association-list-of-symbols-and-numbers?)
+   "Multiplies the default values of the flexible vertical spacing paper
+    variables by the amounts specified in @{input}, a number or alist.
     Returns a paper block. See:
     http://lilypond.org/doc/v2.18/Documentation/notation/flexible-vertical-spacing-paper-variables"
    (let*
-    ;; Get scaling factors from arg.
-    ((all (or (assq-ref arg 'all) (if (number? arg) arg)))
-     (sys-sys (or (assq-ref arg 'system-system) all 1))
-     (score-sys (or (assq-ref arg 'score-system) all 1))
-     (mark-sys (or (assq-ref arg 'markup-system) all 1))
-     (score-mark (or (assq-ref arg 'score-markup) all 1))
-     (mark-mark (or (assq-ref arg 'markup-markup) all 1))
-     (top-sys (or (assq-ref arg 'top-system) all 1))
-     (top-mark (or (assq-ref arg 'top-markup) all 1))
-     (last-bot (or (assq-ref arg 'last-bottom) all 1)))
-    ;; Change settings by multiplying default values by the scaling factors.
-    ;; If the default value is 1, don't bother multiplying by 1.
+    ;; default values of 0 are omitted since they can't be scaled
+    ((defaults
+      '((system-system . ((basic-distance . 12) (minimum-distance . 8) (padding . 1)))
+        (score-system . ((basic-distance . 14) (minimum-distance . 8) (padding . 1)))
+        (markup-system . ((basic-distance . 5) (padding . 0.5)))
+        (score-markup . ((basic-distance . 12) (padding . 0.5)))
+        (markup-markup . ((basic-distance . 1) (padding . 0.5)))
+        (top-system . ((basic-distance . 1) (padding . 1)))
+        (top-markup . ((padding . 1)))
+        (last-bottom . ((basic-distance . 1) (padding . 1)))))
+     (props-list (map car defaults))
+     (valid-input-list (concatenate (list '(all) props-list)))
+     ;; generate new props by multiplying defaults by scaling factors
+     (nprops
+      (if (number? input)
+          (make-scaled-props-single-num defaults input)
+          (make-scaled-props defaults props-list input #f))))
+    ;; give warning on bad input
+    (validate-input input valid-input-list "scaleVerticalSpacingPageLayout")
     #{
       \paper {
-        system-system-spacing =
-        #`((basic-distance . ,(* 12 sys-sys))
-           (minimum-distance . ,(* 8 sys-sys))
-           (padding . ,sys-sys))
-        score-system-spacing =
-        #`((basic-distance . ,(* 14 score-sys))
-           (minimum-distance . ,(* 8 score-sys))
-           (padding . ,score-sys))
-        markup-system-spacing =
-        #`((basic-distance . ,(* 5 mark-sys))
-           (padding . ,(* 0.5 mark-sys)))
-        score-markup-spacing =
-        #`((basic-distance . ,(* 12 score-mark))
-           (padding . ,(* 0.5 score-mark)))
-        markup-markup-spacing =
-        #`((basic-distance . ,mark-mark)
-           (padding . ,(* 0.5 mark-mark)))
-        top-system-spacing =
-        % top-system-spacing: minimum-distance is 0
-        #`((basic-distance . ,top-sys)
-           (padding . ,top-sys))
-        top-markup-spacing.padding = #top-mark
-        % top-markup-spacing: basic-distance and minimum-distance are 0
-        last-bottom-spacing =
-        % last-bottom-spacing: minimum-distance is 0
-        #`((basic-distance . ,last-bot)
-           (padding . ,last-bot))
+        system-system-spacing = #(assq-ref nprops 'system-system)
+        score-system-spacing = #(assq-ref nprops 'score-system)
+        markup-system-spacing = #(assq-ref nprops 'markup-system)
+        score-markup-spacing = #(assq-ref nprops 'score-markup)
+        markup-markup-spacing = #(assq-ref nprops 'markup-markup)
+        top-system-spacing = #(assq-ref nprops 'top-system)
+        top-markup-spacing = #(assq-ref nprops 'top-markup)
+        last-bottom-spacing = #(assq-ref nprops 'last-bottom)
       }
     #}))
 
 
 scaleVerticalSpacingInSystems =
-#(define-scheme-function (parser location arg) (number-or-list?)
-   "Multiplies the default values of the grob-properties that affect 
-    flexible vertical spacing within systems by the amounts specified 
-    in @{arg}, a number or alist.  Returns a layout block. See:
+#(define-scheme-function (parser location input)
+   (number-or-association-list-of-symbols-and-numbers?)
+   "Multiplies the default values of the grob-properties that affect
+    flexible vertical spacing within systems by the amount(s) specified
+    in @{input}, a number or alist. Returns a layout block. See:
     http://lilypond.org/doc/v2.18/Documentation/notation/flexible-vertical-spacing-within-systems"
    ;; FretBoards do not set any grob-properties in VerticalAxisGroup,
    ;; so there's nothing to scale for them, so they are not included.
    (let*
-    ;; Get scaling factors from arg.
-    ((all (or (assq-ref arg 'all) (if (number? arg) arg)))
-     (grp (or (assq-ref arg 'staff-grouper) all))
-     (stf (or (assq-ref arg 'staff) (assq-ref arg 'staff-default-staff-staff) all))
-     (crds (or (assq-ref arg 'chord-names) all))
-     (dyn (or (assq-ref arg 'dynamics) (assq-ref arg 'dynamics-nonstaff-relatedstaff) all))
-     (figb (or (assq-ref arg 'figured-bass) all))
-     (lyr (or (assq-ref arg 'lyrics) all))
-     (nn (or (assq-ref arg 'note-names) all))
-
-     (grp-staff-staff (or (assq-ref arg 'StaffGrouper.staff-staff) grp))
-     (grp-grp-staff (or (assq-ref arg 'StaffGrouper.staffgroup-staff) grp))
-     (crds-non-rel (or (assq-ref arg 'chord-names-nonstaff-relatedstaff) crds))
-     (crds-non-non (or (assq-ref arg 'chord-names-nonstaff-nonstaff) crds))
-     (figb-non-rel (or (assq-ref arg 'figured-bass-nonstaff-relatedstaff) figb))
-     (figb-non-non (or (assq-ref arg 'figured-bass-nonstaff-nonstaff) figb))
-     (lyr-non-rel (or (assq-ref arg 'lyrics-nonstaff-relatedstaff) lyr))
-     (lyr-non-non (or (assq-ref arg 'lyrics-nonstaff-nonstaff) lyr))
-     (lyr-non-un (or (assq-ref arg 'lyrics-nonstaff-unrelatedstaff) lyr))
-     (nn-non-rel (or (assq-ref arg 'note-names-nonstaff-relatedstaff) nn))
-     (nn-non-non (or (assq-ref arg 'note-names-nonstaff-nonstaff) nn))
-     (nn-non-un (or (assq-ref arg 'note-names-nonstaff-unrelatedstaff) nn)))
-    ;; Create overrides by multiplying default values by the scaling factors.
-    ;; If the default value is 1, don't bother multiplying by 1.
+    ;; default values of 0 are omitted since they can't be scaled
+    ((defaults
+      '((staff-grouper-staff-staff . ((basic-distance . 9) (minimum-distance . 7) (padding . 1)))
+        (staff-grouper-staffgroup-staff . ((basic-distance . 10.5) (minimum-distance . 8) (padding . 1)))
+        (staff-default-staff-staff . ((basic-distance . 9) (minimum-distance . 8) (padding . 1)))
+        (chord-names-nonstaff-relatedstaff . ((padding . 0.5)))
+        (chord-names-nonstaff-nonstaff . ((padding . 0.5)))
+        (dynamics-nonstaff-relatedstaff . ((basic-distance . 5) (padding . 0.5)))
+        (figured-bass-nonstaff-relatedstaff . ((padding . 0.5)))
+        (figured-bass-nonstaff-nonstaff . ((padding . 0.5)))
+        (lyrics-nonstaff-relatedstaff . ((basic-distance . 5.5) (padding . 0.5)))
+        (lyrics-nonstaff-nonstaff . ((minimum-distance . 2.8) (padding . 0.2)))
+        (lyrics-nonstaff-unrelatedstaff . ((padding . 0.5)))
+        (note-names-nonstaff-relatedstaff . ((basic-distance . 5.5) (padding . 0.5)))
+        (note-names-nonstaff-nonstaff . ((minimum-distance . 2.8) (padding . 0.2)))
+        (note-names-nonstaff-unrelatedstaff . ((padding . 1.5)))))
+     (prop-lookup
+      '((staff-grouper-staff-staff . staff-grouper)
+        (staff-grouper-staffgroup-staff . staff-grouper)
+        (staff-default-staff-staff . staff)
+        (chord-names-nonstaff-relatedstaff . chord-names)
+        (chord-names-nonstaff-nonstaff . chord-names)
+        (dynamics-nonstaff-relatedstaff . dynamics)
+        (figured-bass-nonstaff-relatedstaff . figured-bass)
+        (figured-bass-nonstaff-nonstaff . figured-bass)
+        (lyrics-nonstaff-relatedstaff . lyrics)
+        (lyrics-nonstaff-nonstaff . lyrics)
+        (lyrics-nonstaff-unrelatedstaff . lyrics)
+        (note-names-nonstaff-relatedstaff . note-names)
+        (note-names-nonstaff-nonstaff . note-names)
+        (note-names-nonstaff-unrelatedstaff . note-names)))
+     (props-list (map car defaults))
+     (valid-input-list (concatenate (list '(all) props-list
+                                      (delete-duplicates (map cdr prop-lookup)))))
+     ;; generate new props by multiplying defaults by scaling factors
+     (nprops
+      (if (number? input)
+          (make-scaled-props-single-num defaults input)
+          (make-scaled-props defaults props-list input prop-lookup))))
+    ;; give warning on bad input
+    (validate-input input valid-input-list "scaleVerticalSpacingInSystems")
     #{
       \layout {
         \context {
           \Score {
-            #(if grp-staff-staff #{
+            #(if (assq-ref nprops 'staff-grouper-staff-staff) #{
               \override StaffGrouper.staff-staff-spacing =
-              #`((basic-distance . ,(* 9 grp-staff-staff))
-                 (minimum-distance . ,(* 7 grp-staff-staff))
-                 (padding . ,grp-staff-staff))
+              #(assq-ref nprops 'staff-grouper-staff-staff)
                  #})
-            #(if grp-grp-staff #{
+            #(if (assq-ref nprops 'staff-grouper-staffgroup-staff) #{
               \override StaffGrouper.staffgroup-staff-spacing =
-              #`((basic-distance . ,(* 10.5 grp-grp-staff))
-                 (minimum-distance . ,(* 8 grp-grp-staff))
-                 (padding . ,grp-grp-staff))
+              #(assq-ref nprops 'staff-grouper-staffgroup-staff)
                  #})
           }
         }
         \context {
           \Staff {
-            #(if stf #{
+            #(if (assq-ref nprops 'staff-default-staff-staff) #{
               \override VerticalAxisGroup.default-staff-staff-spacing =
-              #`((basic-distance . ,(* 9 stf))
-                 (minimum-distance . ,(* 8 stf))
-                 (padding . ,stf))
+              #(assq-ref nprops 'staff-default-staff-staff)
                  #})
           }
         }
         \context {
           \ChordNames {
-            #(if crds-non-rel #{
-              \override VerticalAxisGroup.nonstaff-relatedstaff-spacing.padding =
-              #(* 0.5 crds-non-rel)
+            #(if (assq-ref nprops 'chord-names-nonstaff-relatedstaff) #{
+              \override VerticalAxisGroup.nonstaff-relatedstaff-spacing =
+              #(assq-ref nprops 'chord-names-nonstaff-relatedstaff)
                  #})
-            #(if crds-non-non #{
-              \override VerticalAxisGroup.nonstaff-nonstaff-spacing.padding =
-              #(* 0.5 crds-non-non)
+            #(if (assq-ref nprops 'chord-names-nonstaff-nonstaff) #{
+              \override VerticalAxisGroup.nonstaff-nonstaff-spacing =
+              #(assq-ref nprops 'chord-names-nonstaff-nonstaff)
                  #})
           }
         }
         \context {
           \Dynamics {
-            #(if dyn #{
+            #(if (assq-ref nprops 'dynamics-nonstaff-relatedstaff) #{
               \override VerticalAxisGroup.nonstaff-relatedstaff-spacing =
-              #`((basic-distance . ,(* 5 dyn))
-                 (padding . ,(* 0.5 dyn)))
+              #(assq-ref nprops 'dynamics-nonstaff-relatedstaff)
                  #})
           }
         }
         \context {
           \FiguredBass {
-            #(if figb #{
-              \override VerticalAxisGroup.nonstaff-relatedstaff-spacing.padding =
-              #(* 0.5 figb-non-rel)
+            #(if (assq-ref nprops 'figured-bass-nonstaff-relatedstaff) #{
+              \override VerticalAxisGroup.nonstaff-relatedstaff-spacing =
+              #(assq-ref nprops 'figured-bass-nonstaff-relatedstaff)
                  #})
-            #(if figb #{
-              \override VerticalAxisGroup.nonstaff-nonstaff-spacing.padding =
-              #(* 0.5 figb-non-non)
+            #(if (assq-ref nprops 'figured-bass-nonstaff-nonstaff) #{
+              \override VerticalAxisGroup.nonstaff-nonstaff-spacing =
+              #(assq-ref nprops 'figured-bass-nonstaff-nonstaff)
                  #})
           }
         }
         \context {
           \Lyrics {
-            #(if lyr-non-rel #{
+            #(if (assq-ref nprops 'lyrics-nonstaff-relatedstaff) #{
               \override VerticalAxisGroup.nonstaff-relatedstaff-spacing =
-              #`((basic-distance . ,(* 5.5 lyr-non-rel))
-                 (padding . ,(* 0.5 lyr-non-rel)))
+              #(assq-ref nprops 'lyrics-nonstaff-relatedstaff)
                  #})
-            #(if lyr-non-non #{
+            #(if (assq-ref nprops 'lyrics-nonstaff-nonstaff) #{
               \override VerticalAxisGroup.nonstaff-nonstaff-spacing =
-              % basic-distance is 0
-              #`((minimum-distance . ,(* 2.8 lyr-non-non))
-                 (padding . ,(* 0.2 lyr-non-non)))
+              #(assq-ref nprops 'lyrics-nonstaff-nonstaff)
                  #})
-            #(if lyr-non-un #{
-              \override VerticalAxisGroup.nonstaff-unrelatedstaff-spacing.padding =
-              #(* 1.5 lyr-non-un)
+            #(if (assq-ref nprops 'lyrics-nonstaff-unrelatedstaff) #{
+              \override VerticalAxisGroup.nonstaff-unrelatedstaff-spacing =
+              #(assq-ref nprops 'lyrics-nonstaff-unrelatedstaff)
                  #})
           }
         }
         \context {
           \NoteNames {
-            #(if nn-non-rel #{
+            #(if (assq-ref nprops 'note-names-nonstaff-relatedstaff) #{
               \override VerticalAxisGroup.nonstaff-relatedstaff-spacing =
-              #`((basic-distance . ,(* 5.5 nn-non-rel))
-                 (padding . ,(* 0.5 nn-non-rel)))
+              #(assq-ref nprops 'note-names-nonstaff-relatedstaff)
                  #})
-            #(if nn-non-non #{
+            #(if (assq-ref nprops 'note-names-nonstaff-nonstaff) #{
               \override VerticalAxisGroup.nonstaff-nonstaff-spacing =
-              % basic-distance is 0
-              #`((minimum-distance . ,(* 2.8 nn-non-non))
-                 (padding . ,(* 0.2 nn-non-non)))
+              #(assq-ref nprops 'note-names-nonstaff-nonstaff)
                  #})
-            #(if nn-non-un #{
-              \override VerticalAxisGroup.nonstaff-unrelatedstaff-spacing.padding =
-              #(* 1.5 nn-non-un)
+            #(if (assq-ref nprops 'note-names-nonstaff-unrelatedstaff) #{
+              \override VerticalAxisGroup.nonstaff-unrelatedstaff-spacing =
+              #(assq-ref nprops 'note-names-nonstaff-unrelatedstaff)
                  #})
           }
         }
@@ -230,7 +296,7 @@ scaleVerticalSpacingInSystems =
    (top-markup . 1)
    (last-bottom . 1))
 
-% B1. scale all properties by the same amount
+% B1. scale all "in systems" properties by the same amount
 
 \scaleVerticalSpacingInSystems #1.5
 
