@@ -40,7 +40,10 @@
     (lambda (prop)
       (cons (car prop)
         (map
-         (lambda (p) (cons (car p) (* input (cdr p))))
+         (lambda (p)
+           (if (eq? (car p) 'stretchability)
+               p
+               (cons (car p) (* input (cdr p)))))
          (cdr prop))))
     defaults))
 
@@ -50,32 +53,25 @@
     scale factors in input, an alist of scale factors, and returns a new alist.
     prop-lookup is an alist that allows for two tiers of props for ...InSystems,
     and is simply #f for ...PageLayout."
-   (let* ((page-layout (not (list? prop-lookup)))
-          (all (assq-ref input 'all))
-          (fallback (if page-layout 1 #f))
-          ;; make a complete set of scaling factors for all props,
-          ;; scaling factors are set by a cascade from the highest
-          ;; priority source to the least using (or ... )
-          (scale-factor-alist
-           (map
-            (lambda (prop)
-              (cons prop
-                (or
-                 (assq-ref input prop)
-                 (and (list? prop-lookup) (assq-ref input (assq-ref prop-lookup prop)))
-                 all
-                 fallback)))
-            props-list))
-          ;; for ...InSystems remove any items not set by user (fallback is #f) since
-          ;; \layout output is conditional and can be an incomplete set of props
-          ;; for ...PageLayout a full set of props are needed since \paper output isn't
-          ;; conditional, so just scale by 1 for props unset by user (fallback is 1)
-          (scale-factor-alist2
-           (if page-layout
-               scale-factor-alist
-               (filter
-                (lambda (p) (not (equal? #f (cdr p))))
-                scale-factor-alist))))
+   (let* (
+           ;; make a complete set of scaling factors for all props,
+           ;; scaling factors are set by a cascade from the highest
+           ;; priority source to the least using (or ... )
+           (scale-factor-alist
+            (map
+             (lambda (prop)
+               (cons prop
+                 (or
+                  (assq-ref input prop)
+                  (and (list? prop-lookup) (assq-ref input (assq-ref prop-lookup prop)))
+                  (assq-ref input 'all)
+                  #f)))
+             props-list))
+           ;; remove any items not set by user (prop value is #f)
+           (scale-factor-alist2
+            (filter
+             (lambda (p) (not (equal? #f (cdr p))))
+             scale-factor-alist)))
      ;; multiply defaults by scaling factors and return the new props alist
      (map
       (lambda (prop)
@@ -85,29 +81,33 @@
           (cons prop-name
             (map
              (lambda (df)
-               (cons (car df) (* mult (cdr df))))
+               ; (display (car df))(newline)
+               (if (eq? (car df) 'stretchability)
+                   df
+                   (cons (car df) (* mult (cdr df)))))
              dfs))))
       scale-factor-alist2)))
 
 
 scaleVerticalSpacingPageLayout =
-#(define-scheme-function (parser location input)
+#(define-void-function (parser location input)
    (number-or-association-list-of-symbols-and-numbers?)
    "Multiplies the default values of the flexible vertical spacing paper
     variables by the amounts specified in @{input}, a number or alist.
     Returns a paper block. See:
     http://lilypond.org/doc/v2.18/Documentation/notation/flexible-vertical-spacing-paper-variables"
    (let*
-    ;; default values of 0 are omitted since they can't be scaled
-    ((defaults
-      '((system-system . ((basic-distance . 12) (minimum-distance . 8) (padding . 1)))
-        (score-system . ((basic-distance . 14) (minimum-distance . 8) (padding . 1)))
-        (markup-system . ((basic-distance . 5) (padding . 0.5)))
-        (score-markup . ((basic-distance . 12) (padding . 0.5)))
+    ((paper (ly:parser-lookup parser '$defaultpaper))
+     ;; default values of 0 are omitted since they can't be scaled
+     (defaults
+      '((system-system . ((basic-distance . 12) (minimum-distance . 8) (padding . 1) (stretchability . 60)))
+        (score-system . ((basic-distance . 14) (minimum-distance . 8) (padding . 1) (stretchability . 120)))
+        (markup-system . ((basic-distance . 5) (padding . 0.5) (stretchability . 30)))
+        (score-markup . ((basic-distance . 12) (padding . 0.5) (stretchability . 60)))
         (markup-markup . ((basic-distance . 1) (padding . 0.5)))
         (top-system . ((basic-distance . 1) (padding . 1)))
         (top-markup . ((padding . 1)))
-        (last-bottom . ((basic-distance . 1) (padding . 1)))))
+        (last-bottom . ((basic-distance . 1) (padding . 1) (stretchability . 30)))))
      (props-list (map car defaults))
      (valid-input-list (concatenate (list '(all) props-list)))
      ;; generate new props by multiplying defaults by scaling factors
@@ -117,18 +117,13 @@ scaleVerticalSpacingPageLayout =
           (make-scaled-props defaults props-list input #f))))
     ;; give warning on bad input
     (validate-input input valid-input-list "scaleVerticalSpacingPageLayout")
-    #{
-      \paper {
-        system-system-spacing = #(assq-ref nprops 'system-system)
-        score-system-spacing = #(assq-ref nprops 'score-system)
-        markup-system-spacing = #(assq-ref nprops 'markup-system)
-        score-markup-spacing = #(assq-ref nprops 'score-markup)
-        markup-markup-spacing = #(assq-ref nprops 'markup-markup)
-        top-system-spacing = #(assq-ref nprops 'top-system)
-        top-markup-spacing = #(assq-ref nprops 'top-markup)
-        last-bottom-spacing = #(assq-ref nprops 'last-bottom)
-      }
-    #}))
+    ;; set paper output-def variables
+    (for-each
+     (lambda (x)
+       (ly:output-def-set-variable! paper
+         (symbol-append (car x) '-spacing)
+         (cdr x)))
+     nprops)))
 
 
 scaleVerticalSpacingInSystems =
@@ -279,57 +274,57 @@ scaleVerticalSpacingInSystems =
 
 %{
 
-% A1. scale all page layout variables by the same amount
+   % A1. scale all page layout variables by the same amount
 
-\scaleVerticalSpacingPageLayout #1.5
+   \scaleVerticalSpacingPageLayout #1.5
 
-% A2. scale specific page layout variables
+   % A2. scale specific page layout variables
 
-\scaleVerticalSpacingPageLayout
-#'((all . 1)
-   (system-system . 1)
-   (score-system . 1)
-   (markup-system . 1)
-   (score-markup . 1)
-   (markup-markup . 1)
-   (top-system . 1)
-   (top-markup . 1)
-   (last-bottom . 1))
+   \scaleVerticalSpacingPageLayout
+   #'((all . 1)
+      (system-system . 1)
+      (score-system . 1)
+      (markup-system . 1)
+      (score-markup . 1)
+      (markup-markup . 1)
+      (top-system . 1)
+      (top-markup . 1)
+      (last-bottom . 1))
 
-% B1. scale all "in systems" properties by the same amount
+   % B1. scale all "in systems" properties by the same amount
 
-\scaleVerticalSpacingInSystems #1.5
+   \scaleVerticalSpacingInSystems #1.5
 
-% B2. scale properties for specific contexts
-% (or of the StaffGrouper grob -- not a context)
+   % B2. scale properties for specific contexts
+   % (or of the StaffGrouper grob -- not a context)
 
-\scaleVerticalSpacingInSystems
-#'((all . 1)
-   (staff-grouper . 1)
-   (staff . 1)
-   (chord-names . 1)
-   (dynamics . 1)
-   (figured-bass . 1)
-   (lyrics . 1)
-   (note-names . 1))
+   \scaleVerticalSpacingInSystems
+   #'((all . 1)
+      (staff-grouper . 1)
+      (staff . 1)
+      (chord-names . 1)
+      (dynamics . 1)
+      (figured-bass . 1)
+      (lyrics . 1)
+      (note-names . 1))
 
-% B3. scale specific properties within specific contexts
-% (or of the StaffGrouper grob -- not a context)
+   % B3. scale specific properties within specific contexts
+   % (or of the StaffGrouper grob -- not a context)
 
-\scaleVerticalSpacingInSystems
-#'((all . 1)
-   (staff-grouper-staff-staff . 1)
-   (staff-grouper-staffgroup-staff . 1)
-   (staff-default-staff-staff . 1) ;; same as (staff . 1)
-   (chord-names-nonstaff-relatedstaff . 1)
-   (chord-names-nonstaff-nonstaff . 1)
-   (dynamics-nonstaff-relatedstaff . 1) ;; same as (dynamics . 1)
-   (figured-bass-nonstaff-relatedstaff . 1)
-   (figured-bass-nonstaff-nonstaff . 1)
-   (lyrics-nonstaff-relatedstaff . 1)
-   (lyrics-nonstaff-nonstaff . 1)
-   (lyrics-nonstaff-unrelatedstaff . 1)
-   (note-names-nonstaff-relatedstaff . 1)
-   (note-names-nonstaff-nonstaff . 1)
-   (note-names-nonstaff-unrelatedstaff . 1))
+   \scaleVerticalSpacingInSystems
+   #'((all . 1)
+      (staff-grouper-staff-staff . 1)
+      (staff-grouper-staffgroup-staff . 1)
+      (staff-default-staff-staff . 1) ;; same as (staff . 1)
+      (chord-names-nonstaff-relatedstaff . 1)
+      (chord-names-nonstaff-nonstaff . 1)
+      (dynamics-nonstaff-relatedstaff . 1) ;; same as (dynamics . 1)
+      (figured-bass-nonstaff-relatedstaff . 1)
+      (figured-bass-nonstaff-nonstaff . 1)
+      (lyrics-nonstaff-relatedstaff . 1)
+      (lyrics-nonstaff-nonstaff . 1)
+      (lyrics-nonstaff-unrelatedstaff . 1)
+      (note-names-nonstaff-relatedstaff . 1)
+      (note-names-nonstaff-nonstaff . 1)
+      (note-names-nonstaff-unrelatedstaff . 1))
 %}
