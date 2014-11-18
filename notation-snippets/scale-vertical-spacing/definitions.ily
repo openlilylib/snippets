@@ -53,25 +53,25 @@
     scale factors in input, an alist of scale factors, and returns a new alist.
     prop-lookup is an alist that allows for two tiers of props for ...InSystems,
     and is simply #f for ...PageLayout."
-   (let* (
-           ;; make a complete set of scaling factors for all props,
-           ;; scaling factors are set by a cascade from the highest
-           ;; priority source to the least using (or ... )
-           (scale-factor-alist
-            (map
-             (lambda (prop)
-               (cons prop
-                 (or
-                  (assq-ref input prop)
-                  (and (list? prop-lookup) (assq-ref input (assq-ref prop-lookup prop)))
-                  (assq-ref input 'all)
-                  #f)))
-             props-list))
-           ;; remove any items not set by user (prop value is #f)
-           (scale-factor-alist2
-            (filter
-             (lambda (p) (not (equal? #f (cdr p))))
-             scale-factor-alist)))
+   (let* ((all (assq-ref input 'all))
+          ;; make a complete set of scaling factors for all props,
+          ;; scaling factors are set by a cascade from the highest
+          ;; priority source to the least using (or ... )
+          (scale-factor-alist
+           (map
+            (lambda (prop)
+              (cons prop
+                (or
+                 (assq-ref input prop)
+                 (and (list? prop-lookup) (assq-ref input (assq-ref prop-lookup prop)))
+                 all
+                 #f)))
+            props-list))
+          ;; remove any items not set by user (prop value is #f)
+          (scale-factor-alist2
+           (filter
+            (lambda (p) (not (equal? #f (cdr p))))
+            scale-factor-alist)))
      ;; multiply defaults by scaling factors and return the new props alist
      (map
       (lambda (prop)
@@ -81,7 +81,6 @@
           (cons prop-name
             (map
              (lambda (df)
-               ; (display (car df))(newline)
                (if (eq? (car df) 'stretchability)
                    df
                    (cons (car df) (* mult (cdr df)))))
@@ -98,31 +97,35 @@ scaleVerticalSpacingPageLayout =
     http://lilypond.org/doc/v2.18/Documentation/notation/flexible-vertical-spacing-paper-variables"
    (let*
     ((paper (ly:parser-lookup parser '$defaultpaper))
-     ;; default values of 0 are omitted since they can't be scaled
+     (props-list
+      '(system-system-spacing
+        score-system-spacing
+        markup-system-spacing
+        score-markup-spacing
+        markup-markup-spacing
+        top-system-spacing
+        top-markup-spacing
+        last-bottom-spacing))
+
      (defaults
-      '((system-system . ((basic-distance . 12) (minimum-distance . 8) (padding . 1) (stretchability . 60)))
-        (score-system . ((basic-distance . 14) (minimum-distance . 8) (padding . 1) (stretchability . 120)))
-        (markup-system . ((basic-distance . 5) (padding . 0.5) (stretchability . 30)))
-        (score-markup . ((basic-distance . 12) (padding . 0.5) (stretchability . 60)))
-        (markup-markup . ((basic-distance . 1) (padding . 0.5)))
-        (top-system . ((basic-distance . 1) (padding . 1)))
-        (top-markup . ((padding . 1)))
-        (last-bottom . ((basic-distance . 1) (padding . 1) (stretchability . 30)))))
-     (props-list (map car defaults))
+      (map
+       (lambda (x) (cons x (ly:output-def-lookup paper x)))
+       props-list))
+
      (valid-input-list (concatenate (list '(all) props-list)))
+
      ;; generate new props by multiplying defaults by scaling factors
      (nprops
       (if (number? input)
           (make-scaled-props-single-num defaults input)
           (make-scaled-props defaults props-list input #f))))
+
     ;; give warning on bad input
     (validate-input input valid-input-list "scaleVerticalSpacingPageLayout")
     ;; set paper output-def variables
     (for-each
      (lambda (x)
-       (ly:output-def-set-variable! paper
-         (symbol-append (car x) '-spacing)
-         (cdr x)))
+       (ly:output-def-set-variable! paper (car x) (cdr x)))
      nprops)))
 
 
@@ -136,8 +139,9 @@ scaleVerticalSpacingInSystems =
    ;; FretBoards do not set any grob-properties in VerticalAxisGroup,
    ;; so there's nothing to scale for them, so they are not included.
    (let*
-    ;; default values of 0 are omitted since they can't be scaled
-    ((defaults
+    ((layout (ly:parser-lookup parser '$defaultlayout))
+     ;; default values of 0 are omitted since they can't be scaled
+     (defaults
       '((staff-grouper-staff-staff . ((basic-distance . 9) (minimum-distance . 7) (padding . 1)))
         (staff-grouper-staffgroup-staff . ((basic-distance . 10.5) (minimum-distance . 8) (padding . 1)))
         (staff-default-staff-staff . ((basic-distance . 9) (minimum-distance . 8) (padding . 1)))
