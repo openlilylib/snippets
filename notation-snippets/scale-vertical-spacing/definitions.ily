@@ -33,21 +33,6 @@
         input)))
 
 
-#(define (make-scaled-props-single-num defaults input)
-   "Takes an alist of default settings and multiplies the values by input, a 
-    single number, and returns a new alist."
-   (map
-    (lambda (prop)
-      (cons (car prop)
-        (map
-         (lambda (p)
-           (if (eq? (car p) 'stretchability)
-               p
-               (cons (car p) (* input (cdr p)))))
-         (cdr prop))))
-    defaults))
-
-
 #(define (make-scaled-props defaults props-list input prop-lookup)
    "Takes an alist of default settings and multiplies the values by the
     scale factors in input, an alist of scale factors, and returns a new alist.
@@ -96,7 +81,11 @@ scaleVerticalSpacingPageLayout =
     Returns a paper block. See:
     http://lilypond.org/doc/v2.18/Documentation/notation/flexible-vertical-spacing-paper-variables"
    (let*
-    ((paper (ly:parser-lookup parser '$defaultpaper))
+    ((input2
+      (if (number? input)
+          (list (cons 'all input))
+          input))
+     (paper (ly:parser-lookup parser '$defaultpaper))
      (props-list
       '(system-system-spacing
         score-system-spacing
@@ -116,16 +105,17 @@ scaleVerticalSpacingPageLayout =
 
      ;; generate new props by multiplying defaults by scaling factors
      (nprops
-      (if (number? input)
-          (make-scaled-props-single-num defaults input)
-          (make-scaled-props defaults props-list input #f))))
+      (make-scaled-props defaults props-list input2 #f)))
+    ;; let* body
 
     ;; give warning on bad input
     (validate-input input valid-input-list "scaleVerticalSpacingPageLayout")
     ;; set paper output-def variables
     (for-each
      (lambda (x)
-       (ly:output-def-set-variable! paper (car x) (cdr x)))
+       (display (ly:output-def-lookup paper (car x) "yoo")) (newline)
+       (ly:output-def-set-variable! paper (car x) (cdr x))
+       (display (ly:output-def-lookup paper (car x) "yoo")) (newline))
      nprops)))
 
 
@@ -139,22 +129,26 @@ scaleVerticalSpacingInSystems =
    ;; FretBoards do not set any grob-properties in VerticalAxisGroup,
    ;; so there's nothing to scale for them, so they are not included.
    (let*
-    ((layout (ly:parser-lookup parser '$defaultlayout))
+    ((input2
+      (if (number? input)
+          (list (cons 'all input))
+          input))
+     ;; (layout (ly:parser-lookup parser '$defaultlayout))
      ;; default values of 0 are omitted since they can't be scaled
      (defaults
-      '((staff-grouper-staff-staff . ((basic-distance . 9) (minimum-distance . 7) (padding . 1)))
-        (staff-grouper-staffgroup-staff . ((basic-distance . 10.5) (minimum-distance . 8) (padding . 1)))
+      '((staff-grouper-staff-staff . ((basic-distance . 9) (minimum-distance . 7) (padding . 1) (stretchability . 5)))
+        (staff-grouper-staffgroup-staff . ((basic-distance . 10.5) (minimum-distance . 8) (padding . 1) (stretchability . 9)))
         (staff-default-staff-staff . ((basic-distance . 9) (minimum-distance . 8) (padding . 1)))
         (chord-names-nonstaff-relatedstaff . ((padding . 0.5)))
         (chord-names-nonstaff-nonstaff . ((padding . 0.5)))
         (dynamics-nonstaff-relatedstaff . ((basic-distance . 5) (padding . 0.5)))
         (figured-bass-nonstaff-relatedstaff . ((padding . 0.5)))
         (figured-bass-nonstaff-nonstaff . ((padding . 0.5)))
-        (lyrics-nonstaff-relatedstaff . ((basic-distance . 5.5) (padding . 0.5)))
-        (lyrics-nonstaff-nonstaff . ((minimum-distance . 2.8) (padding . 0.2)))
+        (lyrics-nonstaff-relatedstaff . ((basic-distance . 5.5) (padding . 0.5) (stretchability . 1)))
+        (lyrics-nonstaff-nonstaff . ((minimum-distance . 2.8) (padding . 0.2) (stretchability . 0)))
         (lyrics-nonstaff-unrelatedstaff . ((padding . 0.5)))
-        (note-names-nonstaff-relatedstaff . ((basic-distance . 5.5) (padding . 0.5)))
-        (note-names-nonstaff-nonstaff . ((minimum-distance . 2.8) (padding . 0.2)))
+        (note-names-nonstaff-relatedstaff . ((basic-distance . 5.5) (padding . 0.5) (stretchability . 1)))
+        (note-names-nonstaff-nonstaff . ((minimum-distance . 2.8) (padding . 0.2) (stretchability . 0)))
         (note-names-nonstaff-unrelatedstaff . ((padding . 1.5)))))
      (prop-lookup
       '((staff-grouper-staff-staff . staff-grouper)
@@ -176,9 +170,9 @@ scaleVerticalSpacingInSystems =
                                       (delete-duplicates (map cdr prop-lookup)))))
      ;; generate new props by multiplying defaults by scaling factors
      (nprops
-      (if (number? input)
-          (make-scaled-props-single-num defaults input)
-          (make-scaled-props defaults props-list input prop-lookup))))
+          (make-scaled-props defaults props-list input2 prop-lookup)))
+    ;; let* body
+
     ;; give warning on bad input
     (validate-input input valid-input-list "scaleVerticalSpacingInSystems")
     #{
