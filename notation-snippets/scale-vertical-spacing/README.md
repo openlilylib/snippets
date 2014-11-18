@@ -19,14 +19,14 @@ This may be sufficient in some cases, but for more control and flexibility the a
     
     \scaleVerticalSpacingPageLayout
     #'((all . 1.1)
-       (system-system . 1.2)
-       (score-system . 1.3)
-       (markup-system . 1.2)
-       (score-markup . 1.3)
-       (markup-markup . 1.2)
-       (top-system . 1.3)
-       (top-markup . 1.2)
-       (last-bottom . 1.3))
+       (system-system-spacing . 1.2)
+       (score-system-spacing . 1.3)
+       (markup-system-spacing . 1.2)
+       (score-markup-spacing . 1.3)
+       (markup-markup-spacing . 1.2)
+       (top-system-spacing . 1.3)
+       (top-markup-spacing . 1.2)
+       (last-bottom-spacing . 1.3))
 
     % scale the properties of specific contexts (and/or properties of the StaffGrouper grob, which is not a context)
     

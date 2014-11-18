@@ -286,14 +286,14 @@ scaleVerticalSpacingInSystems =
 
    \scaleVerticalSpacingPageLayout
    #'((all . 1)
-      (system-system . 1)
-      (score-system . 1)
-      (markup-system . 1)
-      (score-markup . 1)
-      (markup-markup . 1)
-      (top-system . 1)
-      (top-markup . 1)
-      (last-bottom . 1))
+      (system-system-spacing . 1)
+      (score-system-spacing . 1)
+      (markup-system-spacing . 1)
+      (score-markup-spacing . 1)
+      (markup-markup-spacing . 1)
+      (top-system-spacing . 1)
+      (top-markup-spacing . 1)
+      (last-bottom-spacing . 1))
 
    % B1. scale all "in systems" properties by the same amount
 
