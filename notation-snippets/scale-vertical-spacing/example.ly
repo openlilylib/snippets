@@ -4,19 +4,19 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This example shows how "Scale vertical spacing" can be used.
-% The implementation and some basic documentation is in the file
-% `definitions.ily`.
+% The implementation is in the file `definitions.ily`.
+% The documentation is in the file `README.md`.
 
 % scale all page layout variables by the same amount
 
 \scaleVerticalSpacingPageLayout #1.5
 
 % scale all "in-system" properties by the same amount,
-% except for lyrics, which is scaled by a different amount
+% except for Lyrics, which is scaled by a different amount
 
 \scaleVerticalSpacingInSystems
-#'((all . 1.5)
-   (lyrics . 1.15))
+#'((all 1.5)
+   (Lyrics 1.15))
 
 
 % EXAMPLE MUSIC
