@@ -268,13 +268,13 @@ You don't need to know these, but here they are for reference.  All the various 
         <td>0.5</td>
     </tr>
     <tr>
-        <td>NoteNames -> VerticalAxisGroup.nonstaff-nonstaff-spacing</td>
+        <td>NoteNames VerticalAxisGroup.nonstaff-nonstaff-spacing</td>
         <td>0</td>
         <td>2.8</td>
         <td>0.2</td>
     </tr>
     <tr>
-        <td>NoteNames -> VerticalAxisGroup.nonstaff-unrelatedstaff-spacing</td>
+        <td>NoteNames VerticalAxisGroup.nonstaff-unrelatedstaff-spacing</td>
         <td>0</td>
         <td>0</td>
         <td>1.5</td>
