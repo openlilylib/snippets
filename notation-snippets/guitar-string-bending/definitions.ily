@@ -196,8 +196,8 @@ thickness begin-x line-y end-x line-y))))
           (left-tab-note-head (ly:grob-property left-bound 'cause))
           (right-tab-note-head (ly:grob-property right-bound 'cause))
           (control-points (ly:grob-property grob 'control-points))
-          ;;changed: car and cadddr changed to: first and last
-          (left-point (first control-points))
+          (left-point (car control-points))
+          ;;changed: cadddr changed to last
           (right-point (last control-points))
           (left-pitch  (ly:event-property (event-cause left-bound) 'pitch))
           (right-pitch (ly:event-property (event-cause right-bound) 'pitch))
