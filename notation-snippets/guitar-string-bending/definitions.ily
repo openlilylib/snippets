@@ -13,7 +13,7 @@
   % add comma-separated tags to make searching more effective:
   tags = "guitar, bend, string bending"
   % is this snippet ready?  See meta/status-values.md
-  status = "undocumented"
+  status = "buggy"
 }
 
 % TODO:
