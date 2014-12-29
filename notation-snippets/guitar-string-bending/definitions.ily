@@ -395,10 +395,13 @@ thickness begin-x line-y end-x line-y))))
 
 %%% music functions
 
-bendOn = {
+bendOn =
+#(define-music-function (parser location note) (ly:music?)
+#{
   \override Voice.Slur #'stencil = #slur::draw-pointed-slur
   \override TabVoice.Slur #'stencil = #slur::draw-bend-arrow
-}
+  $note \noBreak
+#})
 
 bendOff = {
   \revert Voice.Slur #'stencil
