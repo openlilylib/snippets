@@ -21,8 +21,9 @@ Limitations
 -----------
 
 * Quarter tone bends are not supported.
-* Line breaks are not supported.  If a bending is broken by a line
-  break, the file won't compile: the workaround is using \noBreak.
+* Line breaks over bending notes are not supported and they are currently
+  disabled, because otherwise the file would not compile as soon as page
+  formatting decisions create such a situation.
 * You can't use hammer-on and pull-off when `\bendOn` is active, because
   this snippet uses and transforms the slur engraver.  This implies that
   you cannot, for instance, start a pull-off right after a bend release.
@@ -39,23 +40,28 @@ Limitations
       \StaffGroup
       \override StaffGrouper.staff-staff-spacing.padding = #5
     }
-  }```
+  }
+  ```
 
 
 Usage
 -----
 
-Add this repository (openlilylib/snippets) to the list of include paths
-in your editor preferences and put the following include statement at
-the top of your file:
+Add this repository to the list of include paths in your editor preferences
+and put the following include statement at the top of your file:
 
     \include "notation-snippets/guitar-string-bending/definitions.ily"
 
 You can activate and deactivate the bending with the following commands:
 
+    % music...
     \bendOn
-    % music here
+    % bended notes here
     \bendOff
+
+> Remember to put the music in Voice or TabVoice contexts (not just Staff
+> or TabStaff), otherwise you may get an extra staff, as explained in the
+> [Usage manual](http://lilypond.org/doc/stable/Documentation/usage/common-errors.html#an-extra-staff-appears).
 
 Within these commands, the parentheses, normally used to notate slurs,
 will notate the bendings.  You can write any bending from a half
