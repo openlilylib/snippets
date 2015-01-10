@@ -12,7 +12,7 @@
     in a certain region of the score.
   }
   oll-usage = \markup \justify {
-    Enter \typewriter { \\setClipRegion from to } as a toplevel command
+    Enter \typewriter { setClipRegion from to } as a toplevel command
     somewhere after including this file. \typewriter from and \typewriter to
     are barnumbers. If they are out of range they are simply ignored so the
     score will be engraved from the beginning and/or through the end.
@@ -20,7 +20,7 @@
     (e.g. from an original score) if you provide a list beforehand.
     This list has to be named \typewriter originalPageBreaks
     and simply contains a list of barnumbers. The available commands are
-    \typewriter { \\setClipPage num } and \typewriter { \\setClipPageRange from to }.
+    \typewriter { setClipPage num } and \typewriter { setClipPageRange from to }.
     They perform a number of plausibility/validity checks.
   }
   oll-category = "compilation-tools"
@@ -61,11 +61,11 @@ setClipRegion =
    (set! clip-region-from from)
    (set! clip-region-to (+ to 1))
    #{
-     \editionMod clips 1 0/4 score.Score.A
+     \editionMod clips 1 0/4 clip-regions.Score.A
      \set Score.skipTypesetting = ##t
-     \editionMod clips #clip-region-from 0/4 score.Score.A
+     \editionMod clips #clip-region-from 0/4 clip-regions.Score.A
      \set Score.skipTypesetting = ##f
-     \editionMod clips #clip-region-to 0/4 score.Score.A
+     \editionMod clips #clip-region-to 0/4 clip-regions.Score.A
      \set Score.skipTypesetting = ##t
    #})
 
@@ -105,3 +105,10 @@ setClipPage =
 #(define-void-function (parser location page)
    (integer?)
    #{ \setClipPageRange #page #page #})
+
+\layout {
+  \context {
+    \Score
+    \consists \editionEngraver clip-regions
+  }
+}
