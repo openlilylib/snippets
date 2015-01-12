@@ -483,7 +483,7 @@
     ))
 
 
-(define (memom? v)
+(define-public (memom? v)
   (or (integer? v)
       (and (pair? v)(integer? (car v))
            (let ((cv (cdr v)))
