@@ -483,12 +483,13 @@
     ))
 
 
-(define (memom? v)
-  (and (pair? v)(integer? (car v))
-       (let ((cv (cdr v)))
-         (if (list? cv)(set! cv (car cv)))
-         (or (rational? cv)(frac-or-mom? cv))
-         )))
+(define-public (memom? v)
+  (or (integer? v)
+      (and (pair? v)(integer? (car v))
+           (let ((cv (cdr v)))
+             (if (list? cv)(set! cv (car cv)))
+             (or (rational? cv)(frac-or-mom? cv))
+             ))))
 (define (limemom? v)(and (list? v)(every memom? v)))
 
 ;%%% the key function "editionMMod"
@@ -517,14 +518,17 @@
     (let ((path (create-music-path #f path)))
       (for-each
        (lambda (p)
-         (let ((takt (car p))
-               (pos (cdr p)))
-           (if (list? pos)(set! pos (car pos)))
-           (if (fraction? pos)(set! pos (fraction->moment pos)))
-           (if (rational? pos)
-               (set! pos (ly:make-moment (numerator pos)(denominator pos))))
-           (add-edmod edition takt pos path mod)
-           )) mposl)
+         (begin
+          (if (integer? p)(set! p (list p 0)))
+          (let ((takt (car p))
+                (pos (cdr p)))
+            (if (integer? pos)(set! pos (list pos 0)))
+            (if (list? pos)(set! pos (car pos)))
+            (if (fraction? pos)(set! pos (fraction->moment pos)))
+            (if (rational? pos)
+                (set! pos (ly:make-moment (numerator pos)(denominator pos))))
+            (add-edmod edition takt pos path mod)
+            ))) mposl)
       )))
 
 
