@@ -56,18 +56,25 @@
 %  the score is engraved to the end).
 setClipRegion =
 #(define-void-function (parser location from to)
-   (integer? integer?)
-   (set! do-clip-region #t)
-   (set! clip-region-from from)
-   (set! clip-region-to (+ to 1))
+   (memom? memom?)
+   (let ((clip-region-from 
+          (if (integer? from) 
+              (list from #{ 0/4 #})
+              (list (car from) 
+                (ly:make-moment (numerator (cadr from))(denominator (cadr from))))))
+         (clip-region-to 
+          (if (integer? to)
+              (list (+ 1 to) #{ 0/4 #})
+              (list (car to)
+                (ly:make-moment (numerator (cadr to))(denominator (cadr to)))))))
    #{
      \editionMod clips 1 0/4 clip-regions.Score.A
      \set Score.skipTypesetting = ##t
-     \editionMod clips #clip-region-from 0/4 clip-regions.Score.A
+     \editionMod clips #(car clip-region-from) #(cadr clip-region-from) clip-regions.Score.A
      \set Score.skipTypesetting = ##f
-     \editionMod clips #clip-region-to 0/4 clip-regions.Score.A
+     \editionMod clips #(car clip-region-to) #(cadr clip-region-to) clip-regions.Score.A
      \set Score.skipTypesetting = ##t
-   #})
+   #}))
 
 % define (and activate) a page range to be compiled alone.
 % Pass first and last page as integers.
