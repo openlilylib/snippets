@@ -93,9 +93,11 @@ setClipPageRange =
                              (list-ref originalPageBreaks (- from 2))))
                (to-bar (if (eq? to (+ (length originalPageBreaks) 1))
                            ;; There is no page break *after* the last page,
-                           ;; so we just take the barnumber of the last page
-                           ;; and hope that it doesn't have more than 100 measures.
-                           (+ (list-ref originalPageBreaks (- to 2)) 100)
+                           ;; so we just set the "to" barnumber to -1
+                           ;; because this simply discards the argument and compiles through to the end
+                           -1
+                           ;; Otherwise we look up the barnumber for the page break and subtract 1
+                           ;; (the last measure to be included is the last one from the previous page
                            (- (list-ref originalPageBreaks (- to 1)) 1))))
            #{ \setClipRegion #from-bar #to-bar #})))))
 
