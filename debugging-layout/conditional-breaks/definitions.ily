@@ -29,8 +29,8 @@
 
 % Make sure the configuration variables are all present
 % and initialize them to #f if not
-#(cond ((not (defined? 'keep-conditional-breaks))
-        (define keep-conditional-breaks #f)))
+#(cond ((not (defined? 'keep-conditional-line-breaks))
+        (define keep-conditional-line-breaks #f)))
 #(cond ((not (defined? 'keep-conditional-page-breaks))
         (define keep-conditional-page-breaks #f)))
 #(cond ((not (defined? 'keep-conditional-page-turns))
@@ -51,31 +51,43 @@
 
 % Conditionally apply the breaks defined in the lists.
 % (Non-present lists are taken as empty lists)
-#(if keep-conditional-breaks
-     (let* (
-             ;; if we do respect original page breaks linebreaks are simply linebreaks,
-             ;; but if we do not respect page breaks, page breaks and turns are
-             ;; realized as line breaks instead.
-             (linebreaks (if keep-conditional-page-breaks
-                             conditionalLineBreaks
-                             (append conditionalLineBreaks conditionalPageBreaks conditionalPageTurns)))
-             ;; if we do not respect page breaks we use an empty list
-             (pagebreaks (if keep-conditional-page-breaks
-                             conditionalPageBreaks
-                             '()))
-             ;; if we do not respect page turns we use an empty list
-             (pageturns (if keep-conditional-page-turns
-                            conditionalPageTurns
-                            '())))
+#(let* (
+         ;; configure which types of breaks are kept.
+         ;; If page breaks or page turns are disabled they are not inserted.
+         ;; However, if line breaks are enabled, page breaks and page turns
+         ;; are inserted as line breaks.
+         ;; Any combination should produce the expected results.
+         (lbreaks (if keep-conditional-line-breaks
+                      conditionalLineBreaks
+                      '()))
+         (lpbreaks (if (and keep-conditional-line-breaks
+                            (not keep-conditional-page-breaks))
+                       conditionalPageBreaks
+                       '()))
+         (lpturns (if (and keep-conditional-line-breaks
+                           (not keep-conditional-page-turns))
+                      conditionalPageTurns
+                      '()))
+         (linebreaks (if keep-conditional-page-breaks
+                         conditionalLineBreaks
+                         (append lbreaks lpbreaks lpturns)))
+         ;; if we do not respect page breaks we use an empty list
+         (pagebreaks (if keep-conditional-page-breaks
+                         conditionalPageBreaks
+                         '()))
+         ;; if we do not respect page turns we use an empty list
+         (pageturns (if keep-conditional-page-turns
+                        conditionalPageTurns
+                        '())))
 
-       #{
-         \editionModList conditional-breaks conditional-breaks.Score.A
-         \break #linebreaks
-         \editionModList conditional-breaks conditional-breaks.Score.A
-         \pageBreak #pagebreaks
-         \editionModList conditional-breaks conditional-breaks.Score.A
-         \pageTurn #pageturns
-       #}))
+   #{
+     \editionModList conditional-breaks conditional-breaks.Score.A
+     \break #linebreaks
+     \editionModList conditional-breaks conditional-breaks.Score.A
+     \pageBreak #pagebreaks
+     \editionModList conditional-breaks conditional-breaks.Score.A
+     \pageTurn #pageturns
+   #})
 
 \layout {
   \context {
