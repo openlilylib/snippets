@@ -82,7 +82,7 @@ setClipRegion =
 setClipPageRange =
 #(define-void-function (parser location from to)
    (integer? integer?)
-   (if (not (defined? 'originalPageBreaks))
+   (if (not (defined? 'conditionalPageBreaks))
        (ly:warning "\\setClipPageRange requested, but no original page breaks defined. Continuing by compiling the whole score.")
        ;; We do have page breaks so continue by retrieving barnumbers from that list
        (cond
@@ -90,22 +90,22 @@ setClipPageRange =
          (ly:warning "\\setClipPageRange: Negative page range requested. Continuing by compiling the whole score."))
         ((< from 1)
          (ly:warning "\\setClipPageRange: Page number below 1 requested. Continuing by compiling the whole score."))
-        ((> to (+ 1 (length originalPageBreaks)))
+        ((> to (+ 1 (length conditionalPageBreaks)))
          (ly:warning "\\setClipPageRange: Page index out of range. Continuing by compiling the whole score."))
         (else
          (let ((from-bar (if (eq? from 1)
                              ;; First page is not included in the originalPageBreaks list
                              ;; so we set the barnumber to 1
                              1
-                             (list-ref originalPageBreaks (- from 2))))
-               (to-bar (if (eq? to (+ (length originalPageBreaks) 1))
+                             (list-ref conditionalPageBreaks (- from 2))))
+               (to-bar (if (eq? to (+ (length conditionalPageBreaks) 1))
                            ;; There is no page break *after* the last page,
                            ;; so we just set the "to" barnumber to -1
                            ;; because this simply discards the argument and compiles through to the end
                            -1
                            ;; Otherwise we look up the barnumber for the page break and subtract 1
                            ;; (the last measure to be included is the last one from the previous page
-                           (- (list-ref originalPageBreaks (- to 1)) 1))))
+                           (- (list-ref conditionalPageBreaks (- to 1)) 1))))
            #{ \setClipRegion #from-bar #to-bar #})))))
 
 % Define (and activate) a page to be compiled alone.
