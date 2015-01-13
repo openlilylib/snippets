@@ -5,6 +5,8 @@
 %%%
 % prepare some mods for an edition fullscore
 
+\editionMod fullscore 3 2/4 my.test.Staff.A \mark "Mark"
+
 % color the notehead red on the second quarter in the second measure
 \editionMod fullscore 2 1/4 my.test.Staff.A \once \override NoteHead #'color = #red
 % destroy the slur starting on the second quarter in the first measure
