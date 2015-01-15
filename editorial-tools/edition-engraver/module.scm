@@ -1,6 +1,6 @@
 ;;;; This file is part of the lalily section in openlilylib
 ;;;;
-;;;; Copyright (C) 2011--2014 Jan-Peter Voigt <jp.voigt@gmx.de>
+;;;; Copyright (C) 2011--2015 Jan-Peter Voigt <jp.voigt@gmx.de>
 ;;;;
 ;;;; lalily is free software: you can redistribute it and/or modify
 ;;;; it under the terms of the GNU General Public License as published by
@@ -388,6 +388,12 @@
                                                                    ((and (ly:music? mod) (eq? 'MarkEvent (ly:music-property mod 'name)))
                                                                     (let ((grob (ly:engraver-make-grob trans 'RehearsalMark '()))
                                                                           (text (ly:music-property mod 'label)))
+                                                                      (if (not (markup? text))
+                                                                          (let ((rmi (ly:context-property context 'rehearsalMark))
+                                                                                (rmf (ly:context-property context 'markFormatter)))
+                                                                            (if (and (integer? rmi)(procedure? rmf))
+                                                                                (set! text (rmf rmi context)))
+                                                                            ))
                                                                       (ly:grob-set-property! grob 'text text)
                                                                       ))
                                                                    ))

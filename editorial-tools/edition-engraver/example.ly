@@ -5,7 +5,9 @@
 %%%
 % prepare some mods for an edition fullscore
 
+% try rehearsal marks
 \editionMod fullscore 3 2/4 my.test.Staff.A \mark "Mark"
+\editionMod fullscore 4 2/4 my.test.Staff.A \mark \default
 
 % color the notehead red on the second quarter in the second measure
 \editionMod fullscore 2 1/4 my.test.Staff.A \once \override NoteHead #'color = #red
