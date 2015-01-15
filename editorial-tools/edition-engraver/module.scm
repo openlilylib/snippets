@@ -1,6 +1,6 @@
 ;;;; This file is part of the lalily section in openlilylib
 ;;;;
-;;;; Copyright (C) 2011--2014 Jan-Peter Voigt <jp.voigt@gmx.de>
+;;;; Copyright (C) 2011--2015 Jan-Peter Voigt <jp.voigt@gmx.de>
 ;;;;
 ;;;; lalily is free software: you can redistribute it and/or modify
 ;;;; it under the terms of the GNU General Public License as published by
@@ -215,6 +215,7 @@
                         (eq? 'PageBreakEvent (ly:music-property m 'name))
                         (eq? 'PageTurnEvent (ly:music-property m 'name))
                         (eq? 'ApplyOutputEvent (ly:music-property m 'name))
+                        (eq? 'MarkEvent (ly:music-property m 'name))
 
                         (eq? 'PartCombineForceEvent (ly:music-property m 'name))
                         (eq? 'ExtenderEvent (ly:music-property m 'name))
@@ -383,6 +384,19 @@
                                                                           (direction (ly:music-property mod 'direction #f)))
                                                                       (ly:grob-set-property! grob 'text text)
                                                                       (if direction (ly:grob-set-property! grob 'direction direction))
+                                                                      ))
+                                                                   ((and (ly:music? mod) (eq? 'MarkEvent (ly:music-property mod 'name)))
+                                                                    (let ((grob (ly:engraver-make-grob trans 'RehearsalMark '()))
+                                                                          (text (ly:music-property mod 'label)))
+                                                                      (if (not (markup? text))
+                                                                          (let ((rmi (ly:context-property context 'rehearsalMark))
+                                                                                (rmf (ly:context-property context 'markFormatter)))
+                                                                            (if (and (integer? rmi)(procedure? rmf))
+                                                                                (let ((rmc (ly:context-property-where-defined context 'rehearsalMark)))
+                                                                                  (set! text (rmf rmi rmc))
+                                                                                  (ly:context-set-property! rmc 'rehearsalMark (+ 1 rmi))
+                                                                                  ))))
+                                                                      (ly:grob-set-property! grob 'text text)
                                                                       ))
                                                                    ))
                                                         mods))

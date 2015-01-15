@@ -5,6 +5,13 @@
 %%%
 % prepare some mods for an edition fullscore
 
+% try rehearsal marks
+\editionMod fullscore 3 2/4 my.test.Staff.A \mark \markup \with-color #blue \bold "special Mark"
+\editionMod fullscore 5 0/4 my.test.Staff.A \mark \default
+\editionMod fullscore 5 2/4 my.test.Staff.A \mark \markup \with-color #blue \bold "X"
+\editionMod fullscore 6 0/4 my.test.Staff.A \mark \default
+\editionMod fullscore 7 0/4 my.test.Staff.A \mark \default
+
 % color the notehead red on the second quarter in the second measure
 \editionMod fullscore 2 1/4 my.test.Staff.A \once \override NoteHead #'color = #red
 % destroy the slur starting on the second quarter in the first measure
