@@ -205,7 +205,7 @@
                       ((or
                         (eq? 'OttavaMusic (ly:music-property m 'name))
                         )
-                       ; TODO which music types can be made available this way? (car of \once!)
+                       ; TODO which music types can be made available this way? (take care of \once!)
                        (set! mods `(,@mods ,(context-mod-from-music parser m)))
                        #t
                        )
