@@ -17,7 +17,8 @@ for an edition-engraver tagged with `altatrinita.alt.music`.
 Howto use it?
 -------------
 
-> You have to `\include "edition-engraver.ily"` from this folder, to make the following work.
+> You have to add the path to openLilyLib either as commandline-argument `-I "the/path/to/open-lily-lib"` or via GUI-preferences.
+> Then `\include "editorial-tools/edition-engraver/definitions.ily"`, to make the following work.
 
 To make use of an edition-engraver, you have to consist the target context with a "named" edition-engraver. For example:
 
