@@ -9,7 +9,7 @@
 \editionMod fullscore 3 2/4 my.test.Staff.A \mark \markup \with-color #blue \bold "special Mark"
 \editionMod fullscore 5 0/4 my.test.Staff.A \mark \default
 \editionMod fullscore 5 2/4 my.test.Staff.A \mark \markup \with-color #blue \bold "X"
-\editionMod fullscore 6 0/4 my.test.Staff.A \mark \default
+\editionMod fullscore 5 2/4 my.test.Staff.A \once \override RehearsalMark.extra-offset.extra-offset = #'(1 . 4)
 \editionMod fullscore 7 0/4 my.test.Staff.A \mark \default
 
 % color the notehead red on the second quarter in the second measure
@@ -62,6 +62,6 @@
     % add edition engraver to this voice and inherit id-path from parent context: #'(my test) from parent Staff
     %\consists \editionEngraver ##f
     % ... but it is already done by the layout block
-  } \relative c'' { c4 bes a( g) f e' d' c \repeat unfold 20 { bes a c b } }
+  } \relative c'' { c4 bes a( g) | f e' d' c | \repeat unfold 3 { bes a c b } | \mark \default | \repeat unfold 16 { bes a c b } }
 >>
 
