@@ -6,3 +6,4 @@
 \loadModule "test/load-test.ly"
 
 
+\hello
