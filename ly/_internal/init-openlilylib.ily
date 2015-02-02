@@ -15,5 +15,5 @@
 \include "module-handling.ily"
 
 
-\loadModule "_internal/utilities/lilypond-version-predicates.ily"
+\include "utilities/lilypond-version-predicates.ily"
 
