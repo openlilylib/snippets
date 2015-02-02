@@ -31,9 +31,11 @@ loadModule =
     ;; try to load the file if it isn't already present
     (if (member load-path oll-loaded-modules)
         (oll:log "module ~a already loaded. Skipping." load-path)
-        (begin
-         (oll:log "load module ~a" load-path)
-         (ly:parser-include-string parser
-           (format "\\include \"~a\"" load-path))
-         (set! oll-loaded-modules
-               (append! oll-loaded-modules `(,load-path)))))))
+        (if (file-exists? load-path)
+            (begin
+             (oll:log "load module ~a" load-path)
+             (ly:parser-include-string parser
+               (format "\\include \"~a\"" load-path))
+             (set! oll-loaded-modules
+                   (append! oll-loaded-modules `(,load-path))))
+            (oll:warn "module not found: ~a" load-path)))))
