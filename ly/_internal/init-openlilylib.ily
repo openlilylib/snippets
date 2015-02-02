@@ -25,7 +25,8 @@
 
 % Version predicates to execute code for specific LilyPond versions
 \include "utilities/lilypond-version-predicates.ily"
-
+% Helpers for handling Scheme association lists
+\include "utilities/alist-access.ily"
 
 
 
