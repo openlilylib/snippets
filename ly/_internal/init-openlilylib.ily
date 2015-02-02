@@ -7,18 +7,6 @@
 
 #(ly:set-option 'relative-includes #t)
 
-% Flag used to include the library only once
-#(define openlilylib-loaded #t)
-
-% logging capabilities with different log levels
-\include "logging.ily"
-
-% Set variables for root path and Scheme module path
-\include "root-path.ily"
-
-% Load functionality to load and manage modules
-\include "module-handling.ily"
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Common functionality
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -29,6 +17,21 @@
 \include "utilities/alist-access.ily"
 
 
+% logging capabilities with different log levels
+\include "logging.ily"
+
+% Set variables for root path and Scheme module path
+\include "root-path.ily"
+
+% Load functionality to load and manage modules
+\include "module-handling.ily"
+
+% Common option handling
+\include "options.ily"
+
+
+% Flag used to include the library only once
+#(define openlilylib-loaded #t)
 
 % Welcome message.
 % This is a default ly:message because otherwise we'd have to mess around with
