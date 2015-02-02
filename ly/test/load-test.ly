@@ -4,4 +4,4 @@
 
 hello =
 #(define-void-function (parser location)()
-  (display "\nHello,\nthis is printed by an included funtion.\n"))
+  (ly:message "\nHello,\nthis is printed by an included funtion.\n"))
