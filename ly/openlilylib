@@ -7,7 +7,7 @@
 % LilyPond version predicates that can be used to create code depending on the
 % LilyPond version currently executed
 
-% Include the basic infrastructure of openLilyLib
+% Include (once) the basic infrastructure of openLilyLib
 %
 % This does several things:
 % - define a global variable 'openlilylib-root
@@ -21,10 +21,11 @@
 % - Add general tools that are available for all libraries.
 %   - lilypond-version-predicates
 %   - logging commands
-\include "_internal/init-openlilylib.ily"
+initOpenLilyLib =
+#(define-void-function (parser location)()
+   (if (not (defined? 'openlilylib-loaded))
+       (begin
+        (ly:parser-include-string parser
+          "\\include \"_internal/init-openlilylib.ily\""))))
+\initOpenLilyLib
 \setRootPath
-
-% Welcome message.
-% This is a default ly:message because otherwise we'd have to mess around with
-% loglevels. This shouldn't be logged anyway.
-#(ly:message "\nopenLilyLib: library infrastructure successfully loaded.\n\n")

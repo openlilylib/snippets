@@ -7,6 +7,9 @@
 
 #(ly:set-option 'relative-includes #t)
 
+% Flag used to include the library only once
+#(define openlilylib-loaded #t)
+
 % logging capabilities with different log levels
 \include "logging.ily"
 
@@ -23,3 +26,11 @@
 % Version predicates to execute code for specific LilyPond versions
 \include "utilities/lilypond-version-predicates.ily"
 
+
+
+
+% Welcome message.
+% This is a default ly:message because otherwise we'd have to mess around with
+% loglevels. This shouldn't be logged anyway.
+
+#(ly:message "\nopenLilyLib: library infrastructure successfully loaded.\n\n")
