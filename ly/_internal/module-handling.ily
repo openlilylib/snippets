@@ -2,7 +2,28 @@
 
 % Maintain a list of already loaded modules.
 % Modules are only loaded once to avoid potentially expensive re-parsing
+#(define oll-loaded-libraries '())
 #(define oll-loaded-modules '())
+
+
+% Conditionally register and load a library when
+% for the first time a module from that library is requested.
+#(define (register-library lib)
+   "Register a library with the configuration system
+    if it hasn't been already loaded.
+    If the library has an __init__.ily file
+    this is loaded (library initialized) too."
+   (if (not (member lib oll-loaded-libraries))
+       (set! oll-loaded-libraries
+             (append oll-loaded-libraries
+               `(,lib)))
+       (let ((lib-init-file (string-join
+                             `(,openlilylib-root ,lib "__init__.ily") "/")))
+         (if (file-exists? lib-init-file)
+             (begin
+              (oll:log "initialize library ~a" lib)
+              (ly:parser-include-string parser
+                (format "\\include \"~a\"" lib-init-file)))))))
 
 % Load module from an openLilyLib library
 % A module may be an individual file or a whole library, this can also be
@@ -18,6 +39,7 @@ loadModule =
    "Load an openLilyLib module if it has not been already loaded."
    (let*
     ((path-list (string-split path #\/))
+     (lib (first path-list))
      (last-elt
       (if (string-index (last path-list) #\.)
           ;; if the last element is a file (with extension)
@@ -36,6 +58,7 @@ loadModule =
              (oll:log "load module ~a" load-path)
              (ly:parser-include-string parser
                (format "\\include \"~a\"" load-path))
+             (register-library (first path-list))
              (set! oll-loaded-modules
                    (append! oll-loaded-modules `(,load-path))))
             (oll:warn "module not found: ~a" load-path)))))
