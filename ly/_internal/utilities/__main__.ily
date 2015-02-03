@@ -13,8 +13,9 @@
 
 % Version predicates to execute code for specific LilyPond versions
 \include "lilypond-version-predicates.ily"
+
 % Helpers for handling Scheme association lists
 \include "alist-access.ily"
-% Get current file name
-\include "this-file.ily"
 
+% Advance path handling
+\include "os-path.ily"
