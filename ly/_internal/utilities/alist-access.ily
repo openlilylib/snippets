@@ -15,6 +15,16 @@
 % here goes the snippet: %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Convert a list to a dot-path notation string.
+% Can be used to print/log tree paths
+#(define (dot-path->string path)
+   "output option path list as a dot-delimited string"
+   (string-join
+    (map
+     (lambda (p)
+       (symbol->string p))
+     path) "."))
+
 % after \clralist <name> the variable <name> is initialized with an empty list
 #(define-public clralist
   (define-void-function (parser location alst)(symbol?)
@@ -82,7 +92,7 @@
                                    (oll:warn location "deleting '~A'" ol)
                                    '()))))
         (if (> (length op) 1)
-            (let ((al (assoc-get sym ol '())))
+            (let ((al (assoc-get sym ol '())))http://www.newyorksightseeing.com/images/GLFall14MAP.pdf
               (if (not (list? al))
                   (begin
                    (ly:input-warning location "deleting '~A' = '~A'" sym al)

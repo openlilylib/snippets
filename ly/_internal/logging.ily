@@ -40,8 +40,8 @@ openLogfile =
             (begin
              ;; this is an "abuse" of the parameters,
              ;; "location" is actually the "fmt" argument
-             (ly:error 
-              (format 
+             (ly:error
+              (format
                (string-append "openLilyLib: " location) fmt))
              (format oll-logfile
                (format "error: ~a\n" location) fmt))))))
@@ -53,13 +53,13 @@ openLogfile =
         #{ \openLogfile #}
         (if (ly:input-location? location)
             (begin
-             (ly:input-warning 
+             (ly:input-warning location
               (format
                (string-append "openLilyLib: " fmt) vals))
              (format oll-logfile fmt vals))
             (begin
-             (ly:warning 
-              (format 
+             (ly:warning
+              (format
                (string-append "openLilyLib: " location) fmt))
              (format oll-logfile
                (format "warning: ~a\n" location) fmt))))))
@@ -71,13 +71,13 @@ openLogfile =
         #{ \openLogfile #}
         (if (ly:input-location? location)
             (begin
-             (ly:input-message location 
-               (format 
+             (ly:input-message location
+               (format
                 (string-append "openLilyLib: " fmt) vals))
              (format oll-logfile fmt vals))
             (begin
-             (ly:message 
-              (format 
-               (string-append "openLilyLib: " fmt)))
+             (ly:message
+              (format
+               (string-append "openLilyLib: " location) fmt))
              (format oll-logfile
                (format "log: ~a\n" location) fmt))))))
