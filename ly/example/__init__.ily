@@ -17,5 +17,5 @@
 
 #(ly:message "\nRegister some options in the __init__ file")
 
-\registerOllOption example.common.thickness 1.2
-\registerOllOption example.common.thick-thickness 2
+\registerOption example.common.thickness 1.2
+\registerOption example.common.thick-thickness 2

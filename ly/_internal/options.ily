@@ -18,7 +18,7 @@
 %     The first item should be the library name
 % #2: initial value
 %     If the user doesn't set the option explicitly this value is assumed
-registerOllOption =
+registerOption =
 #(define-void-function (parser location opt-path init)
    (list? scheme?)
    #{ \setatree openlilylib-options #opt-path #init #})
@@ -28,7 +28,7 @@ registerOllOption =
 %     the first item of the path is the library name,
 %     followed by an arbitrary path at the library's discretion
 % #2: Any Scheme value
-setOllOption =
+setOption =
 #(define-void-function (parser location opt-path val)
    (list? scheme?)
    (let (
@@ -52,7 +52,7 @@ setOllOption =
 % Retrieve an option
 % Provied a tree path in dotted or list notation
 % Retrieving a non-existing option path issues a warning and returnes #f
-getOllOption =
+getOption =
 #(define-scheme-function (parser location opt-path)
    (list?)
    (let ((val #{ \getatree openlilylib-options #opt-path #}))

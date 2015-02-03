@@ -20,7 +20,7 @@ registerLibrary =
         (set! oll-loaded-libraries
               (append oll-loaded-libraries
                 `(,lib)))
-        (let* ((root #{ \getOllOption global.root-path #})
+        (let* ((root #{ \getOption global.root-path #})
                 (lib-init-file (string-join
                               `(,root ,lib "__init__.ily") "/")))
           (if (file-exists? lib-init-file)
@@ -53,9 +53,9 @@ loadModule =
           '("__main__.ily")))
      (append-path (string-join
                    (append path-list last-elt) "/"))
-     (load-path (string-append 
-                 #{ \getOllOption global.root-path #} 
-                 "/" 
+     (load-path (string-append
+                 #{ \getOption global.root-path #}
+                 "/"
                  append-path)))
     ;; try to load the file if it isn't already present
     (if (member load-path oll-loaded-modules)

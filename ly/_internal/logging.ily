@@ -23,7 +23,7 @@ openLogfile =
 
 % Critical error
 #(define (oll:error location fmt . vals)
-   (if (>= #{ \getOllOption global.loglevel #} oll-loglevel-critical)
+   (if (>= #{ \getOption global.loglevel #} oll-loglevel-critical)
        (begin
         ;; open logfile upon first request
         #{ \openLogfile #}
@@ -46,7 +46,7 @@ openLogfile =
 
 % Warning
 #(define (oll:warn location fmt . vals)
-   (if (>= #{ \getOllOption global.loglevel #}  oll-loglevel-warning)
+   (if (>= #{ \getOption global.loglevel #}  oll-loglevel-warning)
        (begin
         #{ \openLogfile #}
         (if (ly:input-location? location)
@@ -64,7 +64,7 @@ openLogfile =
 
 % Logging
 #(define (oll:log location fmt . vals)
-   (if (>= #{ \getOllOption global.loglevel #}  oll-loglevel-log)
+   (if (>= #{ \getOption global.loglevel #}  oll-loglevel-log)
        (begin
         #{ \openLogfile #}
         (if (ly:input-location? location)
@@ -82,7 +82,7 @@ openLogfile =
 
 % Debug output
 #(define (oll:debug location fmt . vals)
-   (if (>= #{ \getOllOption global.loglevel #}  oll-loglevel-debug)
+   (if (>= #{ \getOption global.loglevel #}  oll-loglevel-debug)
        (begin
         #{ \openLogfile #}
         (if (ly:input-location? location)
