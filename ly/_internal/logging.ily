@@ -81,3 +81,21 @@ openLogfile =
                (string-append "openLilyLib: " location) fmt))
              (format oll-logfile
                (format "log: ~a\n" location) fmt))))))
+
+% Debug output
+#(define (oll:debug location fmt . vals)
+   (if (>= oll-loglevel oll-loglevel-debug)
+       (begin
+        #{ \openLogfile #}
+        (if (ly:input-location? location)
+            (begin
+             (ly:input-message location
+               (format
+                (string-append "openLilyLib: " fmt) vals))
+             (format oll-logfile fmt vals))
+            (begin
+             (ly:message
+              (format
+               (string-append "openLilyLib: " location) fmt))
+             (format oll-logfile
+               (format "log: ~a\n" location) fmt))))))
