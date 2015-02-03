@@ -20,7 +20,7 @@
 % add a break to several times
 \editionMMod fullscore #'((2 1/4)) my.test.Score.A { \bar "" \break } % the empty bar permits break inside measure
 % add an annotation in form of a TextScript
-\editionMod fullscore 2 0/4 my.test.Voice.A -\markup { \with-color #red "what's that?" }
+\editionMod fullscore 2 0/4 my.test.alot.Voice.A -\markup { \with-color #red "what's that?" }
 
 % now also ottava is supported (uses context-mod-from-music)
 \editionMod fullscore 2 2/4 my.test.Staff.A \ottava #1
@@ -55,6 +55,7 @@
 \addEdition fullscore
 
 \new Staff \with {
+    edition-id = #'(my test alot)
   % add edition engraver with id-path #'(my test) to this Staff
   \consists \editionEngraver my.test
 } <<

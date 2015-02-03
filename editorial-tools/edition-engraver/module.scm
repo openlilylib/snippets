@@ -244,22 +244,35 @@
                                (tag '())
                                (barnum 0)
                                (measurepos (ly:make-moment 0 1))
+
+                               ; TODO get-paths -> collect from all paths
                                (get-path (lambda (edition takt pos) `(,edition ,takt ,pos ,@tag)))
+
                                (initialize
                                 (lambda (trans)
                                   (if (procedure? tag-path) (set! tag-path (tag-path)))
                                   (if (not (list? tag-path))
-                                      (let ((parent (ly:context-parent context))
+
+                                      ; TODO edition-id
+                                      (let ((edition-id (ly:context-property context 'edition-id #f))
+                                            (parent (ly:context-parent context))
                                             (peng #f))
+
                                         (define (search-peng path eng)
                                           (if (eqv? (object-property eng 'context) parent)
                                               (set! peng eng)))
-                                        (if (ly:context? parent) (walk-edition-engravers search-peng))
-                                        (if peng (set! tag-path (object-property peng 'tag-path)))
-                                        (if (not (list? tag-path))
-                                            (set! tag-path (if (list? cmf) cmf (get-music-folder))))
-                                        ))
+
+                                        (ly:message "edition-id: ~A" edition-id)
+                                        (if (and (not (list? tag-path)) (list? edition-id) (> (length edition-id) 0))
+                                            (set! tag-path edition-id)
+                                            (begin
+                                             (if (ly:context? parent) (walk-edition-engravers search-peng))
+                                             (if peng (set! tag-path (object-property peng 'tag-path)))
+                                             (if (not (list? tag-path))
+                                                 (set! tag-path (if (list? cmf) cmf (get-music-folder))))
+                                             ))))
                                   (let* ((cn (ly:context-name context))
+                                         (cid (ly:context-id context))
                                          (path `(,@tag-path ,(o->sym cn)))
                                          (ccid (tree-get context-count path)))
                                     (define (topctx context)
