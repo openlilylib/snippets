@@ -23,7 +23,7 @@
 %   - logging commands
 initOpenLilyLib =
 #(define-void-function (parser location)()
-   (if (not (defined? 'openlilylib-loaded))
+   (if (not (defined? 'openlilylib-options))
        (begin
         (ly:parser-include-string parser
           "\\include \"_internal/init-openlilylib.ily\""))))

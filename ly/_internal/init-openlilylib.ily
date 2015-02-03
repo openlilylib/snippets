@@ -11,12 +11,8 @@
 %%%% Common functionality
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Version predicates to execute code for specific LilyPond versions
-\include "utilities/lilypond-version-predicates.ily"
-% Helpers for handling Scheme association lists
-\include "utilities/alist-access.ily"
-% Get current file name
-\include "utilities/this-file.ily"
+% Make common functionality available to all openLilyLib "users"
+\include "utilities/__main__.ily"
 
 % logging capabilities with different log levels
 \include "logging.ily"
