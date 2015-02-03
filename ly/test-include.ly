@@ -4,7 +4,7 @@
 \include "openlilylib"
 
 % Increase loglevel, otherwise one wouldn't see some instructional messages
-#(set! oll-loglevel oll-loglevel-log)
+\setOllOption global.loglevel #oll-loglevel-log
 
 % load a single file from module "test"
 \loadModule "test/load-test.ly"

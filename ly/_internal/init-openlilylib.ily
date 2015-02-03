@@ -14,21 +14,22 @@
 % Make common functionality available to all openLilyLib "users"
 \include "utilities/__main__.ily"
 
-% logging capabilities with different log levels
+% Logging capabilities with different log levels
 \include "logging.ily"
-
-% Set variables for root path and Scheme module path
-\include "root-path.ily"
-
-% Load functionality to load and manage modules
-\include "module-handling.ily"
 
 % Common option handling
 \include "options.ily"
 
+% Set default loglevel to 'warning'
+% (can only be done after options have been included)
+\registerOllOption global.loglevel #oll-loglevel-warning
 
-% Flag used to include the library only once
-#(define openlilylib-loaded #t)
+% Set variables for root path and Scheme module path
+\include "root-path.ily"
+
+% Functionality to load and manage modules
+\include "module-handling.ily"
+
 
 % Welcome message.
 % This is a default ly:message because otherwise we'd have to mess around with

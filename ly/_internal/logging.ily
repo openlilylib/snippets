@@ -7,8 +7,6 @@
 #(define oll-loglevel-log      3)
 #(define oll-loglevel-debug    4)
 
-% Set default loglevel of warning
-#(define oll-loglevel oll-loglevel-warning)
 #(define oll-logfile #f)
 
 % Open a log file when the first entry is actually written
@@ -25,7 +23,7 @@ openLogfile =
 
 % Critical error
 #(define (oll:error location fmt . vals)
-   (if (>= oll-loglevel oll-loglevel-critical)
+   (if (>= #{ \getOllOption global.loglevel #} oll-loglevel-critical)
        (begin
         ;; open logfile upon first request
         #{ \openLogfile #}
@@ -48,7 +46,7 @@ openLogfile =
 
 % Warning
 #(define (oll:warn location fmt . vals)
-   (if (>= oll-loglevel oll-loglevel-warning)
+   (if (>= #{ \getOllOption global.loglevel #}  oll-loglevel-warning)
        (begin
         #{ \openLogfile #}
         (if (ly:input-location? location)
@@ -66,7 +64,7 @@ openLogfile =
 
 % Logging
 #(define (oll:log location fmt . vals)
-   (if (>= oll-loglevel oll-loglevel-log)
+   (if (>= #{ \getOllOption global.loglevel #}  oll-loglevel-log)
        (begin
         #{ \openLogfile #}
         (if (ly:input-location? location)
@@ -84,7 +82,7 @@ openLogfile =
 
 % Debug output
 #(define (oll:debug location fmt . vals)
-   (if (>= oll-loglevel oll-loglevel-debug)
+   (if (>= #{ \getOllOption global.loglevel #}  oll-loglevel-debug)
        (begin
         #{ \openLogfile #}
         (if (ly:input-location? location)
