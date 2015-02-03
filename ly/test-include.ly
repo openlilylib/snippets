@@ -21,3 +21,17 @@
 
 % Use a command defined in the loaded modules
 \hello
+
+\registerOllOption test.option.one ##f
+\registerOllOption test.option.two "Hi"
+
+
+\setOllOption test.option.one "Hello"
+\setOllOption test.option.two "Hello"
+\setOllOption test.option.three "Hello"
+
+
+#(display #{ \getOllOption test.option.one #})
+#(newline)
+#(display #{ \getOllOption test.option.wtf #})
+#(newline)
