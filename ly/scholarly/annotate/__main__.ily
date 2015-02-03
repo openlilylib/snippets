@@ -44,13 +44,13 @@
 #(define annotations '())
 
 % Include factored out functionality
-\include "annotate-configuration.ily"
+\include "config.ily"
 \include "parse-rhythmic-location.ily"
-\include "annotate-sort.ily"
-\include "annotate-format.ily"
-\include "annotate-export.ily"
-\include "annotate-export-latex.ily"
-\include "annotate-export-plaintext.ily"
+\include "sort.ily"
+\include "format.ily"
+\include "export.ily"
+\include "export-latex.ily"
+\include "export-plaintext.ily"
 
 % Define a lookup list for existing export procedures.
 % While this might be expected to be defined in the configuration
