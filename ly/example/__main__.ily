@@ -12,6 +12,5 @@
 #(ly:message "\nLoad a file from within the module.\n")
 \loadModule "example/load-test.ly"
 
-#(ly:message "I don't understand why the following (display) fails.
-Obviously the __init__.ily file is only parsed *after* __main__.ily")
-#(display in-init)
+#(display
+  (format "Use variable in __main__ that was defined in __init__: ~a" in-init))

@@ -4,7 +4,8 @@
   set up the environment, register options for the library
 %}
 
-#(oll:log "Initializing example library.~a" "")
+#(ly:message "Initializing example library.")
+
 #(ly:message
   (format "\nThis message is triggered in file ~a"
     #{ \thisFile #}))

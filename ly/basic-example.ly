@@ -24,7 +24,7 @@
 #(ly:message "Use a command defined in the loaded modules")
 \hello
 
-#(ly:message "\nOverwrite one option, keep default by another, try to set a non-existent option.")
+#(ly:message "\nOverwrite one option, keep default of another, try to set a non-existent option.")
 \setOllOption example.common.thickness 0.8
 \setOllOption example.common.thin-thickness 0.5
 #(ly:message (format "Default value of example.common.thick-thickness: ~a\n"

@@ -8,22 +8,25 @@
 
 % Conditionally register and load a library when
 % for the first time a module from that library is requested.
-#(define (register-library lib)
+registerLibrary =
+#(define-void-function (parser location lib)
+   (string?)
    "Register a library with the configuration system
     if it hasn't been already loaded.
     If the library has an __init__.ily file
     this is loaded (library initialized) too."
    (if (not (member lib oll-loaded-libraries))
-       (set! oll-loaded-libraries
-             (append oll-loaded-libraries
-               `(,lib)))
-       (let ((lib-init-file (string-join
-                             `(,openlilylib-root ,lib "__init__.ily") "/")))
-         (if (file-exists? lib-init-file)
-             (begin
-              (oll:log "initialize library ~a" lib)
-              (ly:parser-include-string parser
-                (format "\\include \"~a\"" lib-init-file)))))))
+       (begin
+        (set! oll-loaded-libraries
+              (append oll-loaded-libraries
+                `(,lib)))
+        (let ((lib-init-file (string-join
+                              `(,openlilylib-root ,lib "__init__.ily") "/")))
+          (if (file-exists? lib-init-file)
+              (begin
+               (oll:log "initialize library \"~a\"" lib)
+               (ly:parser-include-string parser
+                 (format "\\include \"~a\"" lib-init-file))))))))
 
 % Load module from an openLilyLib library
 % A module may be an individual file or a whole library, this can also be
@@ -55,10 +58,12 @@ loadModule =
         (oll:log "module ~a already loaded. Skipping." load-path)
         (if (file-exists? load-path)
             (begin
+             ;; first register/load the library
+             #{ \registerLibrary #(first path-list) #}
+             ;; then load the requested module
              (oll:log "load module ~a" load-path)
              (ly:parser-include-string parser
                (format "\\include \"~a\"" load-path))
-             (register-library (first path-list))
              (set! oll-loaded-modules
                    (append! oll-loaded-modules `(,load-path))))
             (oll:warn "module not found: ~a" load-path)))))
