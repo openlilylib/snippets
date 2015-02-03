@@ -15,6 +15,6 @@
 }
 
 thisFile =
-"Return the absolute path to the current file"
 #(define-scheme-function (parser location)()
+   "Return the absolute path to the current file"
    (car (ly:input-file-line-char-column location)))
