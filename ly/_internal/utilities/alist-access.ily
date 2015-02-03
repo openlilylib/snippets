@@ -92,7 +92,7 @@
                                    (oll:warn location "deleting '~A'" ol)
                                    '()))))
         (if (> (length op) 1)
-            (let ((al (assoc-get sym ol '())))http://www.newyorksightseeing.com/images/GLFall14MAP.pdf
+            (let ((al (assoc-get sym ol '())))
               (if (not (list? al))
                   (begin
                    (ly:input-warning location "deleting '~A' = '~A'" sym al)
