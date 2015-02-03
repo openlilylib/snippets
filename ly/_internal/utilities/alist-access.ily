@@ -1,4 +1,5 @@
 \version "2.17.96"
+\include "ly/_internal/logging.ily"
 
 \header {
   snippet-title = "work with (nested) association-lists"
@@ -92,16 +93,16 @@
                                    (oll:warn location "deleting '~A'" ol)
                                    '()))))
         (if (> (length op) 1)
-            (let ((al (assoc-get sym ol '())))http://www.newyorksightseeing.com/images/GLFall14MAP.pdf
+            (let ((al (assoc-get sym ol '())))
               (if (not (list? al))
                   (begin
-                   (ly:input-warning location "deleting '~A' = '~A'" sym al)
+                   (oll:warn location "deleting '~A' = '~A'" sym al)
                    (set! al '())
                    ))
               (assoc-set-append ol sym (setval al (cdr op)))
               )
             (let ((ov (assoc-get sym ol #f)))
-              (if ov (oll:warn location "deleting '~A'" ov))
+              ;(if ov (oll:warn location "deleting '~A'" ov))
               (assoc-set-append ol sym val)
               )
             )))
