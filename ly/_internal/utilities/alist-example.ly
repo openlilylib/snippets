@@ -16,6 +16,7 @@
 % work with nested a-lists
 \clratree opts % equivalent to "tags=#'()" but can be called, whenever a void-function is allowed
 % set '((staff . ((trumpet . ((name . "Trumpet")) )) ))
+\setatree opts staffs.trumpet.name "Trompete"
 \setatree opts staffs.trumpet.name "Trumpet"
 % addatree leaves the order of input in the assoc-list for the price of a little bit more computing
 \addatree opts staffs.trombone.name "Trombone"
