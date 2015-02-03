@@ -24,8 +24,18 @@
 % (can only be done after options have been included)
 \registerOllOption global.loglevel #oll-loglevel-warning
 
-% Set variables for root path and Scheme module path
-\include "root-path.ily"
+% Set the root path of openLilyLib
+% - for oll module inclusion
+% - for Scheme module inclusion
+% This must be called from the main openlilylib file
+% because that's inside the desired root directory
+setRootPath =
+#(define-void-function (parser location)()
+   (let* ((path (get-normalized-path (ly:input-file-line-char-column location))))
+     #{ \registerOllOption global.root-path #path #}
+     (if (not (member path %load-path))
+         (set! %load-path `(,path ,@%load-path)))))
+
 
 % Functionality to load and manage modules
 \include "module-handling.ily"
