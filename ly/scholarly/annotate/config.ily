@@ -39,19 +39,8 @@
 %%%%%%%%%%%%%
 % File export
 
-% initialize empty configuration variable
-#(cond ((not (defined? 'annotation-export-targets))
-        (define annotation-export-targets '())))
-#(define export-annotations #f)
-
-% Convenience function to select output targets
-% Provide a list with strings. These have to match
-% an item in the export-routines alist defined in the main file.
-setAnnotationExportTargets =
-#(define-void-function (parser location targets)
-   (stringlist?)
-   (set! annotation-export-targets targets)
-   (set! export-annotations #t))
+% By default annotations are not exported
+\registerOption scholarly.annotation-export-targets #'()
 
 %%%%%%%%%%%%%%%%%
 % Limiting output

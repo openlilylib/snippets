@@ -121,9 +121,9 @@ annotationCollector =
                    (set! (ly:grob-property grob 'color)
                          (assoc-ref annotation-colors
                            (assoc-ref annotation "type"))))
-               (if (or 
+               (if (or
                     #{ \getOption scholarly.print-annotations #}
-                    export-annotations)
+                    (not (null? #{ \getOption scholarly.annotation-export-targets #} )))
                    ;; only add to the list of grobs in the engraver
                    ;; when we actually process them afterwards
                    (let ((ctx-id
@@ -198,7 +198,7 @@ annotationProcessor =
          (if er
              (er)
              (ly:warning (format "Invalid annotation export target: ~a" t)))))
-      annotation-export-targets))))
+      #{ \getOption scholarly.annotation-export-targets #}))))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
