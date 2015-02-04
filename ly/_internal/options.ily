@@ -55,9 +55,16 @@ setOption =
 getOption =
 #(define-scheme-function (parser location opt-path)
    (list?)
-   (let ((val #{ \getatree openlilylib-options #opt-path #}))
-     (if val
-         val
+   (let*
+    ;; test if the second-to-last branch contains
+    ;; an entry for that option (assoc needed in order not to
+    ;; stumble over existing entries with #f)
+    ((opt-key (last opt-path))
+     (parent (list-head opt-path (- (length opt-path) 1)))
+     (siblings #{ \getatree openlilylib-options #parent #})
+     (registered (assoc opt-key siblings)))
+    (if registered
+        #{ \getatree openlilylib-options #opt-path #}
         (begin
          (oll:warn location "Try retrieving non-existent option: ~a" (dot-path->string opt-path))
          #f))))
