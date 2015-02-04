@@ -63,9 +63,6 @@
 %%%% Coloring annotations
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-%TODO: This is a ScholarLY option, not an annotate one
-\registerOption scholarly.colorize ##t
-
 % default colors for annotations types
 #(define annotation-color-defaults
    ;; Colors to be used for different types of annotation
