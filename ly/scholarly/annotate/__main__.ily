@@ -114,7 +114,7 @@ annotationCollector =
                    ;; filter annotations the user has excluded
                    (not (member
                          (assoc-ref annotation "type")
-                         ignored-annotation-types)))
+                         #{ \getOption scholarly.ignore-annotation-types #})))
               ;; add more properties that are only now available
               (begin
                (if color-annotations

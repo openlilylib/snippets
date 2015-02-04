@@ -45,15 +45,8 @@
 %%%%%%%%%%%%%%%%%
 % Limiting output
 
-% Filter list to ignore annotation types before they are even created.
-#(define ignored-annotation-types '())
-
-% Convenience function to set the list of ignored annotation types.
-% Strings passed in the stringlist argument should match existing
-% annotation types, otherwise they simply don't have any effect.
-ignoreAnnotationTypes =
-#(define-void-function (parser location types)(stringlist?)
-   (set! ignored-annotation-types types))
+% By default all annotation types are processed
+\registerOption scholarly.ignore-annotation-types #'()
 
 %%%%%%%%%%%%%%%%%%%%%%%
 % Filtering annotations
