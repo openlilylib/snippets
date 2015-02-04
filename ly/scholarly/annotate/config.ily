@@ -63,17 +63,8 @@
 %%%% Coloring annotations
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Switch coloring of annotations on/off.
-% By default coloring is active
-#(cond ((not (defined? 'color-annotations))
-        (define color-annotations #t)))
-
-% Convenience function for switching coloring annotations
-% Specify ##t or ##f to switch on/off
-colorAnnotations =
-#(define-scheme-function (parser location active)
-   (boolean?)
-   (set! color-annotations active))
+%TODO: This is a ScholarLY option, not an annotate one
+\registerOption scholarly.colorize ##t
 
 % default colors for annotations types
 #(define annotation-color-defaults

@@ -117,7 +117,7 @@ annotationCollector =
                          #{ \getOption scholarly.annotate.ignored-types #})))
               ;; add more properties that are only now available
               (begin
-               (if color-annotations
+               (if #{ \getOption scholarly.colorize #}
                    (set! (ly:grob-property grob 'color)
                          (assoc-ref annotation-colors
                            (assoc-ref annotation "type"))))
