@@ -183,7 +183,7 @@ annotationProcessor =
         (set! annotations
               (sort-annotations annotations
                 (assoc-ref annotation-comparison-predicates s))))
-      (reverse annotation-sort-criteria))
+      (reverse #{ \getOption scholarly.annotate.sort-criteria #}))
 
      ;; Optionally print annotations
      (if #{ \getOption scholarly.print-annotations #}

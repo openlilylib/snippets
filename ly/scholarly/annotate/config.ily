@@ -51,19 +51,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%
 % Filtering annotations
 
-% Criteria by which annotations are to be sorted.
-% This is a list of keywords which can be set directly
-% By default sort annotations in chronological order
-#(cond ((not (defined? 'annotation-sort-criteria))
-        (define annotation-sort-criteria
-          '("rhythmic-location"))))
-% Example: order by type and then by author
-%#(set! annotation-sort-criteria '("type" "author"))
-
-sortAnnotationsBy =
-#(define-void-function (parser location criteria)
-   (stringlist?)
-   (set! annotation-sort-criteria criteria))
+% By default sort annotations in chronological order.
+% For other sorting options set this option to a stringlist.
+% Available sort criteria:
+% - "rhythmic-location"
+% - "type"
+% - "author"
+\registerOption scholarly.annotate.sort-criteria #'("rhythmic-location")
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Coloring annotations
