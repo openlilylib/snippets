@@ -44,10 +44,10 @@ setOption =
      (if registered
          (begin
           #{ \setatree openlilylib-options #opt-path #val #}
-          (oll:log "Option set: ~a"
+          (oll:log location "Option set: ~a"
             (format "~a: ~a"
               (dot-path->string opt-path) val)))
-         (oll:warn "Not a valid option path: ~a" (dot-path->string opt-path)))))
+         (oll:warn location "Not a valid option path: ~a" (dot-path->string opt-path)))))
 
 % Retrieve an option
 % Provied a tree path in dotted or list notation
@@ -58,9 +58,9 @@ getOption =
    (let ((val #{ \getatree openlilylib-options #opt-path #}))
      (if val
          val
-         (begin
-          (oll:warn "Try retrieving non-existent option: ~a" (dot-path->string opt-path))
-          #f))))
+        (begin
+         (oll:warn location "Try retrieving non-existent option: ~a" (dot-path->string opt-path))
+         #f))))
 
 % TODO:
 % Provide commands to bulk-process this.
