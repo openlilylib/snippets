@@ -33,17 +33,8 @@
 %%%%%%%%%%%%%%%%
 % Console output
 
-% initialize empty configuration variable
-% By default annotations are printed to the console
-#(cond ((not (defined? 'print-annotations))
-        (define print-annotations #t)))
-
-% Convenience function for switching annotation printing
-% Specify ##t or ##f to switch on/off
-printAnnotations =
-#(define-scheme-function (parser location active)
-   (boolean?)
-   (set! print-annotations active))
+% By default annotations are printed
+\registerOption scholarly.print-annotations ##t
 
 %%%%%%%%%%%%%
 % File export

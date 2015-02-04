@@ -121,7 +121,9 @@ annotationCollector =
                    (set! (ly:grob-property grob 'color)
                          (assoc-ref annotation-colors
                            (assoc-ref annotation "type"))))
-               (if (or print-annotations export-annotations)
+               (if (or 
+                    #{ \getOption scholarly.print-annotations #}
+                    export-annotations)
                    ;; only add to the list of grobs in the engraver
                    ;; when we actually process them afterwards
                    (let ((ctx-id
@@ -184,7 +186,7 @@ annotationProcessor =
       (reverse annotation-sort-criteria))
 
      ;; Optionally print annotations
-     (if print-annotations
+     (if #{ \getOption scholarly.print-annotations #}
          (do-print-annotations))
      ;; Export iterating over all entries in the
      ;; annotation-export-targets configuration list
