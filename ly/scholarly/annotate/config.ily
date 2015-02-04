@@ -30,11 +30,6 @@
 % fundamental behaviour
 %%%%%%%%%%%%%%%%%%%%%%%
 
-% String list predicate
-#(define (stringlist? obj)
-   (and (list? obj)
-        (every string? obj)))
-
 %%%%%%%%%%%%%%%%
 % Console output
 
