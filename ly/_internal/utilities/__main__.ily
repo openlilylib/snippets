@@ -11,6 +11,9 @@
 %%%% Common functionality
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% A collection of general-purpose predicates
+\include "general-predicates.ily"
+
 % Version predicates to execute code for specific LilyPond versions
 \include "lilypond-version-predicates.ily"
 
