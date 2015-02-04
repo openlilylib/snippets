@@ -34,19 +34,19 @@
 % Console output
 
 % By default annotations are printed
-\registerOption scholarly.print-annotations ##t
+\registerOption scholarly.annotate.print ##t
 
 %%%%%%%%%%%%%
 % File export
 
 % By default annotations are not exported
-\registerOption scholarly.annotation-export-targets #'()
+\registerOption scholarly.annotate.export-targets #'()
 
 %%%%%%%%%%%%%%%%%
 % Limiting output
 
 % By default all annotation types are processed
-\registerOption scholarly.ignore-annotation-types #'()
+\registerOption scholarly.annotate.ignored-types #'()
 
 %%%%%%%%%%%%%%%%%%%%%%%
 % Filtering annotations
