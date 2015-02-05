@@ -23,36 +23,10 @@ registerOption =
    (list? scheme?)
    #{ \setatree openlilylib-options #opt-path #init #})
 
-% Set an option
-% #1: Provide a tree path in dotted or list notation
-%     the first item of the path is the library name,
-%     followed by an arbitrary path at the library's discretion
-% #2: Any Scheme value
-setOption =
-#(define-void-function (parser location opt-path val)
-   (list? scheme?)
-   (let (
-          ;; test if the second-to-last branch contains
-          ;; an entry for that option (assoc needed in order not to
-          ;; stumble over existing entries with #f)
-          (registered
-           (assoc
-            (last opt-path)
-            #{ \getatree openlilylib-options
-               #(list-head opt-path
-                  (- (length opt-path) 1)) #})))
-     (if registered
-         (begin
-          #{ \setatree openlilylib-options #opt-path #val #}
-          (oll:log location "Option set: ~a"
-            (format "~a: ~a"
-              (dot-path->string opt-path) val)))
-         (oll:warn location "Not a valid option path: ~a" (dot-path->string opt-path)))))
-
-% Retrieve an option
-% Provied a tree path in dotted or list notation
-% Retrieving a non-existing option path issues a warning and returnes #f
-getOption =
+% Convenience function to determine if an option is set.
+% can be used to avoid warnings when trying to access unregistered options.
+% Returns the option's value or #f
+optionRegistered =
 #(define-scheme-function (parser location opt-path)
    (list?)
    (let*
@@ -62,12 +36,48 @@ getOption =
     ((opt-key (last opt-path))
      (parent (list-head opt-path (- (length opt-path) 1)))
      (siblings #{ \getatree openlilylib-options #parent #})
-     (registered (assoc opt-key siblings)))
-    (if registered
-        #{ \getatree openlilylib-options #opt-path #}
-        (begin
-         (oll:warn location "Try retrieving non-existent option: ~a" (dot-path->string opt-path))
-         #f))))
+     (entry (assoc opt-key siblings)))
+    ;; return either the cdr of entry or #f
+    (and entry (cdr entry))))
+
+% Set an option.
+% Only registered options can be set this way.
+% #1: Provide a tree path in dotted or list notation
+%     the first item of the path is the library name,
+%     followed by an arbitrary path at the library's discretion
+% #2: Any Scheme value
+setOption =
+#(define-void-function (parser location opt-path val)
+   (list? scheme?)
+   (if #{ \optionRegistered #opt-path #}
+       (begin
+        #{ \setatree openlilylib-options #opt-path #val #}
+        (oll:log location "Option set: ~a"
+          (format "~a: ~a"
+            (dot-path->string opt-path) val)))
+       ;; reject setting unknown options and report that
+       (oll:warn location "Not a valid option path: ~a" (dot-path->string opt-path))))
+
+% Retrieve an option
+% Provide a tree path in dotted or list notation
+% Retrieving a non-existing option path issues a warning and returns #f
+getOption =
+#(define-scheme-function (parser location opt-path)
+   (list?)
+   (let ((value #{ \optionRegistered #opt-path #}))
+     (or value
+         (begin
+          (oll:warn location "Try retrieving non-existent option: ~a" (dot-path->string opt-path))
+          #f))))
+
+% Same as \getOption, but retrieving non-existing options returns
+% the fallback argument and does not raise a warning.
+getOptionWithFallback =
+#(define-scheme-function (parser location opt-path fallback)
+   (list? scheme?)
+   (let ((value #{ \optionRegistered #opt-path #}))
+     (or value
+          fallback)))
 
 % Retrieve a suboption from an option that stores an alist
 % This actually is just another subtree but that function can
@@ -79,7 +89,22 @@ getOption =
 getChildOption =
 #(define-scheme-function (parser location opt-path child)
    (list? symbol?)
-    #{ \getOption #(append opt-path (list child)) #})
+   #{ \getOption #(append opt-path (list child)) #})
+
+% Same as \getChildOption, but retrieving non-existing options
+% returns the #fallback argument and doesn't issue a warning.
+% This is useful for dynamic options where the user should be
+% allowed to provide arbitrary values.
+% An example is the setting of arbitrary annotation properties.
+getChildOptionWithFallback =
+#(define-scheme-function (parser location opt-path child fallback)
+   (list? symbol? scheme?)
+   #{ \getOptionWithFallback #(append opt-path (list child)) #fallback #})
+
+% TODO:
+% \displayRegisteredOptions
+% which can be used while developing, to see which options (also from libraries)
+% can be set.
 
 % TODO:
 % Provide commands to bulk-process this.

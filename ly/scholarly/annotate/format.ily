@@ -52,10 +52,10 @@
 % flt is a list of property names that should *not* be rendered
 #(define (format-property-message prop)
    (let
-    ((prop-key (car prop))
+    ((prop-key (string->symbol (car prop)))
      (prop-value (cdr prop)))
     (format "    ~a: ~a"
-      (or (assoc-ref annotation-property-labels prop-key)
+      (or #{ \getChildOptionWithFallback scholarly.annotate.property-labels #prop-key ##f #}
           prop-key)
       ;; display a placeholder for music expressions
       ;; because these are cluttering the output.

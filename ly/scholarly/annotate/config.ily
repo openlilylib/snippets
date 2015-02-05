@@ -123,41 +123,14 @@
 
 % Default labels for annotation properties
 % Used for console printing and plain text  export
-#(define annotation-property-labels-defaults
-   `(("message" . "Message")
-     ("author" . "Author(s)")
-     ("context-id" . "Context")
-     ("source" . "Affected Source")
-     ("voice-name" . "Voice")
-     ("segment-name" . "File")
-     ("grob-type" . "Affected Item")))
-
-% initialize an empty alist for the annotation type labels
-#(cond ((not (defined? 'annotation-property-labels))
-        (define annotation-property-labels '())))
-
-% look up default type labels and set them
-% if they aren't present yet
-#(for-each
-  (lambda (type)
-    (if (not (assoc-ref annotation-property-labels (car type)))
-        (set! annotation-property-labels
-              (assoc-set! annotation-property-labels
-                (car type) (cdr type)))))
-  annotation-property-labels-defaults)
-
-% Convenience function to modify the labels for any annotation type.
-% Expects:
-% - string with property type (should match one of the key from
-%   annotation-property-label-defaults above)
-% - string with new label
-% For custom properties that don't have a defined label
-% the plain property name is used.
-setAnnotationPropertyLabel =
-#(define-void-function (parser location prop label)
-   (markup? markup?)
-   (set! annotation-property-labels
-         (assoc-set! annotation-property-labels prop label)))
+\registerOption scholarly.annotate.property-labels
+#`((message . "Message")
+   (author . "Author(s)")
+   (context-id . "Context")
+   (source . "Affected Source")
+   (voice-name . "Voice")
+   (segment-name . "File")
+   (grob-type . "Affected Item"))
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
