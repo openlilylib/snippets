@@ -3,6 +3,8 @@
 % Options are stored in one nested alist
 % Managment of that alist is realized through the a-list-access.ily files.
 
+#(use-modules (ice-9 pretty-print))
+
 % Global object holding all configuration data of all loaded openLilyLib modules
 \clratree openlilylib-options
 
@@ -77,7 +79,7 @@ getOptionWithFallback =
    (list? scheme?)
    (let ((value #{ \optionRegistered #opt-path #}))
      (or value
-          fallback)))
+         fallback)))
 
 % Retrieve a suboption from an option that stores an alist
 % This actually is just another subtree but that function can
@@ -101,10 +103,14 @@ getChildOptionWithFallback =
    (list? symbol? scheme?)
    #{ \getOptionWithFallback #(append opt-path (list child)) #fallback #})
 
-% TODO:
-% \displayRegisteredOptions
-% which can be used while developing, to see which options (also from libraries)
-% can be set.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Display all currently registered options
+
+displayOptions =
+#(define-scheme-function (parser location)()
+   (display "\n\nopenlilyLib: Currently registered options:\n=====\n")
+   (pretty-print
+    openlilylib-options #:display? #t))
 
 % TODO:
 % Provide commands to bulk-process this.

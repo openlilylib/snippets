@@ -29,3 +29,5 @@
 \setOption example.common.thin-thickness 0.5
 #(ly:message (format "Default value of example.common.thick-thickness: ~a\n"
                #{ \getOption example.common.thick-thickness #}))
+
+\displayOptions
