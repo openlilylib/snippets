@@ -81,46 +81,14 @@
 %%%% Handling of annotation types for plain text output
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Default labels for each known annotation type
-% Used for plain text export
-#(define annotation-type-labels-defaults
-   ;; default labels to be used for output in logfiles
-   `(("critical-remark" . "Critical Remark:")
-     ("musical-issue" . "Musical Issue:")
-     ("lilypond-issue" . "LilyPond Issue:")
-     ("question" . "Question:")
-     ("todo" . "TODO:")))
-
-% initialize an empty alist for the annotation type labels
-#(cond ((not (defined? 'annotation-type-labels))
-        (define annotation-type-labels '())))
-
-% look up default type labels and set them
-% if they aren't present yet
-#(for-each
-  (lambda (type)
-    (if (not (assoc-ref annotation-type-labels (car type)))
-        (set! annotation-type-labels
-              (assoc-set! annotation-type-labels
-                (car type) (cdr type)))))
-  annotation-type-labels-defaults)
-
-% Convenience function to modify the labels for any annotation type.
-% Expects:
-% - string with annotation type (should match one of the key from
-%   annotation-type-labels above)
-% - string with new label
-% TODO:
-% This *should* work to seet the labels of custom annotation types
-% but this should be checked carefully.
-% BTW what happens if a custom annotation type is used and *no*
-% label is added? This should have a fallback without errors.
-setAnnotationTypeLabel =
-#(define-void-function (parser location type label)
-   (markup? markup?)
-   (set! annotation-type-labels
-         (assoc-set! annotation-type-labels type label)))
-
+% For retrieving values and registering custom annotation types
+% see above at the coloring section
+\registerOption scholarly.annotate.labels
+#`((critical-remark . "Critical Remark:")
+   (musical-issue . "Musical Issue:")
+   (lilypond-issue . "LilyPond Issue:")
+   (question . "Question:")
+   (todo . "TODO:"))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Handling of annotation types for LaTeX output
