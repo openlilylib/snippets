@@ -244,9 +244,19 @@
                                (tag '())
                                (barnum 0)
                                (measurepos (ly:make-moment 0 1))
+                               (ctxid (ly:context-id context))
+                               (ctxname (ly:context-name context))
 
                                ; TODO get-paths -> collect from all paths
-                               (get-path (lambda (edition takt pos) `(,edition ,takt ,pos ,@tag)))
+                               (get-paths
+                                (lambda (edition takt pos)
+                                  `(
+                                     (,edition ,takt ,pos ,@tag-path ,ctxid)
+                                     (,edition ,takt ,pos ,@tag-path ,ctxname)
+                                     (,edition ,takt ,pos ,@tag-path ,ctxname ,ctxid)
+                                     (,edition ,takt ,pos ,@tag-path ,ctxname ,(base26 (object-property eng 'tag-path-idx)))
+                                     )
+                                  ))
 
                                (initialize
                                 (lambda (trans)
@@ -289,10 +299,10 @@
                                                (takt (ly:context-property c 'currentBarNumber))
                                                (mpos (ly:context-property c 'measurePosition)))
                                           (cons takt mpos) )))
-
                                     (set-object-property! eng 'context context)
                                     (set-object-property! eng 'tag-path tag-path)
                                     (set-object-property! eng 'path path)
+                                    (set-object-property! eng 'tag-path-idx ccid)
 
                                     ; (if (lalily:verbose) (ly:message "looking for editions in ~A" (glue-list path "/")))
                                     )))
@@ -304,23 +314,25 @@
                                     (if (eq? #t (ly:grob-property grob 'non-musical))
                                         (for-each
                                          (lambda (edition)
-                                           (let* ((path (get-path edition takt pos))
-                                                  (mods (tree-get mod-tree path)))
-                                             (if (list? mods)
-                                                 (for-each
-                                                  (lambda (mod)
-                                                    (cond
-                                                     ((and (ly:music? mod) (eq? 'LineBreakEvent (ly:music-property mod 'name)))
-                                                      (set! (ly:grob-property grob 'line-break-permission) (ly:music-property mod 'break-permission)))
-                                                     ((and (ly:music? mod) (eq? 'PageBreakEvent (ly:music-property mod 'name)))
-                                                      (set! (ly:grob-property grob 'page-break-permission) (ly:music-property mod 'break-permission)))
-                                                     ((and (ly:music? mod) (eq? 'PageTurnEvent (ly:music-property mod 'name)))
-                                                      (set! (ly:grob-property grob 'page-turn-permission) (ly:music-property mod 'break-permission)))
-                                                     ((and (ly:music? mod) (eq? 'ApplyOutputEvent (ly:music-property mod 'name)))
-                                                      (let ((proc (ly:music-property mod 'procedure)))
-                                                        (proc grob context context)
-                                                        ))
-                                                     )) mods)))) (editions)))
+                                           (for-each
+                                            (lambda (path)
+                                              (let ((mods (tree-get mod-tree path)))
+                                                (if (list? mods)
+                                                    (for-each
+                                                     (lambda (mod)
+                                                       (cond
+                                                        ((and (ly:music? mod) (eq? 'LineBreakEvent (ly:music-property mod 'name)))
+                                                         (set! (ly:grob-property grob 'line-break-permission) (ly:music-property mod 'break-permission)))
+                                                        ((and (ly:music? mod) (eq? 'PageBreakEvent (ly:music-property mod 'name)))
+                                                         (set! (ly:grob-property grob 'page-break-permission) (ly:music-property mod 'break-permission)))
+                                                        ((and (ly:music? mod) (eq? 'PageTurnEvent (ly:music-property mod 'name)))
+                                                         (set! (ly:grob-property grob 'page-turn-permission) (ly:music-property mod 'break-permission)))
+                                                        ((and (ly:music? mod) (eq? 'ApplyOutputEvent (ly:music-property mod 'name)))
+                                                         (let ((proc (ly:music-property mod 'procedure)))
+                                                           (proc grob context context)
+                                                           ))
+                                                        )) mods))))
+                                            (get-paths edition takt pos))) (editions)))
                                     )))
                                (start-translation-timestep
                                 (lambda (trans . recall) ; recall from process-music
@@ -330,35 +342,36 @@
                                     (define (modc+ mod)(set! modc `(,@modc ,mod)))
                                     (set! barnum takt)(set! measurepos pos)
                                     (for-each (lambda (edition)
-                                                (let* ((path (get-path edition takt pos))
-                                                       (mods (tree-get mod-tree path)))
-                                                  ;(display path)(display mods)(newline)
-                                                  (if (list? mods)
-                                                      (for-each (lambda (mod)
-                                                                  (cond
-                                                                   ((override? mod)
-                                                                    (if (is-revert mod)
-                                                                        (do-revert context mod)
-                                                                        (do-override context mod))
-                                                                    (modc+ mod))
-                                                                   ((propset? mod)
-                                                                    (do-propset context mod)
-                                                                    (modc+ mod))
-                                                                   ((apply-context? mod)
-                                                                    (do-apply context mod))
-                                                                   ((ly:context-mod? mod)
-                                                                    (ly:context-mod-apply! context mod)
-                                                                    (modc+ mod))
-                                                                   )) mods)
-                                                      )
-                                                  )) (editions))
-                                    ; warning if start-translation-timestep is not called in first place
-                                    (if (and (> (length modc) 0)(> (length recall) 0) (eq? #t (car recall)))
-                                        (begin
-                                         (ly:warning "missing @ ~A ~A ~A" takt pos (glue-list tag "/"))
-                                         (for-each (lambda (mod) (ly:warning "---> ~A" mod)) modc)
-                                         ))
-                                    )))
+                                                (for-each
+                                                 (lambda (path)
+                                                   (let ((mods (tree-get mod-tree path)))
+                                                     ;(display path)(display mods)(newline)
+                                                     (if (list? mods)
+                                                         (for-each (lambda (mod)
+                                                                     (cond
+                                                                      ((override? mod)
+                                                                       (if (is-revert mod)
+                                                                           (do-revert context mod)
+                                                                           (do-override context mod))
+                                                                       (modc+ mod))
+                                                                      ((propset? mod)
+                                                                       (do-propset context mod)
+                                                                       (modc+ mod))
+                                                                      ((apply-context? mod)
+                                                                       (do-apply context mod))
+                                                                      ((ly:context-mod? mod)
+                                                                       (ly:context-mod-apply! context mod)
+                                                                       (modc+ mod))
+                                                                      )) mods)
+                                                         )
+                                                     )) (get-paths edition takt pos))) (editions)))
+                                  ; warning if start-translation-timestep is not called in first place
+                                  (if (and (> (length modc) 0)(> (length recall) 0) (eq? #t (car recall)))
+                                      (begin
+                                       (ly:warning "missing @ ~A ~A ~A" takt pos (glue-list tag "/"))
+                                       (for-each (lambda (mod) (ly:warning "---> ~A" mod)) modc)
+                                       ))
+                                  ))
                                (stop-translation-timestep
                                 (lambda (trans)
                                   (let ((takt (ly:context-property context 'currentBarNumber))
