@@ -1,0 +1,41 @@
+\annotation
+   [original-text={<LilyPond Music>},
+    arbitrary-calulation={158},
+    arbitrary-scheme-list={(1 34 (3 . 2) (quote foo))},
+    original-key={Key: #<Pitch a >},
+    original-time={\time 3/4},
+    ossia={#<Score>},
+    original-music={<LilyPond Music>},
+    original-pitch={#<Pitch cis >},
+    number-property={12.3}]
+    {1}{1}
+    {Linke Hand}
+    {Clef}
+    {See \textbackslash what is \emph{possible}}
+    {custom-annotation}
+ 
+\musicalIssue
+   [author={Foo Bar}]
+    {1}{2 1/4}
+    {right-hand}
+    {NoteHead}
+    {Could this be dis?}
+ 
+\musicalIssue
+    {1}{3 1/2}
+    {examples}
+    {Hairpin}
+    {This hairpin is completely unoriginal}
+ 
+\lilypondIssue
+    {1}{4}
+    {right-hand}
+    {Script}
+    {This should be bigger}
+ 
+\annotateQuestion
+    {1}{4}
+    {Linke Hand}
+    {Beam}
+    {Which kind of beaming should we use?}
+ 
