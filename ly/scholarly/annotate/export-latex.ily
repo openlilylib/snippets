@@ -124,7 +124,6 @@ latex-escape-regexp = #(make-regexp latex-escape-regexpstring)
 % or return a 'NA' string and issue a warning
 % This is probably mostly an issue with the display of beat fractions
 #(define (lilyglyphs-lookup frac)
-   (ly:message (format "~a" frac))
    (or (assoc-ref lilyglyphs-rhythmic-values frac)
        ; Currently we don't provide any intelligent handling of
        ; values that are not in the above list.
@@ -226,7 +225,7 @@ latex-escape-regexp = #(make-regexp latex-escape-regexpstring)
           (indent-multiline-latex-string
            (escape-string-latex
             (assoc-ref ann "message")))))
-       
+
        ;; For a custom annotation we have to append
        ;; the type as 7th argument
        (let ((type (assoc-ref annotation-type-latex-commands
