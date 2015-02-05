@@ -59,8 +59,8 @@
       ;; add annotation type
       (append-to-output-stringlist
        #{ \getChildOption
-          scholarly.annotate.labels
-         #(assoc-ref ann "type") #})
+          scholarly.annotate.export.plaintext.labels
+          #(assoc-ref ann "type") #})
       ;; print properties list
       (append-to-output-stringlist
        (format-property-messages ann

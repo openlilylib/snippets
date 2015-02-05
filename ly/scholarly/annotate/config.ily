@@ -83,7 +83,7 @@
 
 % For retrieving values and registering custom annotation types
 % see above at the coloring section
-\registerOption scholarly.annotate.labels
+\registerOption scholarly.annotate.export.plaintext.labels
 #`((critical-remark . "Critical Remark:")
    (musical-issue . "Musical Issue:")
    (lilypond-issue . "LilyPond Issue:")
