@@ -118,9 +118,15 @@ annotationCollector =
               ;; add more properties that are only now available
               (begin
                (if #{ \getOption scholarly.colorize #}
-                   (set! (ly:grob-property grob 'color)
-                         (assoc-ref annotation-colors
-                           (assoc-ref annotation "type"))))
+                   ;; retrieve color from a dynamically determined sub-option
+                   (let*
+                    ((ann-type
+                      (append
+                       `(scholarly annotate colors)
+                       (list (assoc-ref annotation "type"))))
+                     (ann-color #{ \getOption #ann-type #}))
+                     ;; colorize grob
+                     (set! (ly:grob-property grob 'color) ann-color)))
                (if (or
                     #{ \getOption scholarly.annotate.print #}
                     (not (null? #{ \getOption scholarly.annotate.export-targets #} )))
@@ -202,10 +208,14 @@ annotationProcessor =
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+#(define (list-or-symbol? obj)
+   (or (list? obj)
+       (symbol? obj)))
+
 
 annotate =
 #(define-music-function (parser location name properties type item)
-   ((symbol?) ly:context-mod? markup? symbol-list-or-music?)
+   ((symbol?) ly:context-mod? list-or-symbol? symbol-list-or-music?)
    ;; annotates a musical object for use with lilypond-doc
 
    (let*
@@ -224,7 +234,7 @@ annotate =
     ;; An empty string refers to the generic \annotation function. In this case
     ;; we don't set a type at all to ensure proper predicate checking
     ;; (the annotation must then have an explicit 'type' property)
-    (if (not (string=? type ""))
+    (if (symbol? type)
         (set! props (assoc-set! props "type" type)))
 
     ;; Add or replace props entries taken from the properties argument
@@ -295,11 +305,11 @@ annotation =
        #{ \annotate
           #name
           #properties
-          ""
+          #'()
           #item #}
        #{ \annotate
           #properties
-          ""
+          #'()
           #item #}))
 
 criticalRemark =
@@ -310,11 +320,11 @@ criticalRemark =
        #{ \annotate
           #name
           #properties
-          "critical-remark"
+          #'critical-remark
           #item #}
        #{ \annotate
           #properties
-          "critical-remark"
+          #'critical-remark
           #item #}))
 
 lilypondIssue =
@@ -325,11 +335,11 @@ lilypondIssue =
        #{ \annotate
           #name
           #properties
-          "lilypond-issue"
+          #'lilypond-issue
           #item #}
        #{ \annotate
           #properties
-          "lilypond-issue"
+          #'lilypond-issue
           #item #}))
 
 musicalIssue =
@@ -340,11 +350,11 @@ musicalIssue =
        #{ \annotate
           #name
           #properties
-          "musical-issue"
+          #'musical-issue
           #item #}
        #{ \annotate
           #properties
-          "musical-issue"
+          #'musical-issue
           #item #}))
 
 question =
@@ -355,11 +365,11 @@ question =
        #{ \annotate
           #name
           #properties
-          "question"
+          #'question
           #item #}
        #{ \annotate
           #properties
-          "question"
+          #'question
           #item #}))
 
 todo =
@@ -370,11 +380,11 @@ todo =
        #{ \annotate
           #name
           #properties
-          "todo"
+          #'todo
           #item #}
        #{ \annotate
           #properties
-          "todo"
+          #'todo
           #item #}))
 
 

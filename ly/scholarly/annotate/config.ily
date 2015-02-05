@@ -64,43 +64,22 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 % default colors for annotations types
-#(define annotation-color-defaults
+#(define annotation-colors
    ;; Colors to be used for different types of annotation
-   `(("critical-remark" . ,darkgreen)
-     ("musical-issue" . ,green)
-     ("lilypond-issue" . ,red)
-     ("question" . ,blue)
-     ("todo" . ,magenta)))
+   `((critical-remark . ,darkgreen)
+     (musical-issue . ,green)
+     (lilypond-issue . ,red)
+     (question . ,blue)
+     (todo . ,magenta)))
 
-% initialize an empty alist for the annotation colors
-#(cond ((not (defined? 'annotation-colors))
-        (define annotation-colors '())))
+% colors are managed as children of scholarly.annotate.colors,
+% so they can be retrieved with
+% \getOption scholarly.annotate.colors.<type>, e.g.
+% \getOption scholarly.annotate.colors.critical-remark
+% When custom annotation types are to be used a color has to be set with
+% \registerOption scholarly.annotate.colors.<type> <default>
+\registerOption scholarly.annotate.colors #annotation-colors
 
-% look up default annotation colors and set them
-% if they aren't present yet
-#(for-each
-  (lambda (type)
-    (if (not (assoc-ref annotation-colors (car type)))
-        (set! annotation-colors
-              (assoc-set! annotation-colors
-                (car type) (cdr type)))))
-  annotation-color-defaults)
-
-% Convenience function to modify the colors for any annotation type.
-% Expects:
-% - string with annotation type (should match one of the key from
-%   annotation-color-defaults above)
-% - Scheme color
-% TODO:
-% This *should* work to seet the color of custom annotation types
-% but this should be checked carefully.
-% BTW what happens if a custom annotation type is used and *no*
-% color is added? This should have a fallback without errors.
-setAnnotationTypeColor =
-#(define-void-function (parser location type color)
-   (markup? color?)
-   (set! annotation-colors
-         (assoc-set! annotation-colors type color)))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Handling of annotation types for plain text output
