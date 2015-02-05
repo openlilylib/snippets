@@ -69,6 +69,18 @@ getOption =
          (oll:warn location "Try retrieving non-existent option: ~a" (dot-path->string opt-path))
          #f))))
 
+% Retrieve a suboption from an option that stores an alist
+% This actually is just another subtree but that function can
+% significantly ease the use when sub-options have to be handled dynamically.
+% \getOption scholarly.annotate.colors.critical-remark
+% is equivalent to
+% \getChildOption scholarly.annotate.colors #'critical-remark
+% but we can simply pass the sub-option name as a symbol
+getChildOption =
+#(define-scheme-function (parser location opt-path child)
+   (list? symbol?)
+    #{ \getOption #(append opt-path (list child)) #})
+
 % TODO:
 % Provide commands to bulk-process this.
 % Maybe also make it possible to load options froma  JSON file

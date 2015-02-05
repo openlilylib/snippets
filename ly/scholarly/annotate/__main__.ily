@@ -118,15 +118,11 @@ annotationCollector =
               ;; add more properties that are only now available
               (begin
                (if #{ \getOption scholarly.colorize #}
-                   ;; retrieve color from a dynamically determined sub-option
-                   (let*
-                    ((ann-type
-                      (append
-                       `(scholarly annotate colors)
-                       (list (assoc-ref annotation "type"))))
-                     (ann-color #{ \getOption #ann-type #}))
-                     ;; colorize grob
-                     (set! (ly:grob-property grob 'color) ann-color)))
+                   ;; colorize grob, retrieving color from sub-option
+                   (set! (ly:grob-property grob 'color)
+                         #{ \getChildOption
+                            scholarly.annotate.colors
+                            #(assoc-ref annotation "type") #}))
                (if (or
                     #{ \getOption scholarly.annotate.print #}
                     (not (null? #{ \getOption scholarly.annotate.export-targets #} )))
