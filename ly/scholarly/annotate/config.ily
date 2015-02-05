@@ -114,15 +114,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % using lilyglyphs for grob-location
 
-% Initialize configuration variable
-#(cond ((not (defined? 'format-beat-string-with-lilyglyphs))
-        (define format-beat-string-with-lilyglyphs #f)))
-
-% Convenience function to set the behaviour
-useLilyglyphsForBeatString =
-#(define-void-function (parser location active)
-   (boolean?)
-   (set! format-beat-string-with-lilyglyphs active))
+% If set the grob location is formatted as a lilyglyphs command
+\registerOption scholarly.annotate.export.latex.use-lilyglyphs #f
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Handling of labels for property fields

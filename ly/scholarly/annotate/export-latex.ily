@@ -205,7 +205,7 @@ latex-escape-regexp = #(make-regexp latex-escape-regexpstring)
        (append-to-output-stringlist
         (format "    {~a}{~a}"
           (assoc-ref loc-props "measure-no")
-          (if format-beat-string-with-lilyglyphs
+          (if #{ \getOption scholarly.annotate.export.latex.use-lilyglyphs #}
               (lilyglyphs-beat-string loc-props)
               (beat-string loc-props))))
 
