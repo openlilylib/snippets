@@ -115,7 +115,7 @@
 % using lilyglyphs for grob-location
 
 % If set the grob location is formatted as a lilyglyphs command
-\registerOption scholarly.annotate.export.latex.use-lilyglyphs #f
+\registerOption scholarly.annotate.export.latex.use-lilyglyphs ##f
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Handling of labels for property fields
