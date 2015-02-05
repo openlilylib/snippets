@@ -63,22 +63,18 @@
 %%%% Coloring annotations
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-% default colors for annotations types
-#(define annotation-colors
-   ;; Colors to be used for different types of annotation
-   `((critical-remark . ,darkgreen)
-     (musical-issue . ,green)
-     (lilypond-issue . ,red)
-     (question . ,blue)
-     (todo . ,magenta)))
-
 % colors are managed as children of scholarly.annotate.colors,
 % so they can be retrieved with
 % \getOption scholarly.annotate.colors.<type>, e.g.
 % \getOption scholarly.annotate.colors.critical-remark
 % When custom annotation types are to be used a color has to be set with
 % \registerOption scholarly.annotate.colors.<type> <default>
-\registerOption scholarly.annotate.colors #annotation-colors
+\registerOption scholarly.annotate.colors
+#`((critical-remark . ,darkgreen)
+   (musical-issue . ,green)
+   (lilypond-issue . ,red)
+   (question . ,blue)
+   (todo . ,magenta))
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
