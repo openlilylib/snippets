@@ -30,4 +30,6 @@
 % Only for publication one will want to turn it off
 \registerOption scholarly.colorize ##t
 
+\registerOption scholarly.colors.editorial-addition #darkred
+
 #(oll:log "Initialized ScholarLY~a" "")
