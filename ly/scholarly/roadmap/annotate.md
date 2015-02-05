@@ -14,16 +14,12 @@ less important but trivial to add may be listed first).
 
 ### Technical foundation
 
-- Convert to a Scheme module  
-  This will be much cleaner, and it will allow to use much shorter names as the names are
-  local to the module.
 - Revise the structure of the annotation object  
   So far an annotation is a flat alist holding many "properties". It should have a number
   of "meta" properties that hold their own alists for properties that are never used to be
   printed. This will make the necessity obsolete to filter out so many properties in the
   export routines.  
   Maybe it is a good idea to have *only* such sub-alists as the top-level items.
-- Properly thing about supporting custom annotation types
 - Add support for callback functions dealing with custom property types
   
 ### Output processing
@@ -44,8 +40,6 @@ less important but trivial to add may be listed first).
 
 #### LaTeX output
 
-- incorporate `lilyglyphs`  
-  Use it to (optionally) visualize the rhythmic location
 - provide some sort of Markdown-like message formatting
 - make an option to output standalone LaTeX documents
 
