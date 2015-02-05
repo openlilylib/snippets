@@ -1,30 +1,35 @@
 # ScholarLY
 
-ScholarLY is a toolbox for scholarly editions with (mainly) GNU LilyPond.
-Its main part is an includable LilyPond library which is complemented by LaTeX
-tools and Python scripts.
+*ScholarLY* is a toolbox for scholarly editions with (mainly) GNU LilyPond.
+It belongs to *openLilyLib*, LilyPond's community library system.
+Therefore getting and installing *ScholarLY* is automatically handled by
+preparing *openLilyLib*.
+See its [home page](https://github.com/openlilylib/openlilylib) for details.
 
-## Installation
+As part of *openLilyLib* this library is released under the
+GNU General Public License. See *openLilyLib*'s license for details.
 
-###LilyPond library 
+## Overview
 
-There are two steps to "install" the LilyPond library once it is downloaded.
-The first step is to meet the dependency to `openLilyLib`, which `ScholarLY` relies
-on. Go to its [home page](https://github.com/openlilylib/openlilylib) and follow
-the directions to get it to run.
-Then simply add the `/ly` directory to LilyPond's include path, either through
-supplying the respective command line option or by adding the path in Frescobaldi's
-preferences. From there on you can use `scholarly` as a prefix to any include command
-in LilyPond input files. This acts as a namespace to avoid name clashes with other
-libraries or built-in commands. You can include individual functions, a number of
-function collections or the full library at once.
-Some examples:
+*ScholarLY* will include a number of features, but currently only `\annotate` is implemented,
+and this can only be seen as a beginning. See the `\annotate`'s [overview](annotate/README.md)
+for more information on this functionality.
 
-- `\include "scholarly/full.ily"`  
-  to include the complete library (not implemented yet)
-- `\include "scholarly/annotate.ily"`  
-  to include only the annotation functionality
-- `\include "scholarly/items/diplomatic-line-breaks.ily"`  
-  (function to indicate line breaks in the source, not implemented yet,
-   naming subject to change)
+## Getting Started
 
+Prerequisite to using *ScholarLY* is activating *openLilyLib* with
+
+```lilypond
+\include "openlilylib"
+```
+
+*openLilyLib* will only be initialized once so it is safe to use this command in multiple
+initialization files. Loading ScholarLY is done with one of:
+
+```lilypond
+\loadModule "scholarly"
+\loadModule "scholarly/annotate"
+```
+
+Once it is running *Scholarly*'s behaviour can be configured using *openLilyLib*'s
+global configuration mechanism. Please refer to the manuals of both for more information.
