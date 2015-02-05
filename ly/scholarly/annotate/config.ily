@@ -2,10 +2,12 @@
 %                                                                             %
 % This file is part of ScholarLY,                                             %
 %                      =========                                              %
-% a toolkit library for scholarly work with GNU LilyPond and LaTeX.           %
+% a toolkit library for scholarly work with GNU LilyPond and LaTeX,           %
+% belonging to openLilyLib (https://github.com/openlilylib/openlilylib        %
+%              -----------                                                    %
 %                                                                             %
 % ScholarLY is free software: you can redistribute it and/or modify           %
-% it under the terms of the GNU Lesser General Public License as published by %
+% it under the terms of the GNU General Public License as published by        %
 % the Free Software Foundation, either version 3 of the License, or           %
 % (at your option) any later version.                                         %
 %                                                                             %
@@ -14,7 +16,7 @@
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               %
 % GNU Lesser General Public License for more details.                         %
 %                                                                             %
-% You should have received a copy of the GNU Lesser General Public License    %
+% You should have received a copy of the GNU General Public License           %
 % along with ScholarLY.  If not, see <http://www.gnu.org/licenses/>.          %
 %                                                                             %
 % ScholarLY is maintained by Urs Liska, ul@openlilylib.org                    %
@@ -23,7 +25,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %{
-  This file defines most of the configuration infrastructure for \annotate
+  This file defines the configuration options for \annotate
 %}
 
 %%%%%%%%%%%%%%%%%%%%%%%
