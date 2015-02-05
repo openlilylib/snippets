@@ -37,10 +37,9 @@ optionRegistered =
     ;; stumble over existing entries with #f)
     ((opt-key (last opt-path))
      (parent (list-head opt-path (- (length opt-path) 1)))
-     (siblings #{ \getatree openlilylib-options #parent #})
-     (entry (assoc opt-key siblings)))
-    ;; return either the cdr of entry or #f
-    (and entry (cdr entry))))
+     (siblings #{ \getatree openlilylib-options #parent #}))
+    ;; return the entry pair or #f
+    (assoc opt-key siblings)))
 
 % Set an option.
 % Only registered options can be set this way.
@@ -67,7 +66,8 @@ getOption =
 #(define-scheme-function (parser location opt-path)
    (list?)
    (let ((value #{ \optionRegistered #opt-path #}))
-     (or value
+     (if value
+         (cdr value)
          (begin
           (oll:warn location "Try retrieving non-existent option: ~a" (dot-path->string opt-path))
           #f))))
@@ -78,7 +78,8 @@ getOptionWithFallback =
 #(define-scheme-function (parser location opt-path fallback)
    (list? scheme?)
    (let ((value #{ \optionRegistered #opt-path #}))
-     (or value
+     (if value
+         (cdr value)
          fallback)))
 
 % Retrieve a suboption from an option that stores an alist
