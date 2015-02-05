@@ -105,9 +105,11 @@
 
 % There is no implementation of convenience commands because this should
 % not actually be necessary. The LaTeX implementation is designed to work
-% together with the LaTeX package, so it should note be configured on user level.
+% together with the LaTeX package, so it should not be configured on user level.
 % If the functionality has to be adapted to a given project the above alist
 % can be modified directly.
+% An additional advantage is that with LaTeX export no special treatment of
+% custom anntotation types is necessary, as these simply map to \annotation
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % using lilyglyphs for grob-location
