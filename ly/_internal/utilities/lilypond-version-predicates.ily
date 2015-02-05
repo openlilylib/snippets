@@ -37,16 +37,18 @@
     against a given version.
   }
   oll-author = "Urs Liska"
-  oll-description = \markup {
+  oll-description = \markup \wordwrap {
     This snippet provides a set of predicates (or comparison
     operators) for LilyPond version numbers.
     This is useful for implementing switches in functions
     to execute code depending on the LilyPond version
     that is currently running.
 
-    The functions take a LilyPond version number (formatted
-    as either a three element list or as a version string) as argument
-    and compare that to the version number of the running LilyPond.
+  }
+  oll-usage = \markup \wordwrap {
+    Compare the predicates against a LilyPond version number (formatted
+    as either a three element list or as a version string). The functions
+    will return "#t" or "#f" depending on the result of the comparison.
   }
   oll-category = "utilities"
   oll-tags = "internal,control-flow,conditionals,compatibility,lilypond-version"
