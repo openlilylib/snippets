@@ -129,16 +129,22 @@ annotationCollector =
                    ;; only add to the list of grobs in the engraver
                    ;; when we actually process them afterwards
                    (let ((ctx-id
-                          ;; Determine if there's
+                          ;; Set ctx-id to
                           ;; a) an explicit context name defined or
-                          ;; b) an implicit context name through the named Staff context
+                          ;; b) an implicit context name through the named Staff context or
+                          ;; c) the directory name (as determined in the \annotate function)
                           (or (assoc-ref annotation "context")
-                              (annotation-context-label context))))
-                     ;; If there's a better label for the context overwrite the context-id property
-                     ;; which has originally been set to the directory name the input file is in
-                     ;; (because in some set-ups this is an indicator of the voice/part context).
-                     (if (string>? ctx-id "")
-                         (set! annotation (assoc-set! annotation "context-id" ctx-id)))
+                              (ly:context-id context)
+                              (assoc-ref annotation "context-id"))))
+                     ;; Look up a context-name label from the options if one is set,
+                     ;; otherwise use the retrieved context-name.
+                     (set! annotation
+                           (assoc-set! annotation
+                             "context-id"
+                             #{ \getChildOptionWithFallback
+                                scholarly.annotate.context-names
+                                #(string->symbol ctx-id)
+                                #ctx-id #}))
                      ;; Get the name of the annotated grob type
                      (set! annotation (assoc-set! annotation "grob-type" (grob-name grob)))
                      ;; Initialize a 'grob-location' property as a sub-alist,

@@ -137,42 +137,14 @@
 %%%% Handling of labels for voice/context names
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% \annotate tries to determine a proper lable for the
-% musical context. It does so by in a three-step
-% fall-through solution.
+% \annotate tries to determine the best labels for the
+% musical context, either one
+% - one explicitly set in the annotation
+% - the actual context (Staff level) name
+% - the directory name of the originating file
 %
-% 1) If the annotation defines a 'context' property
-%    this value is used.
-% 2) If the Staff-level context where the annotation
-%    is defined is explicitly named this name is used
-% 3) Without any explicit naming the directory name of
-%    the file in which the annotation is entered is used.
-%
-% For pretty-printing or localizing \annotate
-% supports re-labelling of these context names.
+% With this option one can map these values to more speaking
+% labels that can for example be used to create localized output.
 
-% Initialize empty alist.
-#(cond ((not (defined? 'annotation-context-labels))
-        (define annotation-context-labels '())))
-
-% Return the label for the given context/part name
-% or the name of the context itself if no label is defined
-#(define (annotation-context-label context)
-   (let*
-    ((ctx (ly:context-id context)))
-    (or
-     (assoc-ref annotation-context-labels ctx)
-     ctx)))
-
-% Convenience function to add labels for context names.
-% Supply an alist with one pair for each instrument,
-% e.g. #'(("piano" . "Klavier"))
-addAnnotationContextLabels =
-#(define-void-function (parser location labels)
-   (list?)
-   (for-each
-    (lambda (l)
-      (set! annotation-context-labels
-            (assoc-set! annotation-context-labels
-              (car l) (cdr l))))
-    labels))
+\registerOption scholarly.annotate.context-names
+#'()
