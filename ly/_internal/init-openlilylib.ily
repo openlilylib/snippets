@@ -11,28 +11,35 @@
 %%%% Common functionality
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Version predicates to execute code for specific LilyPond versions
-\include "utilities/lilypond-version-predicates.ily"
-% Helpers for handling Scheme association lists
-\include "utilities/alist-access.ily"
-% Get current file name
-\include "utilities/this-file.ily"
+% Make common functionality available to all openLilyLib "users"
+\include "utilities/__main__.ily"
 
-% logging capabilities with different log levels
+% Logging capabilities with different log levels
 \include "logging.ily"
-
-% Set variables for root path and Scheme module path
-\include "root-path.ily"
-
-% Load functionality to load and manage modules
-\include "module-handling.ily"
 
 % Common option handling
 \include "options.ily"
 
+% Set default loglevel to 'warning'
+% (can only be done after options have been included)
+\registerOption global.loglevel #oll-loglevel-warning
 
-% Flag used to include the library only once
-#(define openlilylib-loaded #t)
+% Set the root path of openLilyLib
+% - for oll module inclusion
+% - for Scheme module inclusion
+% This must be called from the main openlilylib file
+% because that's inside the desired root directory
+setRootPath =
+#(define-void-function (parser location)()
+   (let* ((path (get-normalized-path (ly:input-file-line-char-column location))))
+     #{ \registerOption global.root-path #path #}
+     (if (not (member path %load-path))
+         (set! %load-path `(,path ,@%load-path)))))
+
+
+% Functionality to load and manage modules
+\include "module-handling.ily"
+
 
 % Welcome message.
 % This is a default ly:message because otherwise we'd have to mess around with

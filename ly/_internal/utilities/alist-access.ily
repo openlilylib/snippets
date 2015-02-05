@@ -1,5 +1,4 @@
 \version "2.17.96"
-\include "ly/_internal/logging.ily"
 
 \header {
   snippet-title = "work with (nested) association-lists"
