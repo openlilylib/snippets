@@ -23,8 +23,8 @@
 \editionMod fullscore 2 0/4 my.test.alot.Melody -\markup { \with-color #red "what's that?" }
 
 % now also ottava is supported (uses context-mod-from-music)
-\editionMod fullscore 2 2/4 my.test.Staff.A \ottava #1
-\editionMod fullscore 5 0/4 my.test.Staff.A \ottava #0
+\editionMod fullscore 2 2/4 my.test.Staff \ottava #1
+\editionMod fullscore 5 0/4 my.test.Staff \ottava #0
 
 % just another tweak on several times
 % editionMMod is still defined but should be marked deprecated
