@@ -12,11 +12,13 @@
       \concat { \vspace #1.5 "Author(s): " \fromproperty #'header:oll-author }
       \line \typewriter { #include-clause }
 
-      \section "Introduction:"
+      \section "Description:"
       \fromproperty  #'header:oll-description
 
       \section "Usage:"
       \fromproperty #'header:oll-usage
+      
+      \section "Configuration:"
     }
   }
 }
