@@ -43,7 +43,7 @@
      ("#" . "\\#")
      ("\n\n" . "\\\\\n")))
 
-latex-escape-regexpstring = "&|\\\\|\{|\}|\[|\]|#|\@.*\@"
+latex-escape-regexpstring = "&|\\\\|\{|\}|\[|\]|#|\@[^@]*\@"
 latex-escape-regexp = #(make-regexp latex-escape-regexpstring)
 
 % LilyPond strings can contain stuff that is not accepted in LaTeX files,
