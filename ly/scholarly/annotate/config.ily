@@ -99,11 +99,11 @@
 % Default labels for each known annotation type
 % Used for LaTeX export
 #(define annotation-type-latex-commands
-   `(("critical-remark" . "\\criticalRemark")
-     ("musical-issue" . "\\musicalIssue")
-     ("lilypond-issue" . "\\lilypondIssue")
-     ("question" . "\\annotateQuestion")
-     ("todo" . "\\annotateTodo")))
+   `((critical-remark . "\\criticalRemark")
+     (musical-issue . "\\musicalIssue")
+     (lilypond-issue . "\\lilypondIssue")
+     (question . "\\annotateQuestion")
+     (todo . "\\annotateTodo")))
 
 % There is no implementation of convenience commands because this should
 % not actually be necessary. The LaTeX implementation is designed to work
