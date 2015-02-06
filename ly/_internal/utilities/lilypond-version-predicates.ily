@@ -39,11 +39,10 @@
   oll-author = "Urs Liska"
   oll-description = \markup \wordwrap {
     This snippet provides a set of predicates (or comparison
-    operators) for LilyPond version numbers.
-    This is useful for implementing switches in functions
-    to execute code depending on the LilyPond version
-    that is currently running.
-
+    operators) for LilyPond version numbers. This is useful
+    for implementing switches that execute code depending on
+    the LilyPond version that is currently running, for example
+    when you have to accept different versions.
   }
   oll-usage = \markup \wordwrap {
     Compare the predicates against a LilyPond version number (formatted
