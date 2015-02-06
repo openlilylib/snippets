@@ -12,6 +12,7 @@
 
 % This is still optional. I thought of providing a certain binding margin.
 \paper {
+  indent = 0\cm
   left-margin = 2\cm
   right-margin = 1.5\cm
 }
