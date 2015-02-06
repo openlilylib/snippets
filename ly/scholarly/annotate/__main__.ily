@@ -136,7 +136,9 @@ annotationCollector =
                           ;; b) an implicit context name through the named Staff context or
                           ;; c) the directory name (as determined in the \annotate function)
                           (or (assoc-ref annotation "context")
-                              (ly:context-id context)
+                              (let ((actual-context-id (ly:context-id context)))
+                                (and actual-context-id
+                                     (not (string=? actual-context-id "\\new"))))
                               (assoc-ref annotation "context-id"))))
                      ;; Look up a context-name label from the options if one is set,
                      ;; otherwise use the retrieved context-name.
