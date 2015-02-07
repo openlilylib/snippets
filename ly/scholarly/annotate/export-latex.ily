@@ -28,7 +28,11 @@
   Output annotations as LaTeX code
 %}
 
-#(use-modules (ice-9 regex))
+% TODO:
+% Consider if we still need this at all
+%
+
+%{
 
 % A list with characters that should be escaped when
 % exporting to LaTeX. This works together with the below regexp
@@ -62,6 +66,8 @@ latex-escape-regexp = #(make-regexp latex-escape-regexpstring)
                         (assoc-ref latex-escape-pairs ms))))
            'post))
    str)
+
+%}
 
 #(define (indent-multiline-latex-string str)
    ;; make nice indentation
@@ -225,7 +231,7 @@ latex-escape-regexp = #(make-regexp latex-escape-regexpstring)
        (append-to-output-stringlist
         (format "    {~a}"
           (indent-multiline-latex-string
-           (escape-string-latex
+           (unescape-plaintext-message
             (assoc-ref ann "message")))))
 
        ;; For a custom annotation we have to append

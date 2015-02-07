@@ -28,6 +28,36 @@
   Basic functionality to export/output annotations
 %}
 
+#(use-modules (ice-9 regex))
+
+% Basic unescaping of plaintext message properties
+% It seems that in LilyPond strings \n, \t and \" are escape sequences
+% (whereas the other Guile escape sequences don't apply).
+% Through this escaping we allow authors to use the combinations \n and \t
+% (e.g. for LaTeX commands). \" is still escaped to a normal quotation mark
+%
+% Later we will have to extend this to support other input formats
+% such as Markdown or HTML (or Markdown with interspersed LaTeX or HTML)
+#(define basic-escape-pairs
+   '(("\n" . "\\n")
+     ("\t" . "\\t")))
+
+#(define basic-escape-regexpstring "\n|\t")
+#(define basic-escape-regexp (make-regexp basic-escape-regexpstring))
+
+#(define (unescape-plaintext-message str)
+   (set! str
+         (regexp-substitute/global #f basic-escape-regexp str
+           'pre (lambda (m)
+                  (let ((ms (match:substring m)))
+                    (assoc-ref basic-escape-pairs ms)))
+           'post))
+   str)
+
+#(define (escape-latex-message str)
+   #f)
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% General export helper routines
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

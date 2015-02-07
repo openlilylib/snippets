@@ -66,9 +66,11 @@
       ; maybe improve handling in the future
       ; and format messages for supported types like key signatures
       ;
-      (if (ly:music? prop-value)
-          (format-ly-music prop-value)
-          prop-value))))
+      (cond ((ly:music? prop-value)
+          (format-ly-music prop-value))
+        ((string? prop-value)
+          (unescape-plaintext-message prop-value))
+        (else prop-value)))))
 
 #(define (format-property-messages ann flt)
    (map (lambda (prop)
