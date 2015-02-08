@@ -143,10 +143,6 @@ annotationCollector =
                               (assoc-ref annotation "context-id"))))
                      ;; Look up a context-name label from the options if one is set,
                      ;; otherwise use the retrieved context-name.
-                     (oll:warn "\n\"context\" property: ~a" (assoc-ref annotation "context"))
-                     (oll:warn "\"actual-context-id: ~a" (ly:context-id context))
-                     (oll:warn "\"context-id\" property: ~a" (assoc-ref annotation "context-id"))
-                     (oll:warn "Resulting \"ctx-id\": ~a\n" ctx-id)
                      (set! annotation
                            (assoc-set! annotation
                              "context-id"
