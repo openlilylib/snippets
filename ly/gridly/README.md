@@ -97,10 +97,10 @@ of things that are used in almost all the functions.
 ### Segment selectors
 
 Used in functions to get the music out of the grid, segment selectors
-are either scheme pairs or the symbol `'all`. The latter selector is
-used to select all the segments in the grid, whereas the former
-specifies a range, with start and end points included. So `'(3 . 6)`
-will select all the segments from `3` to `6`, included.
+are either scheme pairs, integers or the symbol `'all`. The latter selector is
+used to select all the segments in the grid, an integer selects a
+single segment, whereas the pair specifies a range, with start and end points
+included. So `'(3 . 6)` will select all the segments from `3` to `6`, included.
 
 In the public functions description, segment selectors are identified
 by `seg-sel`.
@@ -183,6 +183,15 @@ Instead, for an example of a multi-file score, take a look at
 
 Changelog
 ---------
+
+ * 0.3.0 - development
+
+   - Add integers as segment selectors
+   - Now including an empty cell in `\gridGetMusic` will no longer throw 
+     an error: if the segment was initialized with `\gridSetStructure`, then
+     a number of skips of the same duration as the defined structure will be
+     used. This allows to create scores containing undefined cells, that is
+     useful to check work in progress.
 
  * 0.2.1
 
