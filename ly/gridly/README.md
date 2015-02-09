@@ -8,7 +8,7 @@ Liska, with some ideas about "putting" and "getting" the music from
 by Jan-Peter Voigt, both appeared on lilypondblog.org.
 
 GridLY is part of `openLilyLib` and is maintained by
-[Matteo Ceccarello](matteo.ceccarello@gmail.com)
+[Matteo Ceccarello](mailto:matteo.ceccarello@gmail.com)
 
 ---
 
