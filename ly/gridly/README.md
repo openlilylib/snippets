@@ -1,11 +1,16 @@
-Gridly - Simple segmented grid for LilyPond
+GridLY - Simple segmented grid for LilyPond
 ===========================================
 
-This package implements the "segmented grid" approach described in
+This library implements the "segmented grid" approach described in
 [this blog post](http://lilypondblog.org/2014/10/segment-grid/) by Urs
 Liska, with some ideas about "putting" and "getting" the music from
 [this blog post](http://lilypondblog.org/2014/07/trees-music-and-lilypond/)
 by Jan-Peter Voigt, both appeared on lilypondblog.org.
+
+GridLY is part of `openLilyLib` and is maintained by
+[Matteo Ceccarello](matteo.ceccarello@gmail.com)
+
+---
 
 The segmented grid approach consists in dividing a multi-part score in
 many segments that can be edited independently, possibly my many
