@@ -1,7 +1,8 @@
 \version "2.18.2"
 
 #(ly:set-option 'relative-includes #t)
-\include "../../grid.ily"
+\include "openlilylib"
+\loadModule "gridly"
 \include "../../grid-templates.ily"
 
 \include "global.ily"
