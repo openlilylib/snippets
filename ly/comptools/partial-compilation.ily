@@ -57,12 +57,12 @@
 setClipRegion =
 #(define-void-function (parser location from to)
    (memom? memom?)
-   (let ((clip-region-from 
-          (if (integer? from) 
+   (let ((clip-region-from
+          (if (integer? from)
               (list from #{ 0/4 #})
-              (list (car from) 
+              (list (car from)
                 (ly:make-moment (numerator (cadr from))(denominator (cadr from))))))
-         (clip-region-to 
+         (clip-region-to
           (if (integer? to)
               (list (+ 1 to) #{ 0/4 #})
               (list (car to)

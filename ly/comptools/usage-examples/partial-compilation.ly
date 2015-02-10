@@ -2,7 +2,8 @@
 
 \version "2.18.0"
 
-\include "general-tools/clip-regions/definitions.ily"
+\include "openlilylib"
+\loadModule "comptools/partial-compilation.ily"
 
 % Define a list with original page breaks (barnumbers)
 conditionalPageBreaks = #'(112 224 336 448 560 672 784)
