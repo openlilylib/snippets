@@ -38,12 +38,12 @@
    (if (ly:music? music)
        (cond
         ((eq? 'TimeSignatureMusic (ly:music-property music 'name))
-              (format "\\time ~a/~a"
-                (ly:music-property music 'numerator)
-                (ly:music-property music 'denominator)))
+         (format "\\time ~a/~a"
+           (ly:music-property music 'numerator)
+           (ly:music-property music 'denominator)))
         ((eq? 'KeyChangeEvent (ly:music-property music 'name))
          (format "Key: ~a" (ly:music-property music 'tonic)))
-         (else "<LilyPond Music>"))
+        (else "<LilyPond Music>"))
        "No music found"))
 
 
@@ -66,11 +66,10 @@
       ; maybe improve handling in the future
       ; and format messages for supported types like key signatures
       ;
-      (cond ((ly:music? prop-value)
-          (format-ly-music prop-value))
-        ((string? prop-value)
-          (unescape-plaintext-message prop-value))
-        (else prop-value)))))
+      (cond
+       ((ly:music? prop-value)
+        (format-ly-music prop-value))
+       (else prop-value)))))
 
 #(define (format-property-messages ann flt)
    (map (lambda (prop)

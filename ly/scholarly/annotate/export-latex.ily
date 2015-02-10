@@ -28,47 +28,6 @@
   Output annotations as LaTeX code
 %}
 
-% TODO:
-% Consider if we still need this at all
-%
-
-%{
-
-% A list with characters that should be escaped when
-% exporting to LaTeX. This works together with the below regexp
-% and is used in the normalization function.
-#(define latex-escape-pairs
-   '(("\\" . "\\textbackslash ")
-     ("&" . "\\&")
-     ("{" . "\\{")
-     ("}" . "\\}")
-     ("[" . "{[}")
-     ("]" . "{]}")
-     ("#" . "\\#")
-     ("\n\n" . "\\\\\n")))
-
-latex-escape-regexpstring = "&|\\\\|\{|\}|\[|\]|#|\@[^@]*\@"
-latex-escape-regexp = #(make-regexp latex-escape-regexpstring)
-
-% LilyPond strings can contain stuff that is not accepted in LaTeX files,
-% so we have to preprocess them).
-% Verbatim LaTeX code can be inserted by enclosing it with at-symbols
-#(define (escape-string-latex str)
-   ;; Escape invalid LaTeX characters
-   (set! str
-         (regexp-substitute/global #f latex-escape-regexp str
-           'pre (lambda (m)
-                  (let ((ms (match:substring m)))
-                    (if (string= "@" (substring ms 0 1))
-                        ;; return verbatim LaTeX code (without the @-s)
-                        (substring ms 1 (- (string-length ms) 1))
-                        ;; return escaped character(s)
-                        (assoc-ref latex-escape-pairs ms))))
-           'post))
-   str)
-
-%}
-
 #(define (indent-multiline-latex-string str)
    ;; make nice indentation
    (set! str
@@ -231,8 +190,7 @@ latex-escape-regexp = #(make-regexp latex-escape-regexpstring)
        (append-to-output-stringlist
         (format "    {~a}"
           (indent-multiline-latex-string
-           (unescape-plaintext-message
-            (assoc-ref ann "message")))))
+           (assoc-ref ann "message"))))
 
        ;; For a custom annotation we have to append
        ;; the type as 7th argument
