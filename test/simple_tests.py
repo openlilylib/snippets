@@ -30,7 +30,7 @@ class SimpleTests:
 
     binary_site = "http://download.linuxaudio.org/lilypond/binaries/"
 
-    test_files = []
+    test_list_fname = ".simple-tests"
 
     def __init__(self, cmd=None):
         self.clean_tmp_dir()
@@ -78,8 +78,50 @@ class SimpleTests:
         script_path = osp.abspath(osp.dirname(osp.realpath(__file__)))
         return osp.abspath(osp.relpath("..", script_path))
 
-    def collect_tests(self):
-        pass
+    def __collect_tests(self):
+        test_files = []
+        for root, _, files in os.walk(self.openlilylib_dir()):
+            for f in files:
+                fname = osp.join(root, f)
+                if f == self.test_list_fname:
+                    print "Found file listing simple tests:", fname
+                    with open(fname, 'r') as test_list:
+                        for line in test_list.readlines():
+                            if not line.startswith("#"):
+                                test_file = osp.join(root, line.strip())
+                                test_files.append(test_file)
+        return test_files
+
+    def run(self):
+        failed_tests = []
+        all_tests = self.__collect_tests()
+        for test in all_tests:
+            print "Running test", test,
+            lily = sp.Popen([self.lily_command,
+                             "-I", self.openlilylib_dir(),
+                             "-I", os.path.join(self.openlilylib_dir(), "ly"),
+                             test],
+                            stdout=sp.PIPE, stderr=sp.PIPE)
+            (out, err) = lily.communicate()
+            if lily.returncode != 0:
+                failed_tests.append(test)
+                print "\n====== FAILED ======"
+                print err
+                print "---------------------"
+            else:
+                print " OK!"
+        print "="*79, "\n"
+        print "  {} failed tests out of {}".format(
+            len(failed_tests), len(all_tests)), "\n"
+        print "="*79, "\n"
+        if len(failed_tests) > 0:
+            print "Failed tests"
+            for test in failed_tests:
+                print " ", test
+            print ""
+            print "="*79
+            sys.exit(1)
+
 
 if __name__ == "__main__":
     tests = None
@@ -89,3 +131,4 @@ if __name__ == "__main__":
         tests = SimpleTests()
     print "Running", tests.lilypond_version()
     print "OpenLilyLib directory", tests.openlilylib_dir()
+    tests.run()
