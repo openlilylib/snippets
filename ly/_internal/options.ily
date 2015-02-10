@@ -109,6 +109,20 @@ getOptionWithFallback =
          (cdr value)
          fallback)))
 
+% Set a child option to a given option path.
+% This is practical to dynamically add sub-options.
+% If the given option path isn't present already it is registered.
+% If the child path is present it is modified, otherwise it is added.
+setChildOption =
+#(define-void-function (parser location opt-path child value)
+   (list? symbol? scheme?)
+   (if (not #{ \optionRegistered #opt-path #})
+       #{ \registerOption #opt-path #'() #})
+   (let ((option (append opt-path (list child))))
+     (if #{ \optionRegistered #option #}
+         #{ \setOption #option #value #}
+         #{ \registerOption #option #value #})))
+
 % Retrieve a suboption from an option that stores an alist
 % This actually is just another subtree but that function can
 % significantly ease the use when sub-options have to be handled dynamically.
