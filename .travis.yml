@@ -1,0 +1,5 @@
+script: ./test/simple_tests.py
+
+env:
+  - LILY_PLATFORM=linux-64 LILY_VERSION=2.18.2-1
+  - LILY_PLATFORM=linux-64 LILY_VERSION=2.19.15-1
