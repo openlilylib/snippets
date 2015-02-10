@@ -87,8 +87,9 @@ class SimpleTests:
                     print "Found file listing simple tests:", fname
                     with open(fname, 'r') as test_list:
                         for line in test_list.readlines():
-                            if not line.startswith("#"):
-                                test_file = osp.join(root, line.strip())
+                            test_fname = line.strip()
+                            if not line.startswith("#") and len(test_fname) > 0:
+                                test_file = osp.join(root, test_fname)
                                 test_files.append(test_file)
         return test_files
 
