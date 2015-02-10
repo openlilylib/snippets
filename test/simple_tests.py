@@ -7,7 +7,22 @@ import shutil
 import sys
 
 class SimpleTests:
-    """\
+    """Run simple integration tests. Specifically, this script will look
+    for all the `.simple-tests` files in the openLilyLib directory
+    tree. For each such file, each line not starting with `#` is
+    treated as a filename. All these files will be compiled with
+    LilyPond. If the compilation results in a non-zero exit code, then
+    that test is marked as failed.
+
+    This class can be run in two different modes:
+
+      - Continuous integration: this mode is active when the tests are
+        run by a continuous integration server. LilyPond will be
+        downloaded from the internet.
+
+      - Local mode: used on local computers, the lilypond executable
+        needs to be passed to the constructor.
+
     Used environment variables
 
       - CI : if 'true' assume that we are running in continuous
