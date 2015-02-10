@@ -12,9 +12,12 @@
     in a certain region of the score.
   }
   oll-usage = \markup \justify {
-    Enter \typewriter { setClipRegion from to } as a toplevel command
+    Use \typewriter { "\\setClipRegion from to" } as a toplevel command
     somewhere after including this file. \typewriter from and \typewriter to
-    are barnumbers. If they are out of range they are simply ignored so the
+    are barnumbers or lists with a barnumber and a fraction
+    (e.g. \typewriter { "\\setClipRegion #'(12 (45 2/4))" } for a range from
+    measure 12 to the \italic third crotchet in measure 45.
+    If they are out of range they are simply ignored so the
     score will be engraved from the beginning and/or through the end.
     You can also use the module to compile a given page or page range
     (e.g. from an original score) if you provide a list beforehand.
@@ -37,6 +40,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 % here goes the snippet: %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Define variables holding the conditional breaks.
+% They expect lists with breaks. Each break can be
+% - an integer representing the bar number
+% - a list with a barnumber and a fraction
+\registerOption comptoools.line-breaks #'()
+\registerOption comptools.page-breaks #'()
+\registerOption comptools.page-turns #'()
 
 % This functionality relies on the edition-engraver
 % which is also part of openLilyLib
@@ -82,31 +93,38 @@ setClipRegion =
 setClipPageRange =
 #(define-void-function (parser location from to)
    (integer? integer?)
-   (if (not (defined? 'conditionalPageBreaks))
-       (ly:warning "\\setClipPageRange requested, but no original page breaks defined. Continuing by compiling the whole score.")
+   (let* ((page-breaks #{ \getOption comptools.page-breaks #})
+         (page-count (length page-breaks)))
+   (if (= 0 page-count)
+       (oll:warn "\\setClipPageRange requested, but no original page breaks defined. 
+Continuing by compiling the whole score.~a""")
        ;; We do have page breaks so continue by retrieving barnumbers from that list
        (cond
         ((> from to)
-         (ly:warning "\\setClipPageRange: Negative page range requested. Continuing by compiling the whole score."))
+         (oll:warn "\\setClipPageRange: Negative page range requested. 
+Continuing by compiling the whole score.~a" ""))
         ((< from 1)
-         (ly:warning "\\setClipPageRange: Page number below 1 requested. Continuing by compiling the whole score."))
-        ((> to (+ 1 (length conditionalPageBreaks)))
-         (ly:warning "\\setClipPageRange: Page index out of range. Continuing by compiling the whole score."))
+         (oll:warn "\\setClipPageRange: Page number below 1 requested. 
+Continuing by compiling the whole score.~a" ""))
+        ((> to (+ 1 page-count))
+         (oll:warn "\\setClipPageRange: Page index out of range (~a). 
+Continuing by compiling the whole score."
+         (format "from ~a to ~a requested, ~a available" from to page-count)))
         (else
          (let ((from-bar (if (eq? from 1)
                              ;; First page is not included in the originalPageBreaks list
                              ;; so we set the barnumber to 1
                              1
-                             (list-ref conditionalPageBreaks (- from 2))))
-               (to-bar (if (eq? to (+ (length conditionalPageBreaks) 1))
+                             (list-ref page-breaks (- from 2))))
+               (to-bar (if (eq? to (+ (length page-breaks) 1))
                            ;; There is no page break *after* the last page,
                            ;; so we just set the "to" barnumber to -1
                            ;; because this simply discards the argument and compiles through to the end
                            -1
                            ;; Otherwise we look up the barnumber for the page break and subtract 1
                            ;; (the last measure to be included is the last one from the previous page
-                           (- (list-ref conditionalPageBreaks (- to 1)) 1))))
-           #{ \setClipRegion #from-bar #to-bar #})))))
+                           (- (list-ref page-breaks (- to 1)) 1))))
+           #{ \setClipRegion #from-bar #to-bar #}))))))
 
 % Define (and activate) a page to be compiled alone.
 % Only that page is typeset

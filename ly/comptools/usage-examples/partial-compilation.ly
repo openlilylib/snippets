@@ -3,10 +3,18 @@
 \version "2.18.0"
 
 \include "openlilylib"
-\loadModule "comptools/partial-compilation.ily"
+%\loadModule "comptools/partial-compilation.ily"
+\registerOption documentation.include-file "comptools/partial-compilation.ily"
+\loadModule "_internal/doc-include/usage-example.ily"
 
 % Define a list with original page breaks (barnumbers)
-conditionalPageBreaks = #'(112 224 336 448 560 672 784)
+% Entries can also be a list with barnumber and fraction
+% Also available: line-breaks and page-turns
+\setOption comptools.page-breaks #'(112 224 336 448 560 672 784)
+
+% Uncomment the following commands to test different partial regions.
+% Multiple (non-overlapping) regions can be set, although the results
+% may not be acceptable.
 
 % Define a region with barnumbers
 %\setClipRegion 8 12
