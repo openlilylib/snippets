@@ -51,6 +51,12 @@ registerBreakSet =
      #{ \setChildOption #base-path #'page-breaks #'() #}
      #{ \setChildOption #base-path #'page-turns #'() #}))
 
+setConditionalBreaks =
+#(define-void-function (parser location set type breaks)
+   (symbol? symbol? list?)
+   (ly:message (format "~a" set))
+   #{ \setChildOption #`(comptools conditional-breaks sets ,set) #type #breaks #})
+
 % Calling of this function is necessary to actually process the conditional breaks.
 % Place it after all break lists have been set.
 % - set: the named set as a Scheme symbol, e.g. \applyConditionalBreaks #'original-edition
