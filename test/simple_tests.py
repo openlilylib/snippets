@@ -91,7 +91,7 @@ class SimpleTests:
 
     def openlilylib_dir(self):
         script_path = osp.abspath(osp.dirname(osp.realpath(__file__)))
-        return osp.abspath(osp.relpath("..", script_path))
+        return osp.abspath(osp.join(script_path, os.pardir))
 
     def __collect_tests(self):
         test_files = []
@@ -112,11 +112,13 @@ class SimpleTests:
         failed_tests = []
         all_tests = self.__collect_tests()
         for test in all_tests:
-            print "Running test", test,
-            lily = sp.Popen([self.lily_command,
-                             "-I", self.openlilylib_dir(),
-                             "-I", os.path.join(self.openlilylib_dir(), "ly"),
-                             test],
+            print "\n\nRunning test", test
+            cmd = [self.lily_command,
+                   "-I", self.openlilylib_dir(),
+                   "-I", os.path.join(self.openlilylib_dir(), "ly"),
+                   test]
+            print "Command: ", " ".join(cmd)
+            lily = sp.Popen(cmd,
                             stdout=sp.PIPE, stderr=sp.PIPE)
             (out, err) = lily.communicate()
             if lily.returncode != 0:
@@ -125,7 +127,7 @@ class SimpleTests:
                 print err
                 print "---------------------"
             else:
-                print " OK!"
+                print "------- OK! --------"
         print "="*79, "\n"
         print "  {} failed tests out of {}".format(
             len(failed_tests), len(all_tests)), "\n"
@@ -146,5 +148,6 @@ if __name__ == "__main__":
     else:
         tests = SimpleTests()
     print "Running", tests.lilypond_version()
-    print "OpenLilyLib directory", tests.openlilylib_dir()
+    oll_dir = tests.openlilylib_dir()
+    print "OpenLilyLib directory", oll_dir
     tests.run()
