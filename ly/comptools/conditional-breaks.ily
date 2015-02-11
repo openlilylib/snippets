@@ -5,18 +5,26 @@
     Take lists of conditional breaks and apply them
   }
   oll-description = \markup \justify {
+    TODO
   }
   oll-usage = \markup \justify {
+    TODO
   }
-  oll-category = "compilation-tools"
+  oll-category = "page-layout"
   % add comma-separated tags to make searching more effective:
   oll-tags = "compilation,layout-control"
   % is this snippet ready?  See meta/status-values.md
   oll-status = "ready"
 
-  oll-todo = \markup {
+  oll-todo = \markup \wordwrap{
+    Add an option to make the conditional breaks \italic exclusive.
+    Currently they are simply applied, so LilyPond can also add its own
+    breaks at will. However, it's not appropriate to hardcode this feature
+    because that would \italic require the user to provide \italic complete
+    lists.
   }
 }
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 % here goes the snippet: %
@@ -62,24 +70,23 @@ applyConditionalBreaks =
            (lbreaks (if keep-conditional-line-breaks
                         conditionalLineBreaks
                         '()))
-           (lpbreaks (if (and keep-conditional-line-breaks
-                              (not keep-conditional-page-breaks))
+           (lpbreaks (if keep-conditional-page-breaks
                          conditionalPageBreaks
                          '()))
-           (lpturns (if (and keep-conditional-line-breaks
-                             (not keep-conditional-page-turns))
+           (lpturns (if keep-conditional-page-turns
                         conditionalPageTurns
                         '()))
-           (linebreaks (if keep-conditional-page-breaks
-                           conditionalLineBreaks
-                           (append lbreaks lpbreaks lpturns)))
+           (linebreaks (if keep-conditional-line-breaks
+                           (append lbreaks lpbreaks lpturns)
+                           lbreaks))
+
            ;; if we do not respect page breaks we use an empty list
            (pagebreaks (if keep-conditional-page-breaks
-                           conditionalPageBreaks
+                           lpbreaks
                            '()))
            ;; if we do not respect page turns we use an empty list
            (pageturns (if keep-conditional-page-turns
-                          conditionalPageTurns
+                          lpturns
                           '())))
 
      ;; apply the determined breaks as edition-engraver commands
