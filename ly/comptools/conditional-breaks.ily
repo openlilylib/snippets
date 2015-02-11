@@ -27,11 +27,6 @@
 \include "editorial-tools/edition-engraver/definitions.ily"
 \addEdition conditional-breaks
 
-% Shared variable that can hold any number of break sets.
-% Selecting one set to apply makes it possible to manage different
-% break sets, e.g. corresponding to different manuscripts
-\registerOption comptools.conditional-breaks.sets #'()
-
 % Configuration variables controlling the breaking behaviour
 % By default line-breaks are respected
 \registerOption comptools.conditional-breaks.use.line-breaks ##t
@@ -40,22 +35,6 @@
 \registerOption comptools.conditional-breaks.use.page-breaks ##f
 % Page turns are also mapped to line breaks if not explicitly activated.
 \registerOption comptools.conditional-breaks.use.page-turns ##f
-
-% Register a named set of breaks that can be referenced later
-registerBreakSet =
-#(define-void-function (parser location name)
-   (symbol?)
-   (let ((base-path `(comptools conditional-breaks sets ,name)))
-     #{ \registerOption #base-path #'() #}
-     #{ \setChildOption #base-path #'line-breaks #'() #}
-     #{ \setChildOption #base-path #'page-breaks #'() #}
-     #{ \setChildOption #base-path #'page-turns #'() #}))
-
-setConditionalBreaks =
-#(define-void-function (parser location set type breaks)
-   (symbol? symbol? list?)
-   (ly:message (format "~a" set))
-   #{ \setChildOption #`(comptools conditional-breaks sets ,set) #type #breaks #})
 
 % Calling of this function is necessary to actually process the conditional breaks.
 % Place it after all break lists have been set.
@@ -74,7 +53,7 @@ applyConditionalBreaks =
            (keep-conditional-page-turns #{ \getOption comptools.conditional-breaks.use.page-turns #})
 
            ;; Load a set of break positions.
-           (break-set `(comptools conditional-breaks sets ,set))
+           (break-set `(comptools break-sets ,set))
            (conditionalLineBreaks #{ \getChildOption #break-set #'line-breaks #})
            (conditionalPageBreaks #{ \getChildOption #break-set #'page-breaks #})
            (conditionalPageTurns #{ \getChildOption #break-set #'page-turns #})
