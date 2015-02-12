@@ -7,7 +7,7 @@
 %% it under the terms of the GNU General Public License as published by
 %% the Free Software Foundation, either version 3 of the License, or
 %% (at your option) any later version.
-%% 
+%%
 %% This program is distributed in the hope that it will be useful,
 %% but WITHOUT ANY WARRANTY; without even the implied warranty of
 %% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -317,10 +317,12 @@ gridGetMusic =
 #(define-music-function
    (parser location part start-end) (string? segment-selector?)
    (let* ((cells (get-cell-range part start-end))
-          (music (map cell:music cells)))
+          (music (map cell:music cells))
+          (opening (list (cell:opening (car cells))))
+          (closing (list (cell:closing (car (last-pair cells))))))
      (make-music
       'SequentialMusic
-      'elements music)))
+      'elements (append opening music closing))))
 
 gridGetLyrics =
 #(define-music-function

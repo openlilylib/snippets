@@ -9,6 +9,8 @@ GridLY - Changelog
      a number of skips of the same duration as the defined structure will be
      used. This allows to create scores containing undefined cells, that is
      useful to check work in progress.
+   - Now `\gridGetMusic` returns, besides the music of the requested segment
+     range, the opening and the closing.
    - Fix a bug in the examples and the in the templates that made the
      compilation fail with LilyPond 2.19.*
 
