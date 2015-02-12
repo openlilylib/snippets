@@ -119,9 +119,18 @@ gridDisplay =
      (display "=== Music grid ===")
      (newline)
      (let ((longest-name (reduce max 0
-                                 (map string-length parts))))
+                                 (map string-length parts)))
+           (table-spacing (reduce max 0
+                                  (map (lambda (seg)
+                                         (string-length (number->string seg)))
+                                       segments))))
        (display-spaces longest-name)
-       (for-each (lambda (x) (display (ly:format " ~a" x))) segments)
+       (for-each
+        (lambda (x)
+          (let ((seg-str (number->string x)))
+            (display-spaces (+ 1 (- table-spacing (string-length seg-str))))
+            (display seg-str)))
+        segments)
        (for-each
         (lambda (part)
           (newline)
@@ -129,12 +138,14 @@ gridDisplay =
           (display-spaces (- longest-name (string-length part)))
           (for-each
            (lambda (seg)
-             (display-spaces (string-length (number->string seg)))
+             ;(display-spaces (string-length (number->string seg)))
+             (display-spaces table-spacing)
              (if (hash-ref music-grid (cons part seg))
                  (display "o")
                  (display "-")))
            segments))
         parts))
+     (newline)
      (newline)))
 
 gridCheck =
