@@ -5,6 +5,7 @@ import os
 import os.path as osp
 import shutil
 import sys
+import re
 
 class SimpleTests:
     """Run simple integration tests. Specifically, this script will look
@@ -58,6 +59,8 @@ class SimpleTests:
             raise Exception("The lilypond command should be given on the command " +
                             "line or configured via environment variables")
 
+        self.lilypond_version = self.__lilypond_version()
+
     def clean_tmp_dir(self):
         if os.path.exists(self.tmp_lily_dir):
             shutil.rmtree(self.tmp_lily_dir)
@@ -85,9 +88,31 @@ class SimpleTests:
                        "--prefix", self.tmp_lily_dir,
                        "--batch"])
 
-    def lilypond_version(self):
+    def __lilypond_version(self):
         lily = sp.Popen([self.lily_command, "-v"], stdout=sp.PIPE, stderr=sp.PIPE)
-        return lily.communicate()[0].splitlines()[0]
+        version_line = lily.communicate()[0].splitlines()[0]
+        return re.search(r"\d\.\d\d\.\d", version_line).group(0)
+
+    def is_runnable_file(self, fname):
+        """Returns true if fname can be compiled with the lilypond version used"""
+        with open(fname, 'r') as fcontents:
+            for line in fcontents.readlines():
+                version_line = re.search(r"\\version \"(\d\.\d\d\.\d)\"", line)
+                if version_line:
+                    file_version = version_line.group(1).split(".")
+                    lily_version = self.lilypond_version.split(".")
+                    if file_version == lily_version:
+                        return True
+                    for (fv, lv) in zip(file_version, lily_version):
+                        if int(fv) < int(lv):
+                            return True
+                    print "**WARNING** File version " +\
+                        version_line.group(1) +\
+                        " greater than lilypond version {}, skipping".format(
+                            self.lilypond_version)
+                    return False
+        print "**WARNING** No version line found, skipping", fname
+        return False
 
     def openlilylib_dir(self):
         script_path = osp.abspath(osp.dirname(osp.realpath(__file__)))
@@ -105,7 +130,8 @@ class SimpleTests:
                             test_fname = line.strip()
                             if not line.startswith("#") and len(test_fname) > 0:
                                 test_file = osp.join(root, test_fname)
-                                test_files.append(test_file)
+                                if self.is_runnable_file(test_file):
+                                    test_files.append(test_file)
         return test_files
 
     def run(self):
@@ -147,7 +173,7 @@ if __name__ == "__main__":
         tests = SimpleTests(sys.argv[1])
     else:
         tests = SimpleTests()
-    print "Running", tests.lilypond_version()
+    print "Running LilyPond", tests.lilypond_version
     oll_dir = tests.openlilylib_dir()
     print "OpenLilyLib directory", oll_dir
     tests.run()
