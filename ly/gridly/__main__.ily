@@ -301,6 +301,8 @@ fill =
                        ((get-music-cell "<structure>" i)
                         (make <cell>
                           #:lyrics #{ #}
+                          #:opening #{ #}
+                          #:closing #{ #}
                           #:music
                           (make-skips
                            (cell:music
