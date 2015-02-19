@@ -208,13 +208,13 @@ segments = #'all
   
   \new StaffGroup <<
     \new Staff <<
-      \new Voice \gridGetStructure \segments
-      \new Voice = "soprano" \gridGetMusic "soprano" \segments
-      \new Lyrics \lyricsto "soprano" \gridGetLyrics "soprano" \segments
+      \new Voice { \gridGetStructure \segments }
+      \new Voice = "soprano" { \gridGetMusic "soprano" \segments }
+      \new Lyrics \lyricsto "soprano" { \gridGetLyrics "soprano" \segments }
     >>
     \new Staff <<
-      \new Voice = "basso" \gridGetMusic "basso" \segments
-      \new Lyrics \lyricsto "basso" \gridGetLyrics "basso" \segments
+      \new Voice = "basso" { \gridGetMusic "basso" \segments }
+      \new Lyrics \lyricsto "basso" { \gridGetLyrics "basso" \segments }
     >>
   >>
 

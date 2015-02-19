@@ -1,11 +1,16 @@
-Gridly - Simple segmented grid for LilyPond
+GridLY - Simple segmented grid for LilyPond
 ===========================================
 
-This package implements the "segmented grid" approach described in
+This library implements the "segmented grid" approach described in
 [this blog post](http://lilypondblog.org/2014/10/segment-grid/) by Urs
 Liska, with some ideas about "putting" and "getting" the music from
 [this blog post](http://lilypondblog.org/2014/07/trees-music-and-lilypond/)
 by Jan-Peter Voigt, both appeared on lilypondblog.org.
+
+GridLY is part of `openLilyLib` and is maintained by
+[Matteo Ceccarello](mailto:matteo.ceccarello@gmail.com)
+
+---
 
 The segmented grid approach consists in dividing a multi-part score in
 many segments that can be edited independently, possibly my many
@@ -92,10 +97,10 @@ of things that are used in almost all the functions.
 ### Segment selectors
 
 Used in functions to get the music out of the grid, segment selectors
-are either scheme pairs or the symbol `'all`. The latter selector is
-used to select all the segments in the grid, whereas the former
-specifies a range, with start and end points included. So `'(3 . 6)`
-will select all the segments from `3` to `6`, included.
+are either scheme pairs, integers or the symbol `'all`. The latter selector is
+used to select all the segments in the grid, an integer selects a
+single segment, whereas the pair specifies a range, with start and end points
+included. So `'(3 . 6)` will select all the segments from `3` to `6`, included.
 
 In the public functions description, segment selectors are identified
 by `seg-sel`.
@@ -175,38 +180,3 @@ For an example of usage on a single file, see
 
 Instead, for an example of a multi-file score, take a look at
 [example/multi-file](https://github.com/Cecca/gridly/tree/master/example/multi-file).
-
-Changelog
----------
-
- * 0.2.1
-
-   Documentation and license
-
-   - Write a README
-   - Switch from LGPL to GPL
-   - Add a multi-file example
-
- * 0.2.0
-   This is a **breaking** release. The public interface changed.
-
-   - Some refactoring of public function names, to make the interface more
-     consistent. Now all the public music functions start with `grid`.
-      - \displayMusicGrid -> \gridDisplay
-      - \checkMusicGrid   -> \gridCheck
-      - \initMusicGrid    -> \gridInit
-   - remove the \gridVersion function. Version checking should be
-     the responsibility of some sort of lilypond "package manager"
-
- * 0.1.0
-   Initial relase, featuring the following public functions:
-    - \gridVersion
-    - \displayMusicGrid
-    - \checkMusicGrid
-    - \initMusicGrid
-    - \gridSetStructure
-    - \gridPutMusic
-    - \gridGetMusic
-    - \gridGetLyrics
-    - \gridGetStructure
-    - \gridTest
