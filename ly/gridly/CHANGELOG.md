@@ -1,7 +1,7 @@
 GridLY - Changelog
 ==================
 
- * 0.3.0 - development
+ * 0.3.0
 
    - Add integers as segment selectors
    - Now including an empty cell in `\gridGetMusic` will no longer throw
@@ -13,6 +13,10 @@ GridLY - Changelog
      range, the opening and the closing.
    - Fix a bug in the examples and the in the templates that made the
      compilation fail with LilyPond 2.19.*
+   - add lyrics to `\gridTest`: When compiling files containing single
+     cells as standalone with the \gridTest command, lyrics are added
+     to the output, if present.
+
 
  * 0.2.1
 
@@ -21,6 +25,7 @@ GridLY - Changelog
    - Write a README
    - Switch from LGPL to GPL
    - Add a multi-file example
+
 
  * 0.2.0
    This is a **breaking** release. The public interface changed.
@@ -32,6 +37,7 @@ GridLY - Changelog
       - \initMusicGrid    -> \gridInit
    - remove the \gridVersion function. Version checking should be
      the responsibility of some sort of lilypond "package manager"
+
 
  * 0.1.0
    Initial relase, featuring the following public functions:

@@ -44,14 +44,6 @@
    (closing #:init-keyword #:closing
             #:getter cell:closing))
 
-%%% The association list holding all the music.
-#(if (not (defined? 'music-grid))
-     (define music-grid #f))
-
-%%% Information that needs to be set up using \initMusicGrid
-#(if (not (defined? 'music-grid-meta))
-     (define music-grid-meta #f))
-
 %%% Some utility functions
 
 #(define (check-coords part segment)
