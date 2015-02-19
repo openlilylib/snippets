@@ -368,18 +368,27 @@ gridTest =
              (ly:error "There is no music cell for ~a:~a"
                        part segment))
          (check-durations segment #f)
-         (let* ((opening (cell:opening (get-music-cell part segment)))
+         (let* ((name (ly:format "~a-~a" part segment))
+                (opening (cell:opening (get-music-cell part segment)))
                 (closing (cell:closing (get-music-cell part segment)))
                 (selector (cons segment segment))
+                (lyrics (let ((maybe-lyrics (cell:lyrics
+                                             (get-music-cell part segment))))
+                          (if maybe-lyrics
+                              #{ \new Lyrics \lyricsto $name $maybe-lyrics #}
+                              #{ #})))
                 (book
                  #{
                     \book {
                       \score {
-                              \new Staff \new Voice {
-                                $opening
-                                \gridGetMusic $part $selector
-                                $closing
-                              }
+                         <<
+                           \new Staff \new Voice = $name {
+                             $opening
+                             \gridGetMusic $part $selector
+                             $closing
+                           }
+                           $lyrics
+                         >>
                          \midi{}
                          \layout{}
                       }
