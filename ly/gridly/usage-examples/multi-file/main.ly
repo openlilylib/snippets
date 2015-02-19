@@ -16,19 +16,17 @@
 
 \gridCheck
 
-segments = #'all
-
 \score {
-  \SATBChoir \segments
+  \SATBChoir
 
   \layout {}
   \midi {}
 }
 
-\rehearsalMidi {\SATBChoir \segments} "soprano"
+\rehearsalMidi {\SATBChoir } "soprano"
 
-\rehearsalMidi {\SATBChoir \segments} "alto"
+\rehearsalMidi {\SATBChoir } "alto"
 
-\rehearsalMidi {\SATBChoir \segments} "tenore"
+\rehearsalMidi {\SATBChoir } "tenore"
 
-\rehearsalMidi {\SATBChoir \segments} "basso"
+\rehearsalMidi {\SATBChoir } "basso"
