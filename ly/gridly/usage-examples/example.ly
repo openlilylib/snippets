@@ -26,8 +26,6 @@
 %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-#(ly:set-option 'relative-includes #t)
-
 %%% Preliminary stuff
 %%% -----------------
 %%%
@@ -43,8 +41,8 @@
 %%% the dimensions of the grid: how many segments it should have and which
 %%% parts it contains. In this case we are initializing a grid with
 %%% two segments and two parts, namely "soprano" and "basso".
-\gridInit #4 #'("soprano"
-                "basso")
+\gridInit 4 #'("soprano"
+               "basso")
 
 %%% You can optionally specify the grid "structure", that is, the
 %%% defaults for each section, that will be then applied to each
@@ -65,7 +63,7 @@
 %%%            used to check for correctness the durations of all the
 %%%            parts of the same segment.
 %%%
-\gridSetStructure #1
+\gridSetStructure 1
 \with {
   lyrics = \lyricmode { Fa }
 }
@@ -77,26 +75,26 @@
 %%% marks, tempo changes, bars, etc. You then have the possibility to
 %%% include the structure above the staves, thus including the effects
 %%% of these commands in the score.
-\gridSetStructure #2
+\gridSetStructure 2
 \with {
   lyrics = \lyricmode { la la la! }
 }
 \relative c' {
-  \mark #1
+  \mark 1
   \tempo 4=120
   s1 | s1 |
 }
 
-\gridSetStructure #3
+\gridSetStructure 3
 \relative c' {
-  \mark #2
+  \mark 2
   
   s1 | s1 |
 }
 
-\gridSetStructure #4
+\gridSetStructure 4
 \relative c' {
-  \mark #3
+  \mark 3
   
   s1 | s1 \bar "|." |
 }
@@ -109,7 +107,7 @@
 %%% additional parameter `part` that specifies the part you are
 %%% working on.
 %%%
-\gridPutMusic "soprano" #1
+\gridPutMusic "soprano" 1
 \with {
   lyrics = \lyricmode { Fa la }
 }
@@ -117,7 +115,7 @@
   e2 f |
 }
 
-\gridPutMusic "soprano" #2
+\gridPutMusic "soprano" 2
 \with {
   lyrics = \lyricmode { li le lo lu la! }
 }
@@ -128,13 +126,13 @@
 %%% The context modifier is optional: if you skip it, defaults for
 %%% `lyrics`, `opening` and `closing` are looked up in the structure
 %%% for the given section.
-\gridPutMusic "basso" #1
+\gridPutMusic "basso" 1
 \relative c {
   \clef "bass"
   c1 |
 }
 
-\gridPutMusic "basso" #2
+\gridPutMusic "basso" 2
 \relative c {
   f2 g | c,1 |
 }
@@ -152,7 +150,7 @@
 %%% these undefined cells in the output (and in the printed grid as
 %%% well)
 
-\gridPutMusic "soprano" #4
+\gridPutMusic "soprano" 4
 \with {
   lyrics = \lyricmode {li le!}
 }
