@@ -2,17 +2,17 @@
 
 %% gridly - simple segmented grid for LilyPond
 %% Copyright (C) 2015 - Matteo Ceccarello
-%% 
+%%
 %% This program is free software: you can redistribute it and/or modify
 %% it under the terms of the GNU General Public License as published by
 %% the Free Software Foundation, either version 3 of the License, or
 %% (at your option) any later version.
-%% 
+%%
 %% This program is distributed in the hope that it will be useful,
 %% but WITHOUT ANY WARRANTY; without even the implied warranty of
 %% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 %% GNU General Public License for more details.
-%% 
+%%
 %% You should have received a copy of the GNU General Public License
 %% along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -88,14 +88,12 @@
 \gridSetStructure 3
 \relative c' {
   \mark 2
-  
   s1 | s1 |
 }
 
 \gridSetStructure 4
 \relative c' {
   \mark 3
-  
   s1 | s1 \bar "|." |
 }
 
@@ -139,7 +137,7 @@
 
 %%% Missing cells
 %%% -------------
-%%% 
+%%%
 %%% As for missing cells, if there is structure defined for them (as
 %%% in this example), then they will be replaced in the output by
 %%% dummy cells, filled with skips. If the structure is not defined,
@@ -195,24 +193,22 @@
 %%%                       the segments from start up to end,
 %%%                       inclusive.
 
-%%% For convenience, let's store the selector in a variable. With 'all
-%%% we are selecting all the segments. If instead we wanted only a
-%%% range of segments, say from 2 to 5, we could have used the tuple
-%%% '(2 . 5). To get a single segment, for instance 3, use a single
-%%% integer, 3.
-segments = #'all
+%%% Optionally set the segment-range to either a pair or to a single segment.
+%%% Uncomment one of the following lines to limit the compiled range:
+%\gridSetRange #'(1 . 2)
+%\gridSetRange 2
 
 \score {
-  
+
   \new StaffGroup <<
     \new Staff <<
-      \new Voice { \gridGetStructure \segments }
-      \new Voice = "soprano" { \gridGetMusic "soprano" \segments }
-      \new Lyrics \lyricsto "soprano" { \gridGetLyrics "soprano" \segments }
+      \new Voice { \gridGetStructure }
+      \new Voice = "soprano" { \gridGetMusic "soprano" }
+      \new Lyrics \lyricsto "soprano" { \gridGetLyrics "soprano" }
     >>
     \new Staff <<
-      \new Voice = "basso" { \gridGetMusic "basso" \segments }
-      \new Lyrics \lyricsto "basso" { \gridGetLyrics "basso" \segments }
+      \new Voice = "basso" { \gridGetMusic "basso" }
+      \new Lyrics \lyricsto "basso" { \gridGetLyrics "basso" }
     >>
   >>
 

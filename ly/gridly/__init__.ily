@@ -29,4 +29,7 @@
 #(if (not (defined? 'music-grid-meta))
      (define music-grid-meta #f))
 
+%%% Default segment range to the whole grid
+\registerOption gridly.segment-range #'all
+
 \void #(oll:log "Initialized GridLY version ~a" gridly-version)
