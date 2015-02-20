@@ -1,28 +1,5 @@
 #!/usr/bin/env python
 
-
-### Caveats
-### =======
-###
-### There are some problems with checking commit messages.
-###
-### First of all, this script is always called in the base directory
-### of the git repository, no matter where the git commit command is
-### issued.
-###
-### Second, if we want to replay a commit message using git commit -F
-### to retrieve the latest commit message, it will be loaded with all
-### the comments. These comments will actually be part of the message,
-### and they will be stripped only if further editing is requested
-### with the `-e` switch. Maybe for this it's better to use a custom
-### file with all the comments stripped.
-###
-### Unfortunately it looks like this custom file cannot be placed in
-### the same directory where the git command is called, since the hook
-### script does not know which directory is this, since it is called
-### in the repository's top level directory.
-
-
 import subprocess as sp
 import sys
 import os.path as osp
@@ -107,7 +84,10 @@ the `-F` option.
 If you want to keep the commit message as is, you can use
 the `--no-verify` option of `git commit` to skip this check.
 
-For more information see TODO""".format(MESSAGE_FILE)
+For more information please see
+{}""".format(
+    MESSAGE_FILE,
+    "https://github.com/openlilylib/openlilylib/blob/master/meta/commit_message_hook.md")
 
 
 def save_message(lines):
