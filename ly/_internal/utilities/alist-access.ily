@@ -101,8 +101,11 @@
                  (getval al (cdr op))
                  #f)))
           ((= (length op) 1)
-           (assoc-get (car op) ol #f))
-          (else #f))))
+           (let ((valpair (assoc (car op) ol)))
+             (if valpair
+                 (cdr valpair)
+                 ; return unspecified if key is not present
+                 ))))))
      (if (list? opts)
          (getval opts path)
          (begin
