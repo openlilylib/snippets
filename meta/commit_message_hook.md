@@ -1,8 +1,7 @@
 # Well-formed commit message hook
 
 Since OpenLilyLib contains many different libraries, it's desirable
-that commit messages start with a name identifying the library. This
-way everyone can
+that commit messages start with a name identifying the library.
 
 However, it is easy to forget to comply to such a policy and to push a
 malformed commit message to the upstream repository. Luckily,
