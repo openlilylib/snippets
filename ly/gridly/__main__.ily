@@ -213,7 +213,7 @@ gridPutMusic =
                    #:closing (props-get 'closing #{ #}))))
      (hash-set! music-grid key value)))
 
-gridSetStructure =
+gridSetSegmentTemplate =
 #(define-void-function
    (parser location segment ctx-mod music)
    (number? (ly:context-mod? #{ \with{} #}) ly:music?)
@@ -344,13 +344,6 @@ gridGetLyrics =
          (make-music
           'SequentialMusic
           'elements lyrics))))
-
-gridGetStructure =
-#(define-music-function
-   (parser location) ()
-   #{
-     \gridGetMusic "<structure>"
-   #})
 
 gridTest =
 #(define-void-function

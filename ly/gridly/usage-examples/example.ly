@@ -40,30 +40,38 @@
 %%% Then, this is the fundamental setup step. With \gridInit you define
 %%% the dimensions of the grid: how many segments it should have and which
 %%% parts it contains. In this case we are initializing a grid with
-%%% two segments and two parts, namely "soprano" and "basso".
-\gridInit 4 #'("soprano"
+%%% two segments and three parts, namely "structure", "soprano" and "basso".
+\gridInit 4 #'("structure"
+               "soprano"
                "basso")
 
-%%% You can optionally specify the grid "structure", that is, the
-%%% defaults for each section, that will be then applied to each
-%%% part. The \gridSetStructure command has the following interface:
+%%% You can optionally define "templates" for each grid column.
+%%% Such a template contains defaults that will be applied to each
+%%% cell in that segment where the respective fields are not overwritten.
+%%% The \gridSetSegmentTemplate command has the following interface:
 %%%
-%%%    \gridSetStructure segment-index context-modifier music
+%%%    \gridSetSegmentTemplate segment-index context-modifier music
 %%%
 %%% where:
 %%%
-%%%  * `segment-index` selects the segment for which you want to set
-%%%                    up the structure
+%%%  * `segment-index` selects the segment for which you want to 
+%%%    define the template
 %%%  * `context-modifier` is an optional parameter, that can be used
-%%%                       to set the default values for the `lyrics`,
-%%%                       the `opening` and the `closing` of the
-%%%                       segment.
-%%%  * `music` is a music expression that defines the length of the
-%%%            segment. The duration specified here will be the one
-%%%            used to check for correctness the durations of all the
-%%%            parts of the same segment.
+%%%    to set the default values for the 
+%%%    - `lyrics`
+%%%    - `opening` 
+%%%    - `closing` of the segment.
+%%%    `opening` and `closing` are music expressions that are ap- or
+%%%    prepended to a range of music that is about to be used.
+%%%    This can be used to instantiate or finalize spanners like
+%%%    dynamics or slurs etc.
+%%%  * `music` is a music expression that is only used to define the 
+%%%    length of the segment. The duration specified here will be the one
+%%%    used to check for correctness the durations of all the
+%%%    parts of the same segment.
 %%%
-\gridSetStructure 1
+
+\gridSetSegmentTemplate 1
 \with {
   lyrics = \lyricmode { Fa }
 }
@@ -71,40 +79,54 @@
   s1 |
 }
 
-%%% The `music` parameter may also include other commands, such as
-%%% marks, tempo changes, bars, etc. You then have the possibility to
-%%% include the structure above the staves, thus including the effects
-%%% of these commands in the score.
-\gridSetStructure 2
+\gridSetSegmentTemplate 2
 \with {
   lyrics = \lyricmode { la la la! }
-}
-\relative c' {
-  \mark 1
-  \tempo 4=120
-  s1 | s1 |
-}
+} 
+{ s1*2 }
 
-\gridSetStructure 3
-\relative c' {
-  \mark 2
-  s1 | s1 |
-}
+\gridSetSegmentTemplate 3 { s1*2 }
 
-\gridSetStructure 4
-\relative c' {
-  \mark 3
-  s1 | s1 \bar "|." |
-}
+\gridSetSegmentTemplate 4 { s1*2 }
 
 %%% Entering music
 %%% --------------
 %%%
 %%% Now we can start to enter the music! The interface of
-%%% \gridPutMusic is the same of \gridSetStructure, with the
+%%% \gridPutMusic is the same of \gridSetSegmentTemplate, with the
 %%% additional parameter `part` that specifies the part you are
 %%% working on.
 %%%
+%%% It makes sense to reserve one or more parts for extra information
+%%% such as tempo and rehearsal marks, bars, repeats etc.
+%%% It is up to the user whether this is done in one common part
+%%% (such as in this example) or in individual parts.
+%%% NOTE: it may be worth considering not to put this information
+%%% in the music definitions but to use `edition-engraver` for this
+%%% purpose, which is also part of openLilyLib
+%%% TODO: Link to that once it has been migrated to the new structure.
+
+%% Structure layer
+\gridPutMusic "structure" 2 {
+  \mark \default
+  \tempo 4=120
+  s1*2
+}
+
+\gridPutMusic "structure" 3 {
+  \mark \default
+  s1 
+  \bar "||"
+  s1
+}
+
+\gridPutMusic "structure" 4 {
+  \mark \default
+  s1*2 
+  \bar "|."
+}
+
+%% soprano part
 \gridPutMusic "soprano" 1
 \with {
   lyrics = \lyricmode { Fa la }
@@ -120,6 +142,8 @@
 \relative c' {
   f4 a g b | c1 |
 }
+
+%% basso part
 
 %%% The context modifier is optional: if you skip it, defaults for
 %%% `lyrics`, `opening` and `closing` are looked up in the structure
@@ -181,19 +205,12 @@
 %%% And now, let's see the functions that are used to get the music
 %%% out of the grid. These functions are
 %%%
-%%%  - \gridGetStructure segment-selector
-%%%  - \gridGetMusic part segment-selector
-%%%  - \gridGetLyrics part segment-selector
+%%%  - \gridGetMusic <part>
+%%%  - \gridGetLyrics <part>
 %%%
-%%% where
-%%%
-%%%  - `part` is the name of the part you want to get the music from
-%%%  - `segment-selector` is either the symbol 'all, to get all the
-%%%                       segments, or a tuple '(start . end) to get
-%%%                       the segments from start up to end,
-%%%                       inclusive.
+%%% where `part` is the name of the part you want to get the music from.
 
-%%% Optionally set the segment-range to either a pair or to a single segment.
+%%% Optionally limit the output to either a pair or to a single segment.
 %%% Uncomment one of the following lines to limit the compiled range:
 %\gridSetRange #'(1 . 2)
 %\gridSetRange 2
@@ -202,7 +219,7 @@
 
   \new StaffGroup <<
     \new Staff <<
-      \new Voice { \gridGetStructure }
+      \new Voice { \gridGetMusic "structure" }
       \new Voice = "soprano" { \gridGetMusic "soprano" }
       \new Lyrics \lyricsto "soprano" { \gridGetLyrics "soprano" }
     >>

@@ -2,9 +2,9 @@
 
 #(ly:set-option 'relative-includes #t)
 
-\gridInit #1 #'("soprano" "alto" "tenore" "basso")
+\gridInit #1 #'("structure" "soprano" "alto" "tenore" "basso")
 
-\gridSetStructure #1
+\gridSetSegmentTemplate #1
 \with {
   lyrics = \lyricmode { Ooo }
 }
