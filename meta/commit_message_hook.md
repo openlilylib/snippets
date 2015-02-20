@@ -86,7 +86,125 @@ git commit -a -F OLL_COMMIT_MSG --no-verify
 of course the `-F OLL_COMMIT_MSG` part can be skipped if the message has
 still to be written.
 
+## Example
 
+Here follows an example usage, where we add two files to the libraries
+`gridly` and `_internal`. In what follows `>` is the command line
+prompt.
+
+```
+> tree -L 1 ly
+ly
+├── basic-example.ly
+├── comptools
+├── example
+├── gridly
+├── _internal
+├── openlilylib
+├── scholarly
+└── utility
+> touch ly/gridly/test
+> touch ly/_internal/test
+> git add ly/gridly/test ly/_internal/test
+> git commit
+```
+
+Now suppose the commit message is the following, as shows up in the
+editor.
+
+```
+This is a malformed commit message. It is missing the library name
+the second line is not empty, the first is too long,
+and the third is way too loooooooooooooooooooooooooooooooooooooooooooooong
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# Sul branch meta/commit-messages-test
+# Changes to be committed:
+#       new file:   ly/_internal/test
+#       new file:   ly/gridly/test
+#
+```
+
+This message does not comply with any of the rules described above,
+hence the commit will fail with the following message
+
+```
+The commit message seems malformed:
+
+ * The commit should start with one of the following:
+        '_internal:'  'gridly:'
+
+ * line 0 is long 66 chars, should be < 50
+
+ * line 2 is long 74 chars, should be < 72
+
+ * line 1 should be empty
+
+
+For your convenience, your commit message has been saved to the file
+OLL_COMMIT_MSG. After having modified it, you can pass it to `git commit` via
+the `-F` option.
+
+If you want to keep the commit message as is, you can use
+the `--no-verify` option of `git commit` to skip this check.
+
+For more information please see
+https://github.com/openlilylib/openlilylib/blob/master/meta/commit_message_hook.md
+```
+
+Moreover, the file `OLL_COMMIT_MSG` has been created in the root
+`openLilyLib` directory
+
+```
+> ls
+custom-music-fonts          input-shorthands   scheme-lib
+debugging-layout            LICENSE            simple-examples
+deprecate.ily               ly                 specific-solutions
+editorial-tools             meta               stylesheets
+fonts                       notation-snippets  templates
+fried-library-to-be-sorted  OLL_COMMIT_MSG
+general-tools               README.md
+```
+
+we can then edit it to finally comply with the rules
+
+```
+gridly: A well formed commit message
+
+Now, by editing the message in the OLL_COMMIT_MESSAGE file, we have
+the chance of fixing the errors.
+```
+
+Now the commit will succeed, with a reminder to remove the
+`OLL_COMMIT_MESSAGE` file
+
+```
+> git commit -F OLL_COMMIT_MSG
+
+It seems that file OLL_COMMIT_MSG exists in the root directory
+of openLilyLib. It was probably created after the failure
+of a previous commit check. Consider removing it, since it
+is no longer needed.
+
+[meta/commit-messages-test 16e1854] gridly: A well formed commit message
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 ly/_internal/test
+ create mode 100644 ly/gridly/test
+```
+
+and the log shows the corrected commit
+
+```
+> git log
+commit 16e1854ff1d386bb123a662f1848070cd07f9f49
+Author: Matteo Ceccarello <ceccarel@dei.unipd.it>
+Date:   Fri Feb 20 21:57:19 2015 +0100
+
+    gridly: A well formed commit message
+
+    Now, by editing the message in the OLL_COMMIT_MESSAGE file, we have
+    the chance of fixing the errors.
+```
 
 ## FAQ
 
