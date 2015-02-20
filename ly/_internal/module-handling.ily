@@ -46,8 +46,8 @@ registerLibrary =
               (append oll-loaded-libraries
                 `(,lib)))
         (let* ((root #{ \getOption global.root-path #})
-                (lib-init-file (string-join
-                              `(,root ,lib "__init__.ily") "/")))
+               (lib-init-file (string-join
+                               `(,root ,lib "__init__.ily") "/")))
           (if (file-exists? lib-init-file)
               (begin
                (oll:log "initialize library \"~a\"" lib)
@@ -87,6 +87,7 @@ loadModule =
         (oll:log "module ~a already loaded. Skipping." load-path)
         (if (file-exists? load-path)
             (begin
+             (oll:log "Registering library ~a" (first path-list))
              ;; first register/load the library
              #{ \registerLibrary #(first path-list) #}
              ;; then load the requested module
