@@ -184,7 +184,7 @@ gridInit =
           (ly:get-context-mods ctx-mod)))
      props))
 
-gridPutMusic =
+gridSetSegmentContent =
 #(define-void-function
    (parser location part segment ctx-mod music)
    (string? number? (ly:context-mod?) ly:music?)
@@ -213,14 +213,14 @@ gridPutMusic =
                    #:closing (props-get 'closing #{ #}))))
      (hash-set! music-grid key value)))
 
-gridSetStructure =
+gridSetSegmentTemplate =
 #(define-void-function
    (parser location segment ctx-mod music)
    (number? (ly:context-mod? #{ \with{} #}) ly:music?)
    (if (get-music-cell "<structure>" segment)
        (ly:debug "Skipping setting of <structure>:~a, already set" segment)
        #{
-         \gridPutMusic "<structure>" $segment $ctx-mod $music
+         \gridSetSegmentContent "<structure>" $segment $ctx-mod $music
        #}))
 
 #(define (cons-skip music length)
@@ -345,14 +345,7 @@ gridGetLyrics =
           'SequentialMusic
           'elements lyrics))))
 
-gridGetStructure =
-#(define-music-function
-   (parser location) ()
-   #{
-     \gridGetMusic "<structure>"
-   #})
-
-gridTest =
+gridCompileCell =
 #(define-void-function
    (parser location part segment)
    (string? number?)

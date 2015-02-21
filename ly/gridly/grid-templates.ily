@@ -23,7 +23,7 @@ SATBChoir =
      <<
        \new ChoirStaff <<
          \new Staff = "soprano" <<
-           \new Voice { \gridGetStructure }
+           \new Voice { \gridGetMusic "structure" }
            \new Voice = "soprano" { \gridGetMusic "soprano" }
            \new Lyrics \lyricsto "soprano" { \gridGetLyrics "soprano" }
          >>

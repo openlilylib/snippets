@@ -137,13 +137,13 @@ whereas arguments surrounded by `[ ]` are optional.
    of the segment range or not listed in `<part-list>`, you will get
    an error.
 
- - `\gridSetStructure <seg-sel> [ctx-mod] <music>` :
-   this function can be optionally called to set the structure of the
+ - `\gridSetSegmentTemplate <seg-sel> [ctx-mod] <music>` :
+   this function can be optionally called to define a template for the
    given segment, for all voices.
 
- - `\gridPutMusic <part> <seg-sel> [ctx-mod] <music>` :
-   this function inserts the given music in the given position of the
-   grid.
+ - `\gridSetSegmentContent <part> <seg-sel> [ctx-mod] <music>` :
+   this function inserts the given music and optionally metadata
+   in the given position of the grid.
 
  - `\gridDisplay` takes no arguments, and prints to the console the
    current state of the grid, with `o` marking the inserted cells and
@@ -162,11 +162,6 @@ whereas arguments surrounded by `[ ]` are optional.
  - `\gridGetLyrics <part> <seg-sel>` : the same as `\gridGetMusic`,
    but returns the lyrics of all the segments, concatenated. Throws an
    error some segment is missing lyrics.
-
- - `\gridGetSructure <seg-sel>` : same as `\gridGetMusic`, but returns
-   the contents of the structure of the given segments. In this way
-   the structure part can be used to store things like rehearsal
-   marks, tempo changes and so on.
 
  - `\gridTest <part> <seg-sel>` : put in the same file as the call to
    `\gridPutMusic` with the same parameters, compiles the cell defined
