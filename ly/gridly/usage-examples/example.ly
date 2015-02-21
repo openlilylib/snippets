@@ -107,27 +107,27 @@
 %%% TODO: Link to that once it has been migrated to the new structure.
 
 %% Structure layer
-\gridPutMusic "structure" 2 {
+\gridSetSegmentContent "structure" 2 {
   \mark \default
   \tempo 4=120
   s1*2
 }
 
-\gridPutMusic "structure" 3 {
+\gridSetSegmentContent "structure" 3 {
   \mark \default
   s1 
   \bar "||"
   s1
 }
 
-\gridPutMusic "structure" 4 {
+\gridSetSegmentContent "structure" 4 {
   \mark \default
   s1*2 
   \bar "|."
 }
 
 %% soprano part
-\gridPutMusic "soprano" 1
+\gridSetSegmentContent "soprano" 1
 \with {
   lyrics = \lyricmode { Fa la }
 }
@@ -135,7 +135,7 @@
   e2 f |
 }
 
-\gridPutMusic "soprano" 2
+\gridSetSegmentContent "soprano" 2
 \with {
   lyrics = \lyricmode { li le lo lu la! }
 }
@@ -148,13 +148,13 @@
 %%% The context modifier is optional: if you skip it, defaults for
 %%% `lyrics`, `opening` and `closing` are looked up in the structure
 %%% for the given section.
-\gridPutMusic "basso" 1
+\gridSetSegmentContent "basso" 1
 \relative c {
   \clef "bass"
   c1 |
 }
 
-\gridPutMusic "basso" 2
+\gridSetSegmentContent "basso" 2
 \relative c {
   f2 g | c,1 |
 }
@@ -172,7 +172,7 @@
 %%% these undefined cells in the output (and in the printed grid as
 %%% well)
 
-\gridPutMusic "soprano" 4
+\gridSetSegmentContent "soprano" 4
 \with {
   lyrics = \lyricmode {li le!}
 }

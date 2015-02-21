@@ -141,9 +141,9 @@ whereas arguments surrounded by `[ ]` are optional.
    this function can be optionally called to define a template for the
    given segment, for all voices.
 
- - `\gridPutMusic <part> <seg-sel> [ctx-mod] <music>` :
-   this function inserts the given music in the given position of the
-   grid.
+ - `\gridSetSegmentContent <part> <seg-sel> [ctx-mod] <music>` :
+   this function inserts the given music and optionally metadata
+   in the given position of the grid.
 
  - `\gridDisplay` takes no arguments, and prints to the console the
    current state of the grid, with `o` marking the inserted cells and

@@ -1,6 +1,6 @@
 \version "2.18.2"
 
-\gridPutMusic "basso" #1
+\gridSetSegmentContent "basso" #1
 \relative c {
   \clef "bass"
   c1 |

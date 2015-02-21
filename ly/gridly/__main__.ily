@@ -184,7 +184,7 @@ gridInit =
           (ly:get-context-mods ctx-mod)))
      props))
 
-gridPutMusic =
+gridSetSegmentContent =
 #(define-void-function
    (parser location part segment ctx-mod music)
    (string? number? (ly:context-mod?) ly:music?)
@@ -220,7 +220,7 @@ gridSetSegmentTemplate =
    (if (get-music-cell "<structure>" segment)
        (ly:debug "Skipping setting of <structure>:~a, already set" segment)
        #{
-         \gridPutMusic "<structure>" $segment $ctx-mod $music
+         \gridSetSegmentContent "<structure>" $segment $ctx-mod $music
        #}))
 
 #(define (cons-skip music length)
