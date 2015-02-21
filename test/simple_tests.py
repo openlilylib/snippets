@@ -48,6 +48,7 @@ class SimpleTests:
 
     test_list_fname = ".simple-tests"
 
+
     def __init__(self, cmd=None):
         self.clean_tmp_dir()
         if self.is_ci_run():
@@ -58,6 +59,8 @@ class SimpleTests:
         else:
             raise Exception("The lilypond command should be given on the command " +
                             "line or configured via environment variables")
+
+        self._openlilylib_dir = ""
 
         self.lilypond_version = self.__lilypond_version()
 
@@ -115,8 +118,10 @@ class SimpleTests:
         return False
 
     def openlilylib_dir(self):
-        script_path = osp.abspath(osp.dirname(osp.realpath(__file__)))
-        return osp.abspath(osp.join(script_path, os.pardir))
+        if not self._openlilylib_dir:
+            script_path = osp.abspath(osp.dirname(osp.realpath(__file__)))
+            self._openlilylib_dir = osp.abspath(osp.join(script_path, os.pardir))
+        return self._openlilylib_dir
 
     def __collect_tests(self):
         test_files = []
