@@ -61,6 +61,7 @@ class SimpleTests:
                             "line or configured via environment variables")
 
         self._openlilylib_dir = ""
+        self._lilypond_version = ""
 
         self.lilypond_version = self.__lilypond_version()
 
@@ -92,9 +93,11 @@ class SimpleTests:
                        "--batch"])
 
     def __lilypond_version(self):
-        lily = sp.Popen([self.lily_command, "-v"], stdout=sp.PIPE, stderr=sp.PIPE)
-        version_line = lily.communicate()[0].splitlines()[0]
-        return re.search(r"\d\.\d\d\.\d", version_line).group(0)
+        if not self._lilypond_version:
+            lily = sp.Popen([self.lily_command, "-v"], stdout=sp.PIPE, stderr=sp.PIPE)
+            version_line = lily.communicate()[0].splitlines()[0]
+            self._lilypond_version = re.search(r"\d\.\d\d\.\d", version_line).group(0)
+        return self._lilypond_version
 
     def is_runnable_file(self, fname):
         """Returns true if fname can be compiled with the lilypond version used"""
