@@ -5,7 +5,7 @@
 
 TESTS="\
 usage-examples/example.ly \
-usage-examples/multi-file/main.ily \
+usage-examples/multi-file/main.ly \
 usage-examples/multi-file/parts/alto-I.ily \
 usage-examples/multi-file/parts/basso-I.ily \
 usage-examples/multi-file/parts/soprano-I.ily \
