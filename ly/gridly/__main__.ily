@@ -318,10 +318,15 @@ fill =
                   segments)))
        elems)))
 
+gridSetRange =
+#(define-void-function
+    (parser location start-end) (segment-selector?)
+    #{ \setOption gridly.segment-range #start-end #})
+
 gridGetMusic =
 #(define-music-function
-   (parser location part start-end) (string? segment-selector?)
-   (let* ((cells (get-cell-range part start-end))
+   (parser location part) (string? )
+   (let* ((cells (get-cell-range part #{ \getOption gridly.segment-range #}))
           (music (map cell:music cells))
           (opening (list (cell:opening (car cells))))
           (closing (list (cell:closing (car (last-pair cells))))))
@@ -331,8 +336,8 @@ gridGetMusic =
 
 gridGetLyrics =
 #(define-music-function
-   (parser location part start-end) (string? segment-selector?)
-   (let* ((cells (get-cell-range part start-end))
+   (parser location part) (string?)
+   (let* ((cells (get-cell-range part #{ \getOption gridly.segment-range #}))
           (lyrics (map cell:lyrics cells)))
      (if (member #f lyrics)
          (ly:error "A segment is missing lyrics!")
@@ -342,9 +347,9 @@ gridGetLyrics =
 
 gridGetStructure =
 #(define-music-function
-   (parser location start-end) (segment-selector?)
+   (parser location) ()
    #{
-     \gridGetMusic "<structure>" $start-end
+     \gridGetMusic "<structure>"
    #})
 
 gridTest =
@@ -360,6 +365,7 @@ gridTest =
              (ly:error "There is no music cell for ~a:~a"
                        part segment))
          (check-durations segment #f)
+         #{ \setOption gridly.segment-range $segment #}
          (let* ((name (ly:format "~a-~a" part segment))
                 (opening (cell:opening (get-music-cell part segment)))
                 (closing (cell:closing (get-music-cell part segment)))
@@ -376,7 +382,7 @@ gridTest =
                          <<
                            \new Staff \new Voice = $name {
                              $opening
-                             \gridGetMusic $part $selector
+                             \gridGetMusic $part
                              $closing
                            }
                            $lyrics

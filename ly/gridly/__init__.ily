@@ -19,7 +19,7 @@
 
 %%% Initialization of the GridLY library
 
-#(define gridly-version "0.3.0")
+#(define gridly-version "0.4.0-dev")
 
 %%% The association list holding all the music.
 #(if (not (defined? 'music-grid))
@@ -28,5 +28,8 @@
 %%% Information that needs to be set up using \initMusicGrid
 #(if (not (defined? 'music-grid-meta))
      (define music-grid-meta #f))
+
+%%% Default segment range to the whole grid
+\registerOption gridly.segment-range #'all
 
 \void #(oll:log "Initialized GridLY version ~a" gridly-version)

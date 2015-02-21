@@ -1,0 +1,8 @@
+# This file lists test files, one per line.
+# comments can be started with the # char at the beginning
+# of a line.
+#
+# All paths are relative to the directory containing the
+# .simple-tests file
+
+example-test.ly
