@@ -5,4 +5,4 @@
   g1 |
 }
 
-\gridTest "soprano" #1
+\gridCompileCell "soprano" #1

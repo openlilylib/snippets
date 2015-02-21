@@ -345,7 +345,7 @@ gridGetLyrics =
           'SequentialMusic
           'elements lyrics))))
 
-gridTest =
+gridCompileCell =
 #(define-void-function
    (parser location part segment)
    (string? number?)
