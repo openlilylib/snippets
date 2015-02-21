@@ -8,7 +8,7 @@ Liska, with some ideas about "putting" and "getting" the music from
 by Jan-Peter Voigt, both appeared on lilypondblog.org.
 
 GridLY is part of `openLilyLib` and is maintained by
-[Matteo Ceccarello](matteo.ceccarello@gmail.com)
+[Matteo Ceccarello](mailto:matteo.ceccarello@gmail.com)
 
 ---
 
@@ -180,47 +180,3 @@ For an example of usage on a single file, see
 
 Instead, for an example of a multi-file score, take a look at
 [example/multi-file](https://github.com/Cecca/gridly/tree/master/example/multi-file).
-
-Changelog
----------
-
- * 0.3.0 - development
-
-   - Add integers as segment selectors
-   - Now including an empty cell in `\gridGetMusic` will no longer throw 
-     an error: if the segment was initialized with `\gridSetStructure`, then
-     a number of skips of the same duration as the defined structure will be
-     used. This allows to create scores containing undefined cells, that is
-     useful to check work in progress.
-
- * 0.2.1
-
-   Documentation and license
-
-   - Write a README
-   - Switch from LGPL to GPL
-   - Add a multi-file example
-
- * 0.2.0
-   This is a **breaking** release. The public interface changed.
-
-   - Some refactoring of public function names, to make the interface more
-     consistent. Now all the public music functions start with `grid`.
-      - \displayMusicGrid -> \gridDisplay
-      - \checkMusicGrid   -> \gridCheck
-      - \initMusicGrid    -> \gridInit
-   - remove the \gridVersion function. Version checking should be
-     the responsibility of some sort of lilypond "package manager"
-
- * 0.1.0
-   Initial relase, featuring the following public functions:
-    - \gridVersion
-    - \displayMusicGrid
-    - \checkMusicGrid
-    - \initMusicGrid
-    - \gridSetStructure
-    - \gridPutMusic
-    - \gridGetMusic
-    - \gridGetLyrics
-    - \gridGetStructure
-    - \gridTest

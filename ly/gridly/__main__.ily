@@ -7,7 +7,7 @@
 %% it under the terms of the GNU General Public License as published by
 %% the Free Software Foundation, either version 3 of the License, or
 %% (at your option) any later version.
-%% 
+%%
 %% This program is distributed in the hope that it will be useful,
 %% but WITHOUT ANY WARRANTY; without even the implied warranty of
 %% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -43,14 +43,6 @@
             #:getter cell:opening)
    (closing #:init-keyword #:closing
             #:getter cell:closing))
-
-%%% The association list holding all the music.
-#(if (not (defined? 'music-grid))
-     (define music-grid #f))
-
-%%% Information that needs to be set up using \initMusicGrid
-#(if (not (defined? 'music-grid-meta))
-     (define music-grid-meta #f))
 
 %%% Some utility functions
 
@@ -119,9 +111,18 @@ gridDisplay =
      (display "=== Music grid ===")
      (newline)
      (let ((longest-name (reduce max 0
-                                 (map string-length parts))))
+                                 (map string-length parts)))
+           (table-spacing (reduce max 0
+                                  (map (lambda (seg)
+                                         (string-length (number->string seg)))
+                                       segments))))
        (display-spaces longest-name)
-       (for-each (lambda (x) (display (ly:format " ~a" x))) segments)
+       (for-each
+        (lambda (x)
+          (let ((seg-str (number->string x)))
+            (display-spaces (+ 1 (- table-spacing (string-length seg-str))))
+            (display seg-str)))
+        segments)
        (for-each
         (lambda (part)
           (newline)
@@ -129,12 +130,14 @@ gridDisplay =
           (display-spaces (- longest-name (string-length part)))
           (for-each
            (lambda (seg)
-             (display-spaces (string-length (number->string seg)))
+             ;(display-spaces (string-length (number->string seg)))
+             (display-spaces table-spacing)
              (if (hash-ref music-grid (cons part seg))
                  (display "o")
                  (display "-")))
            segments))
         parts))
+     (newline)
      (newline)))
 
 gridCheck =
@@ -301,6 +304,8 @@ fill =
                        ((get-music-cell "<structure>" i)
                         (make <cell>
                           #:lyrics #{ #}
+                          #:opening #{ #}
+                          #:closing #{ #}
                           #:music
                           (make-skips
                            (cell:music
@@ -313,19 +318,26 @@ fill =
                   segments)))
        elems)))
 
+gridSetRange =
+#(define-void-function
+    (parser location start-end) (segment-selector?)
+    #{ \setOption gridly.segment-range #start-end #})
+
 gridGetMusic =
 #(define-music-function
-   (parser location part start-end) (string? segment-selector?)
-   (let* ((cells (get-cell-range part start-end))
-          (music (map cell:music cells)))
+   (parser location part) (string? )
+   (let* ((cells (get-cell-range part #{ \getOption gridly.segment-range #}))
+          (music (map cell:music cells))
+          (opening (list (cell:opening (car cells))))
+          (closing (list (cell:closing (car (last-pair cells))))))
      (make-music
       'SequentialMusic
-      'elements music)))
+      'elements (append opening music closing))))
 
 gridGetLyrics =
 #(define-music-function
-   (parser location part start-end) (string? segment-selector?)
-   (let* ((cells (get-cell-range part start-end))
+   (parser location part) (string?)
+   (let* ((cells (get-cell-range part #{ \getOption gridly.segment-range #}))
           (lyrics (map cell:lyrics cells)))
      (if (member #f lyrics)
          (ly:error "A segment is missing lyrics!")
@@ -335,9 +347,9 @@ gridGetLyrics =
 
 gridGetStructure =
 #(define-music-function
-   (parser location start-end) (segment-selector?)
+   (parser location) ()
    #{
-     \gridGetMusic "<structure>" $start-end
+     \gridGetMusic "<structure>"
    #})
 
 gridTest =
@@ -353,18 +365,28 @@ gridTest =
              (ly:error "There is no music cell for ~a:~a"
                        part segment))
          (check-durations segment #f)
-         (let* ((opening (cell:opening (get-music-cell part segment)))
+         #{ \setOption gridly.segment-range $segment #}
+         (let* ((name (ly:format "~a-~a" part segment))
+                (opening (cell:opening (get-music-cell part segment)))
                 (closing (cell:closing (get-music-cell part segment)))
                 (selector (cons segment segment))
+                (lyrics (let ((maybe-lyrics (cell:lyrics
+                                             (get-music-cell part segment))))
+                          (if maybe-lyrics
+                              #{ \new Lyrics \lyricsto $name $maybe-lyrics #}
+                              #{ #})))
                 (book
                  #{
                     \book {
                       \score {
-                              \new Staff \new Voice {
-                                $opening
-                                \gridGetMusic $part $selector
-                                $closing
-                              }
+                         <<
+                           \new Staff \new Voice = $name {
+                             $opening
+                             \gridGetMusic $part
+                             $closing
+                           }
+                           $lyrics
+                         >>
                          \midi{}
                          \layout{}
                       }
