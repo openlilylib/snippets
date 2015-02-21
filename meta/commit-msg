@@ -1,0 +1,115 @@
+#!/usr/bin/env python
+
+import subprocess as sp
+import sys
+import os.path as osp
+import itertools
+
+MESSAGE_FILE = "OLL_COMMIT_MSG"
+
+FIRST_LINE_LENGTH = 50
+LINE_LENGTH = 72
+
+
+def get_commit_msg_lines():
+    message = ''
+    with open(sys.argv[1], 'r') as msg_file:
+        message = msg_file.read()
+
+    # Drop the lines after the first commented one.
+    return list(itertools.takewhile(
+        lambda s: not s.startswith('#'),
+        message.splitlines()))
+
+def changed_files():
+    git_status = sp.check_output(['git', 'status', '--porcelain'])
+    return [f[3:] for f in git_status.splitlines()
+            if not f.startswith('?')]
+
+
+def involved_projects():
+    projects = set()
+    for fname in changed_files():
+        components = fname.split(osp.sep)
+        if components[0] == 'ly' and len(components) > 2:
+            prj = components[1].lower()
+            projects.add(prj)
+    return projects
+
+
+def check_project_label(lines):
+    label = lines[0].split(':')[0]
+    projects = involved_projects()
+    errors = []
+    if len(projects) > 0 and label.lower() not in projects:
+        valid_labels = ''
+        for prj in projects:
+            valid_labels += "'" + prj + ":'  "
+        msg = "The commit should start with one of the following:\n\t" +\
+              valid_labels
+        errors.append(msg)
+    return errors
+
+
+def check_lines(lines):
+    errors = []
+
+    def check_line(line, linum, length):
+        if len(line) > length:
+            msg = "line {} is long {} chars, should be < {}".format(
+                linum, len(line), length)
+            errors.append(msg)
+
+    check_line(lines[0], 0, FIRST_LINE_LENGTH)
+
+    for idx, line in enumerate(lines[1:]):
+        check_line(line, idx+1, LINE_LENGTH)
+
+    if len(lines) > 1 and len(lines[1].strip()) != 0:
+        msg = "line 1 should be empty"
+        errors.append(msg)
+
+    return errors
+
+
+def print_errors(errors):
+    print "The commit message seems malformed:\n"
+    for err in errors:
+        print " *", err, "\n"
+    print """
+For your convenience, your commit message has been saved to the file
+{}. After having modified it, you can pass it to `git commit` via
+the `-F` option.
+
+If you want to keep the commit message as is, you can use
+the `--no-verify` option of `git commit` to skip this check.
+
+For more information please see
+{}""".format(
+    MESSAGE_FILE,
+    "https://github.com/openlilylib/openlilylib/blob/master/meta/commit_message_hook.md")
+
+
+def save_message(lines):
+    with open(MESSAGE_FILE, 'w') as msg_file:
+        for line in lines:
+            msg_file.write(line)
+            msg_file.write('\n')
+
+
+if __name__ == "__main__":
+    COMMIT_MSG_LINES = get_commit_msg_lines()
+    errors = []
+    errors.extend(check_project_label(COMMIT_MSG_LINES))
+    errors.extend(check_lines(COMMIT_MSG_LINES))
+
+    if len(errors) != 0:
+        print_errors(errors)
+        save_message(COMMIT_MSG_LINES)
+        sys.exit(1)
+    elif osp.exists(MESSAGE_FILE):
+        print "\nIt seems that file {} exists in the root directory".format(
+            MESSAGE_FILE)
+        print "of openLilyLib. It was probably created after the failure"
+        print "of a previous commit check. Consider removing it, since it"
+        print "is no longer needed.\n"
