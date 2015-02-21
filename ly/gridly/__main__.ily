@@ -365,6 +365,7 @@ gridTest =
              (ly:error "There is no music cell for ~a:~a"
                        part segment))
          (check-durations segment #f)
+         #{ \getOption gridly.segment-range #}
          (let* ((name (ly:format "~a-~a" part segment))
                 (opening (cell:opening (get-music-cell part segment)))
                 (closing (cell:closing (get-music-cell part segment)))
@@ -381,7 +382,7 @@ gridTest =
                          <<
                            \new Staff \new Voice = $name {
                              $opening
-                             \gridGetMusic $part $selector
+                             \gridGetMusic $part
                              $closing
                            }
                            $lyrics
