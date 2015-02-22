@@ -166,7 +166,7 @@ gridInit =
        (begin
          (set! music-grid-meta (make-hash-table))
          (hash-set! music-grid-meta #:segments segments)
-         (hash-set! music-grid-meta #:parts (cons "<structure>" parts)))))
+         (hash-set! music-grid-meta #:parts (cons "<template>" parts)))))
 
 
 %%% Grid manipulation
@@ -193,14 +193,14 @@ gridPutMusic =
           ;; This closure will look in the `props' alist for the given
           ;; symbol, returning the associated value. If the symbol is
           ;; not in the alist, then a default value is looked up in
-          ;; the corresponding `<structure>' segment. If even there a
+          ;; the corresponding `<template>' segment. If even there a
           ;; default value is not found, `default'
           (props-get (lambda (sym last-default)
                        (let ((res (assoc-ref props sym)))
                          (if res
                              res
                              (let ((cell-structure
-                                    (get-music-cell "<structure>" segment)))
+                                    (get-music-cell "<template>" segment)))
                                (if cell-structure
                                    (slot-ref cell-structure sym)
                                    last-default))))))
@@ -211,14 +211,14 @@ gridPutMusic =
                    #:closing (props-get 'closing #{ #}))))
      (hash-set! music-grid key value)))
 
-gridSetStructure =
+gridSetSegmentTemplate =
 #(define-void-function
    (parser location segment ctx-mod music)
    (number? (ly:context-mod? #{ \with{} #}) ly:music?)
-   (if (get-music-cell "<structure>" segment)
-       (ly:debug "Skipping setting of <structure>:~a, already set" segment)
+   (if (get-music-cell "<template>" segment)
+       (ly:debug "Skipping setting of <template>:~a, already set" segment)
        #{
-         \gridPutMusic "<structure>" $segment $ctx-mod $music
+         \gridPutMusic "<template>" $segment $ctx-mod $music
        #}))
 
 #(define (cons-skip music length)
@@ -294,7 +294,7 @@ the given `music'"
                        ;; is defined. Hence we use a dummy cell filled
                        ;; with skips matching the length of the given
                        ;; cell.
-                       ((get-music-cell "<structure>" i)
+                       ((get-music-cell "<template>" i)
                         (make <cell>
                           #:lyrics #{ #}
                           #:opening #{ #}
@@ -302,7 +302,7 @@ the given `music'"
                           #:music
                           (make-skips
                            (cell:music
-                            (get-music-cell "<structure>" i)))))
+                            (get-music-cell "<template>" i)))))
                        ;; Neither the cell nor the structure are
                        ;; defined. Throw an error.
                        (#t (ly:error
@@ -337,13 +337,6 @@ gridGetLyrics =
          (make-music
           'SequentialMusic
           'elements lyrics))))
-
-gridGetStructure =
-#(define-music-function
-   (parser location) ()
-   #{
-     \gridGetMusic "<structure>"
-   #})
 
 gridCompileCell =
 #(define-void-function
@@ -405,3 +398,35 @@ gridTest =
      "\n\tPlease replace the former with the latter.")
     "gridTest" "gridCompileCell")
    ((ly:music-function-extract gridCompileCell) parser location part segment))
+
+
+gridSetStructure =
+#(define-void-function
+   (parser location segment ctx-mod music)
+   (number? (ly:context-mod? #{ \with{} #}) ly:music?)
+   (ly:input-warning
+    location
+    (string-append
+     "\n\tFunction `~a' is deprecated in favor of `~a' and"
+     "\n\twill be removed in a future release."
+     "\n\tPlease replace the former with the latter.")
+    "gridSetStructure" "gridSetSegmentTemplate")
+   ((ly:music-function-extract gridSetSegmentTemplate)
+    parser location segment ctx-mod music))
+
+
+gridGetStructure =
+#(define-music-function
+   (parser location) ()
+   (ly:input-warning
+    location
+    (string-append
+     "\n\tThe function `gridGetStructure' is deprecated and is"
+     "\n\tno longer part of the public interface of GridLY."
+     "\n\tIt will be removed in a future release."
+     "\n\tIf you are using this function to retrieve marks and"
+     "\n\tand tempo changes, please put them in a dedicated part,"
+     "\n\tnamed for instance `marks'"))
+   #{
+     \gridGetMusic "<template>"
+   #})
