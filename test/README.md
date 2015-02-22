@@ -62,10 +62,11 @@ Running locally
 ---------------
 
 The tests as specified by `simple_tests.py` can also be run locally, by issuing
-the following command (for Unix-like systems)
+the following command (for Unix-like systems). The testing script will use
+whatever version of LilyPond the command `lilypond` points to.
 
 ```
-test/simple_tests.py lilypond
+test/simple_tests.py
 ```
 
 that will run the tests using whatever LilyPond version the command `lilypond`

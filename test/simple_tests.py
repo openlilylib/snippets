@@ -60,8 +60,7 @@ class SimpleTests:
         elif not cmd == None:
             self.lily_command = cmd
         else:
-            raise Exception("The lilypond command should be given on the command " +
-                            "line or configured via environment variables")
+            self.lily_command = "lilypond"
 
         self.lilypond_version = self.__lilypond_version()
         self.openlilylib_dir = self.__openlilylib_dir()
