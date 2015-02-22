@@ -60,6 +60,7 @@ class SimpleTests:
                             "line or configured via environment variables")
 
         self.lilypond_version = self.__lilypond_version()
+        self.openlilylib_dir = self.__openlilylib_dir()
 
     def clean_tmp_dir(self):
         if os.path.exists(self.tmp_lily_dir):
@@ -114,13 +115,13 @@ class SimpleTests:
         print "**WARNING** No version line found, skipping", fname
         return False
 
-    def openlilylib_dir(self):
+    def __openlilylib_dir(self):
         script_path = osp.abspath(osp.dirname(osp.realpath(__file__)))
         return osp.abspath(osp.join(script_path, os.pardir))
 
     def __collect_tests(self):
         test_files = []
-        for root, _, files in os.walk(self.openlilylib_dir()):
+        for root, _, files in os.walk(self.openlilylib_dir):
             for f in files:
                 fname = osp.join(root, f)
                 if f == self.test_list_fname:
@@ -140,8 +141,8 @@ class SimpleTests:
         for test in all_tests:
             print "\n\nRunning test", test
             cmd = [self.lily_command,
-                   "-I", self.openlilylib_dir(),
-                   "-I", os.path.join(self.openlilylib_dir(), "ly"),
+                   "-I", self.openlilylib_dir,
+                   "-I", os.path.join(self.openlilylib_dir, "ly"),
                    test]
             print "Command: ", " ".join(cmd)
             lily = sp.Popen(cmd,
@@ -174,6 +175,6 @@ if __name__ == "__main__":
     else:
         tests = SimpleTests()
     print "Running LilyPond", tests.lilypond_version
-    oll_dir = tests.openlilylib_dir()
+    oll_dir = tests.openlilylib_dir
     print "OpenLilyLib directory", oll_dir
     tests.run()
