@@ -47,6 +47,8 @@ class SimpleTests:
     binary_site = "http://download.linuxaudio.org/lilypond/binaries/"
 
     test_list_fname = ".simple-tests"
+    test_excludes_fname = ".simple-tests-exclude"
+    examples_dirname = "usage-examples"
 
     def __init__(self, cmd=None):
         self.clean_tmp_dir()
@@ -119,20 +121,41 @@ class SimpleTests:
         script_path = osp.abspath(osp.dirname(osp.realpath(__file__)))
         return osp.abspath(osp.join(script_path, os.pardir))
 
+
+    def __collect_all_in_dir(self, dirname):
+        test_files = []
+        excluded_files = set()
+        excludes_fname = osp.join(dirname, self.test_excludes_fname)
+        if osp.exists(excludes_fname):
+            print "Found excludes file:", excludes_fname
+            with open(excludes_fname, 'r') as excludes_lines:
+                for line in excludes_lines.readlines():
+                    excluded_fname = line.strip()
+                    if not line.startswith("#") and len(excluded_fname) > 0:
+                        to_exclude = osp.abspath(
+                            osp.join(dirname, excluded_fname))
+                        print excluded_files
+                        excluded_files.add(to_exclude)
+
+        for root, _, files in os.walk(dirname):
+            for f in files:
+                if f != self.test_excludes_fname:
+                    test_fname = osp.abspath(osp.join(root, f))
+                    if self.is_runnable_file(test_fname) \
+                       and not test_fname in excluded_files:
+
+                        test_files.append(test_fname)
+
+        return test_files
+
+
+
     def __collect_tests(self):
         test_files = []
         for root, _, files in os.walk(self.openlilylib_dir):
-            for f in files:
-                fname = osp.join(root, f)
-                if f == self.test_list_fname:
-                    print "Found file listing simple tests:", fname
-                    with open(fname, 'r') as test_list:
-                        for line in test_list.readlines():
-                            test_fname = line.strip()
-                            if not line.startswith("#") and len(test_fname) > 0:
-                                test_file = osp.join(root, test_fname)
-                                if self.is_runnable_file(test_file):
-                                    test_files.append(test_file)
+            if osp.basename(root) == self.examples_dirname:
+                test_files.extend(self.__collect_all_in_dir(root))
+
         return test_files
 
     def run(self):
