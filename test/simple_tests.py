@@ -134,7 +134,7 @@ class SimpleTests:
                     if not line.startswith("#") and len(excluded_fname) > 0:
                         to_exclude = osp.abspath(
                             osp.join(dirname, excluded_fname))
-                        print excluded_files
+                        print "Excluding", to_exclude
                         excluded_files.add(to_exclude)
 
         for root, _, files in os.walk(dirname):
