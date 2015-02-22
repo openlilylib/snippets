@@ -98,6 +98,9 @@ class SimpleTests:
 
     def is_runnable_file(self, fname):
         """Returns true if fname can be compiled with the lilypond version used"""
+        if not (fname.endswith(".ly") or fname.endswith(".ily")):
+            print "Not a lilypond file, skipping", fname
+            return False
         with open(fname, 'r') as fcontents:
             for line in fcontents.readlines():
                 version_line = re.search(r"\\version \"(\d+\.\d+\.\d+)\"", line)
@@ -139,12 +142,11 @@ class SimpleTests:
 
         for root, _, files in os.walk(dirname):
             for f in files:
-                if f != self.test_excludes_fname:
-                    test_fname = osp.abspath(osp.join(root, f))
-                    if self.is_runnable_file(test_fname) \
-                       and not test_fname in excluded_files:
+                test_fname = osp.abspath(osp.join(root, f))
+                if self.is_runnable_file(test_fname) \
+                   and not test_fname in excluded_files:
 
-                        test_files.append(test_fname)
+                    test_files.append(test_fname)
 
         return test_files
 
