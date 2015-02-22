@@ -33,8 +33,6 @@
 #(use-modules (ice-9 regex))
 
 #(define-class <cell> ()
-   (barcheck #:init-keyword #:barckeck
-             #:getter cell:barcheck)
    (music #:init-keyword #:music
           #:getter cell:music)
    (lyrics #:init-keyword #:lyrics
@@ -263,11 +261,6 @@ gridSetStructure =
 the given `music'"
    (let ((start (make-music 'SequentialMusic 'elements '())))
      (find-durations start 1 (ly:music-length music))))
-
-fill =
-#(define-music-function
-   (parser location music) (ly:music?)
-   (make-skips music))
 
 #(define (segment-selector? x)
    (or (pair? x)
