@@ -8,12 +8,14 @@ import sys
 import re
 
 class SimpleTests:
-    """Run simple integration tests. Specifically, this script will look
-    for all the `.simple-tests` files in the openLilyLib directory
-    tree. For each such file, each line not starting with `#` is
-    treated as a filename. All these files will be compiled with
-    LilyPond. If the compilation results in a non-zero exit code, then
-    that test is marked as failed.
+    """Run simple intergration tests. Specifically, this script will look
+    for all the files in `usage-examples` directories. All these files
+    will be compiled with LilyPond. If the compilation results in a
+    non-zero exit code, then that test is marked as failed.
+
+    If a file named `.simple-tests-exclude` is found in a
+    `usage-example` directory, then all the files listed in that file
+    are excluded from the test set.
 
     This class can be run in two different modes:
 

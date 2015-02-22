@@ -20,10 +20,9 @@ a non-zero exit status, then the test is considered failed.
 Test definition
 ---------------
 
-Test files are thus normal LilyPond files, and can be the same files used as
-usage examples. To mark one or more files as tests, so that `simple_tests.py`
-can check them, simply create a `.simple-tests`, then list each file that should
-be tested in its own line. Paths should be relative to `.simple-tests`.
+All the files under a `usage-examples` directory are considered test files. To
+exclude a file from the compilation, add its name to a file called
+`.simple-tests-exclude` under the relevant `usage-examples` directory.
 
 For instance, consider a library `someLib`. The directory structure is as
 follows
@@ -33,21 +32,20 @@ openlilylib
 └── ly
     └── someLib
         ├── __main__.ily
-        ├── .simple-tests
         └── usage-examples
+            ├── .simple-tests-exclude
             ├── example1
             │   └── example.ly
             └── example2
                 └── test.ly
 ```
 
-to mark `example1/example.ly` and `example2/test.ly` as tests, the contents of
-`.simple-tests` should be as follows
+to exclude `example1/example.ly` from the tests, the contents of
+`.simple-tests-exclude` should be as follows
 
 ```
 # Comments can be inserted using # chars
 usage-examples/example1/example.ly
-usage-examples/example2/test.ly
 ```
 
 LilyPond version configuration
@@ -74,13 +72,33 @@ that will run the tests using whatever LilyPond version the command `lilypond`
 points to. Example output:
 
 ```
-Running GNU LilyPond 2.18.2
-OpenLilyLib directory /home/matteo/Development/openlilylib
-Found file listing simple tests: /home/matteo/Development/lilypond/openlilylib/test/.simple-tests
-Running test /home/matteo/Development/lilypond/openlilylib/test/example-test.ly  OK!
+Running LilyPond 2.18.2
+OpenLilyLib directory /data/matteo/Development/lilypond/openlilylib
+Found excludes file: /data/matteo/Development/lilypond/openlilylib/ly/gridly/usage-examples/.simple-tests-exclude
+Excluding /data/matteo/Development/lilypond/openlilylib/ly/gridly/usage-examples/multi-file/global.ily
+Excluding /data/matteo/Development/lilypond/openlilylib/ly/gridly/usage-examples/multi-file/parts/alto-I.ily
+Excluding /data/matteo/Development/lilypond/openlilylib/ly/gridly/usage-examples/multi-file/parts/basso-I.ily
+Excluding /data/matteo/Development/lilypond/openlilylib/ly/gridly/usage-examples/multi-file/parts/soprano-I.ily
+Excluding /data/matteo/Development/lilypond/openlilylib/ly/gridly/usage-examples/multi-file/parts/tenore-I.ily
+Not a lilypond file, skipping /data/matteo/Development/lilypond/openlilylib/ly/gridly/usage-examples/.simple-tests-exclude
+
+
+Running test /data/matteo/Development/lilypond/openlilylib/ly/gridly/usage-examples/example.ly
+Command:  lilypond -I /data/matteo/Development/lilypond/openlilylib -I /data/matteo/Development/lilypond/openlilylib/ly /data/matteo/Development/lilypond/openlilylib/ly/gridly/usage-examples/example.ly
+------- OK! --------
+
+
+Running test /data/matteo/Development/lilypond/openlilylib/ly/gridly/usage-examples/multi-file/main.ly
+Command:  lilypond -I /data/matteo/Development/lilypond/openlilylib -I /data/matteo/Development/lilypond/openlilylib/ly /data/matteo/Development/lilypond/openlilylib/ly/gridly/usage-examples/multi-file/main.ly
+------- OK! --------
+
+
+Running test /data/matteo/Development/lilypond/openlilylib/ly/scholarly/usage-examples/annotate.ly
+Command:  lilypond -I /data/matteo/Development/lilypond/openlilylib -I /data/matteo/Development/lilypond/openlilylib/ly /data/matteo/Development/lilypond/openlilylib/ly/scholarly/usage-examples/annotate.ly
+------- OK! --------
 ===============================================================================
 
-  0 failed tests out of 1
+  0 failed tests out of 3
 
 ===============================================================================
 ```
