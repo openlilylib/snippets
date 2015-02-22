@@ -345,7 +345,7 @@ gridGetStructure =
      \gridGetMusic "<structure>"
    #})
 
-gridTest =
+gridCompileCell =
 #(define-void-function
    (parser location part segment)
    (string? number?)
@@ -389,3 +389,19 @@ gridTest =
                             #{ \paper {} #}
                             #{ \layout {} #}
                             (ly:parser-output-name parser))))))
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Deprecated functions
+
+gridTest =
+#(define-void-function
+   (parser location part segment)
+   (string? number?)
+   (ly:input-warning
+    location
+    (string-append
+     "\n\tFunction `~a' is deprecated in favor of `~a' and"
+     "\n\twill be removed in a future release."
+     "\n\tPlease replace the former with the latter.")
+    "gridTest" "gridCompileCell")
+   ((ly:music-function-extract gridCompileCell) parser location part segment))
