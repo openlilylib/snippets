@@ -9,6 +9,9 @@
 
 language: python
 
+# This will route the build job to the new Travis build environment
+sudo: false
+
 # This is the script that will actually run the tests
 script: ./test/simple_tests.py
 
