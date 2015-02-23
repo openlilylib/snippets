@@ -10,6 +10,9 @@ GridLY - Changelog
       - `gridGetMusic` lost an argument. Now it accepts only the string
         specifying the part. The segment range should be set using the new
         function `gridSetRange`.
+      - `gridSetStructure` -> `gridSetSegmentTemplate`
+      - `gridGetStructure` has been removed in favor of the explicit
+        use of a `marks` part.
 
 
  * 0.3.0
