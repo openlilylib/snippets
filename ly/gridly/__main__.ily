@@ -199,10 +199,10 @@ gridPutMusic =
                        (let ((res (assoc-ref props sym)))
                          (if res
                              res
-                             (let ((cell-structure
+                             (let ((cell-template
                                     (get-music-cell "<template>" segment)))
-                               (if cell-structure
-                                   (slot-ref cell-structure sym)
+                               (if cell-template
+                                   (slot-ref cell-template sym)
                                    last-default))))))
           (value (make <cell>
                    #:music music
@@ -221,46 +221,6 @@ gridSetSegmentTemplate =
          \gridPutMusic "<template>" $segment $ctx-mod $music
        #}))
 
-#(define (cons-skip music length)
-   "Conses a skip of the given length in front of the given music"
-   (let ((skip (make-music
-                'SkipEvent
-                'duration
-                (ly:make-duration length 0 1)))
-         (elements (ly:music-property music 'elements)))
-     (make-music
-      'SequentialMusic
-      'elements
-      (cons skip elements))))
-
-#(define (find-durations acc length goal)
-   "Recursively finds the sequence of skips of the same duration of `goal`"
-   (ly:debug "Call find-durations with ~a ~a"
-               length goal)
-   (let ((dur (ly:music-length acc)))
-     (ly:debug "Current duration is ~a" dur)
-     (cond
-      ;; The skips have the desired duration, hence we are done
-      ((equal? dur goal) acc)
-      ;; If we still don't have reached the goal then we try to add
-      ;; another skip in front of the music we already have. If the
-      ;; newly created music length is past the goal, then we recur
-      ;; using smaller skips, otherwise we recur using the new music
-      ;; as the accumulator
-      ((ly:moment<? dur goal)
-       (let* ((new-acc (cons-skip acc length))
-              (new-dur (ly:music-length new-acc)))
-         (if (ly:moment<? goal new-dur)
-             (find-durations acc (* 2 length) goal)
-             (find-durations new-acc length goal))))
-      ;; We shall never get here!
-      (#t (ly:error "We got past the goal!!")))))
-
-#(define (make-skips music)
-   "Creates 'SequentialMusic made of skips with the same duration as
-the given `music'"
-   (let ((start (make-music 'SequentialMusic 'elements '())))
-     (find-durations start 1 (ly:music-length music))))
 
 #(define (segment-selector? x)
    (or (pair? x)
@@ -290,23 +250,23 @@ the given `music'"
                       (cond
                        ;; The cell is defined an populated with music
                        (cell cell)
-                       ;; The cell is not defined, but its structure
-                       ;; is defined. Hence we use a dummy cell filled
-                       ;; with skips matching the length of the given
-                       ;; cell.
+                       ;; The cell is not defined, but its template is
+                       ;; defined. Hence we use the default values provided
+                       ;; by the template, except for the lyrics, since
+                       ;; there are no notes in this dummy cell.
                        ((get-music-cell "<template>" i)
                         (make <cell>
                           #:lyrics #{ #}
-                          #:opening #{ #}
-                          #:closing #{ #}
-                          #:music
-                          (make-skips
-                           (cell:music
-                            (get-music-cell "<template>" i)))))
-                       ;; Neither the cell nor the structure are
+                          #:opening (cell:opening
+                                     (get-music-cell "<template>" i))
+                          #:closing (cell:closing
+                                     (get-music-cell "<template>" i))
+                          #:music (cell:music
+                                   (get-music-cell "<template>" i))))
+                       ;; Neither the cell nor the template are
                        ;; defined. Throw an error.
                        (#t (ly:error
-                            "Segment '~a' of part '~a' is still empty and its structure is not defined"
+                            "Segment '~a' of part '~a' is still empty and its template is not defined"
                             i part)))))
                   segments)))
        elems)))
