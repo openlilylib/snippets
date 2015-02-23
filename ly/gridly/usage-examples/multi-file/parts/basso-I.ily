@@ -9,6 +9,6 @@
   \bar "|."
 }
 
-\gridTest "basso" #1
+\gridCompileCell "basso" #1
 
 

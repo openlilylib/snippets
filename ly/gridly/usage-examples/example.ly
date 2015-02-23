@@ -41,14 +41,15 @@
 %%% the dimensions of the grid: how many segments it should have and which
 %%% parts it contains. In this case we are initializing a grid with
 %%% two segments and two parts, namely "soprano" and "basso".
-\gridInit 4 #'("soprano"
+\gridInit 4 #'("marks"
+               "soprano"
                "basso")
 
-%%% You can optionally specify the grid "structure", that is, the
+%%% You can optionally specify the grid "template", that is, the
 %%% defaults for each section, that will be then applied to each
-%%% part. The \gridSetStructure command has the following interface:
+%%% part. The \gridSetSegmentTemplate command has the following interface:
 %%%
-%%%    \gridSetStructure segment-index context-modifier music
+%%%    \gridSetSegmentTemplate segment-index context-modifier music
 %%%
 %%% where:
 %%%
@@ -63,7 +64,7 @@
 %%%            used to check for correctness the durations of all the
 %%%            parts of the same segment.
 %%%
-\gridSetStructure 1
+\gridSetSegmentTemplate 1
 \with {
   lyrics = \lyricmode { Fa }
 }
@@ -75,33 +76,31 @@
 %%% marks, tempo changes, bars, etc. You then have the possibility to
 %%% include the structure above the staves, thus including the effects
 %%% of these commands in the score.
-\gridSetStructure 2
+\gridSetSegmentTemplate 2
 \with {
   lyrics = \lyricmode { la la la! }
 }
 \relative c' {
-  \mark 1
-  \tempo 4=120
   s1 | s1 |
 }
 
-\gridSetStructure 3
+\gridSetSegmentTemplate 3
 \relative c' {
-  \mark 2
   s1 | s1 |
 }
 
-\gridSetStructure 4
+
+\gridSetSegmentTemplate 4
 \relative c' {
-  \mark 3
-  s1 | s1 \bar "|." |
+  s1 | s1|
 }
+
 
 %%% Entering music
 %%% --------------
 %%%
 %%% Now we can start to enter the music! The interface of
-%%% \gridPutMusic is the same of \gridSetStructure, with the
+%%% \gridPutMusic is the same of \gridSetSegmentTemplate, with the
 %%% additional parameter `part` that specifies the part you are
 %%% working on.
 %%%
@@ -134,6 +133,26 @@
 \relative c {
   f2 g | c,1 |
 }
+
+\gridPutMusic "marks" 2
+\relative c' {
+  \mark 1
+  \tempo 4=120
+  s1 | s1 |
+}
+
+\gridPutMusic "marks" 3
+\relative c' {
+  \mark 2
+  s1 | s1 |
+}
+
+\gridPutMusic "marks" 4
+\relative c' {
+  \mark 3
+  s1 | s1 \bar "|." |
+}
+
 
 %%% Missing cells
 %%% -------------
@@ -202,7 +221,7 @@
 
   \new StaffGroup <<
     \new Staff <<
-      \new Voice { \gridGetStructure }
+      \new Voice { \gridGetMusic "marks" }
       \new Voice = "soprano" { \gridGetMusic "soprano" }
       \new Lyrics \lyricsto "soprano" { \gridGetLyrics "soprano" }
     >>

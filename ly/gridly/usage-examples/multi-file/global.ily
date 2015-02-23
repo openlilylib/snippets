@@ -3,9 +3,9 @@
 \include "openlilylib"
 \loadModule "gridly"
 
-\gridInit #1 #'("soprano" "alto" "tenore" "basso")
+\gridInit #1 #'("marks" "soprano" "alto" "tenore" "basso")
 
-\gridSetStructure #1
+\gridSetSegmentTemplate #1
 \with {
   lyrics = \lyricmode { Ooo }
 }

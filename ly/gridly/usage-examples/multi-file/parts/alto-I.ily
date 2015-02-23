@@ -7,4 +7,4 @@
   e1 |
 }
 
-\gridTest "alto" #1
+\gridCompileCell "alto" #1
