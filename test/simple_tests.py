@@ -239,6 +239,9 @@ class SimpleTests:
             print "="*79
             sys.exit(1)
 
+def print_separator():
+    print ""
+    print "="*79, "\n"
 
 if __name__ == "__main__":
     tests = None
