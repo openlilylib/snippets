@@ -137,6 +137,21 @@ class SimpleTests:
 
     def __collect_all_in_dir(self, dirname):
         test_files = []
+
+        includes_fname = osp.join(dirname, self.test_includes_fname)
+        if osp.exists(includes_fname):
+            print "Found includes file:", self.__relative_path(includes_fname)
+            with open(includes_fname, 'r') as includes_lines:
+                inc_cnt = 0
+                for line in includes_lines.readlines():
+                    included_fname = line.strip()
+                    if not line.startswith("#") and len(included_fname) > 0:
+                        inc_cnt += 1
+                        to_include = osp.abspath(
+                            osp.join(dirname, included_fname))
+                        self.included_tests.append(to_include)
+                print "Including {} files.".format(inc_cnt)
+
         excludes_fname = osp.join(dirname, self.test_excludes_fname)
         if osp.exists(excludes_fname):
             print "Found excludes file:", self.__relative_path(excludes_fname)
@@ -175,6 +190,9 @@ class SimpleTests:
 
         # check again for excluded files
         # (as the exclude file may be in another directory)
+        for i in self.included_tests:
+            if not i in self.excluded_tests:
+                self.test_files.append(i)
         for t in test_files:
             if not t in self.excluded_tests:
                 self.test_files.append(t)
