@@ -214,8 +214,8 @@ class SimpleTests:
 
         print_separator()
         print "Running tests now\n"
-        
-        failed_tests = []
+
+        failed_tests = {}
         for test in self.test_files:
             print "\n\nRunning test", self.__relative_path(test)
             cmd = [self.lily_command,
@@ -227,10 +227,9 @@ class SimpleTests:
                             stdout=sp.PIPE, stderr=sp.PIPE)
             (out, err) = lily.communicate()
             if lily.returncode != 0:
-                failed_tests.append(test)
+                failed_tests[test] = err
                 print "\n====== FAILED ======"
-                print err
-                print "---------------------"
+                print "See details at the end of test run."
             else:
                 print "------- OK! --------"
         print_separator()
@@ -238,9 +237,17 @@ class SimpleTests:
             len(failed_tests), len(self.test_files)), "\n"
         print_separator()
         if len(failed_tests) > 0:
-            print "Failed tests"
-            for test in failed_tests:
-                print " ", test
+            fail_list = [t for t in failed_tests]
+            fail_list.sort()
+            print "Failed tests:"
+            for test in fail_list:
+                print " ", self.__relative_path(test)
+
+            print "\nDetails for failed tests:\n"
+            for test in fail_list:
+                print " ", self.__relative_path(test)
+                print failed_tests[test]
+                print ""
             print_separator()
             sys.exit(1)
 
