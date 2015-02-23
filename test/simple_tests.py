@@ -66,6 +66,11 @@ class SimpleTests:
         self.lilypond_version = self.__lilypond_version()
         self.openlilylib_dir = self.__openlilylib_dir()
         self.relative_path_start_index = len(self.openlilylib_dir) + 1
+
+        self.lily_command_with_includes = [self.lily_command,
+                   "-I", self.openlilylib_dir,
+                   "-I", os.path.join(self.openlilylib_dir, "ly")]
+
         self.test_files = []
         self.included_tests = []
         self.excluded_tests = []
@@ -218,12 +223,7 @@ class SimpleTests:
         failed_tests = {}
         for test in self.test_files:
             print "\n\nRunning test", self.__relative_path(test)
-            cmd = [self.lily_command,
-                   "-I", self.openlilylib_dir,
-                   "-I", os.path.join(self.openlilylib_dir, "ly"),
-                   test]
-            print "Command: ", " ".join(cmd)
-            lily = sp.Popen(cmd,
+            lily = sp.Popen(self.lily_command_with_includes + [test],
                             stdout=sp.PIPE, stderr=sp.PIPE)
             (out, err) = lily.communicate()
             if lily.returncode != 0:
@@ -268,5 +268,8 @@ if __name__ == "__main__":
     print "Running LilyPond", tests.lilypond_version
     oll_dir = tests.openlilylib_dir
     print "OpenLilyLib directory: {}".format(oll_dir)
+
+    print "LilyPond command to be used:"
+    print " ".join(tests.lily_command_with_includes + ["<test-file>"])
 
     tests.run()
