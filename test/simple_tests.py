@@ -140,7 +140,7 @@ class SimpleTests:
 
         includes_fname = osp.join(dirname, self.test_includes_fname)
         if osp.exists(includes_fname):
-            print "Found includes file:", self.__relative_path(includes_fname)
+            print "Found includes file:\n", self.__relative_path(includes_fname)
             with open(includes_fname, 'r') as includes_lines:
                 inc_cnt = 0
                 for line in includes_lines.readlines():
@@ -154,7 +154,7 @@ class SimpleTests:
 
         excludes_fname = osp.join(dirname, self.test_excludes_fname)
         if osp.exists(excludes_fname):
-            print "Found excludes file:", self.__relative_path(excludes_fname)
+            print "Found excludes file:\n", self.__relative_path(excludes_fname)
             with open(excludes_fname, 'r') as excludes_lines:
                 exc_cnt = 0
                 for line in excludes_lines.readlines():
@@ -168,7 +168,7 @@ class SimpleTests:
                 print "Excluding {} files.".format(exc_cnt)
 
         if osp.basename(dirname) == self.examples_dirname:
-            print "\nEntering:", self.__relative_path(dirname)
+            print "\nEntering examples directory:\n", self.__relative_path(dirname)
             inc_cnt = 0
             for root, _, files in os.walk(dirname):
                 for f in files:
@@ -184,6 +184,9 @@ class SimpleTests:
 
 
     def __collect_tests(self):
+
+        print_separator()
+        print "Collecting test files\n"
         test_files = []
         for root, _, files in os.walk(self.openlilylib_dir):
             test_files.extend(self.__collect_all_in_dir(root))
@@ -201,7 +204,7 @@ class SimpleTests:
     def run(self):
         self.__collect_tests()
 
-        print "="*79, "\n"
+        print_separator()
         print "Found the following test files:"
         print "\n".join([self.__relative_path(t) for t in self.test_files])
         print "\n"
@@ -209,6 +212,9 @@ class SimpleTests:
         print "Potential test files explicitly excluded:"
         print "\n".join([self.__relative_path(t) for t in self.excluded_tests])
 
+        print_separator()
+        print "Running tests now\n"
+        
         failed_tests = []
         for test in self.test_files:
             print "\n\nRunning test", self.__relative_path(test)
@@ -227,16 +233,15 @@ class SimpleTests:
                 print "---------------------"
             else:
                 print "------- OK! --------"
-        print "="*79, "\n"
+        print_separator()
         print "  {} failed tests out of {}".format(
             len(failed_tests), len(self.test_files)), "\n"
-        print "="*79, "\n"
+        print_separator()
         if len(failed_tests) > 0:
             print "Failed tests"
             for test in failed_tests:
                 print " ", test
-            print ""
-            print "="*79
+            print_separator()
             sys.exit(1)
 
 def print_separator():
@@ -255,6 +260,6 @@ if __name__ == "__main__":
     print "================================\n"
     print "Running LilyPond", tests.lilypond_version
     oll_dir = tests.openlilylib_dir
-    print "OpenLilyLib directory: {}\n".format(oll_dir)
+    print "OpenLilyLib directory: {}".format(oll_dir)
 
     tests.run()
