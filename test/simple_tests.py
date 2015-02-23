@@ -164,8 +164,9 @@ class SimpleTests:
     def run(self):
         failed_tests = []
         all_tests = self.__collect_tests()
+        relative_path_start = len(self.openlilylib_dir) + 1
         for test in all_tests:
-            print "\n\nRunning test", test
+            print "\n\nRunning test", test[relative_path_start:]
             cmd = [self.lily_command,
                    "-I", self.openlilylib_dir,
                    "-I", os.path.join(self.openlilylib_dir, "ly"),
