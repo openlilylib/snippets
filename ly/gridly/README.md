@@ -137,13 +137,14 @@ whereas arguments surrounded by `[ ]` are optional.
    of the segment range or not listed in `<part-list>`, you will get
    an error.
 
- - `\gridSetSegmentTemplate <seg-sel> [ctx-mod] <music>` :
-   this function can be optionally called to set the defaults of the
-   given segment, for all voices.
+ - `\gridSetSegmentTemplate <segment-id> [ctx-mod] <music>` : this
+   function can be optionally called to set the defaults of the given
+   segment, for all parts. Here, the `<segment-id>` is a single
+   integer.
 
- - `\gridPutMusic <part> <seg-sel> [ctx-mod] <music>` :
+ - `\gridPutMusic <part> <segment-id> [ctx-mod] <music>` :
    this function inserts the given music in the given position of the
-   grid.
+   grid. Here, the `<segment-id>` is a single integer.
 
  - `\gridDisplay` takes no arguments, and prints to the console the
    current state of the grid, with `o` marking the inserted cells and
@@ -154,17 +155,21 @@ whereas arguments surrounded by `[ ]` are optional.
    then the duration specified there is used as a reference, otherwise
    the duration of the various parts are compared among themselves.
 
- - `\gridGetMusic <part> <seg-sel>` : returns the music associated
-   with the given part matching the given segment selector. The
-   segments are returned as a single music expression, thus can be
-   readily included in voices and staves.
+ - `\gridSetRange <seg-sel>`: sets the range of cells that should be
+   retrieved by `gridGetMusic` and `gridGetLyrics`. If this function
+   is not called, then the segment ragne defaults to `'all`.
 
- - `\gridGetLyrics <part> <seg-sel>` : the same as `\gridGetMusic`,
-   but returns the lyrics of all the segments, concatenated. Throws an
-   error some segment is missing lyrics.
+ - `\gridGetMusic <part>` : returns the music associated with the
+   given part matching segment selector specified with
+   `\gridSetRange`. The segments are returned as a single music
+   expression, thus can be readily included in voices and staves.
 
- - `\gridCompileCell <part> <seg-sel>` : compiles the given cell in a
-   standalone score
+ - `\gridGetLyrics <part>` : the same as `\gridGetMusic`, but returns
+   the lyrics of all the segments specified with `\gridSetRange`,
+   concatenated. Throws an error some segment is missing lyrics.
+
+ - `\gridCompileCell <part> <segment-id>` : compiles the given cell in
+   a standalone score. Here, the `<segment-id>` is a single integer.
 
 Usage
 -----
