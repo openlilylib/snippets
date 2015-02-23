@@ -50,6 +50,7 @@ class SimpleTests:
 
     test_list_fname = ".simple-tests"
     test_excludes_fname = ".simple-tests-exclude"
+    test_includes_fname = ".simple-tests-include"
     examples_dirname = "usage-examples"
 
     def __init__(self, cmd=None):
@@ -64,6 +65,10 @@ class SimpleTests:
 
         self.lilypond_version = self.__lilypond_version()
         self.openlilylib_dir = self.__openlilylib_dir()
+        self.test_files = []
+        self.included_tests = []
+        self.excluded_tests = []
+
 
     def clean_tmp_dir(self):
         if os.path.exists(self.tmp_lily_dir):
@@ -158,13 +163,19 @@ class SimpleTests:
             if osp.basename(root) == self.examples_dirname:
                 test_files.extend(self.__collect_all_in_dir(root))
 
-        return test_files
+        self.test_files = test_files
 
     def run(self):
+        self.__collect_tests()
+
+        print "="*79, "\n"
+        print "Found the following test files:"
+        print "\n".join(self.test_files)
+        print "\n"
+
         failed_tests = []
-        all_tests = self.__collect_tests()
         relative_path_start = len(self.openlilylib_dir) + 1
-        for test in all_tests:
+        for test in self.test_files:
             print "\n\nRunning test", test[relative_path_start:]
             cmd = [self.lily_command,
                    "-I", self.openlilylib_dir,
@@ -183,7 +194,7 @@ class SimpleTests:
                 print "------- OK! --------"
         print "="*79, "\n"
         print "  {} failed tests out of {}".format(
-            len(failed_tests), len(all_tests)), "\n"
+            len(failed_tests), len(self.test_files)), "\n"
         print "="*79, "\n"
         if len(failed_tests) > 0:
             print "Failed tests"
@@ -200,7 +211,12 @@ if __name__ == "__main__":
         tests = SimpleTests(sys.argv[1])
     else:
         tests = SimpleTests()
+
+    print "\n================================"
+    print "openLilyLib automated test suite"
+    print "================================\n"
     print "Running LilyPond", tests.lilypond_version
     oll_dir = tests.openlilylib_dir
-    print "OpenLilyLib directory", oll_dir
+    print "OpenLilyLib directory: {}\n".format(oll_dir)
+
     tests.run()
