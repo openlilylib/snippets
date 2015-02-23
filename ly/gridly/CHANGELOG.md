@@ -1,12 +1,13 @@
 GridLY - Changelog
 ==================
 
- * 0.4.0 - Development
+ * 0.4.0
 
-   This is a **breaking** release. The public interface changes
+   This is a **breaking** release. The public interface changed
 
    - The following public functions have been refactored
       - `gridTest` -> `gridCompileCell`
+      - Add function `gridSetRange`
       - `gridGetMusic` lost an argument. Now it accepts only the string
         specifying the part. The segment range should be set using the new
         function `gridSetRange`.
