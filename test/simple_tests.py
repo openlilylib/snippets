@@ -100,7 +100,6 @@ class SimpleTests:
     def is_runnable_file(self, fname):
         """Returns true if fname can be compiled with the lilypond version used"""
         if not (fname.endswith(".ly") or fname.endswith(".ily")):
-            print "Not a lilypond file, skipping", fname
             return False
         with open(fname, 'r') as fcontents:
             for line in fcontents.readlines():
