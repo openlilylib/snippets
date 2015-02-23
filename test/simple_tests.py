@@ -65,6 +65,7 @@ class SimpleTests:
 
         self.lilypond_version = self.__lilypond_version()
         self.openlilylib_dir = self.__openlilylib_dir()
+        self.relative_path_start_index = len(self.openlilylib_dir) + 1
         self.test_files = []
         self.included_tests = []
         self.excluded_tests = []
@@ -130,6 +131,10 @@ class SimpleTests:
         return osp.abspath(osp.join(script_path, os.pardir))
 
 
+    def __relative_path(self, fname):
+        """Return the filename relative to openlilylib_dir"""
+        return fname[self.relative_path_start_index:]
+
     def __collect_all_in_dir(self, dirname):
         test_files = []
         excluded_files = set()
@@ -174,9 +179,8 @@ class SimpleTests:
         print "\n"
 
         failed_tests = []
-        relative_path_start = len(self.openlilylib_dir) + 1
         for test in self.test_files:
-            print "\n\nRunning test", test[relative_path_start:]
+            print "\n\nRunning test", self.__relative_path(test)
             cmd = [self.lily_command,
                    "-I", self.openlilylib_dir,
                    "-I", os.path.join(self.openlilylib_dir, "ly"),
