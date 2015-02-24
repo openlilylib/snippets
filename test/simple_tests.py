@@ -69,7 +69,9 @@ class SimpleTests:
 
         self.lily_command_with_includes = [self.lily_command,
                    "-I", self.openlilylib_dir,
-                   "-I", os.path.join(self.openlilylib_dir, "ly")]
+                   "-I", os.path.join(self.openlilylib_dir, "ly"),
+                   "-o",
+                   os.path.join(self.openlilylib_dir, "test", "results")]
 
         self.test_files = []
         self.included_tests = []
