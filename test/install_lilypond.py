@@ -6,23 +6,37 @@ import os.path as osp
 import shutil
 import sys
 
-home_dir = os.getenv("HOME")
-install_root = "{}/.lilypond".format(home_dir)
+#############################################################
+# Load environment variables
+# at the same time checking if we're running on the CI server
 
+try:
+    is_ci = os.environ["CI"]
+    lily_platform = os.environ["LILY_PLATFORM"]
+    lily_version_key = os.environ["LILY_VERSION"]
+except:
+    sys.exit('\nScript can only be run in CI mode. Aborting\n')
+
+#########################
+# Configuration constants
+
+# Download site for LilyPond distributions
+binary_site = "http://download.linuxaudio.org/lilypond/binaries/"
+# String template for generating the LilyPond installation command
 lily_install_script = "lilypond-install-{}.sh"
 
-binary_site = "http://download.linuxaudio.org/lilypond/binaries/"
-ci_env_var = "CI"
+###########################
+# Determine the environment
+# This script doesn't have to be platform independent as it only runs on Linux machines
 
-lily_platform = os.environ["LILY_PLATFORM"]
-lily_platform_var = "LILY_PLATFORM"
-lily_version_var = "LILY_VERSION"
+# Home directory, serves as root for several paths
+home_dir = os.getenv("HOME")
+# base directory where two LilyPond versions are installed and cached
+install_root = "{}/.lilypond".format(home_dir)
 
 
-def is_ci_run():
-    """True if tests are running in continuous integration environment"""
-    return ci_env_var in os.environ and os.environ[ci_env_var] == "true"
-
+#################################
+# Functions doing the actual work
 
 def download_url(version):
     return "{}/{}/lilypond-{}.{}.sh".format(
@@ -73,11 +87,13 @@ def remove_previous_lilyponds(targets):
             shutil.rmtree(os.path.join(install_root, d))
 
 
+
+#########################
+# Actual script execution
+
 if __name__ == "__main__":
     print "LilyPond installation script for"
     print "automtated testing of openLilyLib on travis-ci.org\n"
-#    if not is_ci_run():
-#        sys.exit('Script can only be run in CI mode. Aborting')
     print "\nLoading LilyPond versions configuration"
     versions = load_lily_versions()
     print "Found versions:"
