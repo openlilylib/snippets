@@ -12,6 +12,16 @@ language: python
 # This will route the build job to the new Travis build environment
 sudo: false
 
+# Keep installed lilypond versions between builds
+cache:
+  directories:
+  - $HOME/.lilypond
+
+# Download and install LilyPond (stable and devel)
+# when not present already (cached between builds)
+install:
+  - python ./test/install_lilypond.py
+
 # This is the script that will actually run the tests
 script: ./test/simple_tests.py
 
@@ -24,7 +34,9 @@ script: ./test/simple_tests.py
 #                   much the only value that makes sense.
 #
 #   - LILY_VERSION is the version of lilypond with which we want to
-#                  run the tests
+#                  run the tests. "stable" and "devel" are placeholders
+#                  for values retrieved from test/LILYPOND-VERSIONS
+#                  during the installation and test scripts
 env:
-  - LILY_PLATFORM=linux-64 LILY_VERSION=2.18.2-1
-  - LILY_PLATFORM=linux-64 LILY_VERSION=2.19.15-1
+  - LILY_PLATFORM=linux-64 LILY_VERSION=stable
+  - LILY_PLATFORM=linux-64 LILY_VERSION=devel
