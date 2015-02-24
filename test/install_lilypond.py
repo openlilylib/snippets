@@ -14,7 +14,6 @@ import collections
 try:
     is_ci = os.environ["CI"]
     lily_platform = os.environ["LILY_PLATFORM"]
-    lily_version_key = os.environ["LILY_VERSION"]
 except:
     sys.exit('\nScript can only be run in CI mode. Aborting\n')
 
@@ -26,7 +25,7 @@ binary_site = "http://download.linuxaudio.org/lilypond/binaries/"
 # File configuring the requested LilyPond versions
 lily_versions_file = "./test/LILYPOND-VERSIONS"
 # String template for generating the LilyPond installation command
-lily_install_script = "lilypond-install-{}.sh"
+lily_install_script_tmpl = "lilypond-install-{}.sh"
 
 ###########################
 # Determine the environment
@@ -42,11 +41,12 @@ install_root = "{}/.lilypond".format(home_dir)
 # Functions doing the actual work
 
 def download_url(version):
-    """Format a string representing the URL to downolad the requested LilyPond distribution"""
+    """Format a string representing the URL to download the requested LilyPond distribution"""
     return "{}/{}/lilypond-{}.{}.sh".format(
         binary_site, lily_platform, version, lily_platform)
 
 def install_distributions(versions):
+    """Download and install LilyPond versions if they are not cached"""
     for v in versions:
         vstring = versions[v]
         lilypond_cmd = os.path.join(install_root,
@@ -55,10 +55,10 @@ def install_distributions(versions):
         try:
             print "\nChecking LilyPond presence with {}\n".format(lilypond_cmd)
             sp.check_call([lilypond_cmd, '--version'])
-            print "LilyPond {} already installed".format(vstring)
+            print "LilyPond {} is already installed".format(vstring)
         except:
             print "Downloading and installing LilyPond {}".format(vstring)
-            install_script = lily_install_script.format(vstring)
+            install_script = lily_install_script_tmpl.format(vstring)
             sp.check_call(
                 ["wget", "-O",
                  install_script,
