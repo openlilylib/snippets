@@ -34,7 +34,9 @@ script: ./test/simple_tests.py
 #                   much the only value that makes sense.
 #
 #   - LILY_VERSION is the version of lilypond with which we want to
-#                  run the tests
+#                  run the tests. "stable" and "devel" are placeholders
+#                  for values retrieved from test/LILYPOND-VERSIONS
+#                  during the installation and test scripts
 env:
   - LILY_PLATFORM=linux-64 LILY_VERSION=stable
   - LILY_PLATFORM=linux-64 LILY_VERSION=devel

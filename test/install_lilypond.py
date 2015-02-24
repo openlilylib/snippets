@@ -5,6 +5,7 @@ import os
 import os.path as osp
 import shutil
 import sys
+import collections
 
 #############################################################
 # Load environment variables
@@ -22,6 +23,8 @@ except:
 
 # Download site for LilyPond distributions
 binary_site = "http://download.linuxaudio.org/lilypond/binaries/"
+# File configuring the requested LilyPond versions
+lily_versions_file = "./test/LILYPOND-VERSIONS"
 # String template for generating the LilyPond installation command
 lily_install_script = "lilypond-install-{}.sh"
 
@@ -39,6 +42,7 @@ install_root = "{}/.lilypond".format(home_dir)
 # Functions doing the actual work
 
 def download_url(version):
+    """Format a string representing the URL to downolad the requested LilyPond distribution"""
     return "{}/{}/lilypond-{}.{}.sh".format(
         binary_site, lily_platform, version, lily_platform)
 
@@ -65,8 +69,8 @@ def install_distributions(versions):
                 "--batch"])
 
 def load_lily_versions():
-    versions = {}
-    with open("./test/LILYPOND-VERSIONS", 'r') as versions_file:
+    versions = collections.OrderedDict()
+    with open(lily_versions_file, 'r') as versions_file:
         for line in versions_file.readlines():
             version_line = line.strip()
             if not version_line.startswith("#") and len(version_line) > 0:
