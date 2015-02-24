@@ -42,11 +42,6 @@ class SimpleTests:
     lily_platform_var = "LILY_PLATFORM"
     lily_version_var = "LILY_VERSION"
 
-    tmp_lily_dir = "/tmp/lilypond"
-
-    lily_install_script = "/tmp/lilypond-install.sh"
-
-    binary_site = "http://download.linuxaudio.org/lilypond/binaries/"
 
     test_list_fname = ".simple-tests"
     test_excludes_fname = ".simple-tests-exclude"
@@ -54,9 +49,7 @@ class SimpleTests:
     examples_dirname = "usage-examples"
 
     def __init__(self, cmd=None):
-        self.clean_tmp_dir()
         if self.is_ci_run():
-            self.__install_distribution()
             self.lily_command = osp.join(self.tmp_lily_dir, "bin/lilypond")
         elif not cmd == None:
             self.lily_command = cmd
@@ -74,7 +67,6 @@ class SimpleTests:
         self.test_files = []
         self.included_tests = []
         self.excluded_tests = []
-
 
     def clean_results_dir(self):
         results_dir = os.path.join(self.openlilylib_dir,
@@ -94,23 +86,6 @@ class SimpleTests:
     def is_ci_run(self):
         """True if tests are running in continuous integration environment"""
         return self.ci_env_var in os.environ and os.environ[self.ci_env_var] == "true"
-
-    def __download_url(self):
-        if not (self.lily_platform_var in os.environ
-                and self.lily_version_var in os.environ):
-            raise KeyError("{} and {} must be set".format(
-                self.lily_platform_var, self.lily_version_var))
-        platform = os.environ[self.lily_platform_var]
-        version = os.environ[self.lily_version_var]
-        return "{}/{}/lilypond-{}.{}.sh".format(
-            self.binary_site, platform, version, platform)
-
-    def __install_distribution(self):
-        sp.check_call(
-            ["wget", "-O", self.lily_install_script, self.__download_url()])
-        sp.check_call(["sh", self.lily_install_script,
-                       "--prefix", self.tmp_lily_dir,
-                       "--batch"])
 
     def __lilypond_version(self):
         lily = sp.Popen([self.lily_command, "-v"], stdout=sp.PIPE, stderr=sp.PIPE)
@@ -274,6 +249,10 @@ def print_separator():
     print "="*79, "\n"
 
 if __name__ == "__main__":
+
+    print "Running tests is temporarily disabled as we only want to check the install part"
+    sys.exit(0)
+    
     tests = None
     if len(sys.argv) > 1:
         tests = SimpleTests(sys.argv[1])
