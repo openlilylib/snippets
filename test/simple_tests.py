@@ -69,14 +69,21 @@ class SimpleTests:
 
         self.lily_command_with_includes = [self.lily_command,
                    "-I", self.openlilylib_dir,
-                   "-I", os.path.join(self.openlilylib_dir, "ly"),
-                   "-o",
-                   os.path.join(self.openlilylib_dir, "test", "results")]
+                   "-I", os.path.join(self.openlilylib_dir, "ly")]
 
         self.test_files = []
         self.included_tests = []
         self.excluded_tests = []
 
+
+    def clean_results_dir(self):
+        results_dir = os.path.join(self.openlilylib_dir,
+                                   "test",
+                                   "results",
+                                   self.lilypond_version)
+        if os.path.exists(results_dir):
+            print "Removing result dir:",results_dir
+            shutil.rmtree(results_dir)
 
     def clean_tmp_dir(self):
         if os.path.exists(self.tmp_lily_dir):
@@ -225,7 +232,16 @@ class SimpleTests:
         failed_tests = {}
         for test in self.test_files:
             print "\n\nRunning test", self.__relative_path(test)
-            lily = sp.Popen(self.lily_command_with_includes + [test],
+            test_dir = os.path.join(self.openlilylib_dir,
+                                    "test",
+                                    "results",
+                                    self.lilypond_version,
+                                    os.path.dirname(self.__relative_path(test)))
+            if not os.path.exists(test_dir):
+                os.makedirs(test_dir)
+            lily = sp.Popen(self.lily_command_with_includes + ['-o',
+                                                               test_dir,
+                                                               test],
                             stdout=sp.PIPE, stderr=sp.PIPE)
             (out, err) = lily.communicate()
             if lily.returncode != 0:
@@ -274,4 +290,6 @@ if __name__ == "__main__":
     print "LilyPond command to be used:"
     print " ".join(tests.lily_command_with_includes + ["<test-file>"])
 
+    print "\nClear previous test results (if any)."
+    tests.clean_results_dir()
     tests.run()
