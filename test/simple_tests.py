@@ -50,6 +50,7 @@ class SimpleTests:
 
     test_list_fname = ".simple-tests"
     test_excludes_fname = ".simple-tests-exclude"
+    test_includes_fname = ".simple-tests-include"
     examples_dirname = "usage-examples"
 
     def __init__(self, cmd=None):
@@ -64,6 +65,16 @@ class SimpleTests:
 
         self.lilypond_version = self.__lilypond_version()
         self.openlilylib_dir = self.__openlilylib_dir()
+        self.relative_path_start_index = len(self.openlilylib_dir) + 1
+
+        self.lily_command_with_includes = [self.lily_command,
+                   "-I", self.openlilylib_dir,
+                   "-I", os.path.join(self.openlilylib_dir, "ly")]
+
+        self.test_files = []
+        self.included_tests = []
+        self.excluded_tests = []
+
 
     def clean_tmp_dir(self):
         if os.path.exists(self.tmp_lily_dir):
@@ -100,7 +111,6 @@ class SimpleTests:
     def is_runnable_file(self, fname):
         """Returns true if fname can be compiled with the lilypond version used"""
         if not (fname.endswith(".ly") or fname.endswith(".ily")):
-            print "Not a lilypond file, skipping", fname
             return False
         with open(fname, 'r') as fcontents:
             for line in fcontents.readlines():
@@ -126,73 +136,124 @@ class SimpleTests:
         return osp.abspath(osp.join(script_path, os.pardir))
 
 
+    def __relative_path(self, fname):
+        """Return the filename relative to openlilylib_dir"""
+        return fname[self.relative_path_start_index:]
+
     def __collect_all_in_dir(self, dirname):
         test_files = []
-        excluded_files = set()
+
+        includes_fname = osp.join(dirname, self.test_includes_fname)
+        if osp.exists(includes_fname):
+            print "Found includes file:\n", self.__relative_path(includes_fname)
+            with open(includes_fname, 'r') as includes_lines:
+                inc_cnt = 0
+                for line in includes_lines.readlines():
+                    included_fname = line.strip()
+                    if not line.startswith("#") and len(included_fname) > 0:
+                        inc_cnt += 1
+                        to_include = osp.abspath(
+                            osp.join(dirname, included_fname))
+                        self.included_tests.append(to_include)
+                print "Including {} files.".format(inc_cnt)
+
         excludes_fname = osp.join(dirname, self.test_excludes_fname)
         if osp.exists(excludes_fname):
-            print "Found excludes file:", excludes_fname
+            print "Found excludes file:\n", self.__relative_path(excludes_fname)
             with open(excludes_fname, 'r') as excludes_lines:
+                exc_cnt = 0
                 for line in excludes_lines.readlines():
                     excluded_fname = line.strip()
                     if not line.startswith("#") and len(excluded_fname) > 0:
+                        exc_cnt += 1
                         to_exclude = osp.abspath(
                             osp.join(dirname, excluded_fname))
-                        print "Excluding", to_exclude
-                        excluded_files.add(to_exclude)
+                        if not to_exclude in self.excluded_tests:
+                            self.excluded_tests.append(to_exclude)
+                print "Excluding {} files.".format(exc_cnt)
 
-        for root, _, files in os.walk(dirname):
-            for f in files:
-                test_fname = osp.abspath(osp.join(root, f))
-                if self.is_runnable_file(test_fname) \
-                   and not test_fname in excluded_files:
-
-                    test_files.append(test_fname)
+        if osp.basename(dirname) == self.examples_dirname:
+            print "\nEntering examples directory:\n", self.__relative_path(dirname)
+            inc_cnt = 0
+            for root, _, files in os.walk(dirname):
+                for f in files:
+                    test_fname = osp.abspath(osp.join(root, f))
+                    if self.is_runnable_file(test_fname) \
+                            and not test_fname in self.excluded_tests:
+                        inc_cnt += 1
+                        test_files.append(test_fname)
+            print "Found {} files.".format(inc_cnt)
 
         return test_files
 
 
 
     def __collect_tests(self):
+
+        print_separator()
+        print "Collecting test files\n"
         test_files = []
         for root, _, files in os.walk(self.openlilylib_dir):
-            if osp.basename(root) == self.examples_dirname:
-                test_files.extend(self.__collect_all_in_dir(root))
+            test_files.extend(self.__collect_all_in_dir(root))
 
-        return test_files
+        # check again for excluded files
+        # (as the exclude file may be in another directory)
+        for i in self.included_tests:
+            if not i in self.excluded_tests:
+                self.test_files.append(i)
+        for t in test_files:
+            if not t in self.excluded_tests:
+                self.test_files.append(t)
+
 
     def run(self):
-        failed_tests = []
-        all_tests = self.__collect_tests()
-        for test in all_tests:
-            print "\n\nRunning test", test
-            cmd = [self.lily_command,
-                   "-I", self.openlilylib_dir,
-                   "-I", os.path.join(self.openlilylib_dir, "ly"),
-                   test]
-            print "Command: ", " ".join(cmd)
-            lily = sp.Popen(cmd,
+        self.__collect_tests()
+
+        print_separator()
+        print "Found the following test files:"
+        print "\n".join([self.__relative_path(t) for t in self.test_files])
+        print "\n"
+
+        print "Potential test files explicitly excluded:"
+        print "\n".join([self.__relative_path(t) for t in self.excluded_tests])
+
+        print_separator()
+        print "Running tests now\n"
+
+        failed_tests = {}
+        for test in self.test_files:
+            print "\n\nRunning test", self.__relative_path(test)
+            lily = sp.Popen(self.lily_command_with_includes + [test],
                             stdout=sp.PIPE, stderr=sp.PIPE)
             (out, err) = lily.communicate()
             if lily.returncode != 0:
-                failed_tests.append(test)
+                failed_tests[test] = err
                 print "\n====== FAILED ======"
-                print err
-                print "---------------------"
+                print "See details at the end of test run."
             else:
                 print "------- OK! --------"
-        print "="*79, "\n"
+        print_separator()
         print "  {} failed tests out of {}".format(
-            len(failed_tests), len(all_tests)), "\n"
-        print "="*79, "\n"
+            len(failed_tests), len(self.test_files)), "\n"
+        print_separator()
         if len(failed_tests) > 0:
-            print "Failed tests"
-            for test in failed_tests:
-                print " ", test
-            print ""
-            print "="*79
+            fail_list = [t for t in failed_tests]
+            fail_list.sort()
+            print "Failed tests:"
+            for test in fail_list:
+                print " ", self.__relative_path(test)
+
+            print "\nDetails for failed tests:\n"
+            for test in fail_list:
+                print " ", self.__relative_path(test)
+                print failed_tests[test]
+                print ""
+            print_separator()
             sys.exit(1)
 
+def print_separator():
+    print ""
+    print "="*79, "\n"
 
 if __name__ == "__main__":
     tests = None
@@ -200,7 +261,15 @@ if __name__ == "__main__":
         tests = SimpleTests(sys.argv[1])
     else:
         tests = SimpleTests()
+
+    print "\n================================"
+    print "openLilyLib automated test suite"
+    print "================================\n"
     print "Running LilyPond", tests.lilypond_version
     oll_dir = tests.openlilylib_dir
-    print "OpenLilyLib directory", oll_dir
+    print "OpenLilyLib directory: {}".format(oll_dir)
+
+    print "LilyPond command to be used:"
+    print " ".join(tests.lily_command_with_includes + ["<test-file>"])
+
     tests.run()
