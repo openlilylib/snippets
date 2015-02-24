@@ -122,7 +122,7 @@
 ; set edition tags
 (define-public (set-editions! ed) #f)
 ; add edition modification
-(define-public (add-edmod edition takt pos path mod) #f)
+(define-public (add-edmod parser edition takt pos path mod) #f)
 ; create edition engraver with path
 (define-public (edition-engraver tag-path) #f)
 ; call proc with arg edition-engraver for all active
@@ -145,7 +145,7 @@
   (set! editions (lambda () (if (list? edition-list) edition-list '())))
   (set! set-editions! (lambda (eds) (if (list? eds) (set! edition-list eds) (ly:error "list expected: ~A" eds))))
   (set! add-edmod
-        (lambda (edition takt pos path modm)
+        (lambda (parser edition takt pos path modm)
           (let* ((edition (if (string? edition) (string->symbol edition) edition))
                  (path `(,edition ,takt ,pos ,@path))
                  (mods (tree-get mod-tree path)))
@@ -529,7 +529,7 @@
     (string-or-symbol? integer? frac-or-mom? list? music-or-contextmod?)
     "Add modification to edition @ measure moment"
     (if (fraction? pos)(set! pos (ly:make-moment (car pos)(cdr pos))))
-    (add-edmod edition takt pos (create-music-path #f path) mod)
+    (add-edmod parser edition takt pos (create-music-path #f path) mod)
     ))
 
 
@@ -555,7 +555,7 @@
          (if (fraction? pos)(set! pos (fraction->moment pos)))
          (if (rational? pos)
              (set! pos (ly:make-moment (numerator pos)(denominator pos))))
-         (add-edmod edition takt pos (create-music-path #f path) mod)
+         (add-edmod parser edition takt pos (create-music-path #f path) mod)
          )) mposl)
     ))
 
@@ -577,7 +577,7 @@
             (if (fraction? pos)(set! pos (fraction->moment pos)))
             (if (rational? pos)
                 (set! pos (ly:make-moment (numerator pos)(denominator pos))))
-            (add-edmod edition takt pos path mod)
+            (add-edmod parser edition takt pos path mod)
             ))) mposl)
       )))
 
