@@ -7,6 +7,8 @@ import shutil
 import sys
 import collections
 
+import common_functions
+
 #############################################################
 # Load environment variables
 # at the same time checking if we're running on the CI server
@@ -22,8 +24,6 @@ except:
 
 # Download site for LilyPond distributions
 binary_site = "http://download.linuxaudio.org/lilypond/binaries/"
-# File configuring the requested LilyPond versions
-lily_versions_file = "./test/LILYPOND-VERSIONS"
 # String template for generating the LilyPond installation command
 lily_install_script_tmpl = "lilypond-install-{}.sh"
 
@@ -68,18 +68,6 @@ def install_distributions(versions):
                 os.path.join(install_root, vstring),
                 "--batch"])
 
-def load_lily_versions():
-    """Read requested LilyPond versions from a file.
-       Return an ordered dictionary."""
-    versions = collections.OrderedDict()
-    with open(lily_versions_file, 'r') as versions_file:
-        for line in versions_file.readlines():
-            version_line = line.strip()
-            if not version_line.startswith("#") and len(version_line) > 0:
-                target, version = version_line.split('=')
-                versions[target] = version
-    return versions
-
 
 def remove_previous_lilyponds(targets):
     """Check the requested LilyPond versions against the
@@ -105,7 +93,7 @@ if __name__ == "__main__":
     print "Check cached LilyPond installations."
 
     print "\nLoading configuration ..."
-    versions = load_lily_versions()
+    versions = common_functions.load_lily_versions()
     print "Requested LilyPond versions:"
     for v in versions:
         print "{} = {}".format(v, versions[v])
