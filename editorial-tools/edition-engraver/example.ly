@@ -6,19 +6,20 @@
 % prepare some mods for an edition fullscore
 
 % try rehearsal marks
-\editionMod fullscore 3 2/4 my.test.Staff.A \mark \markup \with-color #blue \bold "special Mark"
-\editionMod fullscore 5 0/4 my.test.Staff.A \mark \default
-\editionMod fullscore 5 2/4 my.test.Staff.A \mark \markup \with-color #blue \bold "X"
-\editionMod fullscore 5 2/4 my.test.Staff.A \once \override RehearsalMark.extra-offset.extra-offset = #'(1 . 4)
-\editionMod fullscore 7 0/4 my.test.Staff.A \mark \default
+\editionMod fullscore 3 2/4 my.test \mark \markup \with-color #blue \bold "special Mark"
+\editionMod fullscore 5 0/4 my.test \mark \default
+% Mark is moved, if we don't address Staff (why? it is called more than once?)
+\editionMod fullscore 5 2/4 my.test.Staff \mark \markup \with-color #blue \bold "X"
+\editionMod fullscore 5 2/4 my.test \once \override RehearsalMark.extra-offset.extra-offset = #'(1 . 4)
+\editionMod fullscore 7 0/4 my.test \mark \default
 
 % color the notehead red on the second quarter in the second measure
-\editionMod fullscore 2 1/4 my.test.Staff.A \once \override NoteHead #'color = #red
+\editionMod fullscore 2 1/4 my.test.alot \once \override NoteHead #'color = #red
 % destroy the slur starting on the second quarter in the first measure
 \editionMod fullscore 1 2/4 my.test.Staff.A \shape #'((0 . 0)(0 . 1)(0 . -1)(0 . 0)) Slur
 
 % add a break to several times
-\editionMMod fullscore #'((2 1/4)) my.test.Score.A { \bar "" \break } % the empty bar permits break inside measure
+\editionMMod fullscore #'((2 1/4)) my.test.Score { \bar "" \break } % the empty bar permits break inside measure
 % add an annotation in form of a TextScript
 \editionMod fullscore 2 0/4 my.test.alot.Melody -\markup { \with-color #red "what's that?" }
 
@@ -30,7 +31,7 @@
 % editionMMod is still defined but should be marked deprecated
 %\editionMMod fullscore #'((1 1/4)(1 3/4)(2 2/4)) my.test.Staff.A \once \override NoteHead.color = #green
 % editionModList is the method, which I will continue to work on
-\editionModList fullscore  my.test.Staff.A \once \override NoteHead.color = #green #'((1 1/4)(1 3/4)(2 2/4))
+\editionModList fullscore  my.test.alot \once \override NoteHead.color = #green #'((1 1/4)(1 3/4)(2 2/4))
 
 % this places the system, starting with measure 7, absolutely
 \editionMod fullscore 7 0/1 my.test.Score.A {

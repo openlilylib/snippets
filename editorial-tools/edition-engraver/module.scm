@@ -253,12 +253,14 @@
                                   (if (and (string? ctxid)(> (string-length ctxid) 0))
                                       (let ((ctxid (string->symbol ctxid)))
                                         `(
-                                           (,edition ,takt ,pos ,@tag-path ,ctxname ,ctxid)
+                                           (,edition ,takt ,pos ,@tag-path)
                                            (,edition ,takt ,pos ,@tag-path ,ctxid)
                                            (,edition ,takt ,pos ,@tag-path ,ctxname)
+                                           (,edition ,takt ,pos ,@tag-path ,ctxname ,ctxid)
                                            (,edition ,takt ,pos ,@tag)
                                            ))
                                       `(
+                                         (,edition ,takt ,pos ,@tag-path ,ctxname ,ctxid)
                                          (,edition ,takt ,pos ,@tag-path ,ctxname)
                                          (,edition ,takt ,pos ,@tag)
                                          )
