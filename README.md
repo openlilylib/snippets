@@ -1,3 +1,4 @@
+Build Status of `openLilyLib` on [Travis](https://travis-ci.org/openlilylib/openlilylib)  
 [![Build Status](https://travis-ci.org/openlilylib/openlilylib.svg?branch=master)](https://travis-ci.org/openlilylib/openlilylib)
 
 What's this?
