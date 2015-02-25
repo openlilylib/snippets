@@ -17,6 +17,7 @@ from common_functions import print_separator, home_dir, install_root
 try:
     is_ci = os.environ["CI"]
     lily_platform = os.environ["LILY_PLATFORM"]
+    lily_version = os.environ["LILY_VERSION"]
 except:
     sys.exit('\nScript can only be run in CI mode. Aborting\n')
 
@@ -32,33 +33,31 @@ lily_install_script_tmpl = "lilypond-install-{}.sh"
 #################################
 # Functions doing the actual work
 
-def download_url(version):
+def download_url():
     """Format a string representing the URL to download the requested LilyPond distribution"""
-    return "{}/{}/lilypond-{}.{}.sh".format(
-        binary_site, lily_platform, version, lily_platform)
+    return "{}{}/lilypond-{}.{}.sh".format(
+        binary_site, lily_platform, lily_version, lily_platform)
 
-def install_distributions(versions):
-    """Download and install LilyPond versions if they are not cached"""
-    for v in versions:
-        vstring = versions[v]
-        lilypond_cmd = os.path.join(install_root,
-                                    vstring,
-                                    "bin/lilypond")
-        try:
-            print "\nChecking LilyPond presence with {}\n".format(lilypond_cmd)
-            sp.check_call([lilypond_cmd, '--version'])
-            print "LilyPond {} is already installed".format(vstring)
-        except:
-            print "Downloading and installing LilyPond {}".format(vstring)
-            install_script = lily_install_script_tmpl.format(vstring)
-            sp.check_call(
-                ["wget", "-O",
-                 install_script,
-                 download_url(vstring)])
-            sp.check_call(["sh", install_script,
-                "--prefix",
-                os.path.join(install_root, vstring),
-                "--batch"])
+def install_distribution():
+    """Download and install LilyPond version if not cached"""
+    lilypond_cmd = os.path.join(install_root,
+                                lily_version,
+                                "bin/lilypond")
+    try:
+        print "\nChecking LilyPond presence with {}\n".format(lilypond_cmd)
+        sp.check_call([lilypond_cmd, '--version'])
+        print "LilyPond {} is already installed in cache, continuing with test script.".format(lily_version)
+    except:
+        print "Downloading and installing LilyPond {}".format(lily_version)
+        install_script = lily_install_script_tmpl.format(lily_version)
+        sp.check_call(
+            ["wget", "-O",
+             install_script,
+             download_url()])
+        sp.check_call(["sh", install_script,
+                       "--prefix",
+                       os.path.join(install_root, lily_version),
+                       "--batch"])
 
 
 def remove_previous_lilyponds(targets):
@@ -82,16 +81,12 @@ def remove_previous_lilyponds(targets):
 # Actual script execution
 
 if __name__ == "__main__":
-    print "Check cached LilyPond installations."
+    print_separator()
+    print "============================="
+    print "openLilyLib automated testing"
+    print "============================="
+    print "Step 1:"
+    print "check LilyPond installation."
+    print "Requested LilyPond version: {}".format(lily_version)
 
-    print "\nLoading configuration ..."
-    versions = common_functions.load_lily_versions()
-    print "Requested LilyPond versions:"
-    for v in versions:
-        print "{} = {}".format(v, versions[v])
-
-    # Clean up
-    remove_previous_lilyponds(versions)
-
-    # Install LilyPonds if necessary
-    install_distributions(versions)
+    install_distribution()

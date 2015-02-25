@@ -38,5 +38,5 @@ script: ./test/simple_tests.py
 #                  for values retrieved from test/LILYPOND-VERSIONS
 #                  during the installation and test scripts
 env:
-  - LILY_PLATFORM=linux-64 LILY_VERSION=stable
-  - LILY_PLATFORM=linux-64 LILY_VERSION=devel
+  - LILY_PLATFORM=linux-64 LILY_VERSION=2.18.2-1
+  - LILY_PLATFORM=linux-64 LILY_VERSION=2.19.15-1
