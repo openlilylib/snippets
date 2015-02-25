@@ -1,0 +1,7 @@
+# LilyPond versions to be used for automated test builds on Travis
+
+# Current stable version
+stable=2.18.2-1
+
+# Current development version
+devel=2.19.15-1
