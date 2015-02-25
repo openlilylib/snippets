@@ -269,8 +269,8 @@ class SimpleTests:
 
 if __name__ == "__main__":
 
-#    print "Running tests is temporarily disabled as we only want to check the install part"
-#    sys.exit(0)
+    print "\nRunning tests is temporarily disabled as we only want to check the install part"
+    sys.exit(0)
 
     # instantiate Tests object
     if len(sys.argv) > 1:
