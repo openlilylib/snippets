@@ -40,6 +40,7 @@ class SimpleTests:
 
     """
 
+    # configuration of variable names
     ci_env_var = "CI"
     lily_version_var = "LILY_VERSION"
 
@@ -58,7 +59,6 @@ class SimpleTests:
             try:
                 self.lilypond_version = os.environ[self.lily_version_var]
                 self.lily_command = osp.join(install_root,
-                                             self.lilypond_version,
                                              "bin",
                                              "lilypond")
             except KeyError:
@@ -79,7 +79,6 @@ class SimpleTests:
         self.failed_tests = {}
 
 
-
     def clean_results_dir(self):
         """Remove any existing results directory,
            taking LilyPond version into account."""
@@ -92,9 +91,11 @@ class SimpleTests:
             print "Removing result dir:",results_dir
             shutil.rmtree(results_dir)
 
+
     def is_ci_run(self):
         """True if tests are running in continuous integration environment"""
         return self.ci_env_var in os.environ and os.environ[self.ci_env_var] == "true"
+
 
     def __lilypond_version(self):
         """Determine the LilyPond version actually run by the command self.lily_command"""
@@ -102,9 +103,11 @@ class SimpleTests:
         version_line = lily.communicate()[0].splitlines()[0]
         return re.search(r"\d+\.\d+\.\d+", version_line).group(0)
 
+
     def is_lilypond_file(self, fname):
         """Return true if filename ends with one of the registered file extensions."""
         return fname.endswith('.ly') or fname.endswith('.ily')
+
 
     def is_runnable_file(self, fname):
         """Returns true if fname can be compiled with the lilypond version used"""
@@ -129,15 +132,18 @@ class SimpleTests:
         print "**WARNING** No version line found, skipping", fname
         return False
 
+
     def __openlilylib_dir(self):
         """Return the root directory of openLilyLib.
            It's the parent directory of the script."""
         script_path = osp.abspath(osp.dirname(osp.realpath(__file__)))
         return osp.abspath(osp.join(script_path, os.pardir))
 
+
     def __relative_path(self, fname):
         """Return the filename relative to openlilylib_dir"""
         return fname[len(self.openlilylib_dir) + 1:]
+
 
     def __read_include_exclude_file(self, fname):
         """Parse a include or exclude file and return
@@ -153,6 +159,7 @@ class SimpleTests:
                         result.append(osp.abspath(
                             osp.join(osp.dirname(fname), line)))
         return result
+
 
     def __collect_all_in_dir(self, dirname):
         """Read contents of a directory and collect test files.
@@ -201,10 +208,12 @@ class SimpleTests:
         print "Potential test files explicitly excluded:"
         print "\n".join([self.__relative_path(t) for t in self.excluded_tests])
 
+
     def print_introduction(self):
         """Print some useful output about the testing environment"""
 
-        print "\n================================"
+        print "\n================================"            # if test failed, add it to the list of failed tests to be reported later
+
         print "openLilyLib automated test suite"
         print "================================\n"
 
@@ -240,6 +249,7 @@ class SimpleTests:
             print_separator()
             sys.exit(1)
 
+
     def run(self):
         """Run the tests collected earlier"""
         print_separator()
@@ -259,18 +269,18 @@ class SimpleTests:
                                                                test],
                             stdout=sp.PIPE, stderr=sp.PIPE)
             (out, err) = lily.communicate()
-            if lily.returncode != 0:
+
+            if lily.returncode == 0:
+                print "------- OK! --------"
+            else:
+                # if test failed, add it to the list of failed tests to be reported later
                 self.failed_tests[test] = err
                 print "\n====== FAILED ======"
                 print "See details at the end of test run."
-            else:
-                print "------- OK! --------"
         print_separator()
 
+# main program flow
 if __name__ == "__main__":
-
-    print "\nRunning tests is temporarily disabled as we only want to check the install part"
-    sys.exit(0)
 
     # instantiate Tests object
     if len(sys.argv) > 1:

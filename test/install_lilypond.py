@@ -27,7 +27,7 @@ except:
 # Download site for LilyPond distributions
 binary_site = "http://download.linuxaudio.org/lilypond/binaries/"
 # String template for generating the LilyPond installation command
-lily_install_script_tmpl = "lilypond-install-{}.sh"
+lily_install_script = "lilypond-install.sh"
 
 
 #################################
@@ -41,41 +41,22 @@ def download_url():
 def install_distribution():
     """Download and install LilyPond version if not cached"""
     lilypond_cmd = os.path.join(install_root,
-                                lily_version,
                                 "bin/lilypond")
+    print "\nChecking LilyPond presence with {}\n".format(lilypond_cmd)
     try:
-        print "\nChecking LilyPond presence with {}\n".format(lilypond_cmd)
         sp.check_call([lilypond_cmd, '--version'])
         print "LilyPond {} is already installed in cache, continuing with test script.".format(lily_version)
     except:
-        print "Downloading and installing LilyPond {}".format(lily_version)
-        install_script = lily_install_script_tmpl.format(lily_version)
+        print "LilyPond {} is not installed yet.".format(lily_version)
+        print "Downloading and installing now"
         sp.check_call(
             ["wget", "-O",
-             install_script,
+             lily_install_script,
              download_url()])
-        sp.check_call(["sh", install_script,
+        sp.check_call(["sh", lily_install_script,
                        "--prefix",
-                       os.path.join(install_root, lily_version),
+                       install_root,
                        "--batch"])
-
-
-def remove_previous_lilyponds(targets):
-    """Check the requested LilyPond versions against the
-       cached ones on the server. If an installed version is
-       found that isn't used for testing it will be removed.
-       This is our 'garbage collection' for new LilyPond versions."""
-    if not os.path.exists(install_root):
-        os.mkdir(install_root)
-        return
-    installed_dirs = os.listdir(install_root)
-    target_dirs = [targets[d] for d in targets]
-    for d in installed_dirs:
-        if not d in target_dirs:
-            print "Remove obsolete LilyPond installation {}\n".format(d)
-            shutil.rmtree(os.path.join(install_root, d))
-
-
 
 #########################
 # Actual script execution
