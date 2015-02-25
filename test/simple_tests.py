@@ -7,7 +7,7 @@ import shutil
 import sys
 import re
 
-from common_functions import print_separator
+from common_functions import print_separator, home_dir, install_root
 
 
 class SimpleTests:

@@ -1,9 +1,20 @@
 #!/usr/bin/env python
 
+import os
 import collections
 
 # File configuring the requested LilyPond versions
 lily_versions_file = "./test/LILYPOND-VERSIONS"
+
+###########################
+# Determine the environment
+# This script doesn't have to be platform independent as it only runs on Linux machines
+
+# Home directory, serves as root for several paths
+home_dir = os.getenv("HOME")
+# base directory where two LilyPond versions are installed and cached
+install_root = "{}/.lilypond".format(home_dir)
+
 
 def load_lily_versions():
     """Read requested LilyPond versions from a file.

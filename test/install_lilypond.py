@@ -8,7 +8,7 @@ import sys
 import collections
 
 import common_functions
-from common_functions import print_separator
+from common_functions import print_separator, home_dir, install_root
 
 #############################################################
 # Load environment variables
@@ -27,15 +27,6 @@ except:
 binary_site = "http://download.linuxaudio.org/lilypond/binaries/"
 # String template for generating the LilyPond installation command
 lily_install_script_tmpl = "lilypond-install-{}.sh"
-
-###########################
-# Determine the environment
-# This script doesn't have to be platform independent as it only runs on Linux machines
-
-# Home directory, serves as root for several paths
-home_dir = os.getenv("HOME")
-# base directory where two LilyPond versions are installed and cached
-install_root = "{}/.lilypond".format(home_dir)
 
 
 #################################
