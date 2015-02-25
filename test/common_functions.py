@@ -18,3 +18,7 @@ def load_lily_versions():
                 versions[target] = version
     return versions
 
+def print_separator():
+    print ""
+    print "="*79, "\n"
+

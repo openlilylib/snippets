@@ -8,6 +8,7 @@ import sys
 import collections
 
 import common_functions
+from common_functions import print_separator
 
 #############################################################
 # Load environment variables

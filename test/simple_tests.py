@@ -7,6 +7,9 @@ import shutil
 import sys
 import re
 
+from common_functions import print_separator
+
+
 class SimpleTests:
     """Run simple intergration tests. Specifically, this script will look
     for all the files in `usage-examples` directories. All these files
@@ -243,10 +246,6 @@ class SimpleTests:
                 print ""
             print_separator()
             sys.exit(1)
-
-def print_separator():
-    print ""
-    print "="*79, "\n"
 
 if __name__ == "__main__":
 
