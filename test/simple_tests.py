@@ -79,6 +79,63 @@ class SimpleTests:
         self.failed_tests = {}
 
 
+# private functions
+    def __collect_all_in_dir(self, dirname):
+        """Read contents of a directory and collect test files.
+           Respect include and exclude files and get all files
+           from usage-examples directories."""
+
+        # process include/exclude files if present
+        includes_fname = osp.join(dirname, self.test_includes_fname)
+        self.included_tests.extend(self.__read_include_exclude_file(includes_fname))
+
+        excludes_fname = osp.join(dirname, self.test_excludes_fname)
+        self.excluded_tests.extend(self.__read_include_exclude_file(excludes_fname))
+
+        # add LilyPond files if we're in a usage-examples directory
+        if osp.basename(dirname) == self.examples_dirname:
+            for f in os.listdir(dirname):
+                test_fname = osp.join(dirname, f)
+                if os.path.isfile(test_fname) and self.is_lilypond_file(test_fname):
+                    self.test_files.append(test_fname)
+
+
+    def __lilypond_version(self):
+        """Determine the LilyPond version actually run by the command self.lily_command"""
+        lily = sp.Popen([self.lily_command, "-v"], stdout=sp.PIPE, stderr=sp.PIPE)
+        version_line = lily.communicate()[0].splitlines()[0]
+        return re.search(r"\d+\.\d+\.\d+", version_line).group(0)
+
+
+    def __openlilylib_dir(self):
+        """Return the root directory of openLilyLib.
+           It's the parent directory of the script."""
+        script_path = osp.abspath(osp.dirname(osp.realpath(__file__)))
+        return osp.abspath(osp.join(script_path, os.pardir))
+
+
+    def __read_include_exclude_file(self, fname):
+        """Parse a include or exclude file and return
+           a list with absolute paths, joining the
+           directory of the include file with the
+           relative file names included in it."""
+        result = []
+        if osp.exists(fname):
+            with open(fname, 'r') as lines:
+                for line in lines.readlines():
+                    line = line.strip()
+                    if not line.startswith("#") and len(line) > 0:
+                        result.append(osp.abspath(
+                            osp.join(osp.dirname(fname), line)))
+        return result
+
+
+    def __relative_path(self, fname):
+        """Return the filename relative to openlilylib_dir"""
+        return fname[len(self.openlilylib_dir) + 1:]
+
+
+# public functions
     def clean_results_dir(self):
         """Remove any existing results directory,
            taking LilyPond version into account."""
@@ -92,16 +149,37 @@ class SimpleTests:
             shutil.rmtree(results_dir)
 
 
+    def collect_tests(self):
+        """Iterate over the whole openLilyLib directory and
+           collect valid test files, either all LilyPond files in
+           'usage-examples' directories or files specified in
+           .simple-tests-include files anywhere.
+           .simple-tests-excludes are used to skip files."""
+
+        print_separator()
+        print "Collecting test files\n"
+
+        # iterate over directory structure
+        for root, _, files in os.walk(self.openlilylib_dir):
+            self.__collect_all_in_dir(root)
+
+        # build definitive list of test cases:
+        self.test_files = [t for t in self.test_files if t not in self.excluded_tests]
+        self.test_files.extend([t for t in self.included_tests if t not in self.excluded_tests])
+        self.test_files.sort()
+
+        # print summary about test cases
+        print "Found {} test files:".format(len(self.test_files))
+        print "\n".join([self.__relative_path(t) for t in self.test_files])
+        print "\n"
+
+        print "Potential test files explicitly excluded:"
+        print "\n".join([self.__relative_path(t) for t in self.excluded_tests])
+
+
     def is_ci_run(self):
         """True if tests are running in continuous integration environment"""
         return self.ci_env_var in os.environ and os.environ[self.ci_env_var] == "true"
-
-
-    def __lilypond_version(self):
-        """Determine the LilyPond version actually run by the command self.lily_command"""
-        lily = sp.Popen([self.lily_command, "-v"], stdout=sp.PIPE, stderr=sp.PIPE)
-        version_line = lily.communicate()[0].splitlines()[0]
-        return re.search(r"\d+\.\d+\.\d+", version_line).group(0)
 
 
     def is_lilypond_file(self, fname):
@@ -131,82 +209,6 @@ class SimpleTests:
                     return False
         print "**WARNING** No version line found, skipping", fname
         return False
-
-
-    def __openlilylib_dir(self):
-        """Return the root directory of openLilyLib.
-           It's the parent directory of the script."""
-        script_path = osp.abspath(osp.dirname(osp.realpath(__file__)))
-        return osp.abspath(osp.join(script_path, os.pardir))
-
-
-    def __relative_path(self, fname):
-        """Return the filename relative to openlilylib_dir"""
-        return fname[len(self.openlilylib_dir) + 1:]
-
-
-    def __read_include_exclude_file(self, fname):
-        """Parse a include or exclude file and return
-           a list with absolute paths, joining the
-           directory of the include file with the
-           relative file names included in it."""
-        result = []
-        if osp.exists(fname):
-            with open(fname, 'r') as lines:
-                for line in lines.readlines():
-                    line = line.strip()
-                    if not line.startswith("#") and len(line) > 0:
-                        result.append(osp.abspath(
-                            osp.join(osp.dirname(fname), line)))
-        return result
-
-
-    def __collect_all_in_dir(self, dirname):
-        """Read contents of a directory and collect test files.
-           Respect include and exclude files and get all files
-           from usage-examples directories."""
-
-        # process include/exclude files if present
-        includes_fname = osp.join(dirname, self.test_includes_fname)
-        self.included_tests.extend(self.__read_include_exclude_file(includes_fname))
-
-        excludes_fname = osp.join(dirname, self.test_excludes_fname)
-        self.excluded_tests.extend(self.__read_include_exclude_file(excludes_fname))
-
-        # add LilyPond files if we're in a usage-examples directory
-        if osp.basename(dirname) == self.examples_dirname:
-            for f in os.listdir(dirname):
-                test_fname = osp.join(dirname, f)
-                if os.path.isfile(test_fname) and self.is_lilypond_file(test_fname):
-                    self.test_files.append(test_fname)
-
-
-    def collect_tests(self):
-        """Iterate over the whole openLilyLib directory and
-           collect valid test files, either all LilyPond files in
-           'usage-examples' directories or files specified in
-           .simple-tests-include files anywhere.
-           .simple-tests-excludes are used to skip files."""
-
-        print_separator()
-        print "Collecting test files\n"
-
-        # iterate over directory structure
-        for root, _, files in os.walk(self.openlilylib_dir):
-            self.__collect_all_in_dir(root)
-
-        # build definitive list of test cases:
-        self.test_files = [t for t in self.test_files if t not in self.excluded_tests]
-        self.test_files.extend([t for t in self.included_tests if t not in self.excluded_tests])
-        self.test_files.sort()
-
-        # print summary about test cases
-        print "Found {} test files:".format(len(self.test_files))
-        print "\n".join([self.__relative_path(t) for t in self.test_files])
-        print "\n"
-
-        print "Potential test files explicitly excluded:"
-        print "\n".join([self.__relative_path(t) for t in self.excluded_tests])
 
 
     def print_introduction(self):
