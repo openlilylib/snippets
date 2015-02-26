@@ -299,10 +299,17 @@ gridGetLyrics =
           'elements lyrics))))
 
 #(define (format-cell-file-name parser part segment)
-   (format "~a-~a-~a"
-     (ly:parser-output-name parser)
-     part
-     segment))
+   (let* ((max-segment-str-len (string-length
+                                (number->string
+                                 (hash-ref music-grid-meta #:segments))))
+          (segment-format-str (string-append "~"
+                                             (number->string max-segment-str-len)
+                                             ",,,'0@a"))
+          (segment-str (format segment-format-str segment)))
+     (format "~a-~a-~a"
+             (ly:parser-output-name parser)
+             part
+             segment-str)))
 
 gridCompileCell =
 #(define-void-function
