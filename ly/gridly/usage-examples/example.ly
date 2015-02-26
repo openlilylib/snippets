@@ -175,6 +175,22 @@
   g1 | c |
 }
 
+%%% Compiling single cells
+%%% ----------------------
+%%%
+%%% It is possible to compile a single cell to a separate mini-score.
+%%% This is a useful tool when working on large scores because it reduces
+%%% the time needed to wait for recompilation to the very small amount
+%%% that is necessary for the currently edited grid cell.
+%%% 
+%%% \gridCompileCell part segment
+%%% will do that.
+%%%
+%%% The cell will be output to a file named
+%%% basename-part-segment.pdf
+%%% so you can even compile one or more cells along with the full score.
+\gridCompileCell "soprano" 2
+
 %%% Display the grid
 %%% ----------------
 %%%
