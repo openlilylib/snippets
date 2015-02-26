@@ -40,14 +40,15 @@
 %%% Then, this is the fundamental setup step. With \gridInit you define
 %%% the dimensions of the grid: how many segments it should have and which
 %%% parts it contains. In this case we are initializing a grid with
-%%% two segments and two parts, namely "soprano" and "basso".
+%%% four segments and three parts, namely "marks", "soprano" and "basso".
 \gridInit 4 #'("marks"
                "soprano"
                "basso")
 
 %%% You can optionally specify the grid "template", that is, the
 %%% defaults for each section, that will be then applied to each
-%%% part. The \gridSetSegmentTemplate command has the following interface:
+%%% part. 
+%%% The \gridSetSegmentTemplate command has the following interface:
 %%%
 %%%    \gridSetSegmentTemplate segment-index context-modifier music
 %%%
@@ -59,39 +60,42 @@
 %%%                       to set the default values for the `lyrics`,
 %%%                       the `opening` and the `closing` of the
 %%%                       segment.
+%%%                       `opening` and `closing` are snippets of music
+%%%                       that can be used to start or finish spanners
+%%%                       such as dynamics, beams or slurs etc.
+%%%                       These can serve to ensure correct results 
+%%%                       when compiling only parts of a score.
 %%%  * `music` is a music expression that defines the length of the
 %%%            segment. The duration specified here will be the one
 %%%            used to check for correctness the durations of all the
 %%%            parts of the same segment.
+%%%            While it is possible to enter *any* music in this field
+%%%            only its duration is taken into account.
 %%%
 \gridSetSegmentTemplate 1
 \with {
   lyrics = \lyricmode { Fa }
 }
-\relative c' {
+{
   s1 |
 }
 
-%%% The `music` parameter may also include other commands, such as
-%%% marks, tempo changes, bars, etc. You then have the possibility to
-%%% include the structure above the staves, thus including the effects
-%%% of these commands in the score.
 \gridSetSegmentTemplate 2
 \with {
   lyrics = \lyricmode { la la la! }
 }
-\relative c' {
+{
   s1 | s1 |
 }
 
 \gridSetSegmentTemplate 3
-\relative c' {
+{
   s1 | s1 |
 }
 
 
 \gridSetSegmentTemplate 4
-\relative c' {
+{
   s1 | s1|
 }
 
@@ -208,30 +212,44 @@
 %%% console. If there is no structure specified for that segment
 %%% (remember, structure specification is optional), then the function
 %%% checks that all the parts have the same duration for that segment.
+%%% This check is completely optional, but it may produce more meaningful
+%%% warnings than the errors that LilyPond itself will give you when
+%%% there is something wrong with the grid contents.
 \gridCheck
 
 %%% Music selection
 %%% ---------------
 %%%
-%%% And now, let's see the functions that are used to get the music
-%%% out of the grid. These functions are
+%%% Limiting output
 %%%
-%%%  - \gridGetStructure segment-selector
-%%%  - \gridGetMusic part segment-selector
-%%%  - \gridGetLyrics part segment-selector
+%%% With the function
+%%%
+%%%   \gridSetRange segment-selector
+%%%
+%%% you can limit the horizontal range of music that is processed.
+%%%
+%%%  - `segment-selector` is on of
+%%%                       - the symbol 'all, to get all the segments
+%%%                       - a pair '(start . end) to get a range of segments
+%%%                       - a number, selecting a single segment
+%%%                       Default is 'all
+%%% It is possible to use the command multiple times and print several
+%%% slices of the full score in consecutive \score blocks.
+%%%
+%%% Uncomment one of the following lines to see the effect:
+%%%
+%\gridSetRange #'(1 . 2)
+%\gridSetRange 2
+
+%%% And now, let's see the functions that are used inside a score definition
+%%% to get the music out of the grid. These functions are
+%%%
+%%%  - \gridGetMusic part
+%%%  - \gridGetLyrics part
 %%%
 %%% where
 %%%
 %%%  - `part` is the name of the part you want to get the music from
-%%%  - `segment-selector` is either the symbol 'all, to get all the
-%%%                       segments, or a tuple '(start . end) to get
-%%%                       the segments from start up to end,
-%%%                       inclusive.
-
-%%% Optionally set the segment-range to either a pair or to a single segment.
-%%% Uncomment one of the following lines to limit the compiled range:
-%\gridSetRange #'(1 . 2)
-%\gridSetRange 2
 
 \score {
 
