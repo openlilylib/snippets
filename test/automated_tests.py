@@ -44,8 +44,8 @@ class SimpleTests:
     ci_env_var = "CI"
     lily_version_var = "LILY_VERSION"
 
-    test_excludes_fname = ".simple-tests-exclude"
-    test_includes_fname = ".simple-tests-include"
+    test_excludes_fname = ".automated-tests-exclude"
+    test_includes_fname = ".automated-tests-include"
     examples_dirname = "usage-examples"
 
     def __init__(self, cmd=None):

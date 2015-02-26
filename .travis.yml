@@ -23,7 +23,7 @@ install:
   - python ./test/install_lilypond.py
 
 # This is the script that will actually run the tests
-script: ./test/simple_tests.py
+script: ./test/automated_tests.py
 
 # These are environment variables that are used to configure the
 # tests.
