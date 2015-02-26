@@ -298,6 +298,12 @@ gridGetLyrics =
           'SequentialMusic
           'elements lyrics))))
 
+#(define (format-cell-file-name parser part segment)
+   (format "~a-~a-~a"
+     (ly:parser-output-name parser)
+     part
+     segment))
+
 gridCompileCell =
 #(define-void-function
    (parser location part segment)
@@ -305,7 +311,7 @@ gridCompileCell =
    (check-grid)
    (check-coords part segment)
    (if (test-location? parser location)
-       (begin
+      (let ((cache-segment #{ \getOption gridly.segment-range #}))
          (display "Compiling test file\n")
          (if (not (get-music-cell part segment))
              (ly:error "There is no music cell for ~a:~a"
@@ -341,7 +347,11 @@ gridCompileCell =
            (ly:book-process book
                             #{ \paper {} #}
                             #{ \layout {} #}
-                            (ly:parser-output-name parser))))))
+           (format-cell-file-name
+            parser
+            part
+            segment))
+         #{ \setOption gridly.segment-range #cache-segment #}))))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Deprecated functions
