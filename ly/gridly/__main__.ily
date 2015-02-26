@@ -298,6 +298,12 @@ gridGetLyrics =
           'SequentialMusic
           'elements lyrics))))
 
+#(define (format-cell-file-name parser part segment)
+   (format "~a-~a-~a"
+     (ly:parser-output-name parser)
+     part
+     segment))
+
 gridCompileCell =
 #(define-void-function
    (parser location part segment)
@@ -341,7 +347,10 @@ gridCompileCell =
            (ly:book-process book
                             #{ \paper {} #}
                             #{ \layout {} #}
-                            (ly:parser-output-name parser))
+           (format-cell-file-name
+            parser
+            part
+            segment))
          #{ \setOption gridly.segment-range #cache-segment #}))))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
