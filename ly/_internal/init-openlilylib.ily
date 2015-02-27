@@ -56,6 +56,10 @@
 % (can only be done after options have been included)
 \registerOption global.loglevel #oll-loglevel-warning
 
+% Utility to include multiple files at once
+% Depends on "options.ily"
+\include "utilities/include-pattern.ily"
+
 % Set the root path of openLilyLib
 % - for oll module inclusion
 % - for Scheme module inclusion

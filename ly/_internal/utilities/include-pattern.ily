@@ -16,6 +16,8 @@
   oll-status = "unfinished"
 }
 
+% Should includes be logged or not?
+\registerOption internal.include-pattern.display-includes ##f
 
 includePattern =
 #(define-void-function (parser location idir pattern)
@@ -38,10 +40,10 @@ includePattern =
                    (closedir dir)))
 
      (for-each (lambda (file)
-                 (let* ((ipv (ly:parser-lookup parser 'includePatternVerbose))
+                 (let* ((ipv #{ \getOption internal.include-pattern.display-includes #})
                         (istr (format "\\include \"~A\"\n" file)))
                    (if (and ipv (or (not (list? ipv))(> (length ipv) 0)))
-                       (ly:message "~A" istr))
+                       (oll:log "~A" istr))
                    (ly:parser-include-string parser istr)))
        includefiles)
      ))
