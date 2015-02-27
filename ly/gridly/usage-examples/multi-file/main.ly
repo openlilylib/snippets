@@ -1,11 +1,7 @@
 \version "2.18.2"
 
-#(ly:set-option 'relative-includes #t)
-\include "openlilylib"
-\loadModule "gridly"
-\include "../../grid-templates.ily"
-
 \include "global.ily"
+\loadModule "gridly/grid-templates.ily"
 
 \include "parts/soprano-I.ily"
 \include "parts/alto-I.ily"
@@ -16,19 +12,17 @@
 
 \gridCheck
 
-segments = #'all
-
 \score {
-  \SATBChoir \segments
+  \SATBChoir
 
   \layout {}
   \midi {}
 }
 
-\rehearsalMidi {\SATBChoir \segments} "soprano"
+\rehearsalMidi {\SATBChoir } "soprano"
 
-\rehearsalMidi {\SATBChoir \segments} "alto"
+\rehearsalMidi {\SATBChoir } "alto"
 
-\rehearsalMidi {\SATBChoir \segments} "tenore"
+\rehearsalMidi {\SATBChoir } "tenore"
 
-\rehearsalMidi {\SATBChoir \segments} "basso"
+\rehearsalMidi {\SATBChoir } "basso"

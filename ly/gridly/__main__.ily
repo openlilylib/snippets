@@ -33,8 +33,6 @@
 #(use-modules (ice-9 regex))
 
 #(define-class <cell> ()
-   (barcheck #:init-keyword #:barckeck
-             #:getter cell:barcheck)
    (music #:init-keyword #:music
           #:getter cell:music)
    (lyrics #:init-keyword #:lyrics
@@ -168,7 +166,7 @@ gridInit =
        (begin
          (set! music-grid-meta (make-hash-table))
          (hash-set! music-grid-meta #:segments segments)
-         (hash-set! music-grid-meta #:parts (cons "<structure>" parts)))))
+         (hash-set! music-grid-meta #:parts (cons "<template>" parts)))))
 
 
 %%% Grid manipulation
@@ -195,16 +193,16 @@ gridPutMusic =
           ;; This closure will look in the `props' alist for the given
           ;; symbol, returning the associated value. If the symbol is
           ;; not in the alist, then a default value is looked up in
-          ;; the corresponding `<structure>' segment. If even there a
+          ;; the corresponding `<template>' segment. If even there a
           ;; default value is not found, `default'
           (props-get (lambda (sym last-default)
                        (let ((res (assoc-ref props sym)))
                          (if res
                              res
-                             (let ((cell-structure
-                                    (get-music-cell "<structure>" segment)))
-                               (if cell-structure
-                                   (slot-ref cell-structure sym)
+                             (let ((cell-template
+                                    (get-music-cell "<template>" segment)))
+                               (if cell-template
+                                   (slot-ref cell-template sym)
                                    last-default))))))
           (value (make <cell>
                    #:music music
@@ -213,61 +211,16 @@ gridPutMusic =
                    #:closing (props-get 'closing #{ #}))))
      (hash-set! music-grid key value)))
 
-gridSetStructure =
+gridSetSegmentTemplate =
 #(define-void-function
    (parser location segment ctx-mod music)
    (number? (ly:context-mod? #{ \with{} #}) ly:music?)
-   (if (get-music-cell "<structure>" segment)
-       (ly:debug "Skipping setting of <structure>:~a, already set" segment)
+   (if (get-music-cell "<template>" segment)
+       (ly:debug "Skipping setting of <template>:~a, already set" segment)
        #{
-         \gridPutMusic "<structure>" $segment $ctx-mod $music
+         \gridPutMusic "<template>" $segment $ctx-mod $music
        #}))
 
-#(define (cons-skip music length)
-   "Conses a skip of the given length in front of the given music"
-   (let ((skip (make-music
-                'SkipEvent
-                'duration
-                (ly:make-duration length 0 1)))
-         (elements (ly:music-property music 'elements)))
-     (make-music
-      'SequentialMusic
-      'elements
-      (cons skip elements))))
-
-#(define (find-durations acc length goal)
-   "Recursively finds the sequence of skips of the same duration of `goal`"
-   (ly:debug "Call find-durations with ~a ~a"
-               length goal)
-   (let ((dur (ly:music-length acc)))
-     (ly:debug "Current duration is ~a" dur)
-     (cond
-      ;; The skips have the desired duration, hence we are done
-      ((equal? dur goal) acc)
-      ;; If we still don't have reached the goal then we try to add
-      ;; another skip in front of the music we already have. If the
-      ;; newly created music length is past the goal, then we recur
-      ;; using smaller skips, otherwise we recur using the new music
-      ;; as the accumulator
-      ((ly:moment<? dur goal)
-       (let* ((new-acc (cons-skip acc length))
-              (new-dur (ly:music-length new-acc)))
-         (if (ly:moment<? goal new-dur)
-             (find-durations acc (* 2 length) goal)
-             (find-durations new-acc length goal))))
-      ;; We shall never get here!
-      (#t (ly:error "We got past the goal!!")))))
-
-#(define (make-skips music)
-   "Creates 'SequentialMusic made of skips with the same duration as
-the given `music'"
-   (let ((start (make-music 'SequentialMusic 'elements '())))
-     (find-durations start 1 (ly:music-length music))))
-
-fill =
-#(define-music-function
-   (parser location music) (ly:music?)
-   (make-skips music))
 
 #(define (segment-selector? x)
    (or (pair? x)
@@ -297,31 +250,36 @@ fill =
                       (cond
                        ;; The cell is defined an populated with music
                        (cell cell)
-                       ;; The cell is not defined, but its structure
-                       ;; is defined. Hence we use a dummy cell filled
-                       ;; with skips matching the length of the given
-                       ;; cell.
-                       ((get-music-cell "<structure>" i)
+                       ;; The cell is not defined, but its template is
+                       ;; defined. Hence we use the default values provided
+                       ;; by the template, except for the lyrics, since
+                       ;; there are no notes in this dummy cell.
+                       ((get-music-cell "<template>" i)
                         (make <cell>
                           #:lyrics #{ #}
-                          #:opening #{ #}
-                          #:closing #{ #}
-                          #:music
-                          (make-skips
-                           (cell:music
-                            (get-music-cell "<structure>" i)))))
-                       ;; Neither the cell nor the structure are
+                          #:opening (cell:opening
+                                     (get-music-cell "<template>" i))
+                          #:closing (cell:closing
+                                     (get-music-cell "<template>" i))
+                          #:music (cell:music
+                                   (get-music-cell "<template>" i))))
+                       ;; Neither the cell nor the template are
                        ;; defined. Throw an error.
                        (#t (ly:error
-                            "Segment '~a' of part '~a' is still empty and its structure is not defined"
+                            "Segment '~a' of part '~a' is still empty and its template is not defined"
                             i part)))))
                   segments)))
        elems)))
 
+gridSetRange =
+#(define-void-function
+    (parser location start-end) (segment-selector?)
+    #{ \setOption gridly.segment-range #start-end #})
+
 gridGetMusic =
 #(define-music-function
-   (parser location part start-end) (string? segment-selector?)
-   (let* ((cells (get-cell-range part start-end))
+   (parser location part) (string? )
+   (let* ((cells (get-cell-range part #{ \getOption gridly.segment-range #}))
           (music (map cell:music cells))
           (opening (list (cell:opening (car cells))))
           (closing (list (cell:closing (car (last-pair cells))))))
@@ -331,8 +289,8 @@ gridGetMusic =
 
 gridGetLyrics =
 #(define-music-function
-   (parser location part start-end) (string? segment-selector?)
-   (let* ((cells (get-cell-range part start-end))
+   (parser location part) (string?)
+   (let* ((cells (get-cell-range part #{ \getOption gridly.segment-range #}))
           (lyrics (map cell:lyrics cells)))
      (if (member #f lyrics)
          (ly:error "A segment is missing lyrics!")
@@ -340,26 +298,33 @@ gridGetLyrics =
           'SequentialMusic
           'elements lyrics))))
 
-gridGetStructure =
-#(define-music-function
-   (parser location start-end) (segment-selector?)
-   #{
-     \gridGetMusic "<structure>" $start-end
-   #})
+#(define (format-cell-file-name parser part segment)
+   (let* ((max-segment-str-len (string-length
+                                (number->string
+                                 (hash-ref music-grid-meta #:segments))))
+          (segment-format-str (string-append "~"
+                                             (number->string max-segment-str-len)
+                                             ",,,'0@a"))
+          (segment-str (format segment-format-str segment)))
+     (format "~a-~a-~a"
+             (ly:parser-output-name parser)
+             part
+             segment-str)))
 
-gridTest =
+gridCompileCell =
 #(define-void-function
    (parser location part segment)
    (string? number?)
    (check-grid)
    (check-coords part segment)
    (if (test-location? parser location)
-       (begin
+      (let ((cache-segment #{ \getOption gridly.segment-range #}))
          (display "Compiling test file\n")
          (if (not (get-music-cell part segment))
              (ly:error "There is no music cell for ~a:~a"
                        part segment))
          (check-durations segment #f)
+         #{ \setOption gridly.segment-range $segment #}
          (let* ((name (ly:format "~a-~a" part segment))
                 (opening (cell:opening (get-music-cell part segment)))
                 (closing (cell:closing (get-music-cell part segment)))
@@ -376,7 +341,7 @@ gridTest =
                          <<
                            \new Staff \new Voice = $name {
                              $opening
-                             \gridGetMusic $part $selector
+                             \gridGetMusic $part
                              $closing
                            }
                            $lyrics
@@ -389,4 +354,56 @@ gridTest =
            (ly:book-process book
                             #{ \paper {} #}
                             #{ \layout {} #}
-                            (ly:parser-output-name parser))))))
+           (format-cell-file-name
+            parser
+            part
+            segment))
+         #{ \setOption gridly.segment-range #cache-segment #}))))
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Deprecated functions
+
+gridTest =
+#(define-void-function
+   (parser location part segment)
+   (string? number?)
+   (ly:input-warning
+    location
+    (string-append
+     "\n\tFunction `~a' is deprecated in favor of `~a' and"
+     "\n\twill be removed in a future release."
+     "\n\tPlease replace the former with the latter.")
+    "gridTest" "gridCompileCell")
+   ((ly:music-function-extract gridCompileCell) parser location part segment))
+
+
+gridSetStructure =
+#(define-void-function
+   (parser location segment ctx-mod music)
+   (number? (ly:context-mod? #{ \with{} #}) ly:music?)
+   (ly:input-warning
+    location
+    (string-append
+     "\n\tFunction `~a' is deprecated in favor of `~a' and"
+     "\n\twill be removed in a future release."
+     "\n\tPlease replace the former with the latter.")
+    "gridSetStructure" "gridSetSegmentTemplate")
+   ((ly:music-function-extract gridSetSegmentTemplate)
+    parser location segment ctx-mod music))
+
+
+gridGetStructure =
+#(define-music-function
+   (parser location) ()
+   (ly:input-warning
+    location
+    (string-append
+     "\n\tThe function `gridGetStructure' is deprecated and is"
+     "\n\tno longer part of the public interface of GridLY."
+     "\n\tIt will be removed in a future release."
+     "\n\tIf you are using this function to retrieve marks and"
+     "\n\tand tempo changes, please put them in a dedicated part,"
+     "\n\tnamed for instance `marks'"))
+   #{
+     \gridGetMusic "<template>"
+   #})

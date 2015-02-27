@@ -86,7 +86,8 @@ _cells_. Each cell has several attributes:
    for such things, and is optional.
  - `closing`: the dual of the `opening` attribute. The place to put
    finishing stuff in, like to end slurs and spanners.
- - `lyrics`: the optional lyrics associated to the `music`.
+ - `lyrics`: the optional lyrics associated to the `music`. This
+   attribute is optional.
 
 Public interface
 ----------------
@@ -96,11 +97,12 @@ of things that are used in almost all the functions.
 
 ### Segment selectors
 
-Used in functions to get the music out of the grid, segment selectors
-are either scheme pairs, integers or the symbol `'all`. The latter selector is
-used to select all the segments in the grid, an integer selects a
-single segment, whereas the pair specifies a range, with start and end points
-included. So `'(3 . 6)` will select all the segments from `3` to `6`, included.
+Used by the function `gridSetRange` to get the music out of the grid,
+segment selectors are either scheme pairs, integers or the symbol
+`'all`. The latter selector is used to select all the segments in the
+grid, an integer selects a single segment, whereas the pair specifies a
+range, with start and end points included. So `'(3 . 6)` will select all
+the segments from `3` to `6`, included.
 
 In the public functions description, segment selectors are identified
 by `seg-sel`.
@@ -128,6 +130,9 @@ by `ctx-mod`.
 
 ### Public functions
 
+All the public music functions defined by GridLY are prefixed with
+`grid`.
+
 In the following list, arguments surrounded by `< >` are mandatory,
 whereas arguments surrounded by `[ ]` are optional.
 
@@ -137,40 +142,42 @@ whereas arguments surrounded by `[ ]` are optional.
    of the segment range or not listed in `<part-list>`, you will get
    an error.
 
- - `\gridSetStructure <seg-sel> [ctx-mod] <music>` :
-   this function can be optionally called to set the structure of the
-   given segment, for all voices.
+ - `\gridSetSegmentTemplate <segment-id> [ctx-mod] <music>` : this
+   function can be optionally called to set the defaults of the given
+   segment, for all parts. Here, the `<segment-id>` is a single
+   integer.
 
- - `\gridPutMusic <part> <seg-sel> [ctx-mod] <music>` :
+ - `\gridPutMusic <part> <segment-id> [ctx-mod] <music>` :
    this function inserts the given music in the given position of the
-   grid.
+   grid. Here, the `<segment-id>` is a single integer.
 
  - `\gridDisplay` takes no arguments, and prints to the console the
    current state of the grid, with `o` marking the inserted cells and
    `-` marking missing ones.
 
  - `\gridCheck` : checks that all the parts within a segment have the
-   same duration. If the structure of that segment has been specified,
-   then the duration specified there is used as a reference, otherwise
-   the duration of the various parts are compared among themselves.
+   same duration, for all the segments. If the template of that segment
+   has been specified, then its duration is used as a reference,
+   otherwise the duration of the various parts are compared among
+   themselves. The use of this function is entirely optional. It can be
+   used any time you wish to check the grid contents, even multiple
+   times.
 
- - `\gridGetMusic <part> <seg-sel>` : returns the music associated
-   with the given part matching the given segment selector. The
-   segments are returned as a single music expression, thus can be
-   readily included in voices and staves.
+ - `\gridSetRange <seg-sel>`: sets the range of cells that should be
+   retrieved by `gridGetMusic` and `gridGetLyrics`. If this function
+   is not called, then the segment ragne defaults to `'all`.
 
- - `\gridGetLyrics <part> <seg-sel>` : the same as `\gridGetMusic`,
-   but returns the lyrics of all the segments, concatenated. Throws an
-   error some segment is missing lyrics.
+ - `\gridGetMusic <part>` : returns the music associated with the
+   given part matching segment selector specified with
+   `\gridSetRange`. The segments are returned as a single music
+   expression, thus can be readily included in voices and staves.
 
- - `\gridGetSructure <seg-sel>` : same as `\gridGetMusic`, but returns
-   the contents of the structure of the given segments. In this way
-   the structure part can be used to store things like rehearsal
-   marks, tempo changes and so on.
+ - `\gridGetLyrics <part>` : the same as `\gridGetMusic`, but returns
+   the lyrics of all the segments specified with `\gridSetRange`,
+   concatenated. Throws an error some segment is missing lyrics.
 
- - `\gridTest <part> <seg-sel>` : put in the same file as the call to
-   `\gridPutMusic` with the same parameters, compiles the cell defined
-   in the file as a standalone score.
+ - `\gridCompileCell <part> <segment-id>` : compiles the given cell in
+   a standalone score. Here, the `<segment-id>` is a single integer.
 
 Usage
 -----

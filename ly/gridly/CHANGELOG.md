@@ -1,6 +1,21 @@
 GridLY - Changelog
 ==================
 
+ * 0.4.0
+
+   This is a **breaking** release. The public interface changed
+
+   - The following public functions have been refactored
+      - `gridTest` -> `gridCompileCell`
+      - Add function `gridSetRange`
+      - `gridGetMusic` lost an argument. Now it accepts only the string
+        specifying the part. The segment range should be set using the new
+        function `gridSetRange`.
+      - `gridSetStructure` -> `gridSetSegmentTemplate`
+      - `gridGetStructure` has been removed in favor of the explicit
+        use of a `marks` part.
+
+
  * 0.3.0
 
    - Add integers as segment selectors
