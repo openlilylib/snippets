@@ -41,6 +41,9 @@
 % Version predicates to execute code for specific LilyPond versions
 \include "lilypond-version-predicates.ily"
 
+% Utility to include multiple files at once
+\include "include-pattern.ily"
+
 % Helpers for handling Scheme association lists
 \include "alist-access.ily"
 

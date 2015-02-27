@@ -38,6 +38,11 @@
 %%%% Common functionality
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Add openLilyLib root directory to Guile's module load path
+% TODO: Check this when the Scheme lib has moved
+\include "general-tools/scheme-wrapper/add-guile-path/definitions.ily"
+\addGuilePath "../.."
+
 % Make common functionality available to all openLilyLib "users"
 \include "utilities/__main__.ily"
 
@@ -66,7 +71,6 @@ setRootPath =
 
 % Functionality to load and manage modules
 \include "module-handling.ily"
-
 
 % Welcome message.
 % This is a default ly:message because otherwise we'd have to mess around with
