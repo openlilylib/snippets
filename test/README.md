@@ -20,8 +20,9 @@ a non-zero exit status, then the test is considered failed.
 Test definition
 ---------------
 
-All the files under a `usage-examples` directory are considered test files. To
-exclude a file from the compilation, add its name to a file called
+All LilyPond input files under a `usage-examples` directory anywhere within
+`openLilyLib` are considered test files and processed automatically. 
+To exclude files from the compilation, add their names to a file called
 `.simple-tests-exclude` under the relevant `usage-examples` directory.
 
 For instance, consider a library `someLib`. The directory structure is as
@@ -35,7 +36,7 @@ openlilylib
         └── usage-examples
             ├── .simple-tests-exclude
             ├── example1
-            │   └── example.ly
+            │   └── example.ly
             └── example2
                 └── test.ly
 ```
@@ -47,6 +48,13 @@ to exclude `example1/example.ly` from the tests, the contents of
 # Comments can be inserted using # chars
 usage-examples/example1/example.ly
 ```
+
+Paths in these entries are considered relative to the location of the
+`.simple-tests-exclude` files.
+
+On the other hand files with the same structure and the name `.simple-tests-include`
+can be used to explicitly add test files that for some reason are not made available
+as usage examples in the respective directories of a library.
 
 LilyPond version configuration
 ------------------------------

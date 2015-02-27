@@ -1,3 +1,6 @@
+Build Status of `openLilyLib` on Travis:  
+[![Build Status](https://travis-ci.org/openlilylib/openlilylib.svg?branch=master)](https://travis-ci.org/openlilylib/openlilylib)
+
 What's this?
 ============
 
@@ -15,6 +18,11 @@ We may also move this repository somewhere else, because we dislike the propriet
 nature of GitHub.
 -->
 
+**[EDIT:** *Currently `openLilyLib` is undergoing a fundamental reorganization.  
+The below README contents is about the* current *implementation as a 
+collection of arbitrary snippets.  
+The new structure as a collection of targeted libraries can be found inside
+the `ly` directory.]*
 
 Contents
 ========
