@@ -32,6 +32,23 @@
     (regexp-match? (string-match (format "^(.*/)?~A\\.i?ly$" outname) locname))
     ))
 
+;
+; All of the following is deprecated
+; as the functionality has been moved to
+; ly/_internal/utilities/os-path.ily.
+;
+; There it is much more consistently named and handled,
+; and a number of code duplicates have been harmonized.
+; as soon as it is clear what should be done with lalily-test-location?
+; the complete file should officially be deprecated.
+;
+; This deprecation must be used more carefully (i.e. by only
+; printing a warning) because code dependencies may be much
+; more common and complex than with simply moving a file into
+; the new structure (which is because the move goes along with
+; significant rewrite).
+;
+
 (define-public (listcwd) '())
 (define-public (absolutePath? path) #f)
 (let* ((os (getenv "OS"))
