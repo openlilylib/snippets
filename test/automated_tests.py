@@ -83,7 +83,7 @@ class SimpleTests:
     def __collect_all_in_dir(self, dirname):
         """Read contents of a directory and collect test files.
            Respect include and exclude files and get all files
-           from usage-examples directories."""
+           from usage-examples directories, recursively."""
 
         # process include/exclude files if present
         includes_fname = osp.join(dirname, self.test_includes_fname)
@@ -92,12 +92,14 @@ class SimpleTests:
         excludes_fname = osp.join(dirname, self.test_excludes_fname)
         self.excluded_tests.extend(self.__read_include_exclude_file(excludes_fname))
 
-        # add LilyPond files if we're in a usage-examples directory
+        # add LilyPond files if we're in a usage-examples directory, recursively
         if osp.basename(dirname) == self.examples_dirname:
-            for f in os.listdir(dirname):
-                test_fname = osp.join(dirname, f)
-                if os.path.isfile(test_fname) and self.is_lilypond_file(test_fname):
-                    self.test_files.append(test_fname)
+            for root, _, files in os.walk(dirname):
+                for f in files:
+                    test_fname = osp.join(root, f)
+                    print test_fname
+                    if os.path.isfile(test_fname) and self.is_lilypond_file(test_fname):
+                        self.test_files.append(test_fname)
 
 
     def __lilypond_version(self):
