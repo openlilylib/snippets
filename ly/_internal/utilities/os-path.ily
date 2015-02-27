@@ -26,59 +26,104 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %{
-  Provide tools to work with file paths.
-  Mostly written by Jan-Peter Voigt
+  Provide tools to OS-independently work with file paths.
+  Compiled and refactored by Urs Liska, based heavily on work by Jan-Peter Voigt
 %}
 
 #(use-modules (ice-9 regex))
-% get the working directory as a string-list
-#(define-public (listcwd) '())
-% test: is this path-string absolute?
-#(define-public (absolutePath? path) #f)
 
-% we have to check, if we are running on windows, because (getcwd) returns a path string with native sparators
-% and on windows an absolute path starts with a letter and a colon - not a slash: 'C:\' vs. '/'
-#(let* ((os (getenv "OS"))
-        (isWindows (if (and (string? os) (regexp-exec (make-regexp ".*Windows.*" regexp/icase) os)) #t #f))
-        (wrx (if isWindows (make-regexp "^[a-z]:$" regexp/icase) #f)))
-   ; listcwd: split (getcwd) with native path separator
-   (set! listcwd (lambda () (string-split (getcwd)(if isWindows #\\ #\/))))
-   ; absolutePath?: test if path list denotes an absolute path
-   (set! absolutePath?
-         (lambda (path)
-           (if isWindows
-               (if (and (> (length path) 0) (regexp-exec wrx (car path))) #t #f)
-               (and (> (length path) 0) (= 0 (string-length (car path))))
-               ))))
+% Flag set when running a Windows OS
+#(define-public is-windows
+   (let ((os (getenv "OS")))
+     (if (and (string? os)
+              (regexp-exec (make-regexp ".*Windows.*" regexp/icase) os))
+         #t #f)))
+
+% forward or backward slash depending on OS
+#(define-public os-path-separator
+   (if is-windows
+       #\\
+       #\/ ))
+
+#(define-public (get-cwd-list)
+   "Return the current working directory as a list of strings."
+   (string-split (getcwd) os-path-separator))
+
+#(define-public (split-path path-string)
+   "Return a list from a given path string,
+    respecting the OS dependent path separator."
+   (string-split path-string os-path-separator))
+
+#(define (make-path-list path)
+   "Take a path as a string or a string list and
+    return a string list"
+   (if (string? path)
+       (split-path path)
+       path))
+
+#(define-public (absolute-path? path)
+   "Test if the given path is absolute.
+    Process either a string or a string list."
+   (let ((path-list (make-path-list path)))
+     (if (and (> (length path-list) 0)
+              ;; consider the path absolute if either the regex for windows volumes is matched
+              ;; or the first list element is empty (indicating a "/" unix root)
+              (or (regexp-exec (make-regexp "^[a-z]:$" regexp/icase) (car path-list))
+                  (= 0 (string-length (car path-list)))))
+         #t #f)))
 
 
-% append a relative path to the path the calling file is int
-#(define (get-normalized-path locstring)
-   (let* ((loclist (string-split (car locstring) #\/)) ; path split to list
-           ; if path list is not absolute, prefix current working directory
-           ; then join to string with separator "/"
-           (path-extra (let ((pl (if (absolutePath? loclist)
-                                     loclist (append (listcwd) loclist))))
-                         (string-join (reverse (cdr (reverse pl))) "/" 'infix)))
-           ; normalize path-list: remove all entries ".." and "." and modify the list respectively
-           (normalize-list (lambda (path)
-                             (let ((ret '()))
-                               (for-each (lambda (e)
-                                           (set! ret (cond ((equal? e "..")(if (> (length ret) 1) (cdr ret) '()))
-                                                       ((equal? e ".") ret)
-                                                       (else `(,e ,@ret))))) path)
-                               (reverse ret))))
-           ; normalize path-string: remove all entries ".." and "."
-           (normalize-path (lambda (s) (string-join (normalize-list (string-split s #\/)) "/" 'infix))))
-     ; normalize path and add folder
-     (if (string-index path-extra #\.)
-         (normalize-path path-extra)
-         path-extra)))
+#(define-public (normalize-path path)
+   "Return a normalized path by removing '.' and '..' elements.
+    If 'path' is a string a normalized string is returned,
+    if it is a list a list is returned.
+    The input string is OS independent (takes os-dependent path separator)
+    but the resulting string is Unix-like (because this is nearly always what we need."
+   (let* ((path-list (make-path-list path))
+          (normalized
+           (let ((ret '()))
+             (for-each
+              (lambda (e)
+                (set! ret (cond ((equal? e "..")(if (> (length ret) 1) (cdr ret) (cdr (reverse (listcwd)))))
+                            ((equal? e ".") (if (= (length ret) 0) (reverse (listcwd)) ret))
+                            (else `(,e ,@ret))))) path-list)
+             (reverse ret))))
+     (if (string? path)
+         (string-join normalized "/" 'infix)
+         normalized)))
 
-% Return the absolulte path/name of the file where this
+#(define (absolute-path path)
+   "Return absolute path of given 'path'.
+    Path can be given as string or string list.
+    If 'path' is an absolute path it is simply normalized,
+    if it is a relative path it is interpreted as relative 
+    to the current working directory.
+    Input is OS independent, output is Unix style."
+   (let* ((is-string (string? path))
+          (path-list (make-path-list path))
+          (abs-path
+           (if (absolute-path? path-list)
+               path-list
+               (append
+                (get-cwd-list)
+                (normalize-path path-list)))))
+     (if is-string
+         (string-join abs-path "/" 'infix)
+         abs-path)))
+
+#(define-public (location-extract-path location)
+   "Returns the normalized path from a LilyPond location
+    or './' if 'location' is in the same directory."
+   (let* ((loc (car (ly:input-file-line-char-column location)))
+          (dirmatch (string-match "(.*/).*" loc))
+          (dirname (if (regexp-match? dirmatch) (match:substring dirmatch 1) "./")))
+     (normalize-path dirname)))
+
+
+% Return the absolute path/name of the file where this
 % command has been called from (i.e. not necessarily
 % the one that is currently compiled)
-thisFile =
-#(define-scheme-function (parser location)()
-   "Return the absolute path to the current file"
-   (car (ly:input-file-line-char-column location)))
+#(define thisFile
+   (define-scheme-function (parser location)()
+     "Return the absolute path to the current file"
+     (car (ly:input-file-line-char-column location))))
