@@ -1,12 +1,11 @@
-% Demonstrate the use of the clip-regions module
+% Test matrix for partial compilation module
 
 \version "2.18.0"
 
 \include "openlilylib"
-\registerOption documentation.include-file "comptools/partial-compilation.ily"
-\loadModule "_internal/doc-include/usage-example.ily"
+\loadModule "comptools/partial-compilation.ily"
 
-\include "comptools-test-data.ily"
+\include "../usage-examples/comptools-test-data.ily"
 
 % Uncomment the following commands to test different partial regions.
 % Multiple (non-overlapping) regions can be set, although the results
@@ -25,7 +24,7 @@
 %\setClipPageRange 4 5
 
 % Negative page range triggers a warning
-%\setClipPageRange 5 3
+\setClipPageRange 5 3
 
 % Non-existent pages result in errors
 %\setClipPageRange 3 123
