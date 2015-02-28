@@ -188,13 +188,11 @@ class SimpleTests:
 
     def is_lilypond_file(self, fname):
         """Return true if filename ends with one of the registered file extensions."""
-        return fname.endswith('.ly') or fname.endswith('.ily')
+        return fname.endswith('.ly')
 
 
     def is_runnable_file(self, fname):
         """Returns true if fname can be compiled with the lilypond version used"""
-        if not self.is_lilypond_file(fname):
-            return False
         with open(fname, 'r') as fcontents:
             for line in fcontents.readlines():
                 version_line = re.search(r"\\version \"(\d+\.\d+\.\d+)\"", line)
