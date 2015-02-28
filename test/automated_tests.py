@@ -46,7 +46,9 @@ class SimpleTests:
 
     test_excludes_fname = ".automated-tests-exclude"
     test_includes_fname = ".automated-tests-include"
-    examples_dirname = "usage-examples"
+    test_dirnames = ["usage-examples", 
+                     "unit-tests"]
+    
 
     def __init__(self, cmd=None):
         # set up building environment
@@ -93,7 +95,7 @@ class SimpleTests:
         self.excluded_tests.extend(self.__read_include_exclude_file(excludes_fname))
 
         # add LilyPond files if we're in a usage-examples directory, recursively
-        if osp.basename(dirname) == self.examples_dirname:
+        if osp.basename(dirname) in self.test_dirnames:
             for root, _, files in os.walk(dirname):
                 for f in files:
                     test_fname = osp.join(root, f)
