@@ -6,10 +6,11 @@
 % Define a list with original page breaks (barnumbers)
 % Entries can also be a list with barnumber and fraction
 % Also available: line-breaks and page-turns
-\setOption comptools.page-breaks #'(112 224 336 448 490 560 672 784)
+\setOption comptools.page-breaks #'(20 37 52 66 83 91)
 
 music = \relative c' {
-  \repeat unfold 800 {
-    c d \bar "" e d
+  \time 4/2
+  \repeat unfold 100 {
+    c2 d \bar "" e4 d8 c d4 e
   }
 }
