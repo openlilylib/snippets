@@ -99,7 +99,6 @@ class SimpleTests:
             for root, _, files in os.walk(dirname):
                 for f in files:
                     test_fname = osp.join(root, f)
-                    print test_fname
                     if os.path.isfile(test_fname) and self.is_lilypond_file(test_fname):
                         self.test_files.append(test_fname)
 
