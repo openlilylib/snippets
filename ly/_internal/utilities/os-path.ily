@@ -45,14 +45,14 @@
        #\\
        #\/ ))
 
-#(define-public (get-cwd-list)
-   "Return the current working directory as a list of strings."
-   (string-split (getcwd) os-path-separator))
-
 #(define-public (split-path path-string)
    "Return a list from a given path string,
     respecting the OS dependent path separator."
    (string-split path-string os-path-separator))
+
+#(define-public (get-cwd-list)
+   "Return the current working directory as a list of strings."
+   (split-path (getcwd)))
 
 #(define (make-path-list path)
    "Take a path as a string or a string list and
