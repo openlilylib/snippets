@@ -16,7 +16,7 @@
 %\setClipRegion 8 12
 
 % Define a region beyond measure borders
-%\setClipRegion 198 #'(212 2/4)
+%\setClipRegion 65 #'(87 2/2)
 
 % Compile a single page
 %\setClipPage 5
