@@ -38,9 +38,13 @@
 %%%% Common functionality
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Add openLilyLib root directory to Guile's module load path
-% TODO: Check this when the Scheme lib has moved
+% Add directoires to Guile's module loading path.
 \include "general-tools/scheme-wrapper/add-guile-path/definitions.ily"
+% the ly directory is now an included path from which modules can be addressed
+% Add openLilyLib root directory to Guile's module load path
+\addGuilePath ".."
+% TODO: Check this when the Scheme lib has moved
+% This is only needed to possibly access modules in the "old" places
 \addGuilePath "../.."
 
 % Make common functionality available to all openLilyLib "users"

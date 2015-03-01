@@ -45,4 +45,4 @@
 \include "alist-access.ily"
 
 % Advance path handling
-\include "os-path.ily"
+#(use-modules (_internal utilities os-path))
