@@ -26,12 +26,6 @@
  (srfi srfi-1)
  )
 
-(define-public (lalily-test-location? parser location)
-  (let ((outname (ly:parser-output-name parser))
-        (locname (car (ly:input-file-line-char-column location))))
-    (regexp-match? (string-match (format "^(.*/)?~A\\.i?ly$" outname) locname))
-    ))
-
 ;
 ; All of the following is deprecated
 ; as the functionality has been moved to
@@ -39,8 +33,7 @@
 ;
 ; There it is much more consistently named and handled,
 ; and a number of code duplicates have been harmonized.
-; as soon as it is clear what should be done with lalily-test-location?
-; the complete file should officially be deprecated.
+; The complete file should officially be deprecated.
 ;
 ; This deprecation must be used more carefully (i.e. by only
 ; printing a warning) because code dependencies may be much
@@ -48,6 +41,13 @@
 ; the new structure (which is because the move goes along with
 ; significant rewrite).
 ;
+
+
+(define-public (lalily-test-location? parser location)
+  (let ((outname (ly:parser-output-name parser))
+        (locname (car (ly:input-file-line-char-column location))))
+    (regexp-match? (string-match (format "^(.*/)?~A\\.i?ly$" outname) locname))
+    ))
 
 (define-public (listcwd) '())
 (define-public (absolutePath? path) #f)
