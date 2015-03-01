@@ -109,19 +109,33 @@
          (string-join abs-path "/" 'infix)
          abs-path)))
 
+#(define-public (normalize-location location)
+   "Returns a normalized path to the given location object"
+   (car (ly:input-file-line-char-column location)))
+
 #(define-public (location-extract-path location)
    "Returns the normalized path from a LilyPond location
     or './' if 'location' is in the same directory."
-   (let* ((loc (car (ly:input-file-line-char-column location)))
+   (let* ((loc (normalize-location location))
           (dirmatch (string-match "(.*/).*" loc))
           (dirname (if (regexp-match? dirmatch) (match:substring dirmatch 1) "./")))
      (normalize-path dirname)))
 
+% Return the normalized absolute path and file name of the
+% file where this function is called from (not the one that
+% is compiled by LilyPond).
+thisFile =
+#(define-scheme-function (parser location)()
+   (normalize-location location))
 
-% Return the absolute path/name of the file where this
-% command has been called from (i.e. not necessarily
-% the one that is currently compiled)
-#(define thisFile
-   (define-scheme-function (parser location)()
-     "Return the absolute path to the current file"
-     (car (ly:input-file-line-char-column location))))
+#(define-public (this-file-compiled parser location)
+   "Return #t if the file where this function is called
+    is the one that is currently compiled by LilyPond."
+   (let ((outname (ly:parser-output-name parser))
+         (locname (normalize-location location)))
+     (regexp-match? (string-match (format "^(.*/)?~A\\.i?ly$" outname) locname))))
+
+% LilyPond format wrapper for this-file-compiled
+thisFileCompiled =
+#(define-scheme-function (parser location)()
+   (this-file-compiled parser location))
