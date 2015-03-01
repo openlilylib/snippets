@@ -30,25 +30,41 @@
 ; All of the following is deprecated
 ; as the functionality has been moved to
 ; ly/_internal/utilities/os-path.ily.
+; This is an openLilyLib core functionality that is made
+; available automatically once "openlilylib" is included.
 ;
 ; There it is much more consistently named and handled,
-; and a number of code duplicates have been harmonized.
+; and a number of code duplications have been harmonized.
 ; The complete file should officially be deprecated.
 ;
-; This deprecation must be used more carefully (i.e. by only
-; printing a warning) because code dependencies may be much
-; more common and complex than with simply moving a file into
-; the new structure (which is because the move goes along with
-; significant rewrite).
+; This deprecation is likely to imply modifications of existing code,
+; so it has to be handled with care.
 ;
+(ly:warning "The file 'scheme-lib/lalily/parser-location.scm' has been deprecated. 
+All contained functionality has been reimplemented in the core of the new openLilyLib structure.
+Unfortunately I can't tell from where this file has been included, sorry.
+For now the file is loaded just as before, but please look into the file
+and read about how the functionality is mapped to new functions.")
 
-
+; DEPRECATED
+;
+; There are now two functions available as soon as openLilyLib has been included:
+; - (this-file-compiled parser location)
+; - \thisFileCompiled
+; Both return #t when the file where the function is called from is the currently
+; compiled file.
 (define-public (lalily-test-location? parser location)
   (let ((outname (ly:parser-output-name parser))
         (locname (car (ly:input-file-line-char-column location))))
     (regexp-match? (string-match (format "^(.*/)?~A\\.i?ly$" outname) locname))
     ))
 
+; DEPRECATED
+;
+; (listcwd) is now available as (get-cwd-list)
+; (absolutePath?) is reimplemented as (absolute-path?)
+;   it takes either an OS independent string or a list of path elements.
+;
 (define-public (listcwd) '())
 (define-public (absolutePath? path) #f)
 (let* ((os (getenv "OS"))
@@ -61,6 +77,15 @@
                                          )))
   )
 
+; DEPRECATED
+;
+; Now there are several functions available:
+; - (normalize-path path)
+; - (absolute-path path)
+; In both cases 'path' is an OS independent string or a list of path elements.
+; Both functions return a Unix string if 'path' is a string or
+; a list if 'path' is a list.
+;
 (define-public (normalize-path-list path)
   "create list, removing \"..\" elements
 example: (normalize-path '(\"a\" \"b\" \"..\" \"c\" \".\" \"d\")) ==> '(\"a\" \"c\" \"d\")"
@@ -74,6 +99,16 @@ example: (normalize-path '(\"a\" \"b\" \"..\" \"c\" \".\" \"d\")) ==> '(\"a\" \"
   "create normalized path string: a/b/../c/d ==> a/c/d"
   (string-join (normalize-path-list (string-split s #\/)) "/" 'infix))
 
+; (DEPRECATED)
+; This function has been simply moved to the new module
+; (of course with some internal changes)
+; so the only change existing code would have to do is
+; ensuring openlilylib is loaded.
+;
+; In addition there is the function
+; - (normalize-location location)
+; that returns a normalized path string from the given location object.
+;
 (define-public (location-extract-path location)
   (let* ((loc (car (ly:input-file-line-char-column location)))
          (dirmatch (string-match "(.*/).*" loc))
