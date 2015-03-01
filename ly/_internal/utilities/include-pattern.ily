@@ -1,7 +1,5 @@
 \version "2.18.0"
 
-#(use-modules (scheme-lib lalily parser-location))
-
 \header {
   oll-title = "Include multiple files"
   oll-author = "Jan-Peter Voigt"
