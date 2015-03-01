@@ -76,6 +76,7 @@
     (assoc-ref obj "location")))
 
 % Retrieve the grob name from the annotation (provided by Harm)
+% From LilyPond 2.19.16 onwards one can use (grob::name grob) instead
 #(define grob-name
    (lambda (x)
      (if (ly:grob? x)
@@ -151,7 +152,13 @@ annotationCollector =
                                 #(string->symbol ctx-id)
                                 #ctx-id #}))
                      ;; Get the name of the annotated grob type
-                     (set! annotation (assoc-set! annotation "grob-type" (grob-name grob)))
+                     (set! annotation
+                           (assoc-set! annotation "grob-type"
+                             (if (lilypond-greater-than-or-equal? "2.19.16")
+                                 ;; use built-in function
+                                 (grob::name grob)
+                                 ;; use custom function from above
+                                 (grob-name grob))))
                      ;; Initialize a 'grob-location' property as a sub-alist,
                      ;; for now with a 'meter' property. This will be populated in 'finalize'.
                      (set! annotation
