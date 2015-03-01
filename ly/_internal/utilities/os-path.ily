@@ -45,26 +45,24 @@
        #\\
        #\/ ))
 
-#(define-public (split-path path-string)
-   "Return a list from a given path string,
-    respecting the OS dependent path separator."
-   (string-split path-string os-path-separator))
+#(define-public (split-path path)
+   "Returns a list with path elements.
+    Takes either a path string or a list.
+    If 'path' is a string it is split
+    respecting the OS dependent path separator,
+    if it is a list then simply the list is returned."
+   (if (string? path)
+       (string-split path os-path-separator)
+       path))
 
 #(define-public (get-cwd-list)
    "Return the current working directory as a list of strings."
    (split-path (getcwd)))
 
-#(define (make-path-list path)
-   "Take a path as a string or a string list and
-    return a string list"
-   (if (string? path)
-       (split-path path)
-       path))
-
 #(define-public (absolute-path? path)
    "Test if the given path is absolute.
     Process either a string or a string list."
-   (let ((path-list (make-path-list path)))
+   (let ((path-list (split-path path)))
      (if (and (> (length path-list) 0)
               ;; consider the path absolute if either the regex for windows volumes is matched
               ;; or the first list element is empty (indicating a "/" unix root)
@@ -79,7 +77,7 @@
     if it is a list a list is returned.
     The input string is OS independent (takes os-dependent path separator)
     but the resulting string is Unix-like (because this is nearly always what we need."
-   (let* ((path-list (make-path-list path))
+   (let* ((path-list (split-path path))
           (normalized
            (let ((ret '()))
              (for-each
@@ -100,7 +98,7 @@
     to the current working directory.
     Input is OS independent, output is Unix style."
    (let* ((is-string (string? path))
-          (path-list (make-path-list path))
+          (path-list (split-path path))
           (abs-path
            (if (absolute-path? path-list)
                path-list
