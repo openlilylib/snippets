@@ -90,7 +90,7 @@
          (string-join normalized "/" 'infix)
          normalized)))
 
-#(define (absolute-path path)
+#(define-public (absolute-path path)
    "Return absolute path of given 'path'.
     Path can be given as string or string list.
     If 'path' is an absolute path it is simply normalized,
@@ -124,9 +124,9 @@
 % Return the normalized absolute path and file name of the
 % file where this function is called from (not the one that
 % is compiled by LilyPond).
-thisFile =
-#(define-scheme-function (parser location)()
-   (normalize-location location))
+#(define-public thisFile
+   (define-scheme-function (parser location)()
+     (normalize-location location)))
 
 #(define-public (this-file-compiled parser location)
    "Return #t if the file where this function is called
@@ -136,6 +136,6 @@ thisFile =
      (regexp-match? (string-match (format "^(.*/)?~A\\.i?ly$" outname) locname))))
 
 % LilyPond format wrapper for this-file-compiled
-thisFileCompiled =
-#(define-scheme-function (parser location)()
-   (this-file-compiled parser location))
+#(define-public thisFileCompiled
+   (define-scheme-function (parser location)()
+     (this-file-compiled parser location)))
