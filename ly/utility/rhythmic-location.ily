@@ -70,6 +70,7 @@
    "Return the length of one single 'beat' as a moment"
    (ly:moment-div measure-length (ly:make-moment number-of-beats)))
 
+% From LilyPond 2.19.6 on you can use (ly:item-get-column item)
 #(define (get-paper-column grob)
    "Return the paper column of a given grob.
     This property knows about the rhyhmic position in a score"
@@ -83,7 +84,10 @@
 #(define (location grob)
    "Return the musical/rhythmical position of a given grob"
    (if (ly:grob? grob)
-       (let ((col (get-paper-column grob)))
+       (let ((col
+              (if (lilypond-greater-than-or-equal? "2.19.6")
+                  (ly:item-get-column grob)
+                  (get-paper-column grob))))
          (if col
              (ly:grob-property col 'rhythmic-location)
              ;; get-paper-column returns #f if no column found
