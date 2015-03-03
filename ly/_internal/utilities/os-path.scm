@@ -133,7 +133,12 @@
     or './' if 'location' is in the same directory."
   (let* ((loc (normalize-location location))
          (dirmatch (string-match "(.*/).*" loc))
-         (dirname (if (regexp-match? dirmatch) (match:substring dirmatch 1) "./")))
+         (dirname (if (regexp-match? dirmatch)
+                      (let ((full-string (match:substring dirmatch 1)))
+                        (substring full-string
+                          0
+                          (- (string-length full-string) 1)))
+                      ".")))
     (normalize-path dirname)))
 
 ;; Return the normalized absolute path and file name of the
