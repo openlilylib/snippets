@@ -37,7 +37,7 @@
 
 
 #(ly:message "\nLoad a file from within the module.\n")
-\loadModule "example/load-test.ly"
+\loadModule "example/load-test.ily"
 
 #(display
   (format "Use variable in __main__ that was defined in __init__: ~a" in-init))
