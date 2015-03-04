@@ -98,7 +98,7 @@ class LilyPond(object):
 
 
 
-class FontMatrix(object):
+class Fonts(object):
     """Object dealing with the remote and local fonts"""
     
     def __init__(self, conf):
@@ -379,7 +379,7 @@ def error(msg):
 def main():
     
     conf = Config()
-    font_matrix = FontMatrix(conf)
+    font_matrix = Fonts(conf)
     font_matrix.download_fonts()
     font_matrix.extract_fonts()
     font_matrix.install_fonts()
