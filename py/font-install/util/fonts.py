@@ -117,6 +117,7 @@ class Font(object):
 
         # determine files and paths
         self.archive = os.path.join(Config.font_repo(), "{}.zip".format(self._basename))
+        self.font_dir = os.path.join(Config.font_repo(), self._basename)
 
 
     def _archive_present(self):
@@ -139,13 +140,25 @@ class Font(object):
                                  self._remote_newer() or
                                  not self._archive_present()) else False
 
+        r['extract'] = True if (r['download'] or
+                                (self._archive_present() and not
+                                    self._font_dir_present())) else False
 
-        if not (r['download']):
+
+        if not (r['download'] or
+                r['extract']):
             print "Font {} up to date.".format(self._name)
         return result
 
     def _download_archive(self):
         pass
+
+    def _font_dir_present(self):
+        """
+        Returns True if the extracted font directory is present.
+        This doesn't check the contents of the directory in any way, however.
+        """
+        return os.path.isdir(self.font_dir)
 
     def _remote_newer(self):
         """
@@ -172,7 +185,6 @@ class Font(object):
         Determine necessary actions and perform them
         """
         actions = self._check()
-
         #raise Exception("Continue with Font.handle()")
 
     def merge_font(self, record):
