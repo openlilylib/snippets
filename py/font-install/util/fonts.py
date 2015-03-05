@@ -34,7 +34,9 @@ class Catalog(object):
         else:
             self._file_name = ""
             self._type = 'remote'
+            print "\nDownloading font catalog from {} ...".format(FONT_HOST)
             self._file_content = self._download_catalog()
+            print "... successful."
 
         # parse catalog file
         self._font_records = self.parse_catalog()
@@ -44,7 +46,6 @@ class Catalog(object):
         Try to downlaod the remote catalog
         :return: string list with the content of the catalog
         """
-        print "Downloading font catalog from {} ...".format(FONT_HOST)
         try:
             return urllib2.urlopen(FONT_CATALOG_URL)
         except Exception, e:
