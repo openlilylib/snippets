@@ -47,7 +47,6 @@ def create_parser():
         description = ("Install extra fonts for LilyPond from http://fonts.openlilylib.org"))
         
     parser.add_argument('-d', '--font-directory', 
-        default = os.getcwd(), 
         help=("Root directory where all fonts are stored.\n" +
               "Defaults to the current working directory."))
     parser.add_argument('-e', '--lilypond-executable', 
