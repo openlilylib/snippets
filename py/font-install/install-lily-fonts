@@ -120,6 +120,9 @@ def main():
     fonts = Fonts()
     print fonts.local_catalog._font_records
     print fonts.remote_catalog._font_records
+    print
+    for f in fonts._font_list:
+        print fonts._fonts[f]._name
 
     sys.exit(0)
 

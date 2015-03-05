@@ -68,6 +68,9 @@ class Catalog(object):
                 error("Error reading local font catalog.")
         return []
 
+    def font_records(self):
+        return self._font_records
+
     def parse_catalog(self):
         """
         Parse the catalog file and return a simple dictionary with font records
@@ -95,6 +98,41 @@ class Catalog(object):
                 result.append(record)
         return result
 
+class Font(object):
+    """
+    Object representing one single font.
+    Capable of downloading archives and doing the 'installation'
+    """
+    def __init__(self, record):
+        self._name = record['name']
+        self._basename = record['basename']
+        # font records usually only have a remote or a local version
+        # as the version is eventually compared numerically
+        # they are initialized with zero-string
+        self._local_version = record.get('local_version', '0')
+        self._remote_version = record.get('remote_version', '0')
+
+    def merge_font(self, record):
+        """
+        Merge a font record into an existing Font object.
+        """
+
+        # we can consider 'name' to be identical,
+        # otherwise this wouldn't be executed.
+        if 'basename' in record:
+            b = record['basename']
+            if not b == self._basename:
+                error("Conflicting font record found:\n  {}".format(record))
+
+        # We _assume_ this will work because from reading the catalogs
+        # a record can have only a remote _or_ a local version.
+        if not self._remote_version:
+            self._remote_version = record.get('remote_version', '0')
+        if not self._local_version:
+            self._local_version = record.get('local_version', '0')
+
+
+
 class Fonts(object):
     """
     Maintain the local and remote catalogs and federate their relations.
@@ -104,9 +142,37 @@ class Fonts(object):
 
         # maintain a sorted list of all font names
         self._font_list = []
+        # ... and a dictionary with Font() objects
+        self._fonts = {}
 
         # check local font catalog
         self.local_catalog = Catalog(os.path.join(Config.font_repo(), FONT_CATALOG_FILE_NAME))
+        self.add_fonts(self.local_catalog)
 
+        # ... and the remote one if the command line is set
         if not Config.local():
             self.remote_catalog = Catalog()
+            self.add_fonts(self.remote_catalog)
+
+    def add_font(self, font_record):
+        """
+        Add a new Font object to the dictionary
+        :param font_record:
+        :return:
+        """
+        fname = font_record['name']
+        self._fonts[fname] = Font(font_record)
+        self._font_list.append(fname)
+        self._font_list.sort()
+
+    def add_fonts(self, catalog):
+        """
+        Add or merge fonts from a catalog
+        :param catalog:
+        :return:
+        """
+        for f in catalog.font_records():
+            if not f['name'] in self._font_list:
+                self.add_font(f)
+            else:
+                self._fonts[f['name']].merge_font(f)
