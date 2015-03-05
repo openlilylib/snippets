@@ -372,12 +372,9 @@ class Catalogs(object):
     
     def remote_fonts(self):
         return self.__remote_fonts
-    
-def error(msg):
-    print "Error condition:"
-    print msg
-    print "Abort script."
-    sys.exit(1)
+
+
+
 
 def main():
     
