@@ -45,7 +45,7 @@
 % They expect lists with breaks. Each break can be
 % - an integer representing the bar number
 % - a list with a barnumber and a fraction
-\registerOption comptoools.line-breaks #'()
+\registerOption comptools.line-breaks #'()
 \registerOption comptools.page-breaks #'()
 \registerOption comptools.page-turns #'()
 
