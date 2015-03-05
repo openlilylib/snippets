@@ -114,6 +114,66 @@ class Font(object):
         self._local_version = record.get('local_version', '0')
         self._remote_version = record.get('remote_version', '0')
 
+        # determine files and paths
+        self.archive = os.path.join(Config.font_repo(), "{}.zip".format(self._basename))
+
+
+    def _archive_present(self):
+        return os.path.isfile(self.archive)
+
+    def _check(self):
+        """
+        Determine the necessary actions for the font,
+        returning a dictionary with boolean values
+        """
+        result = r = {}
+
+        # download archive if
+        # - font not declared locally
+        # - remote is newer
+        # - archive is missing locally
+        r['download'] = False
+        if not Config.local():
+            r['download'] = True if (self._local_version == '0' or
+                                 self._remote_newer() or
+                                 not self._archive_present()) else False
+
+
+        if not (r['download']):
+            print "Font {} up to date.".format(self._name)
+        return result
+
+    def _download_archive(self):
+        pass
+
+    def _remote_newer(self):
+        """
+        Returns True if the remote version is newer than the local one
+        """
+        local = self._version_as_integer(self._local_version)
+        remote = self._version_as_integer(self._remote_version)
+        return remote > local
+
+    def _version_as_integer(self, version):
+        """
+        Calculate an integer representation of a font version string.
+        """
+        ver_list = version.split('.')
+        power = 12
+        value = 0
+        for elem in ver_list:
+            value += int(elem) * 10 ** power
+            power -= 3
+        return value
+
+    def handle(self):
+        """
+        Determine necessary actions and perform them
+        """
+        actions = self._check()
+
+        #raise Exception("Continue with Font.handle()")
+
     def merge_font(self, record):
         """
         Merge a font record into an existing Font object.
@@ -121,16 +181,14 @@ class Font(object):
 
         # we can consider 'name' to be identical,
         # otherwise this wouldn't be executed.
-        if 'basename' in record:
-            b = record['basename']
-            if not b == self._basename:
-                error("Conflicting font record found:\n  {}".format(record))
+        if 'basename' in record and not self._basename == record['basename']:
+            error("Conflicting font record found:\n  {}".format(record))
 
         # We _assume_ this will work because from reading the catalogs
         # a record can have only a remote _or_ a local version.
-        if not self._remote_version:
+        if self._remote_version == '0':
             self._remote_version = record.get('remote_version', '0')
-        if not self._local_version:
+        if self._local_version == '0':
             self._local_version = record.get('local_version', '0')
 
 
@@ -178,3 +236,11 @@ class Fonts(object):
                 self.add_font(f)
             else:
                 self._fonts[f['name']].merge_font(f)
+
+    def handle_fonts(self):
+        """
+        Asks each Font object to do what is necessary
+        (download, check, extract, link ...)
+        """
+        for f in self._font_list:
+            self._fonts[f].handle()

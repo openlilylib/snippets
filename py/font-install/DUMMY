@@ -60,16 +60,6 @@ class FontsDeprec(object):
 
 
     def __check_action(self, remote, local):
-        def version_to_integer(font_version):
-            if not font_version:
-                return 0
-            ver_list = font_version.split('.')
-            power = 4
-            value = 0
-            for elem in ver_list:
-                value += int(elem) * 10 ** power
-                power -= 1
-            return value
 
         rv = version_to_integer(remote)
         lv = version_to_integer(local)
