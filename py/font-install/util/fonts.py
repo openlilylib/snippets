@@ -66,7 +66,9 @@ class Catalog(object):
                 return result
             except Exception, e:
                 error("Error reading local font catalog.")
-        return []
+        else:
+            print "No local catalog found. Assuming you want to create a new local repository."
+            return []
 
     def font_records(self):
         return self._font_records
