@@ -102,26 +102,6 @@ class Catalog(object):
         print "  Found {} fonts.".format(len(result))
         return result
 
-    def __read_catalog_file(self, lines):
-        def parse_line(line):
-            try:
-                lst = line.split()
-                return (" ".join(lst[2:]),
-                        lst[1],
-                        lst[0])
-            except:
-                print "Illegal line in font catalog file, skipping:\n  {}".format(line)
-                return None
-
-        result = {}
-        for line in lines.readlines():
-            line = line.strip()
-            if not line.startswith("#") and len(line) > 0:
-                match = parse_line(line)
-                if not match:
-                    continue
-                result[match[0]] = (match[1], match[2])
-        return result
 
     def font_dir(self):
         return self.__font_dir
@@ -138,8 +118,8 @@ class Catalog(object):
 def main():
     Config.read_args()
     fonts = Fonts()
-    print ''.join(fonts.local_catalog._file_content)
-    print ''.join(fonts.remote_catalog._file_content)
+    print fonts.local_catalog._font_records
+    print fonts.remote_catalog._font_records
 
     sys.exit(0)
 

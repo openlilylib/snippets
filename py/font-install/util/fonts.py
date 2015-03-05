@@ -26,13 +26,18 @@ class Catalog(object):
 
     def __init__(self, file = None):
 
-        self._file_name = ""
         if file:
             # only the local catalog has a file name
             self._file_name = file
+            self._type = 'local'
             self._file_content = self._read_catalog()
         else:
+            self._file_name = ""
+            self._type = 'remote'
             self._file_content = self._download_catalog()
+
+        # parse catalog file
+        self._font_records = self.parse_catalog()
 
     def _download_catalog(self):
         """
@@ -62,6 +67,33 @@ class Catalog(object):
             except Exception, e:
                 error("Error reading local font catalog.")
         return []
+
+    def parse_catalog(self):
+        """
+        Parse the catalog file and return a simple dictionary with font records
+        """
+        def parse_line(line):
+            try:
+                lst = line.split()
+                result = {}
+                result['basename'] = lst[0]
+                result['{}_version'.format(self._type)] = lst[1]
+                result['name'] = " ".join(lst[2:])
+                return result
+            except:
+                print "Illegal line in {} font catalog file, skipping:\n  {}".format(
+                    target, line)
+                return None
+
+        result = []
+        for line in self._file_content:
+            line = line.strip()
+            if not line.startswith("#") and len(line) > 0:
+                record = parse_line(line)
+                if not record:
+                    continue
+                result.append(record)
+        return result
 
 class Fonts(object):
     """
