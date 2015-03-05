@@ -1,0 +1,175 @@
+
+
+class FontsDeprec(object):
+    """Object dealing with the remote and local fonts"""
+
+    def __init__(self, conf):
+        self.modified = False
+        # Reference to the config and LilyPond objects
+        self.conf = conf
+        self.lily = conf.lilypond
+        self.local_fonts = conf.local_fonts()
+        self.local_font_names = [f for f in self.local_fonts]
+        self.local_font_names.sort()
+        self.remote_fonts = conf.remote_fonts()
+        self.remote_font_names = [f for f in self.remote_fonts]
+        self.remote_font_names.sort()
+        self.__updatable_font_names = []
+
+        # Matrix (dictionary) with font names and their properties
+        self.matrix = mx = {}
+        # Fonts that are declared locally but not available online
+        self.stale_font_names = []
+        # max display lengths
+        max_len_font_name = 0
+        max_len_font_filename = 0
+
+        # iterate over the remote fonts and fill the dictionary
+        for rf in self.remote_font_names:
+            ln = len(rf)
+            dirname = self.remote_fonts[rf][1]
+            lfn = len(dirname)
+            max_len_font_name = max(ln, max_len_font_name)
+            max_len_font_filename = max(ln, max_len_font_filename)
+            mx[rf] = {
+                'remote_version': self.remote_fonts[rf][0],
+                'local_version': None,
+                'dirname': dirname,
+                'font_root': os.path.join(self.conf.font_dir(), dirname),
+                'loc_archive': os.path.join(self.conf.font_dir(), "{}.zip".format(dirname)),
+                # default to 'install'
+                'action': 'install'}
+        for lf in self.local_font_names:
+            if lf in self.remote_font_names:
+                lv = self.local_fonts[lf][0]
+                rv = self.remote_fonts[lf][0]
+                mx[lf]['local_version'] = lv
+                mx[lf]['action'] = self.__check_action(rv, lv)
+            else:
+                self.stale_font_names.append(lf)
+
+        self.__max_len_font_name = max_len_font_name + 1
+        self.__max_len_font_filename = max_len_font_filename + 1
+        self.display_matrix()
+
+        if self.stale_font_names:
+            print ("\nThere are local fonts not available online.\n" +
+                   "Please check, as it may indicate an error condition.")
+            for f in self.stale_font_names:
+                print "-", f
+
+
+    def __check_action(self, remote, local):
+        def version_to_integer(font_version):
+            if not font_version:
+                return 0
+            ver_list = font_version.split('.')
+            power = 4
+            value = 0
+            for elem in ver_list:
+                value += int(elem) * 10 ** power
+                power -= 1
+            return value
+
+        rv = version_to_integer(remote)
+        lv = version_to_integer(local)
+        if lv == 0:
+            return "=> install"
+        elif rv > lv:
+            return "=> update"
+        else:
+            return "no action"
+
+    def display_matrix(self):
+        name_len = self.__max_len_font_name
+        header = "Font".ljust(name_len) + " Remote  Local  Operation"
+
+        print
+        print "Font matrix and determined operations:"
+        print header
+        print "=" * len(header)
+        for f in self.remote_font_names:
+            fname = f.ljust(name_len)
+            rem_v = self.matrix[f]['remote_version']
+            loc_v = self.matrix[f]['local_version']
+            action = self.matrix[f]['action']
+            if not loc_v:
+                loc_v = 'NA'
+            print fname, rem_v.ljust(7), loc_v.ljust(6), action
+
+    def download_fonts(self):
+        for f in self.updatable_font_names():
+            f_rec = self.matrix[f]
+            if not self.modified:
+                print "\nDownloading font archives now ..."
+            self.modified = True
+            try:
+                dname = f_rec['dirname']
+                url = "{host}/{name}/{name}.zip".format(
+                    host=FONT_HOST,
+                    name=dname)
+                print "- {} ({}).".format(f, url)
+                archive = urllib2.urlopen(url)
+                output = open(f_rec['loc_archive'], 'wb')
+                output.write(archive.read())
+                output.close()
+                self.matrix[f]['local_version'] = self.matrix[f]['remote_version']
+                print "  ... OK"
+
+            except Exception, e:
+                error("Error downloading font archive {}.\nMessage:\n{}".format(
+                    f, str(e)))
+        self.write_local_catalog()
+
+    def extract_fonts(self):
+        def clear_directory(dir):
+            if os.path.exists(dir):
+                shutil.rmtree(dir)
+            os.mkdir(dir)
+
+        if len(self.updatable_font_names()) > 0:
+            print "\nExtracting downloaded fonts"
+        for f in self.updatable_font_names():
+            archive = zipfile.ZipFile(self.matrix[f]['loc_archive'], 'r')
+            font_dir = os.path.join(self.conf.font_dir(),
+                                    self.matrix[f]['dirname'])
+            clear_directory(font_dir)
+            archive.extractall(font_dir)
+            print "-", f
+
+    def install_fonts(self):
+        if not self.updatable_font_names():
+            return
+        print "\nInstalling downloaded fonts"
+        for f in self.updatable_font_names():
+            self.lily.install_font(self.matrix[f])
+
+    def updatable_font_names(self):
+        """Returns a list of all remote font names that
+           should be downloaded and installed"""
+        if self.__updatable_font_names:
+            return self.__updatable_font_names
+        result = []
+        for f in self.remote_font_names:
+            if self.matrix[f]['action'] in ['install', 'update']:
+                result.append(f)
+        return result
+
+    def write_local_catalog(self):
+        import datetime
+
+        lines = []
+        lines.append("# Local LilyPond font catalog")
+        lines.append("# Written by the openLilyLib font installation script")
+        lines.append("# {}\n".format(datetime.date.isoformat(datetime.date.today())))
+        for f in self.remote_font_names:
+            f_rec = self.matrix[f]
+            line = ' '.join([f_rec['dirname'].ljust(self.__max_len_font_filename),
+                             f_rec['local_version'].ljust(8),
+                             f])
+            lines.append(line)
+        fname = os.path.join(self.conf.font_dir(), FONT_CATALOG_FILE_NAME)
+        catalog = open(fname, 'w')
+        catalog.write('\n'.join(lines))
+        catalog.close()
+

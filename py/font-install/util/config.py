@@ -24,6 +24,9 @@ class Config(object):
     # don't compare anything, unconditionally download and install fonts
     _force = None
 
+    # don't consider the online repository, simply link a LilyPond installation
+    _local = None
+
     # path to actual local font storage directory
     _local_font_repo = ""
 
@@ -138,8 +141,8 @@ class Config(object):
         Config._local = True if args['local'] else False
         Config._force = True if args['force'] else False
 
-        Config._font_dir = Config._get_local_repo_path(args['font_directory'])
-        print "\nDetermined font directory:\n  {}".format(Config._font_dir)
+        Config._local_font_repo = Config._get_local_repo_path(args['font_directory'])
+        print "\nDetermined font directory:\n  {}".format(Config.font_repo())
 
         Config._lilypond_font_root = Config._get_lilypond_font_path(args['lilypond_executable'])
         print "\nDetermined LilyPond font root directory:\n  {}".format(Config._lilypond_font_root)
@@ -163,3 +166,7 @@ class Config(object):
     @staticmethod
     def lilypond_font_root():
         return Config._lilypond_font_root
+
+    @staticmethod
+    def local():
+        return Config._local
