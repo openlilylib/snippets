@@ -83,25 +83,6 @@ class Catalog(object):
         self.__local_fonts = self.__check_local_fonts()
         self.__remote_fonts = self.__check_remote_fonts()
 
-    def __check_local_fonts(self):
-        print "Determine local fonts."
-        font_catalog = os.path.join(self.font_dir(), FONT_CATALOG_FILE_NAME)
-        result = {}
-        if os.path.exists(font_catalog):
-            with open(font_catalog, 'r') as lines:
-                declared_fonts = self.__read_catalog_file(lines)
-                for font in declared_fonts:
-                    tup = declared_fonts[font]
-                    if os.path.exists(os.path.join(self.font_dir(), tup[1])):
-                        result[font] = (tup[0], tup[1])
-                    else:
-                        print "Font declared but not present: \"{}\"".format(font)
-                        print tup
-        else:
-            print "  No catalog file found.\n"
-        print "  Found {} fonts.".format(len(result))
-        return result
-
 
     def font_dir(self):
         return self.__font_dir
