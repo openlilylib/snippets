@@ -26,17 +26,15 @@ class LilyPond(object):
         self.__exec_file = self.__check_exec_file(exec_file)
 
         # Target directories for font "installation"
-        font_dir = os.path.normpath(os.path.join(self.__exec_file, 
+        self.font_dir = os.path.normpath(os.path.join(self.__exec_file,
                          '..',
                          '..', 
                          'share', 
                          'lilypond', 
                          'current', 
                          'fonts'))
-        print self.__exec_file
-        print font_dir
-        self.otf_dir = os.path.join(font_dir, 'otf')
-        self.svg_dir = os.path.join(font_dir, 'svg')
+#        self.otf_dir = os.path.join(font_dir, 'otf')
+#        self.svg_dir = os.path.join(font_dir, 'svg')
             
     def __check_exec_file(self, file_arg):
         
@@ -60,20 +58,25 @@ class LilyPond(object):
     def install_font(self, f_rec):
         """Installs the given font to the current LilyPond installation."""
         
-        def clear_directory(dir, font_filename):
+        def clear_directory(type, font_filename):
             """Remove existing links to a font in a dir to prevent inconsistencies"""
-            print "OTF:", self.otf_dir
-            print "SVG:", self.svg_dir
-            for ln in os.listdir(dir):
-                abs_ln = os.path.join(dir, ln)
+            target_dir = os.path.join(self.font_dir, type)
+            for ln in os.listdir(target_dir):
+                abs_ln = os.path.join(target_dir, ln)
                 if os.path.islink(abs_ln) and ln.startswith(font_filename):
                     os.unlink(abs_ln)
+
+
+        def install_directory(ext, font_filename):
+            """Create all the links for one font name"""
+            pass
+
         
         font_filename = f_rec['dirname']
         font_root = f_rec['font_root']
-        clear_directory(self.otf_dir, font_filename)
-        clear_directory(self.svg_dir, font_filename)
-        
+        clear_directory('otf', font_filename)
+        clear_directory('svg', font_filename)
+        install_directory()
         
 
 #    for dirName, subdirList, fileList in os.walk(font_dir):
@@ -270,7 +273,7 @@ class Fonts(object):
         catalog.write('\n'.join(lines))
         catalog.close()
     
-class Config(object):
+class Catalogs(object):
     
     def __init__(self):
         self.__process_args()
@@ -378,7 +381,7 @@ def error(msg):
 
 def main():
     
-    conf = Config()
+    conf = Catalogs()
     font_matrix = Fonts(conf)
     font_matrix.download_fonts()
     font_matrix.extract_fonts()
