@@ -97,7 +97,7 @@ useNotationFont =
 #(define-void-function (parser location options name)
    ((ly:context-mod?) string?)
    (if (lilypond-less-than? "2.19.12")
-       (oll:warn location (format fonts-lily-version-warning 
+       (oll:warn location (format fonts-lily-version-warning
                      (lilypond-version))))
    (let*
     (
@@ -132,7 +132,9 @@ useNotationFont =
     ;; if 'none' is given as brace set to default "emmentaler"
     (if (and (assoc-ref options 'brace)
              (string=? "none" (assoc-ref options 'brace)))
-        (set! brace "Emmentaler"))
+        (begin
+         (set! brace "Emmentaler")
+         (set! use-brace "emmentaler")))
 
     ;; if a non-existent stylesheet is requested
     ;; issue a warning and reset to -default
@@ -170,13 +172,12 @@ useNotationFont =
         "/stylesheets/load-font")))
     (oll:log location
       (format "Font \"~a\" loaded successfully" name))
-    
+
     ;; try to load font extensions if requested
     (if extensions (use-font-extensions parser location name))
 
     ;; include the determined style file for the font
     ;; if not "none".
-    (ly:message style)
     (if (not (string=? "none" style))
         (ly:parser-include-string parser
           (ly:gulp-file style-file)))
