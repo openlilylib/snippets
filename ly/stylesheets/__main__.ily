@@ -33,29 +33,8 @@
   Currently only font selection is implemented
 %}
 
-% Use a notation font with or without options.
-% To be called as a toplevel command.
-% Arguments:
-% - options: ly:context-mod? ( a "\with {}" clause)
-%   - brace: define brace font
-%            - "none": default to Emmentaler
-%            - omitted: use the same as the font name
-%   - style: load a style sheet for the font
-%            - omitted: load the "-default" stylesheet
-%                       (has to be provided by the library)
-% - name: Font name
-%
-% All arguments are case insensitive, so "Emmentaler" is
-% equivalent to "emmentaler".
-% Note: If the names do not contain characters beyond alphabetical
-% and a hyphen (but no numbers), the quotation marks can be omitted,
-% so
-%    \useNotationFont Beethoven
-% is valid while with
-%    \useNotationFont "Gutenberg1939"
-% the quotation marks are needed.
 
-
+% Starting with some helper commands
 #(define (make-style-file name style)
    "Construct file name for included style sheet.
     Factored out because needed several times."
@@ -82,6 +61,27 @@
            (format "No extensions available for font \"~a\". Skipping." name))
          )))
 
+% Use a notation font with or without options.
+% To be called as a toplevel command.
+% Arguments:
+% - options: ly:context-mod? ( a "\with {}" clause)
+%   - brace: define brace font
+%            - "none": default to Emmentaler
+%            - omitted: use the same as the font name
+%   - style: load a style sheet for the font
+%            - omitted: load the "-default" stylesheet
+%                       (has to be provided by the library)
+% - name: Font name
+%
+% All arguments are case insensitive, so "Emmentaler" is
+% equivalent to "emmentaler".
+% Note: If the names do not contain characters beyond alphabetical
+% and a hyphen (but no numbers), the quotation marks can be omitted,
+% so
+%    \useNotationFont Beethoven
+% is valid while with
+%    \useNotationFont "Gutenberg1939"
+% the quotation marks are needed.
 
 useNotationFont =
 #(define-void-function (parser location options name)
