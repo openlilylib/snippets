@@ -37,12 +37,33 @@
 % Place the call to it inside a \paper {} block.
 \paper {
   useNotationFont =
-  #(define-scheme-function (parser location name)
-     (string?)
-     (ly:parser-define! parser 'fonts
-       (set-global-fonts
-        #:music name
-        #:brace name
-        #:factor (/ staff-height pt 20))))
+  #(define-scheme-function (parser location options name)
+     ((ly:context-mod?) string?)
+     (let*
+      (
+        ;; create an alist with options if they are given.
+        ;; if the argument is not given or no options are defined
+        ;; we have an empty list.
+        (options
+         (if options
+             (map
+              (lambda (o)
+                (cons (cadr o) (caddr o)))
+              (ly:get-context-mods options))
+             '()))
+        ;; retrieve 'brace' name from options if given.
+        ;; if not given we assume the same as the notation font
+        (brace
+         (or (assoc-ref options 'brace)
+              name))
+        )
+      ;; if 'none' is given as brace set to default "emmentaler"
+      (if (string=? "none" (assoc-ref options 'brace))
+          (set! brace "emmentaler"))
+      (ly:parser-define! parser 'fonts
+        (set-global-fonts
+         #:music name
+         #:brace brace
+         #:factor (/ staff-height pt 20)))))
 }
 
