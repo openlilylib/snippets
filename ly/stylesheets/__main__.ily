@@ -33,6 +33,7 @@
   Currently only font selection is implemented
 %}
 
+\version "2.18.0"
 
 % Starting with some helper commands
 #(define (make-style-file name style)
@@ -45,6 +46,15 @@
     "-"
     (string-downcase style)
     ".ily"))
+
+% A string that is used to warn users who run an older
+% LilyPond version.
+#(define fonts-lily-version-warning "
+Loading alternative fonts requires LilyPond >= 2.19.12 or
+a patched version of LilyPond 2.18. You are running LilyPond ~a.
+If you receive an error message below please either upgrade to
+a current LilyPond version or install the patch as described on
+http://fonts.openlilylib.org.\n")
 
 %%%% activate font extensions
 % The Arnold font provides a number of extra glyphs, others may follow.
@@ -86,6 +96,9 @@
 useNotationFont =
 #(define-void-function (parser location options name)
    ((ly:context-mod?) string?)
+   (if (lilypond-less-than? "2.19.12")
+       (oll:warn location (format fonts-lily-version-warning 
+                     (lilypond-version))))
    (let*
     (
       (use-name (string-downcase name))
