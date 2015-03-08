@@ -132,3 +132,16 @@ useNotationFont =
           (ly:gulp-file style-file)))
     (oll:log location (format "Associated \"~a\" stylesheet loaded successfully" style))
     ))
+
+
+%%%% ARNOLD extensions
+% The Arnold font provides a number of extra glyphs
+% This command loads a separate style sheet defining commands
+% and articulations to make use of these extra glyphs.
+useArnoldExtensions = 
+#(define-void-function (parser location)()
+   (ly:parser-include-string parser
+     (ly:gulp-file
+      (string-append
+       #{ \getOption global.root-path #}
+       "/stylesheets/fonts/arnold-extensions.ily"))))
