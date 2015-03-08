@@ -117,7 +117,8 @@ useNotationFont =
     ;; Post-process options
     ;;
     ;; if 'none' is given as brace set to default "emmentaler"
-    (if (string=? "none" (assoc-ref options 'brace))
+    (if (and (assoc-ref options 'brace)
+             (string=? "none" (assoc-ref options 'brace)))
         (set! brace "Emmentaler"))
 
     ;; if a non-existent stylesheet is requested
