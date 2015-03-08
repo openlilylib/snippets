@@ -43,6 +43,7 @@ by using the following form:
 \useNotationFont \with {
   brace = Beethoven
   style = none
+  extensions = ##t
 }
 Cadence
 ```
@@ -55,3 +56,7 @@ notation font does not have a corresponding brace font (which is currently the c
 Using `none` as `style` will skip loading a stylesheet, which you may want when creating a style sheet
 from scratch. Please consult the documentation about any additional styles available for a given font.
 if a non-existent stylesheet is requested a warning is issued and the default stylesheet is loaded.
+
+A font may contain extensions that can be activated with the `extensions = ##t` option. Currently only
+the *Arnold* fonts has such extensions, consisting of a few extra articulations and commands.
+Requesting extensions for a font that doesn't provide them will issue a warning but don't do any further harm.
