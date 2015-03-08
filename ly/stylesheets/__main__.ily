@@ -41,6 +41,8 @@
      ((ly:context-mod?) string?)
      (let*
       (
+        ;; Make font name case insensitive
+        (use-name (string-downcase name))
         ;; create an alist with options if they are given.
         ;; if the argument is not given or no options are defined
         ;; we have an empty list.
@@ -62,7 +64,7 @@
           (set! brace "emmentaler"))
       (ly:parser-define! parser 'fonts
         (set-global-fonts
-         #:music name
+         #:music use-name
          #:brace brace
          #:factor (/ staff-height pt 20)))))
 }
