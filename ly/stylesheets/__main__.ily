@@ -33,39 +33,102 @@
   Currently only font selection is implemented
 %}
 
-% Wrapper around choosing notation fonts.
-% Place the call to it inside a \paper {} block.
-\paper {
-  useNotationFont =
-  #(define-scheme-function (parser location options name)
-     ((ly:context-mod?) string?)
-     (let*
-      (
-        ;; Make font name case insensitive
-        (use-name (string-downcase name))
-        ;; create an alist with options if they are given.
-        ;; if the argument is not given or no options are defined
-        ;; we have an empty list.
-        (options
-         (if options
-             (map
-              (lambda (o)
-                (cons (cadr o) (caddr o)))
-              (ly:get-context-mods options))
-             '()))
-        ;; retrieve 'brace' name from options if given.
-        ;; if not given we assume the same as the notation font
-        (brace
-         (or (assoc-ref options 'brace)
-              name))
-        )
-      ;; if 'none' is given as brace set to default "emmentaler"
-      (if (string=? "none" (assoc-ref options 'brace))
-          (set! brace "emmentaler"))
-      (ly:parser-define! parser 'fonts
-        (set-global-fonts
-         #:music use-name
-         #:brace brace
-         #:factor (/ staff-height pt 20)))))
-}
+% Use a notation font with or without options.
+% To be called as a toplevel command.
+% Arguments:
+% - options: ly:context-mod? ( a "\with {}" clause)
+%   - brace: define brace font
+%            - "none": default to Emmentaler
+%            - omitted: use the same as the font name
+%   - style: load a style sheet for the font
+%            - omitted: load the "-default" stylesheet
+%                       (has to be provided by the library)
+% - name: Font name
+%
+% All arguments are case insensitive, so "Emmentaler" is
+% equivalent to "emmentaler".
+% Note: If the names do not contain characters beyond alphabetical
+% and a hyphen (but no numbers), the quotation marks can be omitted,
+% so
+%    \useNotationFont Beethoven
+% is valid while with
+%    \useNotationFont "Gutenberg1939"
+% the quotation marks are needed.
 
+useNotationFont =
+#(define-void-function (parser location options name)
+   ((ly:context-mod?) string?)
+   (let*
+    (
+      (use-name (string-downcase name))
+      ;; create an alist with options if they are given.
+      ;; if the argument is not given or no options are defined
+      ;; we have an empty list.
+      (options
+       (if options
+           (map
+            (lambda (o)
+              (cons (cadr o) (caddr o)))
+            (ly:get-context-mods options))
+           '()))
+      ;; retrieve 'brace' name from options if given.
+      ;; if not given we assume the same as the notation font
+      (brace
+       (or (assoc-ref options 'brace)
+           name))
+      (use-brace (string-downcase brace))
+      ;; retrieve 'style' option with "default" default ...
+      (style
+       (or (assoc-ref options 'style)
+           "default"))
+      ;; ... and produce include filename from it
+      (style-file
+       (string-append
+        #{ \getOption global.root-path #}
+        "/stylesheets/fonts/"
+        use-name 
+        "-" 
+        (string-downcase style) 
+        ".ily"))
+      )
+
+    ;; Post-process options
+    ;;
+    ;; if 'none' is given as brace set to default "emmentaler"
+    (if (string=? "none" (assoc-ref options 'brace))
+        (set! brace "Emmentaler"))
+
+    ;; store options, these are used from the included load-font file
+    #{ \setOption stylesheets.font.name #name #}
+    #{ \setOption stylesheets.font.use-name #use-name #}
+    #{ \setOption stylesheets.font.brace #brace #}
+    #{ \setOption stylesheets.font.use-brace #use-brace #}
+    
+    ;; load font through an included file.
+    ;; this is necessary so that file can set its own
+    ;; \paper {} block.
+    ;
+    ; TODO: 
+    ; Find a way to pull that functionality in here.
+    ; The problem seems to be that (even when wrapping the
+    ; definition of 'fonts in a ly:parser-define call the 
+    ; properties of the \paper block (e.g. staff-height) are 
+    ; not available.
+    ; I think one has to somehow access the current paper block 
+    ; through Scheme (I suspect there are options in the paper
+    ; related ly: functions but I didn't succeed to find a solution).
+    (ly:parser-include-string parser
+      (ly:gulp-file
+       (string-append
+        #{ \getOption global.root-path #}
+        "/stylesheets/load-font")))
+    (oll:log location 
+      (format "Font \"~a\" loaded successfully" name))
+    
+    ;; include the determined style file for the font
+    ;; if not "none".
+    (if (not (string=? "none" style))
+        (ly:parser-include-string parser
+          (ly:gulp-file style-file)))
+    (oll:log location (format "Associated \"~a\" stylesheet loaded successfully" style))
+    ))

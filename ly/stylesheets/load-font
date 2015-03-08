@@ -29,13 +29,22 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %{
-  Initialization of the Stylesheets library
+  Activate a font that is configured using \useNotationFont.
+  Do not include this file directly, as it is called implicitly through
+  the function. (This is why the file doesn't have an extension.)
+
+  TODO:
+  We are still looking for a way to avoid having to do this separate include.
+  The problem is that inside the function we don't have access to the
+  staff-height and pt variables
+  => Ideas and solutions welcome!
 %}
 
-% internal options for use in the font loading mechanism
-\registerOption stylesheets.font.name Emmentaler
-\registerOption stylesheets.font.use-name Emmentaler
-\registerOption stylesheets.font.brace Emmentaler
-\registerOption stylesheets.font.use-brace Emmentaler
+\paper {
+  #(define fonts
+    (set-global-fonts
+     #:music #{ \getOption stylesheets.font.use-name #}
+     #:brace #{ \getOption stylesheets.font.use-brace #}
+     #:factor (/ staff-height pt 20)))
+}
 
-#(oll:log "Initialized Stylesheets~a" "")
