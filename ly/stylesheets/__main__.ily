@@ -55,6 +55,18 @@
 %    \useNotationFont "Gutenberg1939"
 % the quotation marks are needed.
 
+
+#(define (make-style-file use-name style)
+   "Construct file name for included style sheet.
+    Factored out because needed several times."
+   (string-append
+    #{ \getOption global.root-path #}
+    "/stylesheets/fonts/"
+    use-name
+    "-"
+    (string-downcase style)
+    ".ily"))
+
 useNotationFont =
 #(define-void-function (parser location options name)
    ((ly:context-mod?) string?)
@@ -82,14 +94,7 @@ useNotationFont =
        (or (assoc-ref options 'style)
            "default"))
       ;; ... and produce include filename from it
-      (style-file
-       (string-append
-        #{ \getOption global.root-path #}
-        "/stylesheets/fonts/"
-        use-name 
-        "-" 
-        (string-downcase style) 
-        ".ily"))
+      (style-file (make-style-file use-name style))
       )
 
     ;; Post-process options
@@ -98,23 +103,33 @@ useNotationFont =
     (if (string=? "none" (assoc-ref options 'brace))
         (set! brace "Emmentaler"))
 
+    ;; if a non-existent stylesheet is requested
+    ;; issue a warning and reset to -default
+    (if (not 
+         (or (string=? "none" style)
+             (file-exists? style-file)))
+        (begin
+         (oll:warn location
+           (format "Requested stylesheet \"~a\" doesn't exist for font \"~a\"" style name))
+         (set! style-file (make-style-file use-name style))))
+
     ;; store options, these are used from the included load-font file
     #{ \setOption stylesheets.font.name #name #}
     #{ \setOption stylesheets.font.use-name #use-name #}
     #{ \setOption stylesheets.font.brace #brace #}
     #{ \setOption stylesheets.font.use-brace #use-brace #}
-    
+
     ;; load font through an included file.
     ;; this is necessary so that file can set its own
     ;; \paper {} block.
     ;
-    ; TODO: 
+    ; TODO:
     ; Find a way to pull that functionality in here.
     ; The problem seems to be that (even when wrapping the
-    ; definition of 'fonts in a ly:parser-define call the 
-    ; properties of the \paper block (e.g. staff-height) are 
+    ; definition of 'fonts in a ly:parser-define call the
+    ; properties of the \paper block (e.g. staff-height) are
     ; not available.
-    ; I think one has to somehow access the current paper block 
+    ; I think one has to somehow access the current paper block
     ; through Scheme (I suspect there are options in the paper
     ; related ly: functions but I didn't succeed to find a solution).
     (ly:parser-include-string parser
@@ -122,11 +137,12 @@ useNotationFont =
        (string-append
         #{ \getOption global.root-path #}
         "/stylesheets/load-font")))
-    (oll:log location 
+    (oll:log location
       (format "Font \"~a\" loaded successfully" name))
-    
+
     ;; include the determined style file for the font
     ;; if not "none".
+    (ly:message style)
     (if (not (string=? "none" style))
         (ly:parser-include-string parser
           (ly:gulp-file style-file)))
@@ -138,7 +154,7 @@ useNotationFont =
 % The Arnold font provides a number of extra glyphs
 % This command loads a separate style sheet defining commands
 % and articulations to make use of these extra glyphs.
-useArnoldExtensions = 
+useArnoldExtensions =
 #(define-void-function (parser location)()
    (ly:parser-include-string parser
      (ly:gulp-file
