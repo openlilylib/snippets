@@ -128,6 +128,10 @@ class Font(object):
         self.font_dir = os.path.join(Config.font_repo(), self._basename)
         self.otf_dir = os.path.join(self.font_dir, 'otf')
         self.svg_dir = os.path.join(self.font_dir, 'svg')
+        self.otf_target_dir = os.path.join(Config.lilypond_font_root(),
+                                      'otf')
+        self.svg_target_dir = os.path.join(Config.lilypond_font_root(),
+                                      'svg')
 
 
     def _archive_present(self):
@@ -192,15 +196,10 @@ class Font(object):
         # collect lists of files in the repo and links in the LilyPond installation,
         # for both the otf and svg/woff directories
         otf_files = os.listdir(self.otf_dir)
-        otf_target_dir = os.path.join(Config.lilypond_font_root(),
-                                      'otf')
-        otf_links = [f for f in os.listdir(otf_target_dir) if f.startswith(self._basename)]
-
+        otf_links = [f for f in os.listdir(self.otf_target_dir) if f.startswith(self._basename)]
 
         svg_files = os.listdir(self.svg_dir)
-        svg_target_dir = os.path.join(Config.lilypond_font_root(),
-                                      'svg')
-        svg_links = [f for f in os.listdir(svg_target_dir) if f.startswith(self._basename)]
+        svg_links = [f for f in os.listdir(self.svg_target_dir) if f.startswith(self._basename)]
 
         # return True if both comparisons return True
         return (compare_links(otf_files, otf_links) and
@@ -259,6 +258,42 @@ class Font(object):
         remote = self._version_as_integer(self._remote_version)
         return remote > local
 
+    def _update_links(self):
+        """
+        Add or update links in the LilyPond installation
+        """
+        def clear_directory(type, basename):
+            """Remove existing links to a font in a dir to prevent inconsistencies"""
+            target_dir = os.path.join(Config.lilypond_font_root(), type)
+            for ln in os.listdir(target_dir):
+                abs_ln = os.path.join(target_dir, ln)
+                if os.path.islink(abs_ln) and ln.startswith(basename):
+                    os.unlink(abs_ln)
+
+        def install_directory(type, basename):
+            """Add links to all font files"""
+            font_dir = os.path.join(self.font_dir, type)
+            target_dir = os.path.join(Config.lilypond_font_root(), type)
+            link_targets = [f for f in os.listdir(font_dir) if f.startswith(self._basename)]
+            for f in link_targets:
+                target_name = os.path.join(font_dir, f)
+                link_name = os.path.join(target_dir, f)
+                try:
+                    os.symlink(target_name, link_name)
+                except OSError, e:
+                    failed_links.append(target_name)
+
+        print "  - Update links"
+        failed_links = []
+        for type in ['otf', 'svg']:
+            clear_directory(type, self._basename)
+            install_directory(type, self._basename)
+
+        if not failed_links:
+            print "  ... OK"
+        return failed_links
+
+
     def _version_as_integer(self, version):
         """
         Calculate an integer representation of a font version string.
@@ -288,6 +323,11 @@ class Font(object):
             self._download_archive()
         if 'extract' in self._actions:
             self._extract_archive()
+        if 'update_links' in self._actions:
+            failed_links = self._update_links()
+            if failed_links:
+                print "Some links for font {} could not be installed:".format(self._name)
+                print ''.join(failed_links)
 
     def merge_font(self, record):
         """
