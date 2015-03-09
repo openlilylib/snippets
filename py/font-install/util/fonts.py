@@ -115,9 +115,18 @@ class Font(object):
         self._local_version = record.get('local_version', '0')
         self._remote_version = record.get('remote_version', '0')
 
+        # existing font files in repo
+        self._otf_files = []
+        self._svg_files = [] # svg includes woff files
+
+        # actions to be performed
+        self._actions = {}
+
         # determine files and paths
         self.archive = os.path.join(Config.font_repo(), "{}.zip".format(self._basename))
         self.font_dir = os.path.join(Config.font_repo(), self._basename)
+        self.otf_dir = os.path.join(self.font_dir, 'otf')
+        self.svg_dir = os.path.join(self.font_dir, 'svg')
 
 
     def _archive_present(self):
@@ -128,7 +137,9 @@ class Font(object):
         Determine the necessary actions for the font,
         returning a dictionary with boolean values
         """
-        result = r = {}
+
+        # shortcut
+        r = self._actions
 
         # download archive if
         # - font not declared locally
@@ -140,18 +151,81 @@ class Font(object):
                                  self._remote_newer() or
                                  not self._archive_present()) else False
 
+        # extract archive if
+        # - it (a new one) was downloaded
+        # - the archive is present but not the target font directory
         r['extract'] = True if (r['download'] or
                                 (self._archive_present() and not
                                     self._font_dir_present())) else False
 
-
-        if not (r['download'] or
-                r['extract']):
+        # the font is considered up to date if
+        # - it doesn't have to be downloaded or extracted
+        # - the font repo matches the links in the installation
+        if (r['download'] or
+            r['extract'] or
+            (not self._check_links())):
+            r['update_links'] = True
+        else:
+            r['update_links'] = False
             print "Font {} up to date.".format(self._name)
-        return result
+
+
+    def _check_links(self):
+        """
+        Determine if the list of font files matches the list of
+        links in the LilyPond installation's font directories
+        """
+        def compare_links(repo, install):
+            """
+            Return True if both string lists are equivalent.
+            """
+            if len(repo) != len(install):
+                return False
+            repo.sort()
+            install.sort()
+            for a, b in zip(repo, install):
+                if a != b:
+                    return False
+            return True
+
+        # collect lists of files in the repo and links in the LilyPond installation,
+        # for both the otf and svg/woff directories
+        otf_files = os.listdir(self.otf_dir)
+        otf_target_dir = os.path.join(Config.lilypond_font_root(),
+                                      'otf')
+        otf_links = [f for f in os.listdir(otf_target_dir) if f.startswith(self._basename)]
+
+
+        svg_files = os.listdir(self.svg_dir)
+        svg_target_dir = os.path.join(Config.lilypond_font_root(),
+                                      'svg')
+        svg_links = [f for f in os.listdir(svg_target_dir) if f.startswith(self._basename)]
+
+        # return True if both comparisons return True
+        return (compare_links(otf_files, otf_links) and
+            compare_links(svg_files, svg_links))
+
 
     def _download_archive(self):
-        pass
+        """
+        Download the font archive to the local font repo
+        """
+        try:
+            url = "{host}/{name}/{name}.zip".format(
+                host=FONT_HOST,
+                name=self._basename)
+            print "  - Download ({}).".format(url)
+            archive = urllib2.urlopen(url)
+            output = open(self.archive, 'wb')
+            output.write(archive.read())
+            output.close()
+            self._local_version = self._remote_version
+            print "  ... OK"
+
+        except Exception, e:
+            error("Error downloading font archive {}.\nMessage:\n{}".format(
+                f, str(e)))
+
 
     def _font_dir_present(self):
         """
@@ -180,12 +254,21 @@ class Font(object):
             power -= 3
         return value
 
-    def handle(self):
+    def check(self):
         """
         Determine necessary actions and perform them
         """
-        actions = self._check()
-        #raise Exception("Continue with Font.handle()")
+        print " - {}".format(self._name)
+        self._check()
+
+    def handle(self):
+        """
+        Process necessary actions for the font
+        (download, extract, update links)
+        """
+        print " -", self._name
+        if 'download' in self._actions:
+            self._download_archive()
 
     def merge_font(self, record):
         """
@@ -255,5 +338,11 @@ class Fonts(object):
         Asks each Font object to do what is necessary
         (download, check, extract, link ...)
         """
+        print "Checking necessary actions ..."
+        for f in self._font_list:
+            self._fonts[f].check()
+        print "... successful."
+
+        print "\nProcessing fonts ..."
         for f in self._font_list:
             self._fonts[f].handle()
