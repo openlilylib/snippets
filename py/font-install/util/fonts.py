@@ -131,6 +131,7 @@ class Fonts(object):
 
         # property to hold the longest name (for display)
         self._max_len_font_fname = 0
+        self._max_len_font_nme = 0
 
         # check local font catalog
         self.local_catalog = Catalog(os.path.join(Config.font_repo(), FONT_CATALOG_FILE_NAME))
@@ -141,11 +142,28 @@ class Fonts(object):
             self.remote_catalog = Catalog()
             self.add_fonts(self.remote_catalog)
 
+    def _act_string(self, bool):
+        """
+        Return a string representation of a boolean for the display matrix
+        """
+        return "-X-- " if bool else "---- "
+
     def _display_matrix(self):
         """
         Display the actions to be performed for the fonts
         """
-        print "\nTODO: Display action matrix!"
+        print "\nActions to be performed:"
+        print ''.join(
+            ['FONT'.ljust(self._max_len_font_name() + 1),
+             'D/L  EXT  INSTALL']
+        )
+        for f in self._font_list:
+            print ''.join([
+                f.ljust(self._max_len_font_name() + 1),
+                self._act_string(self._fonts[f]._actions['download']),
+                self._act_string(self._fonts[f]._actions['extract']),
+                self._act_string(self._fonts[f]._actions['update_links']),
+            ])
 
     def _max_len_font_filename(self):
         """
@@ -157,6 +175,18 @@ class Fonts(object):
         for f in self._font_list:
             result = max(result,
                          len(self._fonts[f]._basename))
+        return result
+
+    def _max_len_font_name(self):
+        """
+        Return the length of the longest font filename
+        """
+        if self._max_len_font_nme:
+            return self._max_len_font_nmme
+        result = 0
+        for f in self._font_list:
+            result = max(result,
+                         len(f))
         return result
 
     def _write_local_catalog(self):
@@ -207,7 +237,7 @@ class Fonts(object):
             self._fonts[f].check()
         print "... successful."
 
-        print "\nActions to be taken:"
+        # display a matrix with all actions for all fonts
         self._display_matrix()
 
         print "\nProcessing fonts ..."
