@@ -71,11 +71,11 @@ def create_parser():
     # Make sure debugger options are recognized as valid. These are passed automatically
     # from PyDev in Eclipse to the inferior process.
     if "pydevd" in sys.modules:
-        parser.add_option('-v', '--vm_type')
-        parser.add_option('-a', '--client')
-        parser.add_option('-p', '--port')
-        parser.add_option('-f', '--file')
-        parser.add_option('-o', '--output')
+        parser.add_argument('-v', '--vm_type')
+        parser.add_argument('-a', '--client')
+        parser.add_argument('-p', '--port')
+        parser.add_argument('-f', '--file')
+        parser.add_argument('-o', '--output')
 
 create_parser()
 
