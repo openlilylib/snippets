@@ -186,7 +186,10 @@ class Font(object):
             r['update_links'] = True
         else:
             r['update_links'] = False
-            print "Font {} up to date.".format(self._name)
+
+        self._up_to_date = False if (r['download'] or
+            r['extract'] or
+            r['update_links']) else True
 
 
     def _check_links(self):
@@ -332,7 +335,8 @@ class Font(object):
         Process necessary actions for the font
         (download, extract, update links)
         """
-        print " -", self._name
+        if not self._up_to_date:
+            print " -", self._name
         a = self._actions
         if a['download']:
             self._download_archive()
