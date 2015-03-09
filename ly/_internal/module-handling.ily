@@ -30,6 +30,57 @@
 #(define oll-loaded-libraries '())
 #(define oll-loaded-modules '())
 
+% Initialize a library before first use.
+% This also serves as a kind of declaration of the intent of using it.
+% If options are passed in a \with {} clause they are set after in
+% initialization file has been loaded. If the initializiation did not
+% register the options (in the form LIBRARY.OPTION) this will cause
+% warnings about trying to set unregistered options.
+useLibrary =
+#(define-void-function (parser location options name)
+   ((ly:context-mod?) symbol? )
+   "Load an openLilyLib library and initialize it"
+   (if (not (member name oll-loaded-libraries))
+       ;; Determine paths to init and main files
+       (let* ((lib-dir
+               (string-append
+                #{ \getOption global.root-path #}
+                "/" (symbol->string name) "/"))
+              (init-file
+               (string-append lib-dir "__init__.ily"))
+              (main-file
+               (string-append lib-dir "__main__.ily")))
+
+         ;; Create a root option for the library
+         #{ \registerOption #(list name) #'() #}
+
+         ;; Load initialization file if it exists
+         (if (file-exists? init-file)
+             (begin
+              (oll:log location "Initialize library \"~a\" ..." name)
+              (ly:parser-include-string parser (ly:gulp-file init-file))))
+
+         ;; If a \with clause has been given pass the options to the library.
+         ;; If the options have not been registered in the __init__ file this
+         ;; will trigger oll:warn messages but don't abort the job.
+         (if options
+             (for-each
+              (lambda (o)
+                (let ((opt-path (list name (cadr o)))
+                      (opt-val (caddr o)))
+                  #{ \setOption #opt-path #opt-val #}))
+              (ly:get-context-mods options)))
+
+         ;; load the main file of the library or issue a warning if that isn't found.
+         (if (file-exists? main-file)
+             (begin
+              (ly:parser-include-string parser (ly:gulp-file main-file))
+              (set! oll-loaded-libraries
+              (append oll-loaded-libraries
+                `(,name)))
+              (oll:log location "... completed."))
+             (oll:warn location (format "Library main file \"~a\" not found" main-file))))))
+
 
 % Conditionally register and load a library when
 % for the first time a module from that library is requested.
