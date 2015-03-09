@@ -54,7 +54,8 @@ def create_parser():
               "LilyPond executable. If not given some attempts are done " +
               "to determine it automatically."))
     # not implemented yet
-    parser.add_argument('-b', '--batch', 
+    parser.add_argument('-b', '--batch',
+        action='store_true',
         help=("Run in batch mode. This means:\n" +
               "- In case of doubts don't ask but abort the script\n" +
               "- Don't ask for choices but install/update all found fonts\n" +
