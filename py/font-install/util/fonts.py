@@ -327,7 +327,6 @@ class Font(object):
         """
         Determine necessary actions and perform them
         """
-        print " - {}".format(self._name)
         self._check()
 
     def handle(self):
@@ -391,6 +390,12 @@ class Fonts(object):
             self.remote_catalog = Catalog()
             self.add_fonts(self.remote_catalog)
 
+    def _display_matrix(self):
+        """
+        Display the actions to be performed for the fonts
+        """
+        print "\nTODO: Display action matrix!"
+
     def _max_len_font_filename(self):
         """
         Return the length of the longest font filename
@@ -446,13 +451,18 @@ class Fonts(object):
         Asks each Font object to do what is necessary
         (download, check, extract, link ...)
         """
-        print "Checking necessary actions ..."
+        print "\nChecking necessary actions ..."
         for f in self._font_list:
             self._fonts[f].check()
         print "... successful."
+
+        print "\nActions to be taken:"
+        self._display_matrix()
 
         print "\nProcessing fonts ..."
         for f in self._font_list:
             self._fonts[f].handle()
 
+        print "\nWrite local catalog"
         self._write_local_catalog()
+        print "\n Script completed successfully."
