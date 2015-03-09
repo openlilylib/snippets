@@ -7,7 +7,8 @@ from __future__ import unicode_literals
 import sys
 import os
 import urllib2
-
+import zipfile
+import shutil
 
 from config import Config
 from util import error
@@ -226,6 +227,22 @@ class Font(object):
             error("Error downloading font archive {}.\nMessage:\n{}".format(
                 f, str(e)))
 
+    def _extract_archive(self):
+        """
+        Extract the font's archive file to its own directory in the local font repo
+        """
+        def clear_directory(dir):
+            """
+            Ensure the target directory is empty
+            """
+            if os.path.exists(dir):
+                shutil.rmtree(dir)
+            os.mkdir(dir)
+
+        print "  - Extract ({})".format(self.archive)
+        archive = zipfile.ZipFile(self.archive, 'r')
+        clear_directory(self.font_dir)
+        archive.extractall(self.font_dir)
 
     def _font_dir_present(self):
         """
@@ -269,6 +286,8 @@ class Font(object):
         print " -", self._name
         if 'download' in self._actions:
             self._download_archive()
+        if 'extract' in self._actions:
+            self._extract_archive()
 
     def merge_font(self, record):
         """
