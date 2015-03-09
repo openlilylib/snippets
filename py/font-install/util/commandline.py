@@ -64,7 +64,8 @@ def create_parser():
         help=("Don't try to determine updated fonts, overwrite everything " +
               "with upstream files."))
     # not implemented yet
-    parser.add_argument('-l', '--local', 
+    parser.add_argument('-l', '--local',
+        action='store_true',
         help=("Consider the local font catalog up to date, don't download " +
               "the remote one. Useful for updating multiple LilyPond installations."))
                 

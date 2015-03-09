@@ -137,9 +137,21 @@ class Config(object):
     @staticmethod
     def read_args():
         args = commandline.parse()
-        Config._batch = True if args['batch'] else False
-        Config._local = True if args['local'] else False
-        Config._force = True if args['force'] else False
+
+        Config._batch = False
+        if args['batch']:
+            Config._batch = True
+            print "Script runs in batch mode (any error condition simply aborts)."
+
+        Config._local = False
+        if args['local']:
+            Config._local = True
+            print "Script running locally."
+
+        Config._force = False
+        if args['force']:
+            Config._force = True
+            print "Forcing remote font versions without checking difference."
 
         Config._local_font_repo = Config._get_local_repo_path(args['font_directory'])
         print "\nDetermined font directory:\n  {}".format(Config.font_repo())
