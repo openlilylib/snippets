@@ -342,7 +342,7 @@ class Font(object):
             self._download_archive()
         if a['extract']:
             self._extract_archive()
-        if ['update_links']:
+        if a['update_links']:
             failed_links = self._update_links()
             if failed_links:
                 print "Some links for font {} could not be installed:".format(self._name)
