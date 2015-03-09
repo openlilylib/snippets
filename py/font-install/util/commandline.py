@@ -60,7 +60,8 @@ def create_parser():
               "- Don't ask for choices but install/update all found fonts\n" +
               "- Quietly overwrite existing files"))
     # not implemented yet
-    parser.add_argument('-f', '--force', 
+    parser.add_argument('-f', '--force',
+        action='store_true',
         help=("Don't try to determine updated fonts, overwrite everything " +
               "with upstream files."))
     # not implemented yet

@@ -149,7 +149,7 @@ class Config(object):
             print "Script running locally."
 
         Config._force = False
-        if args['force']:
+        if args['force'] and not Config._local:
             Config._force = True
             print "Forcing remote font versions without checking difference."
 
