@@ -76,14 +76,18 @@ useLibrary =
              (begin
               (ly:parser-include-string parser (ly:gulp-file main-file))
               (set! oll-loaded-libraries
-              (append oll-loaded-libraries
-                `(,name)))
+                    (append oll-loaded-libraries
+                      `(,name)))
               (oll:log location "... completed."))
              (oll:warn location (format "Library main file \"~a\" not found" main-file))))))
 
 
 % Conditionally register and load a library when
 % for the first time a module from that library is requested.
+
+%%% DEPRECATED !!!
+%%% This is deprecated together with \loadModule
+%%%
 registerLibrary =
 #(define-void-function (parser location lib)
    (string?)
@@ -133,6 +137,15 @@ loadModule =
                  #{ \getOption global.root-path #}
                  "/"
                  append-path)))
+
+    ;; DEPRECATION !!!
+    ;; If used for loading a main library we should now use
+    ;; \useLibrary instead
+    (if (= 1 (length path-list))
+        (oll:warn location
+"\n\\loadModule is deprecated for loading libraries.
+Please use the more idiomatic and powerful \\useLibrary now."))
+
     ;; try to load the file if it isn't already present
     (if (member load-path oll-loaded-modules)
         (oll:log "module ~a already loaded. Skipping." load-path)
