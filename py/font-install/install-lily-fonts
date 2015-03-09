@@ -14,54 +14,6 @@ from util.fonts import Fonts
 from util import error
 
 
-class LilyPond(object):
-    """Represents a given LilyPond installation directory"""
-
-    def install_font(self, f_rec):
-        """Installs the given font to the current LilyPond installation."""
-
-        def clear_directory(type, font_filename):
-            """Remove existing links to a font in a dir to prevent inconsistencies"""
-            target_dir = os.path.join(self.font_dir, type)
-            for ln in os.listdir(target_dir):
-                abs_ln = os.path.join(target_dir, ln)
-                if os.path.islink(abs_ln) and ln.startswith(font_filename):
-                    os.unlink(abs_ln)
-
-
-        def install_directory(ext, font_filename):
-            """Create all the links for one font name"""
-            pass
-
-
-        font_filename = f_rec['dirname']
-        font_root = f_rec['font_root']
-        clear_directory('otf', font_filename)
-        clear_directory('svg', font_filename)
-        install_directory()
-
-
-#    for dirName, subdirList, fileList in os.walk(font_dir):
-#        print "Processing dir:", dirName
-#        for f in fileList:
-#            link_name = ''
-#            name, ext = os.path.splitext(f)
-#            if ext == '.otf':
-#                link_name = os.path.join(otf_dir, f)
-#            if ext == '.svg' or ext == '.woff':
-#                link_name = os.path.join(svg_dir, f)
-#            if link_name:
-#                link_target = os.path.join(dirName, f)
-#                try:
-#                    os.symlink(link_target, link_name)
-#                except OSError, e:
-#                    print "Could not install font:", link_target
-#                    print str(e)
-#                print 'Installed:', link_name
-
-
-
-
 
 class Catalog(object):
     def __init__(self):
