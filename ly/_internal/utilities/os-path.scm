@@ -97,8 +97,8 @@
           (let ((ret '()))
             (for-each
              (lambda (e)
-               (set! ret (cond ((equal? e "..")(if (> (length ret) 1) (cdr ret) (cdr (reverse (listcwd)))))
-                           ((equal? e ".") (if (= (length ret) 0) (reverse (listcwd)) ret))
+               (set! ret (cond ((equal? e "..")(if (> (length ret) 1) (cdr ret) (cdr (reverse (get-cwd-list)))))
+                           ((equal? e ".") (if (= (length ret) 0) (reverse (get-cwd-list)) ret))
                            (else `(,e ,@ret))))) path-list)
             (reverse ret))))
     (if (string? path)

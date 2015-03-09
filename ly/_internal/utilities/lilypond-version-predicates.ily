@@ -105,3 +105,15 @@
    is equal to the given reference version"
   (= (calculate-version (ly:version))
      (calculate-version ref-version)))
+
+#(define (lilypond-version-string ver-list)
+   "Return a string representation of a version list.
+    Elements of the list can be either strings or integers"
+   (string-join
+    (map (lambda (elt)
+           (if (integer? elt)
+               (number->string elt)
+               elt))
+      ver-list)
+    "."))
+     
