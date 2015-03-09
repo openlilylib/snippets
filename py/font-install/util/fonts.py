@@ -102,6 +102,20 @@ class Catalog(object):
                 result.append(record)
         return result
 
+    def write_catalog(self, lines):
+        """
+        Write the catalog file if we're local.
+        """
+        if self._type == 'remote':
+            error("Trying to write to remote catalog.")
+        try:
+            catalog = open(self._file_name, 'w')
+            catalog.write('\n'.join(lines))
+            catalog.close()
+        except Exception, e:
+            error("An error occured, while writing local font catalog:\n{}").format(str(e))
+
+
 class Font(object):
     """
     Object representing one single font.
@@ -360,6 +374,9 @@ class Fonts(object):
         # ... and a dictionary with Font() objects
         self._fonts = {}
 
+        # property to hold the longest name (for display)
+        self._max_len_font_fname = 0
+
         # check local font catalog
         self.local_catalog = Catalog(os.path.join(Config.font_repo(), FONT_CATALOG_FILE_NAME))
         self.add_fonts(self.local_catalog)
@@ -368,6 +385,33 @@ class Fonts(object):
         if not Config.local():
             self.remote_catalog = Catalog()
             self.add_fonts(self.remote_catalog)
+
+    def _max_len_font_filename(self):
+        """
+        Return the length of the longest font filename
+        """
+        if self._max_len_font_fname:
+            return self._max_len_font_fname
+        result = 0
+        for f in self._font_list:
+            result = max(result,
+                         len(self._fonts[f]._basename))
+        return result
+
+    def _write_local_catalog(self):
+        import datetime
+
+        lines = []
+        lines.append("# Local LilyPond font catalog")
+        lines.append("# Written by the openLilyLib font installation script")
+        lines.append("# {}\n".format(datetime.date.isoformat(datetime.date.today())))
+        for f in self._font_list:
+            font = self._fonts[f]
+            line = ' '.join([font._basename.ljust(self._max_len_font_filename()),
+                             font._local_version.ljust(8),
+                             f])
+            lines.append(line)
+        self.local_catalog.write_catalog(lines)
 
     def add_font(self, font_record):
         """
@@ -405,3 +449,5 @@ class Fonts(object):
         print "\nProcessing fonts ..."
         for f in self._font_list:
             self._fonts[f].handle()
+
+        self._write_local_catalog()
