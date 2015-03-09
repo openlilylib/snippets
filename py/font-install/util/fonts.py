@@ -333,11 +333,12 @@ class Font(object):
         (download, extract, update links)
         """
         print " -", self._name
-        if 'download' in self._actions:
+        a = self._actions
+        if a['download']:
             self._download_archive()
-        if 'extract' in self._actions:
+        if a['extract']:
             self._extract_archive()
-        if 'update_links' in self._actions:
+        if ['update_links']:
             failed_links = self._update_links()
             if failed_links:
                 print "Some links for font {} could not be installed:".format(self._name)
