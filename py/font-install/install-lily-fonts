@@ -13,55 +13,12 @@ from util.config import Config
 from util.fonts import Fonts
 from util import error
 
-
-
-class Catalog(object):
-    def __init__(self):
-
-        # maintain a sorted list of all font names
-        self.__font_list = []
-
-        self.__check_font_catalogs()
-
-    def __check_remote_fonts(self):
-
-        print "Parsing remote font catalog ..."
-        result = self.__read_catalog_file(lines)
-        print "Successfully updated font catalog:"
-        print "  Found {} fonts.".format(len(result))
-        return result
-
-    def __check_font_catalogs(self):
-        self.__local_fonts = self.__check_local_fonts()
-        self.__remote_fonts = self.__check_remote_fonts()
-
-
-    def font_dir(self):
-        return self.__font_dir
-
-    def local_fonts(self):
-        return self.__local_fonts
-
-    def remote_fonts(self):
-        return self.__remote_fonts
-
-
-
-
 def main():
     Config.read_args()
     fonts = Fonts()
     fonts.handle_fonts()
 
     sys.exit(0)
-
-    ##################
-    conf = Catalog()
-    font_matrix = Fonts(conf)
-    font_matrix.download_fonts()
-    font_matrix.extract_fonts()
-    font_matrix.install_fonts()
-
 
 # ####################################
 # Finally launch the program
