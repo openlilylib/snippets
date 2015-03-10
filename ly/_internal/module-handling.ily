@@ -88,12 +88,7 @@
 % - options: a \with {} clause with metadata options.
 %   some of them are mandatory, others can be used at the discretion
 %   of the library maintainers:
-%   Mandatory options:
-%   - maintainers (string-or-alist?)
-%     multiple maintainers can be maintained with name/email
-%   - TO-BE-CONTINUED
-%   Recognized options:
-%   - TO-BE-DISCUSSED
+%   For possible mandatory and known options see the two lists above.
 %
 declareLibrary =
 #(define-void-function (parser location display-name name options)
