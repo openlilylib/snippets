@@ -247,11 +247,20 @@ useModule =
              "/" (join-unix-path sym-path)))
            ;; Check if a valid file can be found for the module path
            ;; #f if no file is found
-           (filename
+           (ext
             (or (if (file-exists? (string-append module-basename ".ily"))
-                    (string-append module-basename ".ily") #f)
+                    ".ily" #f)
                 (if (file-exists? (string-append module-basename "/__main__.ily"))
-                    (string-append module-basename "/__main__.ily") #f)))
+                    "/__main__.ily" #f)))
+           (filename
+            (if ext
+                (string-append module-basename ext) #f))
+           (init-file
+            (and ext
+                 (string=? "/__main__.ily" ext)
+                 (let ((fname (string-append module-basename "/__init__.ily")))
+                   (if (file-exists? fname)
+                       fname #f))))
            (opts (extract-options options)))
 
           ;; Load module if present
@@ -263,7 +272,13 @@ useModule =
                       library (join-dot-path mod-path)))
                   (begin
 
-                   ;; Include module file
+                   ;; include init-file if present
+                   (if init-file
+                       (ly:parser-include-string parser
+                         (format "\\include \"~a\"" init-file)))
+
+
+                   ;; include module file
                    (ly:parser-include-string parser
                      (format "\\include \"~a\"" filename))
 
