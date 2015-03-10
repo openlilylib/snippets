@@ -54,18 +54,24 @@
     Takes either a path string or a list.
     If 'path' is a string it is split
     respecting the OS dependent path separator,
-    if it is a list then simply the list is returned."
+    if it is a list then the list is returned,
+    while elements are converted from symbol to string if necessary."
   (if (string? path)
       (string-split path os-path-separator)
-      path))
+      (map
+       (lambda (elt)
+         (if (string? elt)
+             elt
+             (symbol->string elt)))
+       path)))
 
 (define-public (join-unix-path path-list)
-  "Returns a Unix formatted path string from a list."
-  (string-join path-list "/"))
+  "Returns a Unix formatted path string from a (symbol?/string?) list."
+  (string-join (split-path path-list) "/"))
 
 (define-public (join-dot-path path)
   "Returns a string in dot-notation (to be displayed).
-   Takes a list with string elements or an
+   Takes a list with symbol?/string? elements or an
    OS independent path string."
   (let ((path-list (split-path path)))
     (string-join path-list ".")))
@@ -76,7 +82,7 @@
 
 (define-public (absolute-path? path)
   "Test if the given path is absolute.
-    Process either a string or a string list."
+    Process either a string or a symbol?/string? list."
   (let ((path-list (split-path path)))
     (if (and (> (length path-list) 0)
              ;; consider the path absolute if either the regex for windows volumes is matched
