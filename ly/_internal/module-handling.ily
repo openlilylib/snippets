@@ -63,6 +63,7 @@
 #(define oll-lib-mandatory-options
    `((maintainers . ,oll-maintainers?)
      (version . ,oll-version-string?)
+     (short-description . ,markup?)
      ))
 
 
