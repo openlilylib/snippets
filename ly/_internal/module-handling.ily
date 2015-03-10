@@ -30,6 +30,9 @@
 #(define oll-loaded-libraries '())
 #(define oll-loaded-modules '())
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Predicates for type-checking of library options
+
 % Simple regex check for Name plus email address in angled brackets:
 % "Ben Maintainer <ben@maintainer.org>"
 #(define (oll-maintainer? obj)
@@ -44,12 +47,22 @@
        (and (list? obj)
             (every oll-maintainer? obj))))
 
+% Returns true if obj is a string representation of an integer
+#(define (integer-string? obj)
+   (integer? (string->number obj)))
+
+% Returns true if a string is a three-element dot-joined list of integers
+#(define (oll-version-string? obj)
+   (and (string? obj)
+        (let ((lst (string-split obj #\.)))
+          (and (= 3 (length lst))
+               (every integer-string? lst)))))
 
 % Alist with mandatory options for library declarations
 % Each entry is a pair of option name symbol and type predicate
 #(define oll-lib-mandatory-options
    `((maintainers . ,oll-maintainers?)
-     (dummy . ,pair?)
+     (version . ,oll-version-string?)
      ))
 
 
