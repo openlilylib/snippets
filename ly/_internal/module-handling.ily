@@ -31,6 +31,19 @@
 #(define oll-loaded-modules '())
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Helper tools
+
+% Extract an options alist from a context-mods argument
+% Return an empty list if no mods are passed.
+#(define (extract-options ctx-mods)
+   (if ctx-mods
+       (map (lambda (o)
+              (cons (cadr o) (caddr o)))
+         (ly:get-context-mods ctx-mods))
+       '()))
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Predicates for type-checking of library options
 
 % Simple regex check for Name plus email address in angled brackets:
@@ -101,10 +114,7 @@ declareLibrary =
      ;; option path to the library's meta options
      (meta-path `(,(string->symbol internal-name) meta))
      ;; retrieve options from context mods
-     (options
-      (map (lambda (o)
-             (cons (cadr o) (caddr o)))
-        (ly:get-context-mods options))))
+     (options (extract-options options)))
 
     ;; initialize library's meta option branch
     #{ \registerOption #meta-path #'() #}
