@@ -30,6 +30,87 @@
 #(define oll-loaded-libraries '())
 #(define oll-loaded-modules '())
 
+
+% Alist with mandatory options for library declarations
+% Each entry is a pair of option name symbol and type predicate
+#(define oll-lib-mandatory-options
+   `((maintainers . ,string-or-alist?)
+     (dummy . ,pair?)
+     ))
+
+
+% Declare a library, to be done in the __init__.ily file
+% Arguments:
+% - display-name: The official name of the library
+% - name (optional): the directory name of the library
+%   This name must be 'symbol?' compatible, i.e. must consist of
+%   alphabetical characters and hyphens only.
+%   This argument can be omitted if the display-name is the same
+%   as the directory name with exception of capitalization.
+%   (e.g. when the display-name is "ScholarLY" the implicit 'name'
+%    is "scholarly").
+% - options: a \with {} clause with metadata options.
+%   some of them are mandatory, others can be used at the discretion
+%   of the library maintainers:
+%   Mandatory options:
+%   - maintainers (string-or-alist?)
+%     multiple maintainers can be maintained with name/email
+%   - TO-BE-CONTINUED
+%   Recognized options:
+%   - TO-BE-DISCUSSED
+%
+declareLibrary =
+#(define-void-function (parser location display-name name options)
+   (string? (symbol?) ly:context-mod?)
+   (let*
+    ;; internal-name is either explicitly given
+    ;; or the lowercase version of display-name
+    ((internal-name
+      (or name (string-downcase display-name)))
+     ;; option path to the library's meta options
+     (meta-path `(,(string->symbol internal-name) meta))
+     ;; retrieve options from context mods
+     (options
+      (map (lambda (o)
+             (cons (cadr o) (caddr o)))
+        (ly:get-context-mods options))))
+
+    ;; initialize library's meta option branch
+    #{ \registerOption #meta-path #'() #}
+
+    ;; check if all mandatory options are present
+    (for-each
+     (lambda (o)
+       (let ((mand-opt (car o)))
+         (if (not (assoc-ref options mand-opt))
+             (oll:error (format "
+    Missing option in library declaration!
+    Library: \"~a\"
+    Option: \"~a\"" display-name mand-opt) ""))
+         ))
+     oll-lib-mandatory-options)
+
+    ;; process options, type-check mandatory options and store in meta
+    (for-each
+     (lambda (o)
+       (let* ((opt-name (car o))
+              (opt-val (cdr o))
+              (predicate? (assoc-ref oll-lib-mandatory-options opt-name)))
+         ;; check for type if there is a predicate (-> true for mandatory options)
+         (if (and predicate?
+                  (not (predicate? opt-val)))
+             (oll:error (format "
+    Type check failed for mandatory option in library declaration!
+    Library: \"~a\"
+    Option: \"~a\"
+    Predicate: ~a" display-name opt-name predicate?) ""))
+
+         ;; store option
+         #{ \setChildOption #meta-path #opt-name #opt-val #}
+         ))
+     options)))
+
+
 % Initialize a library before first use.
 % This also serves as a kind of declaration of the intent of using it.
 % If options are passed in a \with {} clause they are set after in
@@ -143,7 +224,7 @@ loadModule =
     ;; \useLibrary instead
     (if (= 1 (length path-list))
         (oll:warn location
-"\n\\loadModule is deprecated for loading libraries.
+          "\n\\loadModule is deprecated for loading libraries.
 Please use the more idiomatic and powerful \\useLibrary now."))
 
     ;; try to load the file if it isn't already present
