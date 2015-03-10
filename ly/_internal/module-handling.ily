@@ -30,11 +30,25 @@
 #(define oll-loaded-libraries '())
 #(define oll-loaded-modules '())
 
+% Simple regex check for Name plus email address in angled brackets:
+% "Ben Maintainer <ben@maintainer.org>"
+#(define (oll-maintainer? obj)
+   (let ((pat (make-regexp ".*<.*@.*>")))
+     (if (and (string? obj)
+              (regexp-exec pat obj))
+         #t #f)))
+
+% Returns true for one maintainer or a list of them
+#(define (oll-maintainers? obj)
+   (or (oll-maintainer? obj)
+       (and (list? obj)
+            (every oll-maintainer? obj))))
+
 
 % Alist with mandatory options for library declarations
 % Each entry is a pair of option name symbol and type predicate
 #(define oll-lib-mandatory-options
-   `((maintainers . ,string-or-alist?)
+   `((maintainers . ,oll-maintainers?)
      (dummy . ,pair?)
      ))
 
