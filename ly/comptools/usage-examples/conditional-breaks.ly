@@ -3,6 +3,10 @@
 \version "2.18.0"
 
 \include "openlilylib"
+
+\setOption global.loglevel #oll-loglevel-log
+\useLibrary comptools
+
 %\loadModule "comptools/partial-compilation.ily"
 \registerOption documentation.include-file "comptools/conditional-breaks.ily"
 \loadModule "_internal/doc-include/usage-example.ily"

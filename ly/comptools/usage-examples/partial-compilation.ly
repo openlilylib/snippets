@@ -3,6 +3,9 @@
 \version "2.18.0"
 
 \include "openlilylib"
+\setOption global.loglevel #oll-loglevel-log
+\useLibrary comptools
+
 \registerOption documentation.include-file "comptools/partial-compilation.ily"
 \loadModule "_internal/doc-include/usage-example.ily"
 
