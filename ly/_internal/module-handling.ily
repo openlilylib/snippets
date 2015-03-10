@@ -192,7 +192,8 @@ useLibrary =
          (if (file-exists? init-file)
              (begin
               (oll:log location "Initialize library \"~a\" ..." display-name)
-              (ly:parser-include-string parser (ly:gulp-file init-file))))
+              (ly:parser-include-string parser
+                (format "\\include \"~a\"" init-file))))
 
          ;; If a \with clause has been given pass the options to the library.
          ;; If the options have not been registered in the __init__ file this
@@ -215,7 +216,7 @@ useLibrary =
                     (append oll-loaded-libraries
                       `(,name)))
               (oll:log location "... completed."))
-             (oll:warn location (format "Library main file \"~a\" not found" main-file))))))
+             (oll:warn location (format "Library main file \"~a\" not found" main-file)))))))
 
 
 % Load a module from within a library.
@@ -339,10 +340,10 @@ registerLibrary =
 loadModule =
 #(define-void-function (parser location path)(string?)
    "Load an openLilyLib module if it has not been already loaded."
-    
-    ;; DEPRECATION !!!
-    (oll:warn location
-          "\n    \\loadModule
+
+   ;; DEPRECATION !!!
+   (oll:warn location
+     "\n    \\loadModule
     is deprecated and will eventually be removed.
     Please use the more idiomatic and powerful
       \\useLibrary and 
