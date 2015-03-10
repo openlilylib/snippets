@@ -67,6 +67,13 @@
      (description . ,string?)
      ))
 
+% Alist with recognized options for library declarations
+% If an option is in this list it is type-checked against the given predicate.
+#(define oll-lib-known-options
+   `((lilypond-min-version . ,oll-version-string?)
+     (lilypond-max-version . ,oll-version-string?)
+     ))
+
 
 % Declare a library, to be done in the __init__.ily file
 % Arguments:
@@ -124,7 +131,8 @@ declareLibrary =
      (lambda (o)
        (let* ((opt-name (car o))
               (opt-val (cdr o))
-              (predicate? (assoc-ref oll-lib-mandatory-options opt-name)))
+              (predicate? (assoc-ref oll-lib-mandatory-options opt-name))
+              (known-opt-pred? (assoc-ref oll-lib-known-options opt-name)))
          ;; check for type if there is a predicate (-> true for mandatory options)
          (if (and predicate?
                   (not (predicate? opt-val)))
@@ -133,6 +141,13 @@ declareLibrary =
     Library: \"~a\"
     Option: \"~a\"
     Predicate: ~a" display-name opt-name predicate?) ""))
+         (if (and known-opt-pred?
+                  (not (known-opt-pred? opt-val)))
+             (oll:error (format "
+    Type check failed for known option in library declaration!
+    Library: \"~a\"
+    Option: \"~a\"
+    Predicate: ~a" display-name opt-name known-opt-pred?) ""))
 
          ;; store option
          #{ \setChildOption #meta-path #opt-name #opt-val #}
