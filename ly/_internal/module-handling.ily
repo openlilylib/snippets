@@ -214,6 +214,73 @@ useLibrary =
              (oll:warn location (format "Library main file \"~a\" not found" main-file))))))
 
 
+% Load a module from within a library.
+% A module is either a single .ily file or a __main__.ily file in a folder.
+% It is adressed as a dotted path representing the directory structure
+% leading to the file. The first element of the path is the library, the last one
+% is the name of the module.
+% It is looked for files path/to/NAME.ily or path/to/NAME/__main__.ily
+%
+% An optional \with {} clause can contain options that will be set
+% after the module has been loaded. Such options must have been registered
+% in the module definition file.
+
+useModule =
+#(define-void-function (parser location options sym-path)
+   ((ly:context-mod?) list?)
+   (let ((dot-path (join-dot-path sym-path)))
+     ;; only do any work if the module isn't already loaded
+     (if (member dot-path oll-loaded-modules )
+         (oll:warn location
+           (format "Module already loaded. Skipping \"~a\"" dot-path))
+         (let*
+          ((library (car sym-path))
+           (mod-path (cdr sym-path))
+           ;; unix file path to the module (base)
+           (module-basename
+            (string-append
+             #{ \getOption global.root-path #}
+             "/" (join-unix-path sym-path)))
+           ;; Check if a valid file can be found for the module path
+           ;; #f if no file is found
+           (filename
+            (or (if (file-exists? (string-append module-basename ".ily"))
+                    (string-append module-basename ".ily") #f)
+                (if (file-exists? (string-append module-basename "/__main__.ily"))
+                    (string-append module-basename "/__main__.ily") #f)))
+           (opts (extract-options options)))
+
+          ;; Load module if present
+          (if filename
+              ;; but only if the library is already loaded
+              (if (not (member library oll-loaded-libraries))
+                  (oll:warn location
+                    (format "Library \"~a\" must be loaded before module \"~a\""
+                      library (join-dot-path mod-path)))
+                  (begin
+
+                   ;; Include module file
+                   (ly:parser-include-string parser
+                     (format "\\include \"~a\"" filename))
+
+                   ;; register module
+                   (set! oll-loaded-modules
+                         (append oll-loaded-modules (list dot-path)))
+
+                   ;; pass along options
+                   (for-each
+                    (lambda (o)
+                      #{ \setChildOption #sym-path #(car o) #(cdr o) #})
+                    opts)
+
+                   ;; TODO: COntinue with setting options
+                   ))
+              (oll:warn location
+                (format "No file found for module ~a"
+                  (join-dot-path (append (list library) mod-path)))))))))
+
+
+
 % Conditionally register and load a library when
 % for the first time a module from that library is requested.
 
