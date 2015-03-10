@@ -204,7 +204,9 @@ useLibrary =
          ;; load the main file of the library or issue a warning if that isn't found.
          (if (file-exists? main-file)
              (begin
-              (ly:parser-include-string parser (ly:gulp-file main-file))
+              ;              (ly:parser-include-string parser (ly:gulp-file main-file))
+              (ly:parser-include-string parser
+                (format "\\include \"~a\"" main-file))
               (set! oll-loaded-libraries
                     (append oll-loaded-libraries
                       `(,name)))
