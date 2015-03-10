@@ -320,6 +320,15 @@ registerLibrary =
 loadModule =
 #(define-void-function (parser location path)(string?)
    "Load an openLilyLib module if it has not been already loaded."
+    
+    ;; DEPRECATION !!!
+    (oll:warn location
+          "\n    \\loadModule
+    is deprecated and will eventually be removed.
+    Please use the more idiomatic and powerful
+      \\useLibrary and 
+      \\useModule now.")
+
    (let*
     ((path-list (string-split path #\/))
      (lib (first path-list))
@@ -336,14 +345,6 @@ loadModule =
                  #{ \getOption global.root-path #}
                  "/"
                  append-path)))
-
-    ;; DEPRECATION !!!
-    ;; If used for loading a main library we should now use
-    ;; \useLibrary instead
-    (if (= 1 (length path-list))
-        (oll:warn location
-          "\n\\loadModule is deprecated for loading libraries.
-Please use the more idiomatic and powerful \\useLibrary now."))
 
     ;; try to load the file if it isn't already present
     (if (member load-path oll-loaded-modules)
