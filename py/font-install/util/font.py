@@ -122,7 +122,7 @@ class Font(object):
         """
         try:
             url = "{host}/{name}/{name}.zip".format(
-                host=FONT_HOST,
+                host=fonts.FONT_HOST,
                 name=self._basename)
             print "  - Download ({}).".format(url)
             archive = urllib2.urlopen(url)
@@ -133,8 +133,8 @@ class Font(object):
             print "  ... OK"
 
         except Exception, e:
-            error("Error downloading font archive {}.\nMessage:\n{}".format(
-                f, str(e)))
+            error("Error downloading font archive for {}.\nMessage:\n{}".format(
+                self._name, str(e)))
 
     def _extract_archive(self):
         """
