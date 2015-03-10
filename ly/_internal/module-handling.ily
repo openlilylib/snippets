@@ -169,6 +169,10 @@ declareLibrary =
 useLibrary =
 #(define-void-function (parser location options name)
    ((ly:context-mod?) symbol? )
+   (let*
+    ;; ensure the library name is lowercase
+    ((display-name name)
+     (name (string->symbol (string-downcase (symbol->string name)))))
    "Load an openLilyLib library and initialize it"
    (if (not (member name oll-loaded-libraries))
        ;; Determine paths to init and main files
@@ -187,7 +191,7 @@ useLibrary =
          ;; Load initialization file if it exists
          (if (file-exists? init-file)
              (begin
-              (oll:log location "Initialize library \"~a\" ..." name)
+              (oll:log location "Initialize library \"~a\" ..." display-name)
               (ly:parser-include-string parser (ly:gulp-file init-file))))
 
          ;; If a \with clause has been given pass the options to the library.
