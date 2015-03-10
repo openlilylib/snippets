@@ -1,6 +1,9 @@
 \version "2.18.0"
 
 \include "openlilylib"
+
+\useLibrary ScholarLY
+
 \registerOption documentation.include-file "scholarly/annotate"
 \loadModule "_internal/doc-include/usage-example.ily"
 

@@ -26,6 +26,18 @@
   Initialization of the ScholarLY library
 %}
 
+\declareLibrary ScholarLY \with {
+  maintainers = "Urs Liska <ul@openlilylib.org>"
+  version = "0.1.0"
+  short-description = "Toolkit for scholarly editing."
+  description = "
+ScholarLY is intended to become a comprehensive toolkit for scholarly work with
+GNU LilyPond. Currently its main content is the \annotate module, providing
+commands to add annotations in the LilyPond sources. These annotations can be
+printed or exported and post-processed, e.g. with critical reports in LaTeX
+documents."
+}
+
 % By default coloring is turned on.
 % Only for publication one will want to turn it off
 \registerOption scholarly.colorize ##t
