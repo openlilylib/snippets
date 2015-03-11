@@ -49,7 +49,8 @@ def create_parser():
     parser.add_argument('-d', '--font-directory', 
         help=("Root directory where all fonts are stored.\n" +
               "Defaults to the current working directory."))
-    parser.add_argument('-e', '--lilypond-executable', 
+    parser.add_argument('-t', '--targets',
+        nargs='+',
         help=("Path (absolute or relative to current working directory) " +
               "LilyPond executable. If not given some attempts are done " +
               "to determine it automatically."))

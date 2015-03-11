@@ -60,11 +60,11 @@ directory, and if the option is not passed at all the script considers the curre
 working directory as the font directory.  
 If the resulting path doesn't point to an existing path you are prompted to choose
 between creating the given directory or aborting the program.
-- `-e --lilypond-executable`  
-Pass this option a path to the LilyPond installation you want to process. The option
-tries to find a valid LilyPond installation by interpreting the path as either the
-LilyPond executable or the root directory of an installation.   
-If both attempts fail the program aborts.
+- `-t --targets`  
+Pass this option a path to one or more LilyPond installations you want to process. 
+The option tries to find valid installations by interpreting the paths as either
+the LilyPond executable or the root directory of an installation.   
+If this fails for any of the given versions the program aborts.
 
 ### Controlling the Behaviour
 
