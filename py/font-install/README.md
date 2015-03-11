@@ -55,16 +55,29 @@ The main options to be noted are:
 
 - `-d --font-directory`  
 Pass this option a path to your local font repository, which can be anywhere on
-your hard disk. The option takes a relative path as relative to the current working
-directory, and if the option is not passed at all the script considers the current
+your hard disk. If the option is not present the script considers the current
 working directory as the font directory.  
-If the resulting path doesn't point to an existing path you are prompted to choose
-between creating the given directory or aborting the program.
+If the resulting path doesn't point to an existing directory you are prompted to choose
+between creating the given directory or aborting the program. If the directory exists
+but no font catalog file is present the script assumes that you want to create one in
+a fresh installation.
 - `-t --targets`  
-Pass this option a path to one or more LilyPond installations you want to process. 
-The option tries to find valid installations by interpreting the paths as either
-the LilyPond executable or the root directory of an installation.   
+This option is used to determine the target LilyPond installations that should be updated.
+It accepts one or more paths to existing LilyPond installations or to files listing
+such paths. The path should either point to the root directory of an installation or
+to the lilypond executable in its `usr/bin` directory. Both installations from binary
+distributions or builds from source are accepted.  
 If this fails for any of the given versions the program aborts.
+
+All path arguments can be given as relative or absolute paths. If relative paths
+are used they are added to the current working directory before being used.
+
+A targets file lists one LilyPond path per line, empty lines or lines starting with `#`
+are silently ignored. The use of targets files is recommended if you have multiple
+LilyPond installations that you want to keep up-to-date in parallel. For your convenience
+there is an entry `target*` in the script directory's `.gitignore` directory, so you
+can add targets files in that practical location without affecting the openLilyLib
+Git repository.
 
 ### Controlling the Behaviour
 

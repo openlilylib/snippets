@@ -84,6 +84,40 @@ class Config(object):
 
 
     @staticmethod
+    def _get_lilypond_font_paths(arg_dirs):
+        """
+        Collect paths to LilyPond font directories.
+        Use either the given strings or read the catalog files
+        if the string points to such a file.
+        :return: List with paths
+        """
+
+        def read_targets_file(target_file):
+            """
+            Read a file with LiylPond paths and return a string list.
+            Ignore empty or comment lines.
+            """
+            result = []
+            try:
+                f = open(target_file, 'r')
+                lines = f.readlines()
+                f.close()
+            except Exception, e:
+                error(str(e))
+            for l in lines:
+                l = l.strip()
+                if not (l.startswith('#') or len(l) == 0):
+                    result.append(l)
+            return result
+
+        for lily in [l for l in arg_dirs]:
+            if os.path.isfile(lily) and (not os.path.basename(lily) == 'lilypond'):
+                arg_dirs.remove(lily)
+                arg_dirs.extend(read_targets_file(lily))
+
+        return [Config._get_lilypond_font_path(lily) for lily in arg_dirs]
+
+    @staticmethod
     def _get_local_repo_path(arg_dir):
         """
         Try to determine path to local font repository from command line argument.
@@ -156,9 +190,7 @@ class Config(object):
         Config._local_font_repo = Config._get_local_repo_path(args['font_directory'])
         print "\nDetermined font directory:\n  {}".format(Config.font_repo())
 
-        Config._lilypond_font_roots = []
-        for lily in args['targets']:
-            Config._lilypond_font_roots.append(Config._get_lilypond_font_path(lily))
+        Config._lilypond_font_roots = Config._get_lilypond_font_paths(args['targets'])
         print "\nDetermined LilyPond font root directories:\n - {}".format(
             '\n - '.join(Config._lilypond_font_roots))
 
