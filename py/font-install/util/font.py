@@ -35,10 +35,6 @@ class Font(object):
         self.font_dir = os.path.join(Config.font_repo(), self._basename)
         self.otf_dir = os.path.join(self.font_dir, 'otf')
         self.svg_dir = os.path.join(self.font_dir, 'svg')
-        self.otf_target_dir = os.path.join(Config.lilypond_font_root(),
-                                      'otf')
-        self.svg_target_dir = os.path.join(Config.lilypond_font_root(),
-                                      'svg')
 
 
     def _archive_present(self):
@@ -73,22 +69,23 @@ class Font(object):
         # the font is considered up to date if
         # - it doesn't have to be downloaded or extracted
         # - the font repo matches the links in the installation
-        if (r['download'] or
-            r['extract'] or
-            (not self._check_links())):
-            r['update_links'] = True
+        if (r['download'] or r['extract']):
+            r['update_links'] = Config.lilypond_font_roots()
         else:
-            r['update_links'] = False
+            r['update_links'] = []
+            for l in Config.lilypond_font_roots():
+                if not self._check_links(l):
+                    r['update_links'].append(l)
 
         self._up_to_date = False if (r['download'] or
             r['extract'] or
             r['update_links']) else True
 
 
-    def _check_links(self):
+    def _check_links(self, font_root):
         """
         Determine if the list of font files matches the list of
-        links in the LilyPond installation's font directories
+        links in the given LilyPond installation's font directories
         """
         def compare_links(repo, install):
             """
@@ -106,10 +103,12 @@ class Font(object):
         # collect lists of files in the repo and links in the LilyPond installation,
         # for both the otf and svg/woff directories
         otf_files = os.listdir(self.otf_dir)
-        otf_links = [f for f in os.listdir(self.otf_target_dir) if f.startswith(self._basename)]
+        otf_target_dir = os.path.join(font_root, 'otf')
+        otf_links = [f for f in os.listdir(otf_target_dir) if f.startswith(self._basename)]
 
         svg_files = os.listdir(self.svg_dir)
-        svg_links = [f for f in os.listdir(self.svg_target_dir) if f.startswith(self._basename)]
+        svg_target_dir = os.path.join(font_root, 'svg')
+        svg_links = [f for f in os.listdir(svg_target_dir) if f.startswith(self._basename)]
 
         # return True if both comparisons return True
         return (compare_links(otf_files, otf_links) and
@@ -172,18 +171,18 @@ class Font(object):
         """
         Add or update links in the LilyPond installation
         """
-        def clear_directory(type, basename):
+        def clear_directory(font_root, type, basename):
             """Remove existing links to a font in a dir to prevent inconsistencies"""
-            target_dir = os.path.join(Config.lilypond_font_root(), type)
+            target_dir = os.path.join(font_root, type)
             for ln in os.listdir(target_dir):
                 abs_ln = os.path.join(target_dir, ln)
                 if os.path.islink(abs_ln) and ln.startswith(basename):
                     os.unlink(abs_ln)
 
-        def install_directory(type, basename):
+        def install_directory(font_root, type, basename):
             """Add links to all font files"""
             font_dir = os.path.join(self.font_dir, type)
-            target_dir = os.path.join(Config.lilypond_font_root(), type)
+            target_dir = os.path.join(font_root, type)
             link_targets = [f for f in os.listdir(font_dir) if f.startswith(self._basename)]
             for f in link_targets:
                 target_name = os.path.join(font_dir, f)
@@ -195,9 +194,10 @@ class Font(object):
 
         print "  - Update links"
         failed_links = []
-        for type in ['otf', 'svg']:
-            clear_directory(type, self._basename)
-            install_directory(type, self._basename)
+        for lily in self._actions['update_links']:
+            for type in ['otf', 'svg']:
+                clear_directory(lily, type, self._basename)
+                install_directory(lily, type, self._basename)
 
         if not failed_links:
             print "  ... OK"

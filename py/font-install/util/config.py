@@ -156,8 +156,10 @@ class Config(object):
         Config._local_font_repo = Config._get_local_repo_path(args['font_directory'])
         print "\nDetermined font directory:\n  {}".format(Config.font_repo())
 
-        Config._lilypond_font_root = Config._get_lilypond_font_path(args['lilypond_executable'])
-        print "\nDetermined LilyPond font root directory:\n  {}".format(Config._lilypond_font_root)
+        # TODO: Continue here. This code is a placeholder for storing 0-N LilyPond versions in a list
+        Config._lilypond_font_roots = [Config._get_lilypond_font_path(args['lilypond_executable'])]
+        print "\nDetermined LilyPond font root directory:\n  {}".format(Config._lilypond_font_roots)
+
 
 
     ##############
@@ -178,6 +180,11 @@ class Config(object):
     @staticmethod
     def lilypond_font_root():
         return Config._lilypond_font_root
+
+    # TODO: This is temporary. Probably the singular version should be removed later.
+    @staticmethod
+    def lilypond_font_roots():
+        return Config._lilypond_font_roots
 
     @staticmethod
     def local():
