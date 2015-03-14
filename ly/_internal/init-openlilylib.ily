@@ -38,6 +38,15 @@
 %%%% Common functionality
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Add directoires to Guile's module loading path.
+\include "general-tools/scheme-wrapper/add-guile-path/definitions.ily"
+% the ly directory is now an included path from which modules can be addressed
+% Add openLilyLib root directory to Guile's module load path
+\addGuilePath ".."
+% TODO: Check this when the Scheme lib has moved
+% This is only needed to possibly access modules in the "old" places
+\addGuilePath "../.."
+
 % Make common functionality available to all openLilyLib "users"
 \include "utilities/__main__.ily"
 
@@ -51,6 +60,10 @@
 % (can only be done after options have been included)
 \registerOption global.loglevel #oll-loglevel-warning
 
+% Utility to include multiple files at once
+% Depends on "options.ily"
+\include "utilities/include-pattern.ily"
+
 % Set the root path of openLilyLib
 % - for oll module inclusion
 % - for Scheme module inclusion
@@ -58,7 +71,7 @@
 % because that's inside the desired root directory
 setRootPath =
 #(define-void-function (parser location)()
-   (let* ((path (get-normalized-path (ly:input-file-line-char-column location))))
+   (let* ((path (location-extract-path location)))
      #{ \registerOption global.root-path #path #}
      (if (not (member path %load-path))
          (set! %load-path `(,path ,@%load-path)))))
@@ -66,7 +79,6 @@ setRootPath =
 
 % Functionality to load and manage modules
 \include "module-handling.ily"
-
 
 % Welcome message.
 % This is a default ly:message because otherwise we'd have to mess around with

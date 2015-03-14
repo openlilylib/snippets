@@ -42,7 +42,7 @@
 \loadModule "example"
 
 #(ly:message "\nTry to load a module that is already loaded:")
-\loadModule "example/load-test.ly"
+\loadModule "example/load-test.ily"
 
 #(ly:message "\nTry to load a non-existent module:")
 \loadModule "example/this/is/not/a/module.ily"

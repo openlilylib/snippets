@@ -149,7 +149,7 @@ getChildOptionWithFallback =
 %%%% Display all currently registered options
 
 displayOptions =
-#(define-scheme-function (parser location)()
+#(define-void-function (parser location)()
    (display "\n\nopenlilyLib: Currently registered options:\n=====\n")
    (pretty-print
     openlilylib-options #:display? #t))

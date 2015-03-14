@@ -46,7 +46,9 @@ class SimpleTests:
 
     test_excludes_fname = ".automated-tests-exclude"
     test_includes_fname = ".automated-tests-include"
-    examples_dirname = "usage-examples"
+    test_dirnames = ["usage-examples", 
+                     "unit-tests"]
+    
 
     def __init__(self, cmd=None):
         # set up building environment
@@ -83,7 +85,7 @@ class SimpleTests:
     def __collect_all_in_dir(self, dirname):
         """Read contents of a directory and collect test files.
            Respect include and exclude files and get all files
-           from usage-examples directories."""
+           from usage-examples directories, recursively."""
 
         # process include/exclude files if present
         includes_fname = osp.join(dirname, self.test_includes_fname)
@@ -92,12 +94,13 @@ class SimpleTests:
         excludes_fname = osp.join(dirname, self.test_excludes_fname)
         self.excluded_tests.extend(self.__read_include_exclude_file(excludes_fname))
 
-        # add LilyPond files if we're in a usage-examples directory
-        if osp.basename(dirname) == self.examples_dirname:
-            for f in os.listdir(dirname):
-                test_fname = osp.join(dirname, f)
-                if os.path.isfile(test_fname) and self.is_lilypond_file(test_fname):
-                    self.test_files.append(test_fname)
+        # add LilyPond files if we're in a usage-examples directory, recursively
+        if osp.basename(dirname) in self.test_dirnames:
+            for root, _, files in os.walk(dirname):
+                for f in files:
+                    test_fname = osp.join(root, f)
+                    if os.path.isfile(test_fname) and self.is_lilypond_file(test_fname):
+                        self.test_files.append(test_fname)
 
 
     def __lilypond_version(self):
@@ -184,13 +187,11 @@ class SimpleTests:
 
     def is_lilypond_file(self, fname):
         """Return true if filename ends with one of the registered file extensions."""
-        return fname.endswith('.ly') or fname.endswith('.ily')
+        return fname.endswith('.ly')
 
 
     def is_runnable_file(self, fname):
         """Returns true if fname can be compiled with the lilypond version used"""
-        if not self.is_lilypond_file(fname):
-            return False
         with open(fname, 'r') as fcontents:
             for line in fcontents.readlines():
                 version_line = re.search(r"\\version \"(\d+\.\d+\.\d+)\"", line)
