@@ -40,7 +40,9 @@
    (opening #:init-keyword #:opening
             #:getter cell:opening)
    (closing #:init-keyword #:closing
-            #:getter cell:closing))
+            #:getter cell:closing)
+   (barNumber #:init-keyword #:barNumber
+              #:getter cell:barNumber))
 
 %%% Some utility functions
 
@@ -208,7 +210,8 @@ gridPutMusic =
                    #:music music
                    #:lyrics (props-get 'lyrics #f)
                    #:opening (props-get 'opening #{ #})
-                   #:closing (props-get 'closing #{ #}))))
+                   #:closing (props-get 'closing #{ #})
+                   #:barNumber (props-get 'barNumber #f))))
      (hash-set! music-grid key value)))
 
 gridSetSegmentTemplate =
@@ -262,7 +265,9 @@ gridSetSegmentTemplate =
                           #:closing (cell:closing
                                      (get-music-cell "<template>" i))
                           #:music (cell:music
-                                   (get-music-cell "<template>" i))))
+                                   (get-music-cell "<template>" i))
+                          #:barNumber (cell:barNumber
+                                       (get-music-cell "<template>" i))))
                        ;; Neither the cell nor the template are
                        ;; defined. Throw an error.
                        (#t (ly:error
@@ -276,16 +281,34 @@ gridSetRange =
     (parser location start-end) (segment-selector?)
     #{ \setOption gridly.segment-range #start-end #})
 
+#(define (prepend-barcheck music barnumber)
+   (let ((barcheck #{ \barNumberCheck $barnumber #}))
+     (make-music
+      'SequentialMusic
+      'elements
+      (list
+       barcheck
+       music))))
+
 gridGetMusic =
 #(define-music-function
-   (parser location part) (string? )
+   (parser location part) (string?)
    (let* ((cells (get-cell-range part #{ \getOption gridly.segment-range #}))
           (music (map cell:music cells))
+          (barnumbers (map cell:barNumber cells))
+          (barnumber-start (cell:barNumber (car cells)))
+          (barnum-set-expr
+           (if barnumber-start
+               (list #{ \set Score.currentBarNumber = $barnumber-start #})
+               (list #{ #})))
+          (music (map (lambda (m b)
+                        (if b (prepend-barcheck m b) m))
+                      music barnumbers))
           (opening (list (cell:opening (car cells))))
           (closing (list (cell:closing (car (last-pair cells))))))
      (make-music
       'SequentialMusic
-      'elements (append opening music closing))))
+      'elements (append opening barnum-set-expr music closing))))
 
 gridGetLyrics =
 #(define-music-function

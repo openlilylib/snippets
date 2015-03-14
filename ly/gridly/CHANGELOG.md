@@ -1,6 +1,10 @@
 GridLY - Changelog
 ==================
 
+ * 0.5.0 **development**
+
+   - Add bar number handling. See issue #101
+
  * 0.4.0
 
    This is a **breaking** release. The public interface changed
