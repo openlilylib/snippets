@@ -341,17 +341,14 @@ gridCompileCell =
    (check-grid)
    (check-coords part segment)
    (if (test-location? parser location)
-      (let ((cache-segment #{ \getOption gridly.segment-range #}))
-         (display "Compiling test file\n")
-         (if (not (get-music-cell part segment))
+       (let ((cache-segment #{ \getOption gridly.segment-range #}))
+         (ly:message "Compiling test file")
+         (if (not (gett-music-cell part segment))
              (ly:error "There is no music cell for ~a:~a"
                        part segment))
          (check-durations segment #f)
          #{ \setOption gridly.segment-range $segment #}
          (let* ((name (ly:format "~a-~a" part segment))
-                (opening (cell:opening (get-music-cell part segment)))
-                (closing (cell:closing (get-music-cell part segment)))
-                (selector (cons segment segment))
                 (lyrics (let ((maybe-lyrics (cell:lyrics
                                              (get-music-cell part segment))))
                           (if maybe-lyrics
@@ -363,9 +360,7 @@ gridCompileCell =
                       \score {
                          <<
                            \new Staff \new Voice = $name {
-                             $opening
                              \gridGetMusic $part
-                             $closing
                            }
                            $lyrics
                          >>
