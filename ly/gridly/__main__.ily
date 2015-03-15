@@ -343,7 +343,7 @@ gridCompileCell =
    (if (test-location? parser location)
        (let ((cache-segment #{ \getOption gridly.segment-range #}))
          (ly:message "Compiling test file")
-         (if (not (gett-music-cell part segment))
+         (if (not (get-music-cell part segment))
              (ly:error "There is no music cell for ~a:~a"
                        part segment))
          (check-durations segment #f)
