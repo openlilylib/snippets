@@ -50,6 +50,7 @@ def create_parser():
         help=("Root directory where all fonts are stored.\n" +
               "Defaults to the current working directory."))
     parser.add_argument('-t', '--targets',
+        required=True,
         nargs='+',
         help=("Path (absolute or relative to current working directory) " +
               "LilyPond executable. If not given some attempts are done " +
