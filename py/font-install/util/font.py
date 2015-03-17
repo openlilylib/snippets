@@ -237,8 +237,9 @@ class Font(object):
         if a['update_links']:
             failed_links = self._update_links()
             if failed_links:
-                print "Some links for font {} could not be installed:".format(self._name)
-                print ''.join(failed_links)
+                print ("Some links for font {} could not be installed.\n" +
+                       "Maybe you have already installed actual font files?").format(self._name)
+                print '\n'.join(failed_links)
 
     def merge_font(self, record):
         """
