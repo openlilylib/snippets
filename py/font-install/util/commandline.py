@@ -72,7 +72,11 @@ def create_parser():
         action='store_true',
         help=("Consider the local font catalog up to date, don't download " +
               "the remote one. Useful for updating multiple LilyPond installations."))
-                
+    parser.add_argument('-i', '--init',
+        action='store_true',
+        help=("Initialize a new local font repository. Do not consider a missing " +
+              "catalog file an error."))
+
     # Make sure debugger options are recognized as valid. These are passed automatically
     # from PyDev in Eclipse to the inferior process.
     if "pydevd" in sys.modules:

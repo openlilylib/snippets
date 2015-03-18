@@ -70,8 +70,16 @@ class Catalog(object):
             except Exception, e:
                 error("Error reading local font catalog.")
         else:
-            print "No local catalog found. Assuming you want to create a new local repository."
-            return []
+            print "No local catalog found."
+            if not Config.init():
+                init = raw_input("Do you want to create one in {} (y/anything)? ".format(self._file_name))
+                if not init.lower() == 'y':
+                    error("Aborted by user.")
+                else:
+                    return []
+            else:
+                print "Assuming you want to create a new local repository."
+                return []
 
     def font_records(self):
         return self._font_records

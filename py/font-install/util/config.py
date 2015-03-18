@@ -136,6 +136,16 @@ class Config(object):
                    "point to existing directory:\n  {}".format(arg_dir))
             if Config.batch():
                 error("{}\nAborting".format(msg))
+            elif Config.init():
+                print "Initializing new repository."
+                try:
+                    os.makedirs(arg_dir)
+                    Config._init = True
+                except Exception, e:
+                        error("Problem creating dir {}.\nError message:\n{}".format(
+                            arg_dir,
+                            str(e)
+                        ))
             else:
                 if raw_input("{}\n Do you want to create it (y/anything)? ".format(msg)).lower() == "y":
                     try:
@@ -187,6 +197,11 @@ class Config(object):
             Config._force = True
             print "Forcing remote font versions without checking difference."
 
+        Config._init = False
+        if args['init']:
+            Config._init = True
+            print "Initializing a new local font repository."
+
         Config._local_font_repo = Config._get_local_repo_path(args['font_directory'])
         print "\nDetermined font directory:\n  {}".format(Config.font_repo())
 
@@ -209,6 +224,10 @@ class Config(object):
     @staticmethod
     def force():
         return Config._force
+
+    @staticmethod
+    def init():
+        return Config._init
 
     @staticmethod
     def lilypond_font_roots():
