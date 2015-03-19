@@ -4,12 +4,16 @@
 
 \include "openlilylib"
 
-\setOption global.loglevel #oll-loglevel-log
+%\setOption global.loglevel #oll-loglevel-log
 \useLibrary comptools
 
 %\loadModule "comptools/partial-compilation.ily"
-\registerOption documentation.include-file "comptools/conditional-breaks.ily"
-\loadModule "_internal/doc-include/usage-example.ily"
+%\registerOption documentation.include-file "comptools/conditional-breaks.ily"
+%\loadModule "_internal/doc-include/usage-example.ily"
+\useModule comptools.conditional-breaks
+
+% Workaround for \useModule bug
+#(display "")
 
 % Define a set with original breaks (barnumbers)
 % Entries can also be a list with barnumber and fraction

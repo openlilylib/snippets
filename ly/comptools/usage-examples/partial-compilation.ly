@@ -3,11 +3,16 @@
 \version "2.18.0"
 
 \include "openlilylib"
-\setOption global.loglevel #oll-loglevel-log
+%\setOption global.loglevel #oll-loglevel-log
 \useLibrary comptools
 
-\registerOption documentation.include-file "comptools/partial-compilation.ily"
-\loadModule "_internal/doc-include/usage-example.ily"
+%\registerOption documentation.include-file "comptools/partial-compilation.ily"
+%\loadModule "_internal/doc-include/usage-example.ily"
+
+\useModule comptools.partial-compilation
+
+% Workaround for \useModule bug
+#(display "")
 
 \include "comptools-test-data.ily"
 
