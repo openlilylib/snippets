@@ -215,7 +215,7 @@ useLibrary =
               (set! oll-loaded-libraries
                     (append oll-loaded-libraries
                       `(,name)))
-              (oll:log location "... completed."))
+              (oll:log "... completed." ""))
              (oll:warn location (format "Library main file \"~a\" not found" main-file)))))))
 
 
