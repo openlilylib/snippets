@@ -172,12 +172,43 @@ class Font(object):
         Add or update links in the LilyPond installation
         """
         def clear_directory(font_root, type, basename):
-            """Remove existing links to a font in a dir to prevent inconsistencies"""
+            """
+            Remove existing links to a font in a dir to prevent inconsistencies.
+            If physical copies are encountered the user is asked if he wants
+            to remove them (and then if that decision should be remembered).
+            In batch mode this would simply cause the program to fail.
+            """
             target_dir = os.path.join(font_root, type)
+            real_files = []
             for ln in os.listdir(target_dir):
                 abs_ln = os.path.join(target_dir, ln)
-                if os.path.islink(abs_ln) and ln.startswith(basename):
-                    os.unlink(abs_ln)
+                if ln.startswith(basename):
+                    if os.path.islink(abs_ln):
+                        os.unlink(abs_ln)
+                    elif os.path.isfile(abs_ln):
+                        real_files.append(abs_ln)
+
+            if real_files:
+                if Config.batch():
+                    # the files will fail later when trying to link them
+                    pass
+                else:
+                    # handle the presence of physical font files
+                    if Config.remove_existing_files:
+                        for f in real_files:
+                            os.remove(f)
+                    else:
+                        print "The following font files are phyiscal copies:"
+                        for f in real_files:
+                            print " -", f
+                        rem = raw_input("Do you want to remove them and replace them with links (y/anything)? ")
+                        rem = True if rem.lower() == 'y' else False
+                        if rem:
+                            for f in real_files:
+                                os.remove(f)
+                            print "Done."
+                        remember = raw_input("Do you want to remember this decision (y/anything)? ")
+                        Config.remove_existing_files = rem if remember.lower() == 'y' else False
 
         def install_directory(font_root, type, basename):
             """Add links to all font files"""

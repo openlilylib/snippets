@@ -27,6 +27,9 @@ class Config(object):
     # don't consider the online repository, simply link a LilyPond installation
     _local = None
 
+    # flag that can be set when physical copies of fonts are detected in an installation
+    remove_existing_files = False
+
     # path to actual local font storage directory
     _local_font_repo = ""
 
