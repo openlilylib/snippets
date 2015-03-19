@@ -3,7 +3,10 @@
 \version "2.18.0"
 
 \include "openlilylib"
-\loadModule "comptools/partial-compilation.ily"
+\useLibrary comptools
+\useModule comptools.partial-compilation
+
+#(display "")
 
 \include "../usage-examples/comptools-test-data.ily"
 
@@ -15,7 +18,7 @@
 %\setClipRegion 8 12
 
 % Define a region beyond measure borders
-\setClipRegion 198 #'(212 2/4)
+\setClipRegion 15 #'(44 2/2)
 
 % Compile a single page
 %\setClipPage 5
