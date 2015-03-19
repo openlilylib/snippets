@@ -32,3 +32,21 @@
   Default stylesheet for the LilyJAZZ font.
 %}
 
+
+\layout {
+  \override Staff.Tie.thickness = #3
+  \override Staff.Slur.thickness = #3
+  \override Staff.PhrasingSlur.thickness = #3
+  \override Score.Hairpin.thickness = #2
+  \override Score.Stem.thickness = #2
+  \override Score.TupletBracket.thickness = #2
+  \override Score.VoltaBracket.thickness = #2
+  \override Staff.BarLine.hair-thickness = #2
+  \override Staff.BarLine.thick-thickness = #4
+  \override Staff.MultiMeasureRest.hair-thickness = #3
+  \override Staff.MultiMeasureRestNumber.font-size = #2
+  \override LyricHyphen.thickness = #3
+  \override LyricExtender.thickness = #3
+  \override PianoPedalBracket.thickness = #2
+}
+

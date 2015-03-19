@@ -32,3 +32,8 @@
   Default stylesheet for the Scorlatti font.
 %}
 
+\layout {
+  \override Tie.thickness = #2.5
+  \override Slur.thickness = #2.5
+  \override PhrasingSlur.thickness = #2.5
+}
