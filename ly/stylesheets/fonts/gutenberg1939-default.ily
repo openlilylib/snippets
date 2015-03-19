@@ -30,5 +30,19 @@
 
 %{
   Default stylesheet for the Gutenberg1939 font.
+  Copyright 2015, Abraham Lee (tisimst.lilypond@gmail.com)
 %}
 
+\layout {
+  \override TupletNumber.font-series = #'bold
+  \context {
+    \Score
+    \override BarLine.hair-thickness = #3
+    \override SystemStartBar.collapse-height = #4
+    \override SystemStartBar.thickness = #3
+  }
+  \context {
+    \StaffGroup
+    \override SystemStartBar.collapse-height = #4
+  }
+}
