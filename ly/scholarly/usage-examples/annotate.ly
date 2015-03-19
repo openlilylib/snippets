@@ -4,8 +4,12 @@
 
 \useLibrary ScholarLY
 
-\registerOption documentation.include-file "scholarly/annotate"
-\loadModule "_internal/doc-include/usage-example.ily"
+\useModule scholarly.annotate
+
+#(display "loaded\n")
+
+%\registerOption documentation.include-file "scholarly/annotate"
+%\loadModule "_internal/doc-include/usage-example.ily"
 
 \markup \vspace #1
 
