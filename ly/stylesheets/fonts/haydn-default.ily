@@ -32,3 +32,13 @@
   Default stylesheet for the Haydn font.
 %}
 
+\layout {
+  \context {
+    \Staff
+    \override Beam #'beam-thickness = #0.7
+    \override Beam #'length-fraction = #1.2
+    \override Tie #'thickness = #3
+    \override Slur #'thickness = #3
+    \override PhrasingSlur #'thickness = #3
+  }
+}

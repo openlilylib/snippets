@@ -32,3 +32,12 @@
   Default stylesheet for the Ross font.
 %}
 
+
+\layout {
+  \override Hairpin.thickness = #1.5
+  \override Slur.thickness = #1.2
+  \override Tie.thickness = #1.2
+  \override PhrasingSlur.thickness = #1.2
+  \override Score.StaffSymbol.thickness = #1.5
+  \override PianoPedalBracket.thickness = #1.5
+}
