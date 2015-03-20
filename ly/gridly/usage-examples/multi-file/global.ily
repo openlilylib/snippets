@@ -1,7 +1,7 @@
 \version "2.18.2"
 
 \include "openlilylib"
-\loadModule "gridly"
+\useLibrary gridly
 
 \gridInit #1 #'("marks" "soprano" "alto" "tenore" "basso")
 
