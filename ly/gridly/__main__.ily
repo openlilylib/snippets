@@ -42,7 +42,9 @@
    (closing #:init-keyword #:closing
             #:getter cell:closing)
    (barNumber #:init-keyword #:barNumber
-              #:getter cell:barNumber))
+              #:getter cell:barNumber)
+   (transposeKey #:init-keyword #:transposeKey
+                 #:getter cell:transposeKey))
 
 %%% Some utility functions
 
@@ -211,7 +213,8 @@ gridPutMusic =
                    #:lyrics (props-get 'lyrics #f)
                    #:opening (props-get 'opening #{ #})
                    #:closing (props-get 'closing #{ #})
-                   #:barNumber (props-get 'barNumber #f))))
+                   #:barNumber (props-get 'barNumber #f)
+                   #:transposeKey (props-get 'transposeKey #f))))
      (hash-set! music-grid key value)))
 
 gridSetSegmentTemplate =
@@ -267,7 +270,9 @@ gridSetSegmentTemplate =
                           #:music (cell:music
                                    (get-music-cell "<template>" i))
                           #:barNumber (cell:barNumber
-                                       (get-music-cell "<template>" i))))
+                                       (get-music-cell "<template>" i))
+                          #:transposeKey (cell:transposeKey
+                                          (get-music-cell "<template>" i))))
                        ;; Neither the cell nor the template are
                        ;; defined. Throw an error.
                        (#t (ly:error
@@ -290,11 +295,17 @@ gridSetRange =
        barcheck
        music))))
 
+#(define (transpose-music music transpose-key)
+   (if transpose-key
+       #{ \transpose $transpose-key c { $music } #}
+       music))
+
 gridGetMusic =
 #(define-music-function
    (parser location part) (string?)
    (let* ((cells (get-cell-range part #{ \getOption gridly.segment-range #}))
           (music (map cell:music cells))
+          (transpose-keys (map cell:transposeKey cells))
           (barnumbers (map cell:barNumber cells))
           (barnumber-start (cell:barNumber (car cells)))
           (barnum-set-expr
@@ -304,8 +315,15 @@ gridGetMusic =
           (music (map (lambda (m b)
                         (if b (prepend-barcheck m b) m))
                       music barnumbers))
-          (opening (list (cell:opening (car cells))))
-          (closing (list (cell:closing (car (last-pair cells))))))
+          (music (map transpose-music music transpose-keys))
+          (opening (list
+                    (transpose-music
+                     (cell:opening (car cells))
+                     (cell:transposeKey (car cells)))))
+          (closing (list
+                    (transpose-music
+                     (cell:closing (car (last-pair cells)))
+                     (cell:transposeKey (car (last-pair cells)))))))
      (make-music
       'SequentialMusic
       'elements (append opening barnum-set-expr music closing))))

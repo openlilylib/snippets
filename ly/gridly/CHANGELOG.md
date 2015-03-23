@@ -4,6 +4,7 @@ GridLY - Changelog
  * 0.5.0 **development**
 
    - Add bar number handling. See issue #101
+   - Add transpose key handling. See issue #102
 
  * 0.4.0
 
