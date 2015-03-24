@@ -32,6 +32,18 @@
   Initialization of the Stylesheets library
 %}
 
+\declareLibrary "Stylesheets" \with {
+  maintainers = #'("Urs Liska <ul@openlilylib.org>"
+                   "Abraham Lee <tisimst.lilypond@gmail.com>"
+                   "Kieren MacMillan <kieren_macmillan@sympatico.ca>")
+  version = "0.1.0"
+  short-description = "Managing fonts and stylesheets with GNU LilyPond"
+  description = "Longer description, used as an introduction to the library."
+  % The following option is "unreal" and only used to demonstrate "known options"
+  lilypond-min-version = "2.18.2"
+}
+
+
 % internal options for use in the font loading mechanism
 \registerOption stylesheets.font.name Emmentaler
 \registerOption stylesheets.font.use-name Emmentaler

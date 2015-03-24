@@ -1,8 +1,16 @@
 \version "2.17.10"
 
 \include "openlilylib"
-\registerOption documentation.include-file "scholarly/diplomatic-line-breaks.ily"
-\loadModule "_internal/doc-include/usage-example.ily"
+
+\useLibrary scholarly
+
+%\registerOption documentation.include-file "scholarly/diplomatic-line-breaks.ily"
+%\loadModule "_internal/doc-include/usage-example.ily"
+
+\useModule scholarly.diplomatic-line-breaks
+
+% The following is necessary because leaving it out would give lots of (strange) syntax errors
+#(ly:message "loaded")
 
 \markup \vspace #1
 {

@@ -29,6 +29,34 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %{
-  Default stylesheet for the Improviso font.
+  Default stylesheet for the IMPROVISO notation font.
+  Copyright (C) 2014-2015
+  - Abraham Lee (tisimst.lilypond@gmail.com),
+  - Urs Liska (ul@openlilylib.org)
 %}
 
+\version "2.18.2"
+
+\layout {
+  \context {
+    \StaffGroup
+    \override SystemStartBracket.thickness = #0.25
+  }
+  \context {
+    \Score
+    \override Beam.beam-thickness = #0.5
+    \override Beam.length-fraction = #1.0
+    \override StaffSymbol.thickness = 1.4
+    \override Stem.thickness = #1.75
+    \override Hairpin.thickness = #2
+    \override PianoPedalBracket.thickness = #2
+    \override Tie.thickness = #2
+    \override Slur.thickness = #2
+    \override PhrasingSlur.thickness = #2
+    \override MultiMeasureRestNumber.font-size = #2
+    \override LyricHyphen.thickness = #3
+    \override LyricExtender.thickness = #3
+    \override Glissando.thickness = 1.75
+    \override VoltaBracket.thickness = #2
+  }
+}

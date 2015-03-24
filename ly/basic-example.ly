@@ -39,22 +39,27 @@
 
 % Load the example library
 % Notice (on the console) that actually example/__main__.ily is loaded
-\loadModule "example"
+\useLibrary example
 
 #(ly:message "\nTry to load a module that is already loaded:")
-\loadModule "example/load-test.ily"
+\useModule example.load-test
 
 #(ly:message "\nTry to load a non-existent module:")
-\loadModule "example/this/is/not/a/module.ily"
-
+\useModule example.this.is.not.any.module
 
 #(ly:message "Use a command defined in the loaded modules")
 \hello
+
+#(ly:message "Display value defined in the init file:")
+#(ly:message in-init)
+
 
 #(ly:message "\nOverwrite one option, keep default of another, try to set a non-existent option.")
 \setOption example.common.thickness 0.8
 \setOption example.common.thin-thickness 0.5
 #(ly:message (format "Default value of example.common.thick-thickness: ~a\n"
                #{ \getOption example.common.thick-thickness #}))
+
+%}
 
 \displayOptions

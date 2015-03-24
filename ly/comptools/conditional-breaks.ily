@@ -68,8 +68,21 @@ applyConditionalBreaks =
 
            ;; process possible combinations of options
            (lbreaks (if keep-conditional-line-breaks
-                        conditionalLineBreaks
-                        '()))
+                        ;; if line breaks are used we compose a list from
+                        ;; the original line breaks and the page breaks/turns
+                        ;; if these aren't kept separately
+                        (append
+                         conditionalLineBreaks
+                         (if (not keep-conditional-page-breaks)
+                             conditionalPageBreaks
+                             '())
+                         (if (not keep-conditional-page-turns)
+                             conditionalPageTurns
+                             '()))
+                        ;; if line breaks are discarded they are so completely
+                        '())
+
+             )
            (lpbreaks (if keep-conditional-page-breaks
                          conditionalPageBreaks
                          '()))

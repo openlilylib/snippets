@@ -39,8 +39,8 @@
 
 
 #(ly:message "\nDefine variable \"in-init\" in initialization file")
+#(define in-init "This is defined in init")
 
-#(define in-init "defined in init")
 
 #(ly:message "\nRegister some options in the __init__ file")
 

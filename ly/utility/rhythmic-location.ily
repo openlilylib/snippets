@@ -88,7 +88,7 @@
    (if (ly:grob? grob)
        (let
         ((loc
-          (if (lilypond-greater-than-or-equal? "2.19.16")
+          (if (lilypond-greater-than-or-equal? "2.19.17")
               (grob::rhythmic-location grob)
               (let ((col (get-paper-column grob)))
                 (if col

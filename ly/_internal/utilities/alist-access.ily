@@ -44,7 +44,7 @@
 
 % Convert a list to a dot-path notation string.
 % Can be used to print/log tree paths
-#(define (dot-path->string path)
+#(define (symbol-list->dot-path path)
    "output option path list as a dot-delimited string"
    (string-join
     (map
