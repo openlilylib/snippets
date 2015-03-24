@@ -82,7 +82,7 @@ setOption =
         #{ \setatree openlilylib-options #opt-path #val #}
         (oll:log location "Option set: ~a"
           (format "~a: ~a"
-            (dot-path->string opt-path) val)))
+            (symbol-list->dot-path opt-path) val)))
        ;; reject setting unknown options and report that
        (oll:warn location "Not a valid option path: ~a" (dot-path->string opt-path))))
 
