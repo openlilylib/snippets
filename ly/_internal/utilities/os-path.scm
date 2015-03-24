@@ -132,7 +132,7 @@
 
 (define-public (normalize-location location)
   "Returns a normalized path to the given location object"
-  (car (ly:input-file-line-char-column location)))
+  (normalize-path (car (ly:input-file-line-char-column location))))
 
 (define-public (location-extract-path location)
   "Returns the normalized path from a LilyPond location
