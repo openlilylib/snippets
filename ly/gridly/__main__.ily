@@ -40,7 +40,11 @@
    (opening #:init-keyword #:opening
             #:getter cell:opening)
    (closing #:init-keyword #:closing
-            #:getter cell:closing))
+            #:getter cell:closing)
+   (barNumber #:init-keyword #:barNumber
+              #:getter cell:barNumber)
+   (transposeKey #:init-keyword #:transposeKey
+                 #:getter cell:transposeKey))
 
 %%% Some utility functions
 
@@ -208,7 +212,9 @@ gridPutMusic =
                    #:music music
                    #:lyrics (props-get 'lyrics #f)
                    #:opening (props-get 'opening #{ #})
-                   #:closing (props-get 'closing #{ #}))))
+                   #:closing (props-get 'closing #{ #})
+                   #:barNumber (props-get 'barNumber #f)
+                   #:transposeKey (props-get 'transposeKey #f))))
      (hash-set! music-grid key value)))
 
 gridSetSegmentTemplate =
@@ -262,7 +268,11 @@ gridSetSegmentTemplate =
                           #:closing (cell:closing
                                      (get-music-cell "<template>" i))
                           #:music (cell:music
-                                   (get-music-cell "<template>" i))))
+                                   (get-music-cell "<template>" i))
+                          #:barNumber (cell:barNumber
+                                       (get-music-cell "<template>" i))
+                          #:transposeKey (cell:transposeKey
+                                          (get-music-cell "<template>" i))))
                        ;; Neither the cell nor the template are
                        ;; defined. Throw an error.
                        (#t (ly:error
@@ -276,16 +286,47 @@ gridSetRange =
     (parser location start-end) (segment-selector?)
     #{ \setOption gridly.segment-range #start-end #})
 
-gridGetMusic =
-#(define-music-function
-   (parser location part) (string? )
-   (let* ((cells (get-cell-range part #{ \getOption gridly.segment-range #}))
-          (music (map cell:music cells))
-          (opening (list (cell:opening (car cells))))
-          (closing (list (cell:closing (car (last-pair cells))))))
+#(define (prepend-barcheck music barnumber)
+   (let ((barcheck #{ \barNumberCheck $barnumber #}))
      (make-music
       'SequentialMusic
-      'elements (append opening music closing))))
+      'elements
+      (list
+       barcheck
+       music))))
+
+#(define (transpose-music music transpose-key)
+   (if transpose-key
+       #{ \transpose $transpose-key c { $music } #}
+       music))
+
+gridGetMusic =
+#(define-music-function
+   (parser location part) (string?)
+   (let* ((cells (get-cell-range part #{ \getOption gridly.segment-range #}))
+          (music (map cell:music cells))
+          (transpose-keys (map cell:transposeKey cells))
+          (barnumbers (map cell:barNumber cells))
+          (barnumber-start (cell:barNumber (car cells)))
+          (barnum-set-expr
+           (if barnumber-start
+               (list #{ \set Score.currentBarNumber = $barnumber-start #})
+               (list #{ #})))
+          (music (map (lambda (m b)
+                        (if b (prepend-barcheck m b) m))
+                      music barnumbers))
+          (music (map transpose-music music transpose-keys))
+          (opening (list
+                    (transpose-music
+                     (cell:opening (car cells))
+                     (cell:transposeKey (car cells)))))
+          (closing (list
+                    (transpose-music
+                     (cell:closing (car (last-pair cells)))
+                     (cell:transposeKey (car (last-pair cells)))))))
+     (make-music
+      'SequentialMusic
+      'elements (append opening barnum-set-expr music closing))))
 
 gridGetLyrics =
 #(define-music-function
@@ -318,17 +359,14 @@ gridCompileCell =
    (check-grid)
    (check-coords part segment)
    (if (test-location? parser location)
-      (let ((cache-segment #{ \getOption gridly.segment-range #}))
-         (display "Compiling test file\n")
+       (let ((cache-segment #{ \getOption gridly.segment-range #}))
+         (ly:message "Compiling test file")
          (if (not (get-music-cell part segment))
              (ly:error "There is no music cell for ~a:~a"
                        part segment))
          (check-durations segment #f)
          #{ \setOption gridly.segment-range $segment #}
          (let* ((name (ly:format "~a-~a" part segment))
-                (opening (cell:opening (get-music-cell part segment)))
-                (closing (cell:closing (get-music-cell part segment)))
-                (selector (cons segment segment))
                 (lyrics (let ((maybe-lyrics (cell:lyrics
                                              (get-music-cell part segment))))
                           (if maybe-lyrics
@@ -340,9 +378,7 @@ gridCompileCell =
                       \score {
                          <<
                            \new Staff \new Voice = $name {
-                             $opening
                              \gridGetMusic $part
-                             $closing
                            }
                            $lyrics
                          >>

@@ -75,6 +75,7 @@
 \gridSetSegmentTemplate 1
 \with {
   lyrics = \lyricmode { Fa }
+  barNumber = 1
 }
 {
   s1 |
@@ -83,18 +84,25 @@
 \gridSetSegmentTemplate 2
 \with {
   lyrics = \lyricmode { la la la! }
+  barNumber = 2
 }
 {
   s1 | s1 |
 }
 
 \gridSetSegmentTemplate 3
+\with {
+  barNumber = 4
+}
 {
   s1 | s1 |
 }
 
 
 \gridSetSegmentTemplate 4
+\with {
+  barNumber = 6
+}
 {
   s1 | s1|
 }
