@@ -154,14 +154,14 @@
   (define-scheme-function (parser location)()
     (normalize-location location)))
 
-(define-public (this-file-compiled parser location)
+(define-public (this-file-compiled? parser location)
   "Return #t if the file where this function is called
     is the one that is currently compiled by LilyPond."
   (let ((outname (ly:parser-output-name parser))
         (locname (normalize-location location)))
     (regexp-match? (string-match (format "^(.*/)?~A\\.i?ly$" outname) locname))))
 
-;; LilyPond format wrapper for this-file-compiled
+;; LilyPond format wrapper for this-file-compiled?
 (define-public thisFileCompiled
   (define-scheme-function (parser location)()
-    (this-file-compiled parser location)))
+    (this-file-compiled? parser location)))
