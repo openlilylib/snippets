@@ -151,12 +151,6 @@ gridCheck =
     (map (lambda (x) (+ 1 x))
          (iota (hash-ref music-grid-meta #:segments)))))
 
-%%% This is taken from Lalily
-#(define (test-location? parser location)
-   (let ((outname (ly:parser-output-name parser))
-         (locname (car (ly:input-file-line-char-column location))))
-     (regexp-match? (string-match (format "^(.*/)?~A\\.i?ly$" outname) locname))))
-
 %%% Grid initialization
 gridInit =
 #(define-void-function
@@ -358,7 +352,7 @@ gridCompileCell =
    (string? number?)
    (check-grid)
    (check-coords part segment)
-   (if (test-location? parser location)
+   (if (this-file-compiled? parser location)
        (let ((cache-segment #{ \getOption gridly.segment-range #}))
          (ly:message "Compiling test file")
          (if (not (get-music-cell part segment))
