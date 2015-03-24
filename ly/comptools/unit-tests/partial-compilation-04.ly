@@ -3,7 +3,10 @@
 \version "2.18.0"
 
 \include "openlilylib"
-\loadModule "comptools/partial-compilation.ily"
+\useLibrary comptools
+\useModule comptools.partial-compilation
+
+#(display "")
 
 \include "../usage-examples/comptools-test-data.ily"
 

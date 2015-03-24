@@ -29,4 +29,4 @@
   currently only the annotate module is implemented
 %}
 
-\loadModule "scholarly/annotate"
+\include "annotate/__main__.ily"

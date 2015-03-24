@@ -31,13 +31,12 @@
 %}
 
 % Output a confirmation message that we are being parsed
-#(ly:message "\nModule \"example\" loaded through openLilyLib!\n")
+#(ly:message "\nModule \"example\" main file loaded through openLilyLib!\n")
 #(ly:message (format "I am ~a" #{ \thisFile #}))
 
 
+#(ly:message "\nLoad a module from within the library main file:")
+\useModule example.load-test
 
-#(ly:message "\nLoad a file from within the module.\n")
-\loadModule "example/load-test.ily"
-
-#(display
-  (format "Use variable in __main__ that was defined in __init__: ~a" in-init))
+%#(display
+%  (format "Use variable in __main__ that was defined in __init__: ~a" in-init))

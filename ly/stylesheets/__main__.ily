@@ -166,7 +166,7 @@ useNotationFont =
     ; through Scheme (I suspect there are options in the paper
     ; related ly: functions but I didn't succeed to find a solution).
     (ly:parser-include-string parser
-      (ly:gulp-file
+      (format "\\include \"~a\""
        (string-append
         #{ \getOption global.root-path #}
         "/stylesheets/load-font")))
@@ -180,6 +180,6 @@ useNotationFont =
     ;; if not "none".
     (if (not (string=? "none" style))
         (ly:parser-include-string parser
-          (ly:gulp-file style-file)))
+          (format "\\include \"~a\"" style-file)))
     (oll:log location (format "Associated \"~a\" stylesheet loaded successfully" style))
     ))

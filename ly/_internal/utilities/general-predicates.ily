@@ -35,3 +35,10 @@
    (and (list? obj)
         (every string? obj)))
 
+% Returns true if obj is a string or a list of pairs (alist)
+% (used for mandatory library options)
+#(define (string-or-alist? obj)
+   (if (or (string? obj)
+           (and (list? obj)
+                (every pair? obj)))
+       #t #f))

@@ -67,15 +67,15 @@
 % Set the root path of openLilyLib
 % - for oll module inclusion
 % - for Scheme module inclusion
-% This must be called from the main openlilylib file
-% because that's inside the desired root directory
 setRootPath =
 #(define-void-function (parser location)()
-   (let* ((path (location-extract-path location)))
-     #{ \registerOption global.root-path #path #}
-     (if (not (member path %load-path))
-         (set! %load-path `(,path ,@%load-path)))))
-
+   (let* ((path
+           (normalize-path
+            (string-append
+             (location-extract-path location)
+             "/.."))))
+     #{ \registerOption global.root-path #path #}))
+\setRootPath
 
 % Functionality to load and manage modules
 \include "module-handling.ily"

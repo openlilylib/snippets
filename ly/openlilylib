@@ -28,4 +28,3 @@ initOpenLilyLib =
         (ly:parser-include-string parser
           "\\include \"_internal/init-openlilylib.ily\""))))
 \initOpenLilyLib
-\setRootPath

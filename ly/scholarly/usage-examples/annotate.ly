@@ -1,8 +1,15 @@
 \version "2.18.0"
 
 \include "openlilylib"
-\registerOption documentation.include-file "scholarly/annotate"
-\loadModule "_internal/doc-include/usage-example.ily"
+
+\useLibrary ScholarLY
+
+\useModule scholarly.annotate
+
+#(display "loaded\n")
+
+%\registerOption documentation.include-file "scholarly/annotate"
+%\loadModule "_internal/doc-include/usage-example.ily"
 
 \markup \vspace #1
 
