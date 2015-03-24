@@ -65,9 +65,9 @@
              (symbol->string elt)))
        path)))
 
-(define-public (join-unix-path path-list)
+(define-public (join-unix-path path)
   "Returns a Unix formatted path string from a (symbol?/string?) list."
-  (string-join (split-path path-list) "/"))
+  (string-join (split-path path) "/"))
 
 (define-public (join-dot-path path)
   "Returns a string in dot-notation (to be displayed).
