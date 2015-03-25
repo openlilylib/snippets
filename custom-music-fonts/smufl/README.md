@@ -4,7 +4,7 @@ This is a LilyPond script providing partial support for Bravura and other future
 
 ## Usage ##
 
-**Current version:** SMuFL 1.0
+**Current version:** SMuFL 1.12
 
 #### Installing font files ####
 
