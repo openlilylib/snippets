@@ -84,7 +84,7 @@ setOption =
           (format "~a: ~a"
             (symbol-list->dot-path opt-path) val)))
        ;; reject setting unknown options and report that
-       (oll:warn location "Not a valid option path: ~a" (dot-path->string opt-path))))
+       (oll:warn location "Not a valid option path: ~a" (symbol-list->dot-path opt-path))))
 
 % Retrieve an option
 % Provide a tree path in dotted or list notation
@@ -96,7 +96,7 @@ getOption =
      (if value
          (cdr value)
          (begin
-          (oll:warn location "Try retrieving non-existent option: ~a" (dot-path->string opt-path))
+          (oll:warn location "Try retrieving non-existent option: ~a" (symbol-list->dot-path opt-path))
           #f))))
 
 % Same as \getOption, but retrieving non-existing options returns
