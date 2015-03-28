@@ -104,7 +104,12 @@ useNotationFont =
                             (lilypond-version))))
    (let ((use-name (string-downcase name)))
      (if
-      (not (member use-name #{ \getOption global.installed-fonts.otf #}))
+      (not (member use-name
+             #{ \getChildOption global.installed-fonts
+                #(if (eq? 'svg (ly:get-option 'backend))
+                     'svg
+                     'otf)
+             #}))
       (oll:warn location
         (format "No font \"~a\" installed in this LilyPond installation. Skipping." name))
       (let*
@@ -146,7 +151,12 @@ useNotationFont =
        ;; if a non-existent brace font is requested
        ;; (or none is requested and there is no brace available for the notation font)
        ;; issue a warning and reset to Emmentaler.
-       (if (not (member use-brace #{ \getOption global.installed-fonts.otf-brace #}))
+       (if (not (member use-brace
+                  #{ \getChildOption global.installed-fonts
+                     #(if (eq? 'svg (ly:get-option 'backend))
+                          'svg-brace
+                          'otf-brace)
+                  #}))
            (begin
             (oll:warn location
               (format "No \"~a\" brace font available. Use Emmentaler as default." brace))
