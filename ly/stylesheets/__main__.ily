@@ -143,6 +143,16 @@ useNotationFont =
             (set! brace "Emmentaler")
             (set! use-brace "emmentaler")))
 
+       ;; if a non-existent brace font is requested
+       ;; (or none is requested and there is no brace available for the notation font)
+       ;; issue a warning and reset to Emmentaler.
+       (if (not (member use-brace #{ \getOption global.installed-fonts.otf-brace #}))
+           (begin
+            (oll:warn location
+              (format "No \"~a\" brace font available. Use Emmentaler as default." brace))
+            (set! brace "Emmentaler")
+            (set! use-brace "emmentaler")))
+
        ;; if a non-existent stylesheet is requested
        ;; issue a warning and reset to -default
        (if (not
