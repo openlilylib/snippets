@@ -59,10 +59,10 @@ class SimpleTests:
         # LilyPond command
         if self.is_ci_run():
             try:
-                self.lilypond_version = os.environ[self.lily_version_var]
                 self.lily_command = osp.join(install_root,
                                              "bin",
                                              "lilypond")
+                self.lilypond_version = self.__lilypond_version()
             except KeyError:
                 sys.exit('Environment variable {} not set. Aborting'.format(self.lily_version_var))
         else:
