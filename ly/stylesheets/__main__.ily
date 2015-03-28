@@ -92,94 +92,101 @@ http://fonts.openlilylib.org.\n")
 % is valid while with
 %    \useNotationFont "Gutenberg1939"
 % the quotation marks are needed.
+%
+% Requesting a font name that is not present results in a warning,
+% but errors due to "font not found" are avoided.
 
 useNotationFont =
 #(define-void-function (parser location options name)
    ((ly:context-mod?) string?)
    (if (lilypond-less-than? "2.19.12")
        (oll:warn location (format fonts-lily-version-warning
-                     (lilypond-version))))
-   (let*
-    (
-      (use-name (string-downcase name))
-      ;; create an alist with options if they are given.
-      ;; if the argument is not given or no options are defined
-      ;; we have an empty list.
-      (options
-       (if options
-           (map
-            (lambda (o)
-              (cons (cadr o) (caddr o)))
-            (ly:get-context-mods options))
-           '()))
-      ;; retrieve 'brace' name from options if given.
-      ;; if not given we assume the same as the notation font
-      (brace
-       (or (assoc-ref options 'brace)
-           name))
-      (use-brace (string-downcase brace))
-      ;; retrieve 'style' option with "default" default ...
-      (style
-       (or (assoc-ref options 'style)
-           "default"))
-      ;; ... and produce include filename from it
-      (style-file (make-style-file use-name style))
-      (extensions (assoc-ref options 'extensions))
-      )
+                            (lilypond-version))))
+   (let ((use-name (string-downcase name)))
+     (if
+      (not (member use-name #{ \getOption global.installed-fonts.otf #}))
+      (oll:warn location
+        (format "No font \"~a\" installed in this LilyPond installation. Skipping." name))
+      (let*
+       (
+         ;; create an alist with options if they are given.
+         ;; if the argument is not given or no options are defined
+         ;; we have an empty list.
+         (options
+          (if options
+              (map
+               (lambda (o)
+                 (cons (cadr o) (caddr o)))
+               (ly:get-context-mods options))
+              '()))
+         ;; retrieve 'brace' name from options if given.
+         ;; if not given we assume the same as the notation font
+         (brace
+          (or (assoc-ref options 'brace)
+              name))
+         (use-brace (string-downcase brace))
+         ;; retrieve 'style' option with "default" default ...
+         (style
+          (or (assoc-ref options 'style)
+              "default"))
+         ;; ... and produce include filename from it
+         (style-file (make-style-file use-name style))
+         (extensions (assoc-ref options 'extensions))
+         )
 
-    ;; Post-process options
-    ;;
-    ;; if 'none' is given as brace set to default "emmentaler"
-    (if (and (assoc-ref options 'brace)
-             (string=? "none" (assoc-ref options 'brace)))
-        (begin
-         (set! brace "Emmentaler")
-         (set! use-brace "emmentaler")))
+       ;; Post-process options
+       ;;
+       ;; if 'none' is given as brace set to default "emmentaler"
+       (if (and (assoc-ref options 'brace)
+                (string=? "none" (assoc-ref options 'brace)))
+           (begin
+            (set! brace "Emmentaler")
+            (set! use-brace "emmentaler")))
 
-    ;; if a non-existent stylesheet is requested
-    ;; issue a warning and reset to -default
-    (if (not
-         (or (string=? "none" style)
-             (file-exists? style-file)))
-        (begin
-         (oll:warn location
-           (format "Requested stylesheet \"~a\" doesn't exist for font \"~a\"" style name))
-         (set! style-file (make-style-file use-name style))))
+       ;; if a non-existent stylesheet is requested
+       ;; issue a warning and reset to -default
+       (if (not
+            (or (string=? "none" style)
+                (file-exists? style-file)))
+           (begin
+            (oll:warn location
+              (format "Requested stylesheet \"~a\" doesn't exist for font \"~a\"" style name))
+            (set! style-file (make-style-file use-name style))))
 
-    ;; store options, these are used from the included load-font file
-    #{ \setOption stylesheets.font.name #name #}
-    #{ \setOption stylesheets.font.use-name #use-name #}
-    #{ \setOption stylesheets.font.brace #brace #}
-    #{ \setOption stylesheets.font.use-brace #use-brace #}
+       ;; store options, these are used from the included load-font file
+       #{ \setOption stylesheets.font.name #name #}
+       #{ \setOption stylesheets.font.use-name #use-name #}
+       #{ \setOption stylesheets.font.brace #brace #}
+       #{ \setOption stylesheets.font.use-brace #use-brace #}
 
-    ;; load font through an included file.
-    ;; this is necessary so that file can set its own
-    ;; \paper {} block.
-    ;
-    ; TODO:
-    ; Find a way to pull that functionality in here.
-    ; The problem seems to be that (even when wrapping the
-    ; definition of 'fonts in a ly:parser-define call the
-    ; properties of the \paper block (e.g. staff-height) are
-    ; not available.
-    ; I think one has to somehow access the current paper block
-    ; through Scheme (I suspect there are options in the paper
-    ; related ly: functions but I didn't succeed to find a solution).
-    (ly:parser-include-string parser
-      (format "\\include \"~a\""
-       (string-append
-        #{ \getOption global.root-path #}
-        "/stylesheets/load-font")))
-    (oll:log location
-      (format "Font \"~a\" loaded successfully" name))
+       ;; load font through an included file.
+       ;; this is necessary so that file can set its own
+       ;; \paper {} block.
+       ;
+       ; TODO:
+       ; Find a way to pull that functionality in here.
+       ; The problem seems to be that (even when wrapping the
+       ; definition of 'fonts in a ly:parser-define call the
+       ; properties of the \paper block (e.g. staff-height) are
+       ; not available.
+       ; I think one has to somehow access the current paper block
+       ; through Scheme (I suspect there are options in the paper
+       ; related ly: functions but I didn't succeed to find a solution).
+       (ly:parser-include-string parser
+         (format "\\include \"~a\""
+           (string-append
+            #{ \getOption global.root-path #}
+            "/stylesheets/load-font")))
+       (oll:log location
+         (format "Font \"~a\" loaded successfully" name))
 
-    ;; try to load font extensions if requested
-    (if extensions (use-font-extensions parser location name))
+       ;; try to load font extensions if requested
+       (if extensions (use-font-extensions parser location name))
 
-    ;; include the determined style file for the font
-    ;; if not "none".
-    (if (not (string=? "none" style))
-        (ly:parser-include-string parser
-          (format "\\include \"~a\"" style-file)))
-    (oll:log location (format "Associated \"~a\" stylesheet loaded successfully" style))
-    ))
+       ;; include the determined style file for the font
+       ;; if not "none".
+       (if (not (string=? "none" style))
+           (ly:parser-include-string parser
+             (format "\\include \"~a\"" style-file)))
+       (oll:log location (format "Associated \"~a\" stylesheet loaded successfully" style))
+       ))))
