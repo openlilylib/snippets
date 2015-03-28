@@ -46,9 +46,9 @@ class SimpleTests:
 
     test_excludes_fname = ".automated-tests-exclude"
     test_includes_fname = ".automated-tests-include"
-    test_dirnames = ["usage-examples", 
+    test_dirnames = ["usage-examples",
                      "unit-tests"]
-    
+
 
     def __init__(self, cmd=None):
         # set up building environment
@@ -59,10 +59,10 @@ class SimpleTests:
         # LilyPond command
         if self.is_ci_run():
             try:
-                self.lilypond_version = os.environ[self.lily_version_var]
                 self.lily_command = osp.join(install_root,
                                              "bin",
                                              "lilypond")
+                self.lilypond_version = self.__lilypond_version()
             except KeyError:
                 sys.exit('Environment variable {} not set. Aborting'.format(self.lily_version_var))
         else:
@@ -167,8 +167,12 @@ class SimpleTests:
             self.__collect_all_in_dir(root)
 
         # build definitive list of test cases:
-        self.test_files = [t for t in self.test_files if t not in self.excluded_tests]
-        self.test_files.extend([t for t in self.included_tests if t not in self.excluded_tests])
+        self.test_files = [t for t in self.test_files
+                           if t not in self.excluded_tests]
+        self.test_files.extend([t for t in self.included_tests
+                                if t not in self.excluded_tests])
+        self.test_files = [t for t in self.test_files
+                           if self.is_runnable_file(t)]
         self.test_files.sort()
 
         # print summary about test cases
@@ -205,8 +209,8 @@ class SimpleTests:
                             return True
                     print "**WARNING** File version " +\
                         version_line.group(1) +\
-                        " greater than lilypond version {}, skipping".format(
-                            self.lilypond_version)
+                        " greater than lilypond version {}, skipping {}".format(
+                            self.lilypond_version, fname)
                     return False
         print "**WARNING** No version line found, skipping", fname
         return False
