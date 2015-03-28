@@ -57,6 +57,10 @@ Using `none` as `style` will skip loading a stylesheet, which you may want when 
 from scratch. Please consult the documentation about any additional styles available for a given font.
 if a non-existent stylesheet is requested a warning is issued and the default stylesheet is loaded.
 
+Requesting a notation font or (even implicitly) a brace font that is not available for the given
+backend in the executed LilyPond installation will issue a warning and reset the (brace) font to
+*Emmentaler*, but LilyPond errors are avoided.
+
 A font may contain extensions that can be activated with the `extensions = ##t` option. Currently only
 the *Arnold* fonts has such extensions, consisting of a few extra articulations and commands.
 Requesting extensions for a font that doesn't provide them will issue a warning but don't do any further harm.
