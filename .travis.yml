@@ -39,4 +39,4 @@ script: ./test/automated_tests.py
 #                  during the installation and test scripts
 env:
   - LILY_PLATFORM=linux-64 LILY_VERSION=2.18.2-1
-  - LILY_PLATFORM=linux-64 LILY_VERSION=2.19.15-1
+  - LILY_PLATFORM=linux-64 LILY_VERSION=2.19.17-1
