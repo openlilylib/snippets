@@ -50,4 +50,75 @@
 \registerOption stylesheets.font.brace Emmentaler
 \registerOption stylesheets.font.use-brace Emmentaler
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Determine installed notation fonts
+
+% Helper function returning all notation and brace fonts from a given directory
+% NOTE:
+% - This only checks for the presence of an -11 font
+% - In the SVG directory only SVG fonts are considered, not the WOFF ones
+#(define (font-list dir)
+   "Iterates over the files in a given directory and collects
+    notation and brace fonts. Returns a pair with two sorted lists:
+    - notation fonts (car)
+    - brace fonts (cdr)"
+   (let ((font-dir (opendir dir))
+         (fonts '())
+         (brace-fonts '())
+         (font-rx (make-regexp "-11.(otf|svg)" regexp/icase))
+         (brace-rx (make-regexp "-brace.(otf|svg)" regexp/icase))
+         )
+     (do ((entry (readdir font-dir)(readdir font-dir)))
+       ((eof-object? entry))
+       (let ((font (regexp-exec font-rx entry))
+             (brace (regexp-exec brace-rx entry)))
+         (if font
+             (set! fonts (append fonts (list (match:prefix font)))))
+         (if brace
+             (set! brace-fonts (append brace-fonts (list (match:prefix brace)))))))
+     (closedir font-dir)
+     (cons
+      (reverse (sort fonts string>?))
+      (reverse (sort brace-fonts string>?)))))
+
+% Read the OTF and SVG fonts installed in the installation of the currently executed LilyPond
+% and store them in the global options
+#(let*
+  ((font-path (append (split-path (ly:get-option 'datadir)) '("fonts")))
+   (otf-path (join-unix-path (append font-path '("otf"))))
+   (otf-list (font-list otf-path))
+   (svg-path (join-unix-path (append font-path '("svg"))))
+   (svg-list (font-list svg-path))
+   )
+  #{ \registerOption global.installed-fonts.otf #(car otf-list) #}
+  #{ \registerOption global.installed-fonts.otf-brace #(cdr otf-list) #}
+  #{ \registerOption global.installed-fonts.svg #(car svg-list) #}
+  #{ \registerOption global.installed-fonts.svg-brace #(cdr svg-list) #})
+
+% Helper function to display a set of font names
+% determining the presence of a matching brace font
+#(define (display-fonts fonts brace)
+   (for-each
+    (lambda (f)
+      (let ((brace-note
+             (if (not (member f brace))
+                 " (no brace font)"
+                 "")))
+        (display (format "- ~a~a" f brace-note))
+        (newline)))
+    fonts))
+
+% Display sorted lists of all notation fonts currently installed.
+displayNotationFonts =
+#(define-void-function (parser location)()
+   (display "\nAvailable notation fonts:\nOpenType:\n")
+   (display-fonts
+    #{ \getOption global.installed-fonts.otf #}
+    #{ \getOption global.installed-fonts.otf-brace #})
+   (display "SVG:\n")
+   (display-fonts
+    #{ \getOption global.installed-fonts.svg #}
+    #{ \getOption global.installed-fonts.svg-brace #}))
+
+
 #(oll:log "Initialized Stylesheets~a" "")
