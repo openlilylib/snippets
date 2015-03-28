@@ -106,9 +106,12 @@ useNotationFont =
      (if
       (not (member use-name
              #{ \getChildOption global.installed-fonts
-                #(if (eq? 'svg (ly:get-option 'backend))
-                     'svg
-                     'otf)
+                #(cond 
+                  ((eq? 'svg (ly:get-option 'backend))
+                   'svg)
+                  ((eq? 'svg-woff (ly:get-option 'backend))
+                   'woff)
+                  (else 'otf))
              #}))
       (oll:warn location
         (format "No font \"~a\" installed in this LilyPond installation. Skipping." name))
@@ -153,13 +156,17 @@ useNotationFont =
        ;; issue a warning and reset to Emmentaler.
        (if (not (member use-brace
                   #{ \getChildOption global.installed-fonts
-                     #(if (eq? 'svg (ly:get-option 'backend))
-                          'svg-brace
-                          'otf-brace)
+                #(cond 
+                  ((eq? 'svg (ly:get-option 'backend))
+                   'svg)
+                  ((eq? 'svg-woff (ly:get-option 'backend))
+                   'woff)
+                  (else 'otf))
                   #}))
            (begin
             (oll:warn location
-              (format "No \"~a\" brace font available. Use Emmentaler as default." brace))
+              (format "No \"~a\" brace font available for backend '~a. Use Emmentaler as default." 
+                brace (ly:get-option 'backend)))
             (set! brace "Emmentaler")
             (set! use-brace "emmentaler")))
 

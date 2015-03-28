@@ -57,7 +57,7 @@
 % NOTE:
 % - This only checks for the presence of an -11 font
 % - In the SVG directory only SVG fonts are considered, not the WOFF ones
-#(define (font-list dir)
+#(define (font-list dir ext)
    "Iterates over the files in a given directory and collects
     notation and brace fonts. Returns a pair with two sorted lists:
     - notation fonts (car)
@@ -65,8 +65,8 @@
    (let ((font-dir (opendir dir))
          (fonts '())
          (brace-fonts '())
-         (font-rx (make-regexp "-11.(otf|svg)" regexp/icase))
-         (brace-rx (make-regexp "-brace.(otf|svg)" regexp/icase))
+         (font-rx (make-regexp (format "-11.~a" ext) regexp/icase))
+         (brace-rx (make-regexp (format "-brace.~a" ext) regexp/icase))
          )
      (do ((entry (readdir font-dir)(readdir font-dir)))
        ((eof-object? entry))
@@ -86,14 +86,17 @@
 #(let*
   ((font-path (append (split-path (ly:get-option 'datadir)) '("fonts")))
    (otf-path (join-unix-path (append font-path '("otf"))))
-   (otf-list (font-list otf-path))
+   (otf-list (font-list otf-path "otf"))
    (svg-path (join-unix-path (append font-path '("svg"))))
-   (svg-list (font-list svg-path))
+   (svg-list (font-list svg-path "svg"))
+   (woff-list (font-list svg-path "woff"))
    )
   #{ \registerOption global.installed-fonts.otf #(car otf-list) #}
   #{ \registerOption global.installed-fonts.otf-brace #(cdr otf-list) #}
   #{ \registerOption global.installed-fonts.svg #(car svg-list) #}
-  #{ \registerOption global.installed-fonts.svg-brace #(cdr svg-list) #})
+  #{ \registerOption global.installed-fonts.svg-brace #(cdr svg-list) #}
+  #{ \registerOption global.installed-fonts.woff #(car woff-list) #}
+  #{ \registerOption global.installed-fonts.woff-brace #(cdr woff-list) #})
 
 % Helper function to display a set of font names
 % determining the presence of a matching brace font
@@ -118,7 +121,11 @@ displayNotationFonts =
    (display "SVG:\n")
    (display-fonts
     #{ \getOption global.installed-fonts.svg #}
-    #{ \getOption global.installed-fonts.svg-brace #}))
+    #{ \getOption global.installed-fonts.svg-brace #})
+   (display "WOFF:\n")
+   (display-fonts
+    #{ \getOption global.installed-fonts.woff #}
+    #{ \getOption global.installed-fonts.woff-brace #}))
 
 
 #(oll:log "Initialized Stylesheets~a" "")
