@@ -78,6 +78,7 @@ http://fonts.openlilylib.org.\n")
 %   - brace: define brace font
 %            - "none": default to Emmentaler
 %            - omitted: use the same as the font name
+%              or default to Emmentaler if there is no corresponding brace font
 %   - style: load a style sheet for the font
 %            - omitted: load the "-default" stylesheet
 %                       (has to be provided by the library)
