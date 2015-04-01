@@ -1,0 +1,42 @@
+###############################################################################
+#
+#                        Travis CI configuration
+#                        =======================
+#
+# This file configures the Continuous Integration server on travis-ci.org
+#
+###############################################################################
+
+language: python
+
+# This will route the build job to the new Travis build environment
+sudo: false
+
+# Keep installed lilypond versions between builds
+cache:
+  directories:
+  - $HOME/.lilypond
+
+# Download and install LilyPond (stable and devel)
+# when not present already (cached between builds)
+install:
+  - python ./test/install_lilypond.py
+
+# This is the script that will actually run the tests
+script: ./test/automated_tests.py
+
+# These are environment variables that are used to configure the
+# tests.
+#
+#   - LILY_PLATFORM is the platform for which lilypond was
+#                   compiled. Note that travis-ci is running 64 bit
+#                   Linux virtual machines, hence `linux-64` is pretty
+#                   much the only value that makes sense.
+#
+#   - LILY_VERSION is the version of lilypond with which we want to
+#                  run the tests. "stable" and "devel" are placeholders
+#                  for values retrieved from test/LILYPOND-VERSIONS
+#                  during the installation and test scripts
+env:
+  - LILY_PLATFORM=linux-64 LILY_VERSION=2.18.2-1
+  - LILY_PLATFORM=linux-64 LILY_VERSION=2.19.17-1
