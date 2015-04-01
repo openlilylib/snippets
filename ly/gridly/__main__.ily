@@ -39,8 +39,12 @@
            #:getter cell:lyrics)
    (opening #:init-keyword #:opening
             #:getter cell:opening)
+   (opening-lyrics #:init-keyword #:opening-lyrics
+                   #:getter cell:opening-lyrics)
    (closing #:init-keyword #:closing
             #:getter cell:closing)
+   (closing-lyrics #:init-keyword #:closing-lyrics
+                   #:getter cell:closing-lyrics)
    (barNumber #:init-keyword #:barNumber
               #:getter cell:barNumber)
    (transposeKey #:init-keyword #:transposeKey
@@ -206,7 +210,9 @@ gridPutMusic =
                    #:music music
                    #:lyrics (props-get 'lyrics #f)
                    #:opening (props-get 'opening #{ #})
+                   #:opening-lyrics (props-get 'opening-lyrics #f)
                    #:closing (props-get 'closing #{ #})
+                   #:closing-lyrics (props-get 'closing-lyrics #f)
                    #:barNumber (props-get 'barNumber #f)
                    #:transposeKey (props-get 'transposeKey #f))))
      (hash-set! music-grid key value)))
@@ -259,8 +265,10 @@ gridSetSegmentTemplate =
                           #:lyrics #{ #}
                           #:opening (cell:opening
                                      (get-music-cell "<template>" i))
+                          #:opening-lyrics #{ #}
                           #:closing (cell:closing
                                      (get-music-cell "<template>" i))
+                          #:closing-lyrics #{ #}
                           #:music (cell:music
                                    (get-music-cell "<template>" i))
                           #:barNumber (cell:barNumber
@@ -326,12 +334,20 @@ gridGetLyrics =
 #(define-music-function
    (parser location part) (string?)
    (let* ((cells (get-cell-range part #{ \getOption gridly.segment-range #}))
-          (lyrics (map cell:lyrics cells)))
+          (lyrics (map cell:lyrics cells))
+          (opening-lyrics (let ((maybe-lyrics (cell:opening-lyrics (car cells))))
+                            (if maybe-lyrics
+                                (list maybe-lyrics)
+                                '())))
+          (closing-lyrics (let ((maybe-lyrics (cell:closing-lyrics (car (last-pair cells)))))
+                            (if maybe-lyrics
+                                (list maybe-lyrics)
+                                '()))))
      (if (member #f lyrics)
          (ly:error "A segment is missing lyrics!")
          (make-music
           'SequentialMusic
-          'elements lyrics))))
+          'elements (append opening-lyrics lyrics closing-lyrics)))))
 
 #(define (format-cell-file-name parser part segment)
    (let* ((max-segment-str-len (string-length
@@ -364,7 +380,7 @@ gridCompileCell =
                 (lyrics (let ((maybe-lyrics (cell:lyrics
                                              (get-music-cell part segment))))
                           (if maybe-lyrics
-                              #{ \new Lyrics \lyricsto $name $maybe-lyrics #}
+                              #{ \new Lyrics \lyricsto $name { \gridGetLyrics $part } #}
                               #{ #})))
                 (book
                  #{
