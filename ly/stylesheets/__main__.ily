@@ -107,7 +107,7 @@ useNotationFont =
      (if
       (not (member use-name
              #{ \getChildOption global.installed-fonts
-                #(cond 
+                #(cond
                   ((eq? 'svg (ly:get-option 'backend))
                    'svg)
                   ((eq? 'svg-woff (ly:get-option 'backend))
@@ -157,16 +157,21 @@ useNotationFont =
        ;; issue a warning and reset to Emmentaler.
        (if (not (member use-brace
                   #{ \getChildOption global.installed-fonts
-                #(cond 
-                  ((eq? 'svg (ly:get-option 'backend))
-                   'svg)
-                  ((eq? 'svg-woff (ly:get-option 'backend))
-                   'woff)
-                  (else 'otf))
+                     % Construct the right subtree to be matched
+                     % according to the used backend.
+                     #(string->symbol
+                       (string-append
+                        (cond
+                         ((eq? 'svg (ly:get-option 'backend))
+                          "svg")
+                         ((eq? 'svg-woff (ly:get-option 'backend))
+                          "woff")
+                         (else "otf"))
+                        "-brace"))
                   #}))
            (begin
             (oll:warn location
-              (format "No \"~a\" brace font available for backend '~a. Use Emmentaler as default." 
+              (format "No \"~a\" brace font available for backend '~a. Use Emmentaler as default."
                 brace (ly:get-option 'backend)))
             (set! brace "Emmentaler")
             (set! use-brace "emmentaler")))
