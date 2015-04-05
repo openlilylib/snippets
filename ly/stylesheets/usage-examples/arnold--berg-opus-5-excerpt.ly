@@ -81,8 +81,8 @@ clarinet = \relative b {
   r4
     \once \override DynamicText.X-offset = -4
     a32 ( \f \< cis f as c es g b
-    e8 \staccatissimo \weakbeat ) \sfz \breathe
-    e8-- \ff \strongbeat  ( _\markup \italic (schwungvoll)
+    e8 \staccatissimo \arnoldWeakbeat ) \sfz \breathe
+    e8-- \ff \arnoldStrongbeat  ( _\markup \italic (schwungvoll)
     \acciaccatura b8 dis-- e--)
 }
 
@@ -152,24 +152,24 @@ left = \relative as, {
     \tuplet 3/2 { q16 <f' g>-> <as, bes>-> \sustainOff } |
 
  % 07
- es8-> ( 
+ es8-> (
    \sustainOn <e' gis>4-- )
    \once \override DynamicText.X-offset = -4
    \override TextScript.staff-padding = 3
    des,8-> \f ( ^\hauptstimme \sustainOff \sustainOn <d' ais' b>4-- ) ^\endstimme
-   bes,8-> ( \sustainOff \sustainOn <des' f a c> ) 
+   bes,8-> ( \sustainOff \sustainOn <des' f a c> )
 }
 
 pianoPart = \new PianoStaff  <<
-  \new Staff = "right" << 
+  \new Staff = "right" <<
     \rightOne
-    \rightTwo 
+    \rightTwo
   >>
-  \new Staff = "middle" { 
-    \clef treble \middle 
+  \new Staff = "middle" {
+    \clef treble \middle
   }
-  \new Staff = "left" { 
-    \clef bass \left 
+  \new Staff = "left" {
+    \clef bass \left
   }
 >>
 

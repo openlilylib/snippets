@@ -34,9 +34,9 @@
   useless if Arnold has not been activated with \useNotationFont.
 
   Additional articulations:
-  - \weakbeat
-  - \strongbeat
-  - \varaccent (alternative glyph for accent)
+  - \arnoldWeakbeat
+  - \arnoldStrongbeat
+  - \arnoldVaraccent (alternative glyph for accent)
 
   - \altAccent activates the varaccent to be used with -> or \accent
   - \defAccent reverts to the normal accent glyph
@@ -63,7 +63,7 @@
 
 #(append! default-script-alist
    (list
-    `("weakbeat"
+    `("arnoldWeakbeat"
        . ((script-stencil . (feta . ("weakbeat" . "weakbeat")))
           (font-size . 1.5)
           ; any other properties
@@ -71,7 +71,7 @@
           (padding . 1)
           (avoid-slur . around)
           (direction . ,UP)))
-    `("strongbeat"
+    `("arnoldStrongbeat"
        . ((script-stencil . (feta . ("strongbeat" . "strongbeat")))
           ; any other properties
           (font-size . -0.5)
@@ -79,7 +79,7 @@
           (padding . 1)
           (avoid-slur . around)
           (direction . ,UP)))
-    `("varaccent"
+    `("arnoldVaraccent"
        . ((toward-stem-shift-in-column . 0.0)
           (script-stencil . (feta . ("varsforzato" . "varsforzato")))
           ; any other properties
@@ -89,9 +89,9 @@
     ))
 
 %%%% create postfix commands to use the articulations
-weakbeat = #(make-articulation "weakbeat")
-strongbeat = #(make-articulation "strongbeat")
-varaccent = #(make-articulation "varaccent")
+arnoldWeakbeat = #(make-articulation "arnoldWeakbeat")
+arnoldStrongbeat = #(make-articulation "arnoldStrongbeat")
+arnoldVaraccent = #(make-articulation "arnoldVaraccent")
 
 %%%% Switch between default and alternative accent glyphs.
 %%%% This can be changed during the music.
@@ -99,7 +99,7 @@ varaccent = #(make-articulation "varaccent")
 % Decide about the naming (altAccent is good but inconsistent)
 altAccent =
 #(define-void-function (parser location)()
-   (set! dashLarger varaccent))
+   (set! dashLarger arnoldVaraccent))
 
 defAccent =
 #(define-void-function (parser location)()
