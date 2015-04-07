@@ -58,14 +58,11 @@
 % and simply copied from arbitrary existing articulations.
 % TODO:
 % Change glyph names for 'varaccent' when changed in font
-% TODO:
-% Change the glyph scaling once this is done in the font
 
 #(append! default-script-alist
    (list
     `("arnoldWeakbeat"
        . ((script-stencil . (feta . ("weakbeat" . "weakbeat")))
-          (font-size . 1.5)
           ; any other properties
           (toward-stem-shift-in-column . 0.0)
           (padding . 1)
@@ -74,7 +71,6 @@
     `("arnoldStrongbeat"
        . ((script-stencil . (feta . ("strongbeat" . "strongbeat")))
           ; any other properties
-          (font-size . -0.5)
           (toward-stem-shift-in-column . 0.0)
           (padding . 1)
           (avoid-slur . around)
@@ -106,11 +102,7 @@ defAccent =
    (set! dashLarger accent))
 
 %%%% Add commands for typical Viennese School voicing indications
-% TODO
-% Check scaling once the glyphs have been updated in the font
-% And check glyph name of endstimme.
-scale-stimme = #-1.2
 
-hauptstimme = \markup { \fontsize #scale-stimme \halign #1 \musicglyph #"scripts.hauptstimme" }
-nebenstimme = \markup { \fontsize #scale-stimme \halign #1 \musicglyph #"scripts.nebenstimme" }
-endstimme = \markup { \fontsize #scale-stimme \halign #-1.5 \musicglyph #"scripts.endvoice" }
+hauptstimme = \markup { \halign #1 \musicglyph #"scripts.hauptstimme" }
+nebenstimme = \markup { \halign #1 \musicglyph #"scripts.nebenstimme" }
+endstimme = \markup { \halign #-1.5 \musicglyph #"scripts.endstimme" }
