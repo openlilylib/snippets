@@ -183,8 +183,8 @@ useNotationFont =
                 (file-exists? style-file)))
            (begin
             (oll:warn location
-              (format "Requested stylesheet \"~a\" doesn't exist for font \"~a\"" style name))
-            (set! style-file (make-style-file use-name style))))
+              (format "Requested stylesheet \"~a\" doesn't exist for font \"~a\". Skipping." style name))
+            (set! style-file #f)))
 
        ;; store options, these are used from the included load-font file
        #{ \setOption stylesheets.font.name #name #}
@@ -218,7 +218,7 @@ useNotationFont =
 
        ;; include the determined style file for the font
        ;; if not "none".
-       (if (not (string=? "none" style))
+       (if (and style-file (not (string=? "none" style)))
            (ly:parser-include-string parser
              (format "\\include \"~a\"" style-file)))
        (oll:log location (format "Associated \"~a\" stylesheet loaded successfully" style))
