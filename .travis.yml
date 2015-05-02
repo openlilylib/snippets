@@ -20,7 +20,7 @@ cache:
 # Download and install LilyPond (stable and devel)
 # when not present already (cached between builds)
 install:
-  - pip install python-dateutil --user
+  - pip install python-dateutil
   - python ./test/install_lilypond.py
 
 # This is the script that will actually run the tests
