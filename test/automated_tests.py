@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 
-import subprocess as sp
 import os
 import os.path as osp
 import shutil
 import sys
 import re
+from lilycmd import LilyCmd
 
-from common_functions import print_separator, home_dir, install_root
+from common_functions import print_separator
 
 
-class SimpleTests:
+class SimpleTests(object):
     """Run simple intergration tests. Specifically, this script will look
     for all the files in `usage-examples` directories. All these files
     will be compiled with LilyPond. If the compilation results in a
@@ -56,24 +56,25 @@ class SimpleTests:
         # root directory
         self.openlilylib_dir = self.__openlilylib_dir()
 
-        # LilyPond command
-        if self.is_ci_run():
-            try:
-                self.lily_command = osp.join(install_root,
-                                             "bin",
-                                             "lilypond")
-                self.lilypond_version = self.__lilypond_version()
-            except KeyError:
-                sys.exit('Environment variable {} not set. Aborting'.format(self.lily_version_var))
+        if 'CI' in os.environ and bool(os.environ["CI"]):
+            # TODO check definition
+            lily_platform = os.environ["LILY_PLATFORM"]
+            lily_version = os.environ["LILY_VERSION"]
+
+            self.lily_command = LilyCmd.with_version(lily_platform,
+                                                     lily_version)
+            if not self.lily_command.installed:
+                raise Exception('The required lilypond version is not installed')
+            self.lilypond_version = self.lily_command.version
         else:
-            self.lily_command = cmd if cmd else "lilypond"
-            self.lilypond_version = self.__lilypond_version()
+            self.lily_command = LilyCmd.system(cmd if cmd else "lilypond")
+            self.lilypond_version = self.lily_command.version
 
         # Add include path and other options to generated LilyPond command
-        self.lily_command_with_includes = [self.lily_command,
-                "-dno-point-and-click",
-                "-I", self.openlilylib_dir,
-                "-I", os.path.join(self.openlilylib_dir, "ly")]
+        self.lily_command_with_includes_args = [
+            "-dno-point-and-click",
+            "-I", self.openlilylib_dir,
+            "-I", os.path.join(self.openlilylib_dir, "ly")]
         # initialize some lists
         self.test_files = []
         self.included_tests = []
@@ -101,14 +102,6 @@ class SimpleTests:
                     test_fname = osp.join(root, f)
                     if os.path.isfile(test_fname) and self.is_lilypond_file(test_fname):
                         self.test_files.append(test_fname)
-
-
-    def __lilypond_version(self):
-        """Determine the LilyPond version actually run by the command self.lily_command"""
-        lily = sp.Popen([self.lily_command, "-v"], stdout=sp.PIPE, stderr=sp.PIPE)
-        version_line = lily.communicate()[0].splitlines()[0]
-        return re.search(r"\d+\.\d+\.\d+", version_line).group(0)
-
 
     def __openlilylib_dir(self):
         """Return the root directory of openLilyLib.
@@ -228,7 +221,9 @@ class SimpleTests:
         print "OpenLilyLib directory: {}".format(self.openlilylib_dir)
 
         print "LilyPond command to be used:"
-        print " ".join(self.lily_command_with_includes + ["-o <output-dir> <test-file>"])
+        print " ".join([self.lily_command.command] +
+                       self.lily_command_with_includes_args +
+                       ["-o <output-dir> <test-file>"])
 
 
     def report(self):
@@ -254,7 +249,8 @@ class SimpleTests:
                 print self.failed_tests[test]
                 print ""
             print_separator()
-            sys.exit(1)
+            return 1
+        return 0
 
 
     def run(self):
@@ -271,13 +267,11 @@ class SimpleTests:
                                     os.path.dirname(self.__relative_path(test)))
             if not os.path.exists(test_result_dir):
                 os.makedirs(test_result_dir)
-            lily = sp.Popen(self.lily_command_with_includes + ['-o',
-                                                               test_result_dir,
-                                                               test],
-                            stdout=sp.PIPE, stderr=sp.PIPE)
-            (out, err) = lily.communicate()
-
-            if lily.returncode == 0:
+            returncode, out, err = self.lily_command.execute(
+                self.lily_command_with_includes_args + ['-o',
+                                                        test_result_dir,
+                                                        test])
+            if returncode == 0:
                 print "------- OK! --------"
             else:
                 # if test failed, add it to the list of failed tests to be reported later
@@ -300,4 +294,9 @@ if __name__ == "__main__":
     tests.clean_results_dir()
     tests.collect_tests()
     tests.run()
-    tests.report()
+    retcode = tests.report()
+
+    # cleanup old version of lilypond
+    LilyCmd.clean_cache()
+
+    sys.exit(retcode)

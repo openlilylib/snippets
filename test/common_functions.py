@@ -32,4 +32,3 @@ def load_lily_versions():
 def print_separator():
     print ""
     print "="*79, "\n"
-
