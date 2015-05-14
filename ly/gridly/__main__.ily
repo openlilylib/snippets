@@ -169,6 +169,9 @@ gridInit =
 
 %%% Grid manipulation
 
+#(define (ctx-mod-or-music? arg)
+   (or (ly:context-mod? arg) (ly:music? arg)))
+
 #(define (context-mod->alist ctx-mod)
    (let ((props '()))
      (if ctx-mod
@@ -182,11 +185,14 @@ gridInit =
 
 gridPutMusic =
 #(define-void-function
-   (parser location part segment ctx-mod music)
-   (string? number? (ly:context-mod?) ly:music?)
+   (parser location part segment ctx-mod-or-music)
+   (string? number? ctx-mod-or-music?)
    (check-grid)
    (check-coords part segment)
-   (let* ((props (context-mod->alist ctx-mod))
+   (let* ((ctx-mod (if (ly:music? ctx-mod-or-music)
+                       #{ \with { music = $ctx-mod-or-music } #}
+                       ctx-mod-or-music))
+          (props (context-mod->alist ctx-mod))
           (key (cons part segment))
           ;; This closure will look in the `props' alist for the given
           ;; symbol, returning the associated value. If the symbol is
@@ -201,24 +207,30 @@ gridPutMusic =
                                     (get-music-cell "<template>" segment)))
                                (if cell-template
                                    (slot-ref cell-template sym)
-                                   last-default))))))
-          (value (make <cell>
-                   #:music music
-                   #:lyrics (props-get 'lyrics #f)
-                   #:opening (props-get 'opening #{ #})
-                   #:closing (props-get 'closing #{ #})
-                   #:barNumber (props-get 'barNumber #f)
-                   #:transposeKey (props-get 'transposeKey #f))))
-     (hash-set! music-grid key value)))
+                                   last-default)))))))
+     (if (not (ly:music? (assoc-ref props 'music)))
+         (begin
+           (ly:input-message
+            location "No music defined for ~a:~a"
+            part segment)
+           (ly:error "The `music' argument is mandatory"))
+         (let ((value (make <cell>
+                        #:music (ly:assoc-get 'music props #f #t)
+                        #:lyrics (props-get 'lyrics #f)
+                        #:opening (props-get 'opening #{ #})
+                        #:closing (props-get 'closing #{ #})
+                        #:barNumber (props-get 'barNumber #f)
+                        #:transposeKey (props-get 'transposeKey #f))))
+           (hash-set! music-grid key value)))))
 
 gridSetSegmentTemplate =
 #(define-void-function
-   (parser location segment ctx-mod music)
-   (number? (ly:context-mod? #{ \with{} #}) ly:music?)
+   (parser location segment ctx-mod-or-music)
+   (number? ctx-mod-or-music?)
    (if (get-music-cell "<template>" segment)
        (ly:debug "Skipping setting of <template>:~a, already set" segment)
        #{
-         \gridPutMusic "<template>" $segment $ctx-mod $music
+         \gridPutMusic "<template>" $segment $ctx-mod-or-music
        #}))
 
 
@@ -437,3 +449,34 @@ gridGetStructure =
    #{
      \gridGetMusic "<template>"
    #})
+
+
+gridPutMusicDepr =
+#(define-void-function
+   (parser location part segment ctx-mod music)
+   (string? number? (ly:context-mod?) ly:music?)
+   (ly:input-warning
+    location
+    "This function is deprecated, use `gridPutMusic' instead")
+   (if ctx-mod
+       (let ((context (ly:make-context-mod
+                       (append
+                        (ly:get-context-mods #{ \with { music = $music } #})
+                        (ly:get-context-mods ctx-mod)))))
+         #{ \gridPutMusic $part $segment $context #})
+       #{ \gridPutMusic $part $segment $music #}))
+
+gridSetSegmentTemplateDepr =
+#(define-void-function
+   (parser location segment ctx-mod music)
+   (number? (ly:context-mod? #{ \with{} #}) ly:music?)
+   (ly:input-warning
+    location
+    "This function is deprecated, use `setSegmentTemplate' instead")
+   (let ((context (ly:make-context-mod
+                   (append
+                    (ly:get-context-mods #{ \with { music = $music } #})
+                    (ly:get-context-mods ctx-mod)))))
+     #{
+       \gridSetSegmentTemplate $segment $context
+     #}))

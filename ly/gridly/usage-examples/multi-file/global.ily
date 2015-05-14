@@ -8,7 +8,7 @@
 \gridSetSegmentTemplate #1
 \with {
   lyrics = \lyricmode { Ooo }
-}
-\relative c {
-  s1 |
+  music = \relative c {
+    s1 |
+  }
 }

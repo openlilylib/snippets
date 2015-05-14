@@ -2,13 +2,13 @@
 
 \include "../global.ily"
 
-\gridPutMusic "basso" #1
+\gridPutMusic "basso" 1
 \relative c {
   \clef "bass"
   c1 |
   \bar "|."
 }
 
-\gridCompileCell "basso" #1
+\gridCompileCell "basso" 1
 
 

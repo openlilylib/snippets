@@ -12,6 +12,23 @@ GridLY is part of `openLilyLib` and is maintained by
 
 ---
 
+Table of contents
+-----------------
+
+ - [Introduction](#introduction)
+ - [Motivation](#motivation)
+ - [The grid](#the-grid)
+ - [Public interface](#public-interface)
+   - [Segment selectors](#segment-selectors)
+   - [Optional attributes](#optional-attributes-via-context-modifiers)
+   - [Public functions](#public-functions)
+ - [Usage](#usage)
+ - [Migration guide](#migration-guide)
+   - [From `0.5.*` to `0.6.*`](#from-05-to-06)
+
+Introduction
+------------
+
 The segmented grid approach consists in dividing a multi-part score in
 many segments that can be edited independently, possibly my many
 people at the same time. From the post of Urs Liska
@@ -95,7 +112,7 @@ Public interface
 Before describing the public interface of `gridly`, let's see a couple
 of things that are used in almost all the functions.
 
-### Segment selectors
+#### Segment selectors
 
 Used by the function `gridSetRange` to get the music out of the grid,
 segment selectors are either scheme pairs, integers or the symbol
@@ -107,34 +124,10 @@ the segments from `3` to `6`, included.
 In the public functions description, segment selectors are identified
 by `seg-sel`.
 
-### Optional attributes via context modifiers
-
-Some cell attributes of a cell, like `opening`, `closing`, and
-`lyrics`, are optional. These attributes can be set using a context
-modifiers (for examples take a look at
-[usage-examples/example.ly](https://github.com/openlilylib/openlilylib/blob/master/ly/gridly/usage-examples/example.ly).
-
-The following snippet sets a context modifier with some lyrics and an
-opening
-```lilypond
-\with {
-  opening = {
-    \time 3/4
-  }
-  lyrics = \lyricmode {fa la la la!}
-}
-```
-
-In the public functions description, context modifiers are identified
-by `ctx-mod`.
-
 ### Public functions
 
 All the public music functions defined by GridLY are prefixed with
 `grid`.
-
-In the following list, arguments surrounded by `< >` are mandatory,
-whereas arguments surrounded by `[ ]` are optional.
 
  - `\gridInit <num-segments> <part-list>` : initializes the grid with
    the given number of centers and the given parts. This is the first
@@ -142,12 +135,12 @@ whereas arguments surrounded by `[ ]` are optional.
    of the segment range or not listed in `<part-list>`, you will get
    an error.
 
- - `\gridSetSegmentTemplate <segment-id> [ctx-mod] <music>` : this
+ - `\gridSetSegmentTemplate <segment-id> <context-or-music>` : this
    function can be optionally called to set the defaults of the given
    segment, for all parts. Here, the `<segment-id>` is a single
    integer.
 
- - `\gridPutMusic <part> <segment-id> [ctx-mod] <music>` :
+ - `\gridPutMusic <part> <segment-id> <context-or-music>` :
    this function inserts the given music in the given position of the
    grid. Here, the `<segment-id>` is a single integer.
 
@@ -183,7 +176,198 @@ Usage
 -----
 
 For an example of usage on a single file, see
-[usage-examples/example.ly](https://github.com/openlilylib/openlilylib/blob/master/ly/gridly/usage-examples/example.ly).
+[usage-examples/example.ly](usage-examples/example.ly).
 
 Instead, for an example of a multi-file score, take a look at
-[usage-examples/multi-file](https://github.com/openlilylib/openlilylib/tree/master/ly/gridly/usage-examples/multi-file).
+[usage-examples/multi-file](usage-examples/multi-file).
+
+Migration guide
+---------------
+
+Since this software is still in early development, sometimes the
+public interface of functions can change to be more expressive and
+clear. This sections collects some tips to migrate from one version of
+GridLY to another.
+
+### From `0.5.*` to `0.6.*`
+
+#### TL;DR;
+
+In GridLY `0.6.0` the public interface of two functions changed. To
+get rid of compilation errors, run the following on the command line.
+
+```bash
+sed -s -i -e 's/gridPutMusic /gridPutMusicDepr /g' *.ly
+sed -s -i -e 's/gridSetSegmentTemplate /gridSetSegmentTemplateDepr /g' *.ly
+```
+
+Then, use the deprecation warnings to upgrade from the old interface to
+the new one (see [Migration examples](#migration-examples))
+
+#### Long version
+
+In version `0.6.0` the public interface of functions `gridPutMusic`
+and `gridSetSegmentTemplate` have changed. Basically, this change
+moves the `music` argument inside the context modifier used to pass
+optional arguments, making it clearer to the user which music is part
+of which cell. If there are no optional arguments, then both functions
+can simply be called with only the music in place of the context
+modifier.
+
+Unfortunately, these changes make invocations performed with the old
+interface invalid. For instance
+
+```lilypond
+\gridPutMusic "soprano" 1
+\with {
+  lyrics = \lyricmode { Fa la }
+}
+\relative c' {
+  e2 f |
+}
+```
+
+is no longer valid. Trying to compile this snippet with GridLY `0.6.0`
+or above results in an error like
+
+```
+example.ly:118:1: No music defined for soprano:1
+
+\gridPutMusic "soprano" 1
+fatal error: The `music' argument is mandatory
+```
+
+The correct invocation of the function is now
+
+```lilypond
+\gridPutMusic "soprano" 1
+\with {
+  music = \relative c' {
+    e2 f |
+  }
+  lyrics = \lyricmode { Fa la }
+}
+```
+
+In order to ease the migration, GridLY provides the functions
+`gridPutMusicDepr` and `gridSetSegmentTemplateDepr` that use the same
+interface of the old `gridPutMusic` and `gridSetSegmentTemplate`,
+respectively. These functions delegate the call to their updated
+counterparts, issuing a deprecation warning (the suffix `Depr` stands
+for _deprecated_).
+
+So, the quick and easy way to get rid of all the errors and still have
+all the code in your project to compile is to replace all the occurrences
+of `gridPutMusic` with `gridPutMusicDepr` and of
+`gridSetSegmentTemplate` with `gridSetSegmentTemplateDepr`. This can
+be done by using search and replace in your editor or by using the
+command line
+
+```bash
+sed -s -i -e 's/gridPutMusic /gridPutMusicDepr /g' *.ly
+sed -s -i -e 's/gridSetSegmentTemplate /gridSetSegmentTemplateDepr /g' *.ly
+```
+
+in the directory containing the LilyPond files you want to upgrade.
+
+> **WARNING**: Before doing this, I *strongly* suggest to put your
+> files under revision control, if you don't already have done this
+> (see
+> [here](http://lilypondblog.org/2013/08/version-control-text-quality-and-creativity/),
+> [here](http://lilypondblog.org/2013/09/write-lilypond-code-for-version-control/),
+> and
+> [here](http://lilypondblog.org/2014/01/why-use-version-control-for-engraving-scores/)
+> for some more discussion on git and LilyPond)
+
+Then, you can use the deprecation warnings as a guidance to update
+each call to the new interface. Just remember that, besides pulling
+the music argument inside the context modifier, you have to remove the
+`Depr` suffix from the name of each function call you update. Once
+there are no more deprecation warnings you will know that all the
+calls have been upgraded.
+
+#### Migration examples
+
+ 1. `gridPutMusic`, no context
+    - before
+
+      ```lilypond
+      \gridPutMusic "part" 1
+      {
+        %% The music
+      }
+      ```
+    - after
+
+      ```lilypond
+      \gridPutMusic "part" 1
+      {
+        %% The music
+      }
+      ```
+
+ 2. `gridPutMusic`, with context
+    - before
+
+      ```lilypond
+      \gridPutMusic "part" 1
+      \with {
+         %% Optional arguments
+      }
+      {
+        %% The music
+      }
+      ```
+    - after
+
+      ```lilypond
+      \gridPutMusic "part" 1
+      \with {
+         %% Optional arguments
+         music = {
+           %% The music
+         }
+      }
+      ```
+
+ 3. `gridSetSegmentTemplate`, no context
+    - before
+
+      ```lilypond
+      \gridSetSegmentTemplate 1
+      {
+        %% The music
+      }
+      ```
+    - after
+
+      ```lilypond
+      \gridSetSegmentTemplate 1
+      {
+        %% The music
+      }
+      ```
+
+ 4. `gridSetSegmentTemplate`, with context
+    - before
+
+      ```lilypond
+      \gridSetSegmentTemplate 1
+      \with {
+         %% Optional arguments
+      }
+      {
+        %% The music
+      }
+      ```
+    - after
+
+      ```lilypond
+      \gridSetSegmentTemplate 1
+      \with {
+         %% Optional arguments
+         music = {
+           %% The music
+         }
+      }
+      ```
