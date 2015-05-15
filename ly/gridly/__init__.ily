@@ -19,7 +19,7 @@
 
 %%% Initialization of the GridLY library
 
-#(define gridly-version "0.5.0")
+#(define gridly-version "0.6.0-dev")
 
 %%% The association list holding all the music.
 #(if (not (defined? 'music-grid))
