@@ -112,7 +112,7 @@ by `seg-sel`.
 Some cell attributes of a cell, like `opening`, `closing`, and
 `lyrics`, are optional. These attributes can be set using a context
 modifiers (for examples take a look at
-[example/example.ly](https://github.com/Cecca/gridly/blob/master/example/example.ly)).
+[usage-examples/example.ly](https://github.com/openlilylib/openlilylib/blob/master/ly/gridly/usage-examples/example.ly).
 
 The following snippet sets a context modifier with some lyrics and an
 opening
@@ -183,7 +183,7 @@ Usage
 -----
 
 For an example of usage on a single file, see
-[example/example.ly](https://github.com/Cecca/gridly/blob/master/example/example.ly).
+[usage-examples/example.ly](https://github.com/openlilylib/openlilylib/blob/master/ly/gridly/usage-examples/example.ly).
 
 Instead, for an example of a multi-file score, take a look at
-[example/multi-file](https://github.com/Cecca/gridly/tree/master/example/multi-file).
+[usage-examples/multi-file](https://github.com/openlilylib/openlilylib/tree/master/ly/gridly/usage-examples/multi-file).
