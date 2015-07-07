@@ -54,9 +54,11 @@
 
 % after \clralist <name> the variable <name> is initialized with an empty list
 #(define-public clralist
-  (define-void-function (parser location alst)(symbol?)
-    (ly:parser-define! parser alst (list))
-    ))
+   (define-void-function (parser location alst)(symbol?)
+     (if (lilypond-greater-than? "2.19.21")
+         (ly:parser-define! alst (list))
+         (ly:parser-define! parser alst (list)))
+     ))
 % sets one value - replaces the value and leaves the order of elements, if <name> is already present
 #(define-public setalist
   (define-void-function (parser location alst name val)(symbol? symbol? scheme?)
@@ -111,8 +113,12 @@
          )))
 % add an entry to a nested a-list
 #(define (add-a-tree parser location name sympath val assoc-set-append)
-  (if (not (symbol? name)) (set! name (string->symbol (object->string name))))
-  (let ((opts (ly:parser-lookup parser name)))
+   (if (not (symbol? name)) (set! name (string->symbol (object->string name))))
+   (let ((opts
+          (if (lilypond-greater-than? "2.19.21")
+              (ly:parser-lookup name)
+              (ly:parser-lookup parser name)
+              )))
     (define (setval ol op)
       (let ((sym (car op))
             (ol (if (list? ol) ol (begin
@@ -133,8 +139,10 @@
               )
             )))
     (set! opts (setval opts sympath))
-    (ly:parser-define! parser name opts)
-    ))
+     (if (lilypond-greater-than? "2.19.21")
+         (ly:parser-define! name opts)
+         (ly:parser-define! parser name opts))
+     ))
 % remove an entry from a nested a-list
 #(define (rem-a-tree parser location name sympath)
   (if (not (symbol? name)) (set! name (string->symbol (object->string name))))

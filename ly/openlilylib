@@ -21,10 +21,22 @@
 % - Add general tools that are available for all libraries.
 %   - lilypond-version-predicates
 %   - logging commands
+%
+% NOTE: There has been a major syntax change in 2.19.22:
+% the parser argument is now obsolete with a number of functions,
+% e.g. ly:parser-include-string.
+% As the lilypond-version-predicates have not been included yet
+% we have to hard-code the switch here.
 initOpenLilyLib =
 #(define-void-function (parser location)()
    (if (not (defined? 'openlilylib-options))
-       (begin
-        (ly:parser-include-string parser
-          "\\include \"_internal/init-openlilylib.ily\""))))
+       (if (let ((v (ly:version)))
+             (or (> (first  v)  2)
+                 (> (second v) 19)
+                 (>= (third v) 22)))
+           (ly:parser-include-string
+            "\\include \"_internal/init-openlilylib.ily\"")
+           (ly:parser-include-string parser
+             "\\include \"_internal/init-openlilylib.ily\"")
+           )))
 \initOpenLilyLib
