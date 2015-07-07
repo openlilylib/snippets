@@ -65,8 +65,11 @@ http://fonts.openlilylib.org.\n")
 #(define (use-font-extensions parser location name)
    (let ((filename (make-style-file name "extensions")))
      (if (file-exists? filename)
-         (ly:parser-include-string parser
+         (if (lilypond-greater-than? "2.19.21")
+         (ly:parser-include-string
            (ly:gulp-file filename))
+         (ly:parser-include-string parser
+           (ly:gulp-file filename)))
          (oll:warn location
            (format "No extensions available for font \"~a\". Skipping." name))
          )))
@@ -205,11 +208,14 @@ useNotationFont =
        ; I think one has to somehow access the current paper block
        ; through Scheme (I suspect there are options in the paper
        ; related ly: functions but I didn't succeed to find a solution).
-       (ly:parser-include-string parser
-         (format "\\include \"~a\""
-           (string-append
-            #{ \getOption global.root-path #}
-            "/stylesheets/load-font")))
+       (let ((arg 
+              (format "\\include \"~a\""
+                (string-append
+                 #{ \getOption global.root-path #}
+                 "/stylesheets/load-font"))))
+         (if (lilypond-greater-than? "2.19.21")
+             (ly:parser-include-string parser arg)
+             (ly:parser-include-string arg)))
        (oll:log location
          (format "Font \"~a\" loaded successfully" name))
 
@@ -219,7 +225,10 @@ useNotationFont =
        ;; include the determined style file for the font
        ;; if not "none".
        (if (and style-file (not (string=? "none" style)))
+           (if (lilypond-greater-than? "2.19.21")
+           (ly:parser-include-string 
+             (format "\\include \"~a\"" style-file))
            (ly:parser-include-string parser
-             (format "\\include \"~a\"" style-file)))
+             (format "\\include \"~a\"" style-file))))
        (oll:log location (format "Associated \"~a\" stylesheet loaded successfully" style))
        ))))
