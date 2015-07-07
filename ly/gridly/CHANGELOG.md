@@ -1,6 +1,10 @@
 GridLY - Changelog
 ==================
 
+ * 0.5.1
+
+   - Add support for lyrics in `opening` and `closing`. See issue #113
+
  * 0.5.0
 
    - Add bar number handling. See issue #101
