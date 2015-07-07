@@ -62,7 +62,9 @@
 % sets one value - replaces the value and leaves the order of elements, if <name> is already present
 #(define-public setalist
   (define-void-function (parser location alst name val)(symbol? symbol? scheme?)
-    (let ((l (ly:parser-lookup parser alst))
+    (let ((l (if (lilypond-greater-than? "2.19.21")
+                 (ly:parser-lookup alst)
+                 (ly:parser-lookup parser alst)))
           (setv #t))
       (set! l (map (lambda (p)
                      (if (and (pair? p) (equal? (car p) name))
@@ -72,28 +74,40 @@
                          p
                          )) l))
       (if setv (set! l (append l (list (cons name val)))))
-      (ly:parser-define! parser alst l)
-      )))
+      (if (lilypond-greater-than? "2.19.21")
+          (ly:parser-define! alst l)
+          (ly:parser-define! parser alst l)))))
 % sets one value - <name> is always placed at the end of the list
 #(define-public addalist
   (define-void-function (parser location alst name val)
     (symbol? symbol? scheme?)
-    (let ((l (ly:parser-lookup parser alst)))
+    (let ((l (if (lilypond-greater-than? "2.19.21")
+                 (ly:parser-lookup alst)
+                 (ly:parser-lookup parser alst))))
       (set! l (filter (lambda (p) (and (pair? p)(not (equal? (car p) name)))) l))
-      (ly:parser-define! parser alst (append l (list (cons name val))))
+      (if (lilypond-greater-than? "2.19.21")
+          (ly:parser-define! alst (append l (list (cons name val))))
+          (ly:parser-define! parser alst (append l (list (cons name val)))))
       )))
 % removes one entry from association list
 #(define-public remalist
   (define-void-function (parser location alst name)(symbol? symbol?)
-    (let ((l (ly:parser-lookup parser alst)))
-      (ly:parser-define! parser alst
-        (filter (lambda (p) (and (pair? p)(not (equal? (car p) name)))) l))
+    (let ((l (if (lilypond-greater-than? "2.19.21")
+                 (ly:parser-lookup alst)
+                 (ly:parser-lookup parser alst))))
+      (if (lilypond-greater-than? "2.19.21")
+          (ly:parser-define! alst
+            (filter (lambda (p) (and (pair? p)(not (equal? (car p) name)))) l))
+          (ly:parser-define! parser alst
+            (filter (lambda (p) (and (pair? p)(not (equal? (car p) name)))) l)))
       )))
 
 % get entry from nested a-list
 #(define-public (get-a-tree parser location name path)
    (if (not (symbol? name)) (set! name (string->symbol (object->string name))))
-   (let ((opts (ly:parser-lookup parser name)))
+   (let ((opts (if (lilypond-greater-than? "2.19.21")
+                   (ly:parser-lookup name)
+                   (ly:parser-lookup parser name))))
      (define (getval ol op)
        (let ((sym (car op)))
          (cond
@@ -146,7 +160,9 @@
 % remove an entry from a nested a-list
 #(define (rem-a-tree parser location name sympath)
   (if (not (symbol? name)) (set! name (string->symbol (object->string name))))
-  (let ((opts (ly:parser-lookup parser name)))
+  (let ((opts (if (lilypond-greater-than? "2.19.21")
+                  (ly:parser-lookup name)
+                  (ly:parser-lookup parser name))))
     (define (remval ol op)
       (let ((sym (car op)))
         (if (> (length op) 1)
@@ -160,7 +176,9 @@
             )
         ))
     (set! opts (remval opts sympath))
-    (ly:parser-define! parser name opts)
+    (if (lilypond-greater-than? "2.19.21")
+        (ly:parser-define! name opts)
+        (ly:parser-define! parser name opts))
     ))
 
 % clear/create an empty a-list
