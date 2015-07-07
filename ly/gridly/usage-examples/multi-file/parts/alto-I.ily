@@ -2,9 +2,9 @@
 
 \include "../global.ily"
 
-\gridPutMusic "alto" #1
+\gridPutMusic "alto" 1
 \relative c' {
   e1 |
 }
 
-\gridCompileCell "alto" #1
+\gridCompileCell "alto" 1

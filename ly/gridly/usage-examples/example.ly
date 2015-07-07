@@ -76,37 +76,36 @@
 \with {
   lyrics = \lyricmode { Fa }
   barNumber = 1
-}
-{
-  s1 |
+  music = {
+    s1 |
+  }
 }
 
 \gridSetSegmentTemplate 2
 \with {
   lyrics = \lyricmode { la la la! }
   barNumber = 2
-}
-{
-  s1 | s1 |
+  music = {
+    s1 | s1 |
+  }
 }
 
 \gridSetSegmentTemplate 3
 \with {
   barNumber = 4
-}
-{
-  s1 | s1 |
+  music = {
+    s1 | s1 |
+  }
 }
 
 
 \gridSetSegmentTemplate 4
 \with {
   barNumber = 6
+  music = {
+    s1 | s1|
+  }
 }
-{
-  s1 | s1|
-}
-
 
 %%% Entering music
 %%% --------------
@@ -119,17 +118,17 @@
 \gridPutMusic "soprano" 1
 \with {
   lyrics = \lyricmode { Fa la }
-}
-\relative c' {
-  e2 f |
+  music = \relative c' {
+    e2 f |
+  }
 }
 
 \gridPutMusic "soprano" 2
 \with {
   lyrics = \lyricmode { li le lo lu la! }
-}
-\relative c' {
-  f4 a g b | c1 |
+  music = \relative c' {
+    f4 a g b | c1 |
+  }
 }
 
 %%% The context modifier is optional: if you skip it, defaults for
@@ -182,9 +181,9 @@
 \gridPutMusic "soprano" 4
 \with {
   lyrics = \lyricmode {li le!}
-}
-\relative c'' {
-  g1 | c |
+  music = \relative c'' {
+    g1 | c |
+  }
 }
 
 %%% Compiling single cells
