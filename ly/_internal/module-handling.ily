@@ -293,8 +293,11 @@ useModule =
 
 
                    ;; include module file
-                   (ly:parser-include-string parser
-                     (format "\\include \"~a\"" filename))
+                   (if (lilypond-greater-than? "2.19.21")
+                       (ly:parser-include-string
+                        (format "\\include \"~a\"" filename))
+                       (ly:parser-include-string parser
+                         (format "\\include \"~a\"" filename)))
 
                    ;; register module
                    (set! oll-loaded-modules
