@@ -159,7 +159,6 @@ declareLibrary =
          ))
      options)))
 
-
 % Initialize a library before first use.
 % This also serves as a kind of declaration of the intent of using it.
 % If options are passed in a \with {} clause they are set after in
