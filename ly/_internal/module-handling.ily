@@ -213,8 +213,8 @@ useLibrary =
               ;              (ly:parser-include-string parser (ly:gulp-file main-file))
               (let ((arg (format "\\include \"~a\"" main-file)))
                 (if (lilypond-greater-than? "2.19.21")
-                    (ly:parser-include-string parser arg)
-                    (ly:parser-include-string arg))
+                    (ly:parser-include-string arg)
+                    (ly:parser-include-string parser arg))
               
               (set! oll-loaded-libraries
                     (append oll-loaded-libraries
