@@ -191,8 +191,10 @@ useLibrary =
          (if (file-exists? init-file)
              (begin
               (oll:log location "Initialize library \"~a\" ..." display-name)
-              (ly:parser-include-string parser
-                (format "\\include \"~a\"" init-file))))
+              (let ((arg (format "\\include \"~a\"" init-file)))
+                (if (lilypond-greater-than? "2.19.21")
+                    (ly:parser-include-string arg)
+                    (ly:parser-include-string parser arg)))))
 
          ;; If a \with clause has been given pass the options to the library.
          ;; If the options have not been registered in the __init__ file this
@@ -209,13 +211,16 @@ useLibrary =
          (if (file-exists? main-file)
              (begin
               ;              (ly:parser-include-string parser (ly:gulp-file main-file))
-              (ly:parser-include-string parser
-                (format "\\include \"~a\"" main-file))
+              (let ((arg (format "\\include \"~a\"" main-file)))
+                (if (lilypond-greater-than? "2.19.21")
+                    (ly:parser-include-string parser arg)
+                    (ly:parser-include-string arg))
+              
               (set! oll-loaded-libraries
                     (append oll-loaded-libraries
                       `(,name)))
               (oll:log "... completed." ""))
-             (oll:warn location (format "Library main file \"~a\" not found" main-file)))))))
+             (oll:warn location (format "Library main file \"~a\" not found" main-file))))))))
 
 
 % Load a module from within a library.
@@ -274,8 +279,17 @@ useModule =
 
                    ;; include init-file if present
                    (if init-file
+                       (if (lilypond-greater-tha
+                   (if init-file
+                       (if (lilypond-greater-than? "2.19.21")
+                       (ly:parser-include-string
+                         (format "\\include \"~a\"" init-file))
                        (ly:parser-include-string parser
-                         (format "\\include \"~a\"" init-file)))
+                         (format "\\include \"~a\"" init-file))))n? "2.19.21")
+                       (ly:parser-include-string
+                         (format "\\include \"~a\"" init-file))
+                       (ly:parser-include-string parser
+                         (format "\\include \"~a\"" init-file))))
 
 
                    ;; include module file
@@ -324,8 +338,12 @@ registerLibrary =
           (if (file-exists? lib-init-file)
               (begin
                (oll:log "initialize library \"~a\"" lib)
-               (ly:parser-include-string parser
-                 (format "\\include \"~a\"" lib-init-file))))))))
+               (if (lilypond-greater-than? "2.19.21")
+                   (ly:parser-include-string 
+                     (format "\\include \"~a\"" lib-init-file))
+                   (ly:parser-include-string parser
+                     (format "\\include \"~a\"" lib-init-file))
+                   )))))))
 
 % Load module from an openLilyLib library
 % A module may be an individual file or a whole library, this can also be
@@ -375,8 +393,11 @@ loadModule =
              #{ \registerLibrary #(first path-list) #}
              ;; then load the requested module
              (oll:log "load module ~a" load-path)
-             (ly:parser-include-string parser
-               (format "\\include \"~a\"" load-path))
+             (if (lilypond-greater-than? "2.19.21")
+                 (ly:parser-include-string 
+                  (format "\\include \"~a\"" load-path))
+                 (ly:parser-include-string parser
+                   (format "\\include \"~a\"" load-path)))
              (set! oll-loaded-modules
                    (append! oll-loaded-modules `(,load-path))))
             (oll:warn "module not found: ~a" load-path)))))
