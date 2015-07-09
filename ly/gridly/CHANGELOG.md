@@ -1,13 +1,17 @@
 GridLY - Changelog
 ==================
 
- * 0.6.0 - **development**
+ * 0.6.0
 
    This is a **breaking** release. The public interface changed
 
    - Change the interface for `gridPutMusic` and `gridSetStructure`.
      Now the function both accept three arguments, the last of which is
      either a context modifier or music. See the discussion in Issue #104.
+
+ * 0.5.1
+
+   - Add support for lyrics in `opening` and `closing`. See issue #113
 
  * 0.5.0
 
