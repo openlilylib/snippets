@@ -87,7 +87,9 @@ scaleVerticalSpacingPageLayout =
       (if (number? input)
           (list (list 'all input))
           input))
-     (paper (ly:parser-lookup parser '$defaultpaper))
+     (paper (if (lilypond-less-than? "2.19.22")
+                (ly:parser-lookup parser '$defaultpaper)
+                (ly:parser-lookup '$defaultpaper)))
      (props-list
       '(system-system-spacing
         score-system-spacing
