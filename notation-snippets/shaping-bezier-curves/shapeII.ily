@@ -1,4 +1,5 @@
 \version "2.17.26"
+\include "ly/_internal/utilities/lilypond-version-predicates.ily"
 
 \header {
   snippet-title = "Improved \shape"
@@ -58,7 +59,9 @@ shapeII =
                           (ly:spanner-broken-into orig) '()))
             (total-found (length siblings))
             (immutable-props (ly:grob-basic-properties grob))
-            (value (find-value-to-offset 'control-points shape-curve immutable-props))
+            (value (find-value-to-offset 'control-points
+                                         shape-curve
+                                         immutable-props))
             (default-cpts (if (procedure? value)
                               (value grob)
                               value))
@@ -129,11 +132,14 @@ shapeII =
                       (ref-y (ly:grob-relative-coordinate ref-bound refp Y))
                       (my-y (ly:grob-relative-coordinate bound refp Y))
                       (cross-staff-correction (- my-y ref-y))
-                      ;; UGH!! I have no idea why this is needed, but without this correction
-                      ;; the example below renders wrongly:
-                      ;; { d''1-\shapeII #'(() (()()()(head))) ( f'' \break a'' g'') }
-                      ;; the if clause is necessary because otherwise the 'fix' will
-                      ;; break the cross-staff case.  UGH!!
+                      ;; UGH!! I have no idea why this is needed, but without
+                      ;; this correction the example below renders wrongly:
+                      ;; {
+                      ;;   d''1-\shapeII #'(() (()()()(head))) ( f''
+                      ;;   \break a'' g'')
+                      ;; }
+                      ;; the if clause is necessary because otherwise the 'fix'
+                      ;; will break the cross-staff case.  UGH!!
                       (ugh-correction
                        (if (ly:grob-property grob 'cross-staff) ; returns boolean
                            0.0
@@ -204,8 +210,10 @@ shapeII =
        (define (calc-one-sibling specs)
          ;; 'specs' is a set of instructions for one sibling.
          (let ((new-cpts default-cpts)
-               ;; make \shape #'((foo)) equivalent to \shape #'((foo foo foo foo))
-               ;; and \shape #'((foo bar)) to \shape #'((foo bar bar foo)):
+               ;; make \shape #'((foo)) equivalent
+               ;; to \shape #'((foo foo foo foo))
+               ;; and \shape #'((foo bar))
+               ;; to \shape #'((foo bar bar foo)):
                (specs (cond
                        ((= 1 (length specs))
                         (make-list 4 (car specs)))
@@ -249,4 +257,6 @@ shapeII =
            (find-specs-for-current-sibling siblings all-specs)
            (calc-one-sibling (car all-specs)))))
 
-   #{ \tweak control-points #shape-curve #item #})
+   (if (lilypond-less-than? '(2 19 25))
+       #{ \tweak control-points #shape-curve #item #}
+       (propertyTweak 'control-points shape-curve item)))
