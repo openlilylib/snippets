@@ -32,7 +32,7 @@ Contents
 * [__debugging-layout__](debugging-layout) -
     tools that visualize LilyPond's layout decisions (e.g. directions),
 * [__general-tools__](general-tools) -
-    stuff for working on and with LilyPond itself.
+    stuff for working on and with LilyPond itself,
 * [__input-shorthands__](input-shorthands) -
     music functions and other tools that make writing LilyPond code easier,
 * [__notation-snippets__](notation-snippets) -
@@ -70,7 +70,7 @@ Using this repository
 =====================
 
 You can view the files in your browser by clicking on their names,
-and simply copy&paste the code into your editor. You can also
+and simply copy & paste the code into your editor. You can also
 [download](https://github.com/openlilylib/snippets/archive/master.zip)
 the whole repository in a ZIP archive.  This is recommended for casual use.
 For regular users, we recommend using [Git](http://git-scm.com/)

@@ -219,8 +219,8 @@ useLibrary =
               (set! oll-loaded-libraries
                     (append oll-loaded-libraries
                       `(,name)))
-              (oll:log "... completed." ""))
-             (oll:warn location (format "Library main file \"~a\" not found" main-file))))))))
+              (oll:log "... completed." "")))
+             (oll:warn location (format "Library main file \"~a\" not found" main-file)))))))
 
 
 % Load a module from within a library.

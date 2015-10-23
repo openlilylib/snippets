@@ -213,7 +213,7 @@ useNotationFont =
                 (string-append
                  #{ \getOption global.root-path #}
                  "/stylesheets/load-font"))))
-         (if (lilypond-greater-than? "2.19.21")
+         (if (lilypond-less-than? "2.19.22")
              (ly:parser-include-string parser arg)
              (ly:parser-include-string arg)))
        (oll:log location
