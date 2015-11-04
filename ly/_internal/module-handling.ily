@@ -279,13 +279,7 @@ useModule =
 
                    ;; include init-file if present
                    (if init-file
-                       (if (lilypond-greater-tha
-                   (if init-file
                        (if (lilypond-greater-than? "2.19.21")
-                       (ly:parser-include-string
-                         (format "\\include \"~a\"" init-file))
-                       (ly:parser-include-string parser
-                         (format "\\include \"~a\"" init-file))))n? "2.19.21")
                        (ly:parser-include-string
                          (format "\\include \"~a\"" init-file))
                        (ly:parser-include-string parser
