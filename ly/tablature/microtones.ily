@@ -398,3 +398,17 @@ Example: 47/7 -> (6 5/7)"
     \override TabNoteHead.before-line-breaking = #my-format-tab-note-head
   }
 }
+
+% microtones has been integrated to LilyPond as of 2.19.31,
+% therefore we issue a deprecation warning
+microtonesCheckLilyVersion =
+#(define-void-function (parser location)()
+   (if (lilypond-greater-than-or-equal? "2.19.31")
+       (oll:warn location "
+
+The module
+  tablature.microtones 
+has been integrated to LilyPond 2.19.31.  You can still use the openLilyLib version but if you 
+constantly use newer LilyPond versions you should consider using the built-in function now.")))
+
+\microtonesCheckLilyVersion
