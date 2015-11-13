@@ -35,5 +35,5 @@ currently supported upstream by LilyPond.  While some of these features
 might not be specific of tablatures or instruments like guitar, bass, etc.,
 the name Tablature seemed to be the best comprehensive term in most cases.
 It currently provides the following features: microtones in tablature;
-bending (to be added)."
+string bending."
 }
