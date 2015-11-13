@@ -6,19 +6,19 @@
 #(use-modules (ice-9 format))
 
 #(define (parser-lookup-symbol parser symbol)
-	 (if (lilypond-greater-than? "2.19.21")
-			 (ly:parser-lookup symbol)
-			 (ly:parser-lookup parser symbol)))
+   (if (lilypond-greater-than? "2.19.21")
+       (ly:parser-lookup symbol)
+       (ly:parser-lookup parser symbol)))
 
 %{!
 % Create a new tree at the given symbol
 %}
 makeTree=
 #(define-void-function
-	 (parser location name) (symbol?)
-	 (if (lilypond-greater-than? "2.19.21")
-			 (ly:parser-define! name (make-tree))
-			 (ly:parser-define! parser name (make-tree))))
+   (parser location name) (symbol?)
+   (if (lilypond-greater-than? "2.19.21")
+       (ly:parser-define! name (make-tree))
+       (ly:parser-define! parser name (make-tree))))
 
 %{!
 % Set the value at the specified path. If the path already exists,
@@ -26,8 +26,8 @@ makeTree=
 %}
 treeSet=
 #(define-void-function
-	 (parser location name path value) (symbol? list? scheme?)
-	 (tree-set! (parser-lookup-symbol parser name) path value))
+   (parser location name path value) (symbol? list? scheme?)
+   (tree-set! (parser-lookup-symbol parser name) path value))
 
 %{!
 % Get the value at the specified path. If the path exists, return
@@ -35,8 +35,8 @@ treeSet=
 %}
 treeGet=
 #(define-scheme-function
-	 (parser location name path default) (symbol? list? scheme?)
-	 (tree-get (parser-lookup-symbol parser name) path default))
+   (parser location name path default) (symbol? list? scheme?)
+   (tree-get (parser-lookup-symbol parser name) path default))
 
 %{!
 % Get the value at the specified path. If the path exists, return
@@ -44,12 +44,12 @@ treeGet=
 %}
 treeGetStrict=
 #(define-scheme-function
-	 (parser location name path) (symbol? list?)
-	 (catch 'key-error
-					(lambda ()
-						(tree-get (parser-lookup-symbol parser name) path))
-					(lambda (key . args)
-						(ly:error "~a: ~a" key (car args)))))
+   (parser location name path) (symbol? list?)
+   (catch 'key-error
+          (lambda ()
+            (tree-get (parser-lookup-symbol parser name) path))
+          (lambda (key . args)
+            (ly:error "~a: ~a" key (car args)))))
 
 %{!
 % Remove the value at the specified path. If the path does not exist,
@@ -57,5 +57,5 @@ treeGetStrict=
 %}
 treeRemove=
 #(define-void-function
-	 (parser location name path) (symbol? list?)
-	 (tree-remove! (parser-lookup-symbol parser name) path))
+   (parser location name path) (symbol? list?)
+   (tree-remove! (parser-lookup-symbol parser name) path))

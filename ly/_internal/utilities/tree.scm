@@ -62,13 +62,13 @@
 ;;    nodes, in case of success, as follows
 ;;
 ;;        (let ((node (tree-get-node tree path)))
-;;					(if node
-;;							(let ((value (node-value node)))
-;;								;; Do something with value
-;;								)
-;;							(begin
-;;								;; Do something to handle the missing value
-;;								)))        
+;;          (if node
+;;              (let ((value (node-value node)))
+;;                ;; Do something with value
+;;                )
+;;              (begin
+;;                ;; Do something to handle the missing value
+;;                )))
 ;;
 ;; 3. The function `tree-lookup'. This function makes the use case
 ;;    described in the last example simpler to use. You invoke it as
@@ -81,12 +81,12 @@
 ;;    path does not exists. So, for instance, you have
 ;;
 ;;        (tree-lookup tree path
-;;				  (lambda (value)
-;;						;; do something with value
-;;						)
-;;					(lambda (missing-path)
-;;						;; do something to handle the missing path
-;;						))
+;;           (lambda (value)
+;;             ;; do something with value
+;;             )
+;;           (lambda (missing-path)
+;;             ;; do something to handle the missing path
+;;             ))
 ;;
 ;; ### Clearing a tree
 ;;
@@ -121,16 +121,16 @@
 ;; contexts where such values are unavailable.
 ;;
 (define-module (_internal utilities tree)
-	#:export (make-tree
-						tree-set!
-						tree-remove!
-						tree-get
-						tree-get-node
-						node-value
-						tree-lookup
-						tree-clear!)
-	#:use-module ((oop goops)
-								(ice-9 format)))
+  #:export (make-tree
+            tree-set!
+            tree-remove!
+            tree-get
+            tree-get-node
+            node-value
+            tree-lookup
+            tree-clear!)
+  #:use-module ((oop goops)
+                (ice-9 format)))
 
 ;;
 ;; Node
@@ -157,66 +157,66 @@
 ;;  - children: a list of children of this node.
 ;;
 (define-class <node> ()
-	(name #:init-keyword #:name
-				#:getter name)
-	(has-value #:init-value #f
-						 #:init-keyword #:has-value
-						 #:accessor has-value)
-	(value #:init-value '()
-				 #:init-keyword #:value
-				 #:accessor value)
-	(children #:init-value '()
-						#:accessor children))
+  (name #:init-keyword #:name
+        #:getter name)
+  (has-value #:init-value #f
+             #:init-keyword #:has-value
+             #:accessor has-value)
+  (value #:init-value '()
+         #:init-keyword #:value
+         #:accessor value)
+  (children #:init-value '()
+            #:accessor children))
 
 ;; Given a node, return its associated value. If the node has no
 ;; associated value (i.e. (= #f (has-value node))), then a
 ;; 'missing-value exception is thrown.
 (define-method (node-value (n <node>))
-	(if (has-value n)
-			(value n)
-			(throw 'missing-value
-						 "The node exists, but has no associated value")))
+  (if (has-value n)
+      (value n)
+      (throw 'missing-value
+             "The node exists, but has no associated value")))
 
 ;; Adds a single child to the given node
 (define-method (add-child (n <node>) (c <node>))
-	(let ((new-children (cons c (children n))))
-		(set! (children n) new-children)
-		n))
+  (let ((new-children (cons c (children n))))
+    (set! (children n) new-children)
+    n))
 
 ;; Adds a list of children to the given node
 (define-method (add-children (n <node>) children)
-	(if (null? children)
-			n
-			(let ((new-node (add-child n (car children))))
-				(add-children new-node (cdr children)))))
+  (if (null? children)
+      n
+      (let ((new-node (add-child n (car children))))
+        (add-children new-node (cdr children)))))
 
 ;; Removes a single child by name. If the child does not exist, then
 ;; this function does nothing.
 (define-method (remove-child (n <node>) child-name)
-	(let ((new-children (filter (lambda (child)
-																(not (equal? (name child) child-name)))
-											 (children n))))
-		(set! (children n) new-children)
-		n))
+  (let ((new-children (filter (lambda (child)
+                                (not (equal? (name child) child-name)))
+                              (children n))))
+    (set! (children n) new-children)
+    n))
 
 ;; Gets a single child by name. If the child is not present, then
 ;; return #f. Note that there is no ambiguity when this function
 ;; returns #f. A node whose value is #f is a different entity with
 ;; respect to #f itself.
 (define-method (get-child (n <node>) child-name)
-	(let ((matching-children (filter (lambda (child)
-																		 (equal? (name child) child-name))
-																	 (children n))))
-		(if (null? matching-children)
-				#f
-				(car matching-children))))
+  (let ((matching-children (filter (lambda (child)
+                                     (equal? (name child) child-name))
+                                   (children n))))
+    (if (null? matching-children)
+        #f
+        (car matching-children))))
 
-;; Overrides the `display' function for nodes. 
+;; Overrides the `display' function for nodes.
 (define-method (display (n <node>) port)
-	(format port "<~a . ~a ~a>" (name n) (has-value n) (value n)))
+  (format port "<~a . ~a ~a>" (name n) (has-value n) (value n)))
 
 ;;
-;; Tree 
+;; Tree
 ;; ====
 ;;
 ;; A tree is simply an object with a root node. This root node is
@@ -224,8 +224,8 @@
 ;; child.
 ;;
 (define-class <tree> ()
-	(root #:init-form (make <node> #:name "root")
-				#:accessor root))
+  (root #:init-form (make <node> #:name "root")
+        #:accessor root))
 
 ;; Create a new empty tree
 (define (make-tree) (make <tree>))
@@ -233,99 +233,99 @@
 ;; Utility method. Associates the given value to the given path, as a
 ;; subtree of node `n'.
 (define-method (subtree-set! (n <node>) path val)
-	(cond
-	 ((null? path) (error "Path in a tree cannot be empty"))
-	 ((null? (cdr path)) (let ((child (get-child n (car path))))
-												 (if child
-														 (begin
-															 (set! (value child) val)
-															 (set! (has-value child) #t))
-														 (let ((c (make <node>
-																				#:name (car path)
-																				#:value val
-																				#:has-value #t)))
-															 (add-child n c)))))
-	 (else (let ((child (get-child n (car path))))
-					 (if child
-							 (subtree-set! child (cdr path) val)
-							 (let ((c (make <node> #:name (car path))))
-								 (add-child n c)
-								 (subtree-set! c (cdr path) val)))))))
+  (cond
+   ((null? path) (error "Path in a tree cannot be empty"))
+   ((null? (cdr path)) (let ((child (get-child n (car path))))
+                         (if child
+                             (begin
+                               (set! (value child) val)
+                               (set! (has-value child) #t))
+                             (let ((c (make <node>
+                                        #:name (car path)
+                                        #:value val
+                                        #:has-value #t)))
+                               (add-child n c)))))
+   (else (let ((child (get-child n (car path))))
+           (if child
+               (subtree-set! child (cdr path) val)
+               (let ((c (make <node> #:name (car path))))
+                 (add-child n c)
+                 (subtree-set! c (cdr path) val)))))))
 
 ;; Associate the given value to the given path. If the path already
 ;; exists, then the value is update, otherwise any missing node is
 ;; created.
 (define-method (tree-set! (t <tree>) path val)
-	(subtree-set! (root t) path val))
+  (subtree-set! (root t) path val))
 
 ;; Utility function. Retrieves the node associated with `path',
 ;; starting from the given node.
 (define-method (subtree-get-node (n <node>) path)
-	(cond
-	 ((null? path) (error "Path in a tree cannot be empty"))
-	 ((null? (cdr path)) (get-child n (car path)))
-	 (else (let ((c (get-child n (car path))))
-					 (if c
-							 (subtree-get-node c (cdr path))
-							 #f)))))
+  (cond
+   ((null? path) (error "Path in a tree cannot be empty"))
+   ((null? (cdr path)) (get-child n (car path)))
+   (else (let ((c (get-child n (car path))))
+           (if c
+               (subtree-get-node c (cdr path))
+               #f)))))
 
 ;; Retrieves the node associated with `path'. If `path' does not
 ;; exist, then return #f
 (define-method (tree-get-node (t <tree>) path)
-	(subtree-get-node (root t) path))
+  (subtree-get-node (root t) path))
 
 ;; Look up `path' in tree `t'. If the path exists, return its
 ;; associated value. Otherwise, if a `default-value' is give return
 ;; it, else throw a 'key-error exception.
 (define (tree-get t path . default-value)
-	(let ((n (tree-get-node t path)))
-		(cond
-		 (n (node-value n))
-		 ((not (null? default-value)) (car default-value))
-		 (else (throw 'key-error
-									(format #f "Path ~a not present in tree" path))))))
+  (let ((n (tree-get-node t path)))
+    (cond
+     (n (node-value n))
+     ((not (null? default-value)) (car default-value))
+     (else (throw 'key-error
+                  (format #f "Path ~a not present in tree" path))))))
 
 ;; Lookup a path in the tree. If the path exists, then invoke
 ;; success-fn with the value as argument, otherwise invoke failure-fn
 ;; with the path as argument.
 (define-method (tree-lookup (t <tree>) path success-fn failure-fn)
-	(let ((node (tree-get-node t path)))
-		(if node
-				(success-fn (node-value node))
-				(failure-fn path))))
+  (let ((node (tree-get-node t path)))
+    (if node
+        (success-fn (node-value node))
+        (failure-fn path))))
 
 ;; Utility function. Remove a path starting from the given node. If
 ;; the path dows not exist, then do nothing. Note that if the path
 ;; does not end at a leaf node, then an entire subtree is removed.
 (define-method (subtree-remove! (n <node>) path)
-	(cond
-	 ((null? path) (error "Path in a tree cannot be empty"))
-	 ((null? (cdr path)) (remove-child n (car path)))
-	 (else (let ((c (get-child n (car path))))
-					 (if c
-							 (subtree-remove! c (cdr path))
-							 #f)))))
+  (cond
+   ((null? path) (error "Path in a tree cannot be empty"))
+   ((null? (cdr path)) (remove-child n (car path)))
+   (else (let ((c (get-child n (car path))))
+           (if c
+               (subtree-remove! c (cdr path))
+               #f)))))
 
 ;; Remove a path from the tree. If the path does not exist, then
 ;; nothing happens. Note that if the path does not end at a leaf node,
 ;; then an entire subtree is removed.
 (define-method (tree-remove! (t <tree>) path)
-	(subtree-remove! (root t) path))
+  (subtree-remove! (root t) path))
 
 ;; Remove all the nodes from the tree.
 (define-method (tree-clear! (t <tree>))
-	(set! (children (root t)) '()))
+  (set! (children (root t)) '()))
 
 ;; Utility function: recursively display a subtree.
 (define (rec-display port n indent)
-	(format port "~a~a\n" indent n)
-	(for-each
-	 (lambda (c)
-		 (rec-display port c (string-append indent "    ")))
-	 (children n)))
+  (format port "~a~a\n" indent n)
+  (for-each
+   (lambda (c)
+     (rec-display port c (string-append indent "    ")))
+   (children n)))
 
 ;; Overrides `display' for tree. Pretty prints the tree on the given
 ;; port.
 (define-method (display (t <tree>) port)
-	(rec-display port (root t) "")
-	(newline port))
+  (rec-display port (root t) "")
+  (newline port))
