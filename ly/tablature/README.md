@@ -36,7 +36,6 @@ There are currently two open issues in the tracker:
 
 ### Limitations
 
-- Quarter tone bends are not supported.
 - Line breaks over bending notes are not supported and they are currently
   disabled, because otherwise the file would not compile as soon as page
   formatting decisions create such a situation.
@@ -61,11 +60,6 @@ There are currently two open issues in the tracker:
 
 
 ### Usage
-
-Add this repository to the list of include paths in your editor preferences
-and put the following include statement at the top of your file:
-
-    \include "notation-snippets/guitar-string-bending/definitions.ily"
 
 You can activate and deactivate the bending with the following commands:
 

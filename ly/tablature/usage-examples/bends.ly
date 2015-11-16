@@ -3,6 +3,8 @@
 \include "openlilylib"
 
 \useLibrary Tablature
+\useModule tablature.microtones
+#(display "")
 \useModule tablature.bending
 
 % Hack needed until issue #136 is fixed:
@@ -52,10 +54,10 @@ test = \relative c'' {
   \break
   % quarter tone bends are not yet supported as they should be, but
   % the bend amount is calculated correctly ;-)
-  %c,4 ( cih ) c4 ( cisih )
+  c,4 ( cih ) c4 ( cisih )
   %% I hope that in future releases the tie will recognize automagically
   %% that he ties to a note which is bent, but I don't know how (yet).
-  \bendGrace c8 ( \holdBend d2 ) ~ d2 ( c1 )
+  \bendGrace c'8 ( \holdBend d2 ) ~ d2 ( c1 )
   c4 ( \shiftBend d) ( e2 )
   \bendOff
   %% switching bends off works apparently

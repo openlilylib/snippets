@@ -1,4 +1,4 @@
-\version "2.16.2" % absolutely necessary!
+\version "2.18.0"
 
 \header {
   oll-title = "Guitar string bending notation"
