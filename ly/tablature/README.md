@@ -73,10 +73,11 @@ You can activate and deactivate the bending with the following commands:
 > [Usage manual](http://lilypond.org/doc/stable/Documentation/usage/common-errors.html#an-extra-staff-appears).
 
 Within these commands, the parentheses, normally used to notate slurs,
-will notate the bendings.  You can write any bending from a half
+will notate the bendings.  You can write any bending from a quarter
 tone up to any interval (a number over the bending arrow will show
 the interval):
 
+    d8( dih)
     d8( dis)
     d8( e)
     d8( f)
