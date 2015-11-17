@@ -373,7 +373,9 @@ Example: 47/7 -> (6 5/7)"
 
     (let* ((txt (ly:grob-property grob 'text))
            (nmbr (if (null? txt) "" (car (last-pair txt))))
-           (string-nmbr (string->number nmbr)))
+           (string-nmbr (if (string? nmbr) 
+                            (string->number nmbr)
+                            1)))
      (if (and (string? nmbr) string-nmbr)
          (let* ((val (integer-and-fraction string-nmbr))
                 (fret
