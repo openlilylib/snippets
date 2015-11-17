@@ -4,6 +4,8 @@
 
 \useLibrary Tablature
 \useModule tablature.microtones
+% Workaround for issue #136 at
+% https://github.com/openlilylib/snippets/issues/136
 #(display "")
 \useModule tablature.bending
 
@@ -59,18 +61,20 @@ test = \relative c'' {
   %% that he ties to a note which is bent, but I don't know how (yet).
   \bendGrace c'8 ( \holdBend d2 ) ~ d2 ( c1 )
   c4 ( \shiftBend d) ( e2 )
-  \bendOff
+  
   %% switching bends off works apparently
   c,4 ( d ) f4 ( g )
   a4 ( g ) e\2 ( d )
   %}
 }
 
+
 \markup \wordwrap {
   The coordinates of the point are half-way between the
   second and the third point of the control points for the slur's bezier
   curve.
 }
+
 
 \score {
   <<
