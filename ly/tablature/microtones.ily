@@ -369,6 +369,8 @@ Example: 47/7 -> (6 5/7)"
 %% TODO better coding for all this string->number/number->string
 #(define my-format-tab-note-head
   (lambda (grob)
+    (display (car (last-pair (ly:grob-property grob 'text))))(newline)
+
     (let* ((txt (ly:grob-property grob 'text))
            (nmbr (if (null? txt) "" (car (last-pair txt))))
            (string-nmbr (string->number nmbr)))
