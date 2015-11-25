@@ -371,7 +371,16 @@ Example: 47/7 -> (6 5/7)"
   (lambda (grob)
     (let* ((txt (ly:grob-property grob 'text))
            (nmbr (if (null? txt) "" (car (last-pair txt))))
-           (string-nmbr (string->number nmbr)))
+           ; TODO: Please check the following conditional.
+           ; It is a workaround for a change in 2.19.31
+           ; This causes the second-to-last item sometimes 
+           ; not to be a string representation of a number.
+           ; The following conditional is a workaround that 
+           ; seems to successfully suppress the issue - 
+           ; but it seems dubious it is a "sane" cure.
+           (string-nmbr (if (string? nmbr) 
+                            (string->number nmbr)
+                            1)))
      (if (and (string? nmbr) string-nmbr)
          (let* ((val (integer-and-fraction string-nmbr))
                 (fret
