@@ -9,6 +9,10 @@ jiTonic =
    (ly:pitch?)
    (set! ji-tonic tonic))
 
+% Maintain a current duration to be used when no duration is given
+% This is extremely hacky and will only work in monophonic context
+#(define ji-duration (ly:make-duration 2))
+
 % Take a fraction and return the corresponding cent value
 #(define (ratio->cent f1 f2)
    (if (eq? 1 f2)
@@ -80,7 +84,9 @@ ratioToPitch =
      (dir (cond 
            ((>= cent 0) "+")
            (else ""))))
-              
+    
+    (if dur (set! ji-duration dur))
+    
     (make-music
      'NoteEvent
      'articulations
@@ -93,7 +99,7 @@ ratioToPitch =
       (car (second lily-pitch))
       (cadr (second lily-pitch)))
      'duration
-     (ly:make-duration 2))))
+     ji-duration)))
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
