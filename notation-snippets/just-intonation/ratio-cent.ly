@@ -60,7 +60,7 @@ jiTonic =
           (1 1/2) ; dis
           (2 0)   ; e
           (3 0)   ; f
-          (3 1/2) ; fis %  \ratioToPitch 2 1
+          (3 1/2) ; fis %  \jiPitch 2 1
   
           (4 0)   ; g
           (4 1/2) ; gis
@@ -88,7 +88,7 @@ jiTonic =
      'symbol
      grob)))
 
-ratioToPitch =
+jiPitch =
 #(define-music-function (dur ratio)
    ((ly:duration?) fraction?)
    (let*
@@ -175,33 +175,33 @@ ratioToPitch =
 \markup "A kind of scale over the middle C"
 
 {
-  \ratioToPitch 1/1  
-  \ratioToPitch 9/8  
-  \ratioToPitch 8/7  
-  \ratioToPitch 7/6  
-  \ratioToPitch 6/5  
-  \ratioToPitch 5/4
-  \ratioToPitch 4/3
-  \ratioToPitch 3/2
-  \ratioToPitch 2/1
+  \jiPitch 1/1  
+  \jiPitch 9/8  
+  \jiPitch 8/7  
+  \jiPitch 7/6  
+  \jiPitch 6/5  
+  \jiPitch 5/4
+  \jiPitch 4/3
+  \jiPitch 3/2
+  \jiPitch 2/1
 }
 
-\markup "Overtones over different fundamentals"
+\markup "Overtones over different fundamentals, durations"
 
 {
 
   \jiTonic f
-  \ratioToPitch 2 3/1
+  \jiPitch 2. 3/1
   \jiTonic c
-  \ratioToPitch 4/1
+  \jiPitch 4 4/1
   \jiTonic as,
-  \ratioToPitch 5/1
+  \jiPitch 2 5/1
   \jiTonic f,
-  \ratioToPitch 6/1
+  \jiPitch 6/1
   \jiTonic d,
-  \ratioToPitch 7/1
+  \jiPitch 7/1
   \jiTonic c,
-  \ratioToPitch 8/1
+  \jiPitch 8/1
 }
 
 \markup "Overtone scale on different fundamentals"
@@ -212,13 +212,13 @@ scale =
 #(define-music-function (pitch)(ly:pitch?)
    #{
      \jiTonic #pitch
-     \ratioToPitch 1/1
-     \ratioToPitch 2/1
-     \ratioToPitch 3/1
-     \ratioToPitch 4/1
-     \ratioToPitch 5/1
-     \ratioToPitch 6/1
-     \ratioToPitch 7/1
+     \jiPitch 1/1
+     \jiPitch 2/1
+     \jiPitch 3/1
+     \jiPitch 4/1
+     \jiPitch 5/1
+     \jiPitch 6/1
+     \jiPitch 7/1
    #})
 
 {
