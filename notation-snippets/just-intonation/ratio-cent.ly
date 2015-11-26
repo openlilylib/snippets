@@ -1,5 +1,14 @@
 \version "2.19.32"
 
+% Maintain the "tonic", starting with a default middle c
+#(define ji-tonic (ly:make-pitch 0 0 0))
+
+% Change the tonic from which the notes are taken
+jiTonic =
+#(define-void-function (tonic)
+   (ly:pitch?)
+   (set! ji-tonic tonic))
+
 % Take a fraction and return the corresponding cent value
 #(define (ratio->cent f1 f2)
    (if (eq? 1 f2)
