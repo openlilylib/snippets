@@ -15,12 +15,8 @@ jiTonic =
 
 % Take a fraction and return the corresponding cent value
 #(define (ratio->cent f1 f2)
-   (if (eq? 1 f2)
-       (begin
-        (set! f1 (* f1 2))
-        (set! f2 (* f2 2))))
    (* 1200
-     (/ (log (/ f1 f2)) (log f2))))
+     (/ (log (/ f1 f2)) (log 2))))
 
 % Take a fraction and return a list with 
 % - the pitch index (0 - 12)
