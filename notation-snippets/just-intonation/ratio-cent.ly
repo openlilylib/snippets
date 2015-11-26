@@ -73,6 +73,25 @@ jiTonic =
           (6 0))   ; b      
        index))))
 
+#(define (color-element grob color)
+   (make-music
+    'ContextSpeccedMusic
+    'context-type
+    'Bottom
+    'element
+    (make-music
+     'OverrideProperty
+     'once
+     #t
+     'pop-first
+     #t
+     'grob-value
+     color
+     'grob-property-path
+     (list (quote color))
+     'symbol
+     grob)))
+
 ratioToPitch =
 #(define-music-function (dur ratio)
    ((ly:duration?) fraction?)
@@ -91,134 +110,126 @@ ratioToPitch =
      (cent (cdr note))
      (dir (cond 
            ((>= cent 0) "+")
-           (else ""))))
-    
+           (else "")))
+     (r (if (> cent 0)
+            (/ cent 50.0)
+            0.0))
+     (b (* -1 (if (< cent 0)
+                  (/ cent 50.0)
+                  0.0)))
+     (cent-color (list r 0.0 b)))
     (if dur (set! ji-duration dur))
     
     (make-music
      'SequentialMusic
      'elements
-     (list (make-music
-            'ContextSpeccedMusic
-            'context-type
-            'Bottom
-            'element
-            (make-music
-             'OverrideProperty
-             'once
-             #t
-             'pop-first
-             #t
-             'grob-value
-             (list 0.0 0.0 0.0)
-             'grob-property-path
-             (list (quote color))
-             'symbol
-             'Accidental))
-       (make-music
-        'NoteEvent
-        'articulations
-        (list (make-music
-               'TextScriptEvent
-               'text (format "~a~a" dir (round cent))))
-        'pitch
-        pitch-ratio
-        'duration
-        ji-duration)
-    
-       ))))
+     (list 
+      (color-element 'Accidental cent-color)
+      (color-element 'NoteHead cent-color)
+      (color-element 'Stem cent-color)
+      (color-element 'TextScript cent-color)
+      (make-music
+       'NoteEvent
+       'articulations
+       (list (make-music
+              'TextScriptEvent
+              'text (format "~a~a" dir (round cent))))
+       'pitch
+       pitch-ratio
+       'duration
+       ji-duration)))))
 
 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Here come the examples
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Here come the examples
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    \layout {
-    \context {
+\layout {
+  \context {
     \Voice
     \override TextScript.font-size = #-2
-    }
-    \context {
+  }
+  \context {
     \Staff
     \accidentalStyle dodecaphonic
-    }
-    }
+  }
+}
 
-    #(display "Display Cents within the octave")#(newline)
-    #(display (ratio->cent 4 3))#(newline)
-    #(display (ratio->cent 3 2))#(newline)
-    #(display (ratio->cent 9 8))#(newline)#(newline)
+#(display "Display Cents within the octave")#(newline)
+#(display (ratio->cent 4 3))#(newline)
+#(display (ratio->cent 3 2))#(newline)
+#(display (ratio->cent 9 8))#(newline)#(newline)
 
-    #(display "Display semitone index (0-11) and Cent deviation")#(newline)
-    #(display (ratio->cent-deviation 4 2))#(newline)
-    #(display (ratio->cent-deviation 3 2))#(newline)
-    #(display (ratio->cent-deviation 9 8))#(newline)#(newline)
+#(display "Display semitone index (0-11) and Cent deviation")#(newline)
+#(display (ratio->cent-deviation 4 2))#(newline)
+#(display (ratio->cent-deviation 3 2))#(newline)
+#(display (ratio->cent-deviation 9 8))#(newline)#(newline)
 
-    #(display "Display the corresponding LilyPond code for pitch")#(newline)
-    #(display (semitones->pitch 1))#(newline)
-    #(display (semitones->pitch 3))#(newline)
-    #(display (semitones->pitch 11))#(newline)
-    #(display (semitones->pitch 12))#(newline)
-    #(display (semitones->pitch -3))#(newline)
+#(display "Display the corresponding LilyPond code for pitch")#(newline)
+#(display (semitones->pitch 1))#(newline)
+#(display (semitones->pitch 3))#(newline)
+#(display (semitones->pitch 11))#(newline)
+#(display (semitones->pitch 12))#(newline)
+#(display (semitones->pitch -3))#(newline)
 
 
-    % Print the nearest pitch below the actual pitch
-    % and print the deviation in Cent below the staff
+% Print the nearest pitch below the actual pitch
+% and print the deviation in Cent below the staff
 
-    \markup "A kind of scale over the middle C"
+\markup "A kind of scale over the middle C"
 
-    {
-    \ratioToPitch 1/1  
-    \ratioToPitch 9/8  
-    \ratioToPitch 8/7  
-    \ratioToPitch 7/6  
-    \ratioToPitch 6/5  
-    \ratioToPitch 5/4
-    \ratioToPitch 4/3
-    \ratioToPitch 3/2
-    \ratioToPitch 2/1
-    }
+{
+  \ratioToPitch 1/1  
+  \ratioToPitch 9/8  
+  \ratioToPitch 8/7  
+  \ratioToPitch 7/6  
+  \ratioToPitch 6/5  
+  \ratioToPitch 5/4
+  \ratioToPitch 4/3
+  \ratioToPitch 3/2
+  \ratioToPitch 2/1
+}
 
-    \markup "Overtones over different fundamentals"
+\markup "Overtones over different fundamentals"
 
-    {
+{
 
-    \jiTonic f
-    \ratioToPitch 2 3/1
-    \jiTonic c
-    \ratioToPitch 4/1
-    \jiTonic as,
-    \ratioToPitch 5/1
-    \jiTonic f,
-    \ratioToPitch 6/1
-    \jiTonic d,
-    \ratioToPitch 7/1
-    \jiTonic c,
-    \ratioToPitch 8/1
-    }
+  \jiTonic f
+  \ratioToPitch 2 3/1
+  \jiTonic c
+  \ratioToPitch 4/1
+  \jiTonic as,
+  \ratioToPitch 5/1
+  \jiTonic f,
+  \ratioToPitch 6/1
+  \jiTonic d,
+  \ratioToPitch 7/1
+  \jiTonic c,
+  \ratioToPitch 8/1
+}
 
-    \markup "Overtone scale on different fundamentals"
+\markup "Overtone scale on different fundamentals"
 
-    #(set! ji-duration (ly:make-duration 2))
+#(set! ji-duration (ly:make-duration 2))
 
-    scale =
-    #(define-music-function (pitch)(ly:pitch?)
-      #{
-        \jiTonic #pitch
-        \ratioToPitch 1/1
-        \ratioToPitch 2/1
-        \ratioToPitch 3/1
-        \ratioToPitch 4/1
-        \ratioToPitch 5/1
-        \ratioToPitch 6/1
-        \ratioToPitch 7/1
-      #})
+scale =
+#(define-music-function (pitch)(ly:pitch?)
+   #{
+     \jiTonic #pitch
+     \ratioToPitch 1/1
+     \ratioToPitch 2/1
+     \ratioToPitch 3/1
+     \ratioToPitch 4/1
+     \ratioToPitch 5/1
+     \ratioToPitch 6/1
+     \ratioToPitch 7/1
+   #})
 
-    {
-    \clef bass
-    \scale a,,
-    \scale d,
-    \clef treble
-    \scale a
-    }
+{
+  \clef bass
+  \scale a,,
+  \scale d,
+  \clef treble
+  \scale a
+}
 
