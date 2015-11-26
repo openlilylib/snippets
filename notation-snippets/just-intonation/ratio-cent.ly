@@ -106,6 +106,17 @@ ratioToPitch =
 % Here come the examples
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\layout {
+  \context {
+    \Voice
+    \override TextScript.font-size = #-2
+  }
+  \context {
+    \Staff
+    \accidentalStyle dodecaphonic
+  }
+}
+
 #(display "Display Cents within the octave")#(newline)
 #(display (ratio->cent 4 2))#(newline)
 #(display (ratio->cent 3 2))#(newline)
