@@ -104,9 +104,6 @@ jiPitch =
         (cadr (second lily-pitch)))
        ji-tonic))
      (cent (cdr note))
-     (dir (cond 
-           ((>= cent 0) "+")
-           (else "")))
      (r (if (> cent 0)
             (/ cent 50.0)
             0.0))
@@ -129,7 +126,7 @@ jiPitch =
        'articulations
        (list (make-music
               'TextScriptEvent
-              'text (format "~a~a" dir (round cent))))
+              'text (format "~@f" (round cent))))
        'pitch
        pitch-ratio
        'duration
