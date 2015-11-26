@@ -34,19 +34,19 @@ jiTonic =
      (pitch-index (string->number (car parts)))
      (cent-str (cadr parts))
      (cent-positive (string->number 
-            (if (> (string-length cent-str) 2)
-                (string-append 
-                 (string-take cent-str 2)
-                 "."
-                 (substring cent-str 2))
-                cent-str)))
+                     (if (> (string-length cent-str) 2)
+                         (string-append 
+                          (string-take cent-str 2)
+                          "."
+                          (substring cent-str 2))
+                         cent-str)))
      (cent (if (< cent-positive 50) 
                cent-positive
                (- cent-positive 100)))
      (semitone  (if (eq? cent cent-positive)
                     pitch-index
                     (+ pitch-index 1))
-                )
+       )
      )
     (cons semitone cent)))
 
@@ -58,28 +58,36 @@ jiTonic =
      (list 
       octave
       (list-ref 
-      '((0 0)   ; c
-         (0 1/2) ; cis
-         (1 0)   ; d
-         (1 1/2) ; dis
-         (2 0)   ; e
-         (3 0)   ; f
-         (3 1/2) ; fis
-         (4 0)   ; g
-         (4 1/2) ; gis
-         (5 0)   ; a
-         (5 1/2) ; ais
-         (6 0))   ; b      
-      index))))
-
-
+       '((0 0)   ; c
+          (0 1/2) ; cis
+          (1 0)   ; d
+          (1 1/2) ; dis
+          (2 0)   ; e
+          (3 0)   ; f
+          (3 1/2) ; fis %  \ratioToPitch 2 1
+  
+          (4 0)   ; g
+          (4 1/2) ; gis
+          (5 0)   ; a
+          (5 1/2) ; ais
+          (6 0))   ; b      
+       index))))
 
 ratioToPitch =
-#(define-music-function (f1 f2)
-   (integer? integer?)
+#(define-music-function (dur ratio)
+   ((ly:duration?) fraction?)
    (let*
-    ((note (ratio->cent-deviation f1 f2))
+    ((f1 (car ratio))
+     (f2 (cdr ratio))
+     (note (ratio->cent-deviation f1 f2))
      (lily-pitch (semitones->pitch (car note)))
+     (pitch-ratio 
+      (ly:pitch-transpose
+       (ly:make-pitch 
+        (car lily-pitch)
+        (car (second lily-pitch))
+        (cadr (second lily-pitch)))
+       ji-tonic))
      (cent (cdr note))
      (dir (cond 
            ((>= cent 0) "+")
@@ -92,12 +100,9 @@ ratioToPitch =
      'articulations
      (list (make-music
             'TextScriptEvent
-            'text (format "~a~a" dir cent)))
+            'text (format "~a~a" dir (round cent))))
      'pitch
-     (ly:make-pitch 
-      (car lily-pitch)
-      (car (second lily-pitch))
-      (cadr (second lily-pitch)))
+     pitch-ratio
      'duration
      ji-duration)))
 
@@ -118,7 +123,7 @@ ratioToPitch =
 }
 
 #(display "Display Cents within the octave")#(newline)
-#(display (ratio->cent 4 2))#(newline)
+#(display (ratio->cent 4 3))#(newline)
 #(display (ratio->cent 3 2))#(newline)
 #(display (ratio->cent 9 8))#(newline)#(newline)
 
@@ -138,18 +143,60 @@ ratioToPitch =
 % Print the nearest pitch below the actual pitch
 % and print the deviation in Cent below the staff
 
+\markup "A kind of scale over the middle C"
+
 {
-  % For some reason ratio N / 1 don't work yet
-%  \ratioToPitch 2 1
-  \ratioToPitch 6 2  
-  \ratioToPitch 4 2  
-  \ratioToPitch 3 2  
-  \ratioToPitch 4 3  
-  \ratioToPitch 5 4
-  \ratioToPitch 6 5
-  \ratioToPitch 7 6
-  \ratioToPitch 8 7
-  \ratioToPitch 9 8
+  \ratioToPitch 1/1  
+  \ratioToPitch 9/8  
+  \ratioToPitch 8/7  
+  \ratioToPitch 7/6  
+  \ratioToPitch 6/5  
+  \ratioToPitch 5/4
+  \ratioToPitch 4/3
+  \ratioToPitch 3/2
+  \ratioToPitch 2/1
 }
 
+\markup "Overtones over different fundamentals"
+
+{
+
+  \jiTonic f
+  \ratioToPitch 2 3/1
+  \jiTonic c
+  \ratioToPitch 4/1
+  \jiTonic as,
+  \ratioToPitch 5/1
+  \jiTonic f,
+  \ratioToPitch 6/1
+  \jiTonic d,
+  \ratioToPitch 7/1
+  \jiTonic c,
+  \ratioToPitch 8/1
+}
+
+\markup "Overtone scale on different fundamentals"
+
+#(set! ji-duration (ly:make-duration 2))
+
+scale =
+#(define-music-function (pitch)(ly:pitch?)
+   #{
+     \jiTonic #pitch
+     \ratioToPitch 1/1
+     \ratioToPitch 2/1
+     \ratioToPitch 3/1
+     \ratioToPitch 4/1
+     \ratioToPitch 5/1
+     \ratioToPitch 6/1
+     \ratioToPitch 7/1
+   #})
+
+{
+  \clef bass
+  \scale a,,
+  \scale d,
+  \clef treble
+  \scale a
+}
 
