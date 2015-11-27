@@ -9,6 +9,15 @@
 % This is extremely hacky and will only work in monophonic context
 #(define ji-duration (ly:make-duration 2))
 
+% Maintain the "tonic", starting with a default middle c
+#(define ji-tonic (ly:make-pitch 0 0 0))
+
+% Change the tonic from which the notes are taken
+jiTonic =
+#(define-void-function (tonic)
+   (ly:pitch?)
+   (set! ji-tonic tonic))
+
 % Produce a note displaying Just Intonation
 % Provide a ratio, which is currently taken to be over c'
 % The duration will be taken from the currently active "ji-duration"
@@ -21,7 +30,10 @@ jiNote =
    ((ly:duration?) fraction?)
    (let*
     ((note (ratio->step-deviation ratio))
-     (pitch (semitones->pitch (car note)))
+     (pitch 
+      (ly:pitch-transpose
+       (semitones->pitch (car note))
+       ji-tonic))
      (cent (cdr note)))
     ;; Update current duration if given as argument
     (set! ji-duration (or dur ji-duration))
