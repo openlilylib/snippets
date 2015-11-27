@@ -18,6 +18,25 @@ jiTonic =
    (ly:pitch?)
    (set! ji-tonic tonic))
 
+#(define (color-element grob color)
+   (make-music
+    'ContextSpeccedMusic
+    'context-type
+    'Bottom
+    'element
+    (make-music
+     'OverrideProperty
+     'once
+     #t
+     'pop-first
+     #t
+     'grob-value
+     color
+     'grob-property-path
+     (list (quote color))
+     'symbol
+     grob)))
+
 % Produce a note displaying Just Intonation
 % Provide a ratio, which is currently taken to be over c'
 % The duration will be taken from the currently active "ji-duration"
@@ -34,10 +53,20 @@ jiNote =
       (ly:pitch-transpose
        (semitones->pitch (car note))
        ji-tonic))
-     (cent (cdr note)))
+     (cent (cdr note))
+     (col (cent->color cent)))
     ;; Update current duration if given as argument
     (set! ji-duration (or dur ji-duration))
     ;; produce a note from the given data
+    (make-music
+     'SequentialMusic
+     'elements
+     (list 
+      (color-element 'Accidental col)
+      (color-element 'NoteHead col)
+      (color-element 'Stem col)
+      (color-element 'Flag col)
+      (color-element 'TextScript col)
     (make-music
      'NoteEvent
      'articulations
@@ -45,4 +74,4 @@ jiNote =
             'TextScriptEvent
             'text (format "~@f" cent)))
      'pitch pitch
-     'duration ji-duration)))
+     'duration ji-duration)))))
