@@ -2,30 +2,35 @@
 
 % Proof-of-concept for a "just intonation" input syntax
 
-% predicate for the detune argument: either a ratio or a cent detune
-#(define (number-or-fraction? value)
-   (or (number? value)
-       (fraction? value)))
+#(ly:set-option 'relative-includes #t)
+\include "conversions.ily"
 
-ji =
-#(define-music-function (pitch dur detune)
-   ;; pass a pitch, an optional duration and the detune value
-   (ly:pitch? (ly:duration?) number-or-fraction?)
-   (let
-    ;; if no duration is given, generate one
-    ; NOTE: Currently a quarter note is returned
-    ((dur (or dur (ly:make-duration 2)))
-     (detune-string
-      (if (number? detune) (number->string detune)
-          (format "~a:~a" (car detune)(cdr detune)))))
-    ; so far only the simple note is returned.
-    ; eventually the note has to be assigned the appropriate accidental.
+% Maintain a current duration to be used when no duration is given
+% This is extremely hacky and will only work in monophonic context
+#(define ji-duration (ly:make-duration 2))
+
+% Produce a note displaying Just Intonation
+% Provide a ratio, which is currently taken to be over c'
+% The duration will be taken from the currently active "ji-duration"
+% which can be changed with the optional argument.
+% The function will return a note with the tempered pitch that
+% matches the actual pitch most closely, and a markup with
+% the rounded cent deviation.
+jiNote =
+#(define-music-function (dur ratio)
+   ((ly:duration?) fraction?)
+   (let*
+    ((note (ratio->step-deviation ratio))
+     (pitch (semitones->pitch (car note)))
+     (cent (cdr note)))
+    ;; Update current duration if given as argument
+    (set! ji-duration (or dur ji-duration))
+    ;; produce a note from the given data
     (make-music
-          'NoteEvent
-          'articulations
-            (list (make-music
-                   'TextScriptEvent
-                   'text (format "~a" detune-string)))
-          'pitch pitch
-          'duration dur)))
-
+     'NoteEvent
+     'articulations
+     (list (make-music
+            'TextScriptEvent
+            'text (format "~@f" cent)))
+     'pitch pitch
+     'duration ji-duration)))
