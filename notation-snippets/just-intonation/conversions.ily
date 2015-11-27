@@ -41,7 +41,7 @@
                (4 0)   ; g
                (4 1/2) ; gis
                (5 0)   ; a
-               (5 1/2) ; ais
+               (6 -1/2) ; ais
                (6 0))   ; b      
             index)))
      (ly:make-pitch octave (car pitch-pair) (cadr pitch-pair))))
