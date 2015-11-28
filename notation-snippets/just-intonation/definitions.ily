@@ -18,6 +18,7 @@ jiTonic =
    (ly:pitch?)
    (set! ji-tonic tonic))
 
+% Produce the code for coloring one grob in a (make-music) expression
 #(define (color-element grob color)
    (make-music
     'ContextSpeccedMusic
@@ -36,6 +37,22 @@ jiTonic =
      (list (quote color))
      'symbol
      grob)))
+
+% Iterate over a set of grobs and color them with the given color
+% Note that this returns a list that can't simply replace the consecutive
+% calls to color-element. Instead the actual (make-music) has to be appended
+% to the result of color-music.
+#(define (color-music color)
+   (map 
+    (lambda (g)
+      (color-element g color))
+    (list 
+     'Accidental
+     'NoteHead
+     'Stem
+     'Flag
+     'TextScript)))
+
 
 % Produce a note displaying Just Intonation
 % Provide a ratio, which is currently taken to be over c'
@@ -61,17 +78,14 @@ jiNote =
     (make-music
      'SequentialMusic
      'elements
-     (list 
-      (color-element 'Accidental col)
-      (color-element 'NoteHead col)
-      (color-element 'Stem col)
-      (color-element 'Flag col)
-      (color-element 'TextScript col)
-    (make-music
-     'NoteEvent
-     'articulations
-     (list (make-music
-            'TextScriptEvent
-            'text (format "~@f" cent)))
-     'pitch pitch
-     'duration ji-duration)))))
+     (append
+      (color-music col)
+      (list
+       (make-music
+        'NoteEvent
+        'articulations
+        (list (make-music
+               'TextScriptEvent
+               'text (format "~@f" cent)))
+        'pitch pitch
+        'duration ji-duration))))))
