@@ -9,15 +9,6 @@
 % This is extremely hacky and will only work in monophonic context
 #(define ji-duration (ly:make-duration 2))
 
-% Maintain the "tonic", starting with a default middle c
-#(define ji-tonic (ly:make-pitch 0 0 0))
-
-% Change the tonic from which the notes are taken
-jiTonic =
-#(define-void-function (tonic)
-   (ly:pitch?)
-   (set! ji-tonic tonic))
-
 % Produce the code for coloring one grob in a (make-music) expression
 #(define (color-element grob color)
    (make-music
@@ -61,15 +52,15 @@ jiTonic =
 % The function will return a note with the tempered pitch that
 % matches the actual pitch most closely, and a markup with
 % the rounded cent deviation.
-jiNote =
-#(define-music-function (dur ratio)
-   ((ly:duration?) fraction?)
+ji =
+#(define-music-function (fundamental dur ratio)
+   (ly:pitch? (ly:duration?) fraction?)
    (let*
     ((note (ratio->step-deviation ratio))
      (pitch 
       (ly:pitch-transpose
        (semitones->pitch (car note))
-       ji-tonic))
+       fundamental))
      (cent (cdr note))
      (col (cent->color cent)))
     ;; Update current duration if given as argument

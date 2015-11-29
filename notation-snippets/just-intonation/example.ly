@@ -2,6 +2,10 @@
 
 \include "definitions.ily"
 
+\paper {
+  score-markup-spacing.minimum-distance = 15
+}
+
 \layout {
   \context {
     \Voice
@@ -13,34 +17,51 @@
   }
 }
 
+\markup { Idealized harmonic series through the first eight partials }
+
+{
+  c1 c' g' c'' e'' g'' bes'' c'''
+}
+
+\markup { Real harmonic series }
+
+{
+  \ji c1 1/1
+  \ji c 2/1
+  \ji c 3/1
+  \ji c 4/1
+  \ji c 5/1
+  \ji c 6/1
+  \ji c 7/1
+  \ji c 8/1
+}
+
 \markup { “Logarithmic” scale approaching the fundamental }
 
 {
-  \jiNote 1 2/1
-  \jiNote 3/2
-  \jiNote 4/3
-  \jiNote 5/4
-  \jiNote 6/5
-  \jiNote 7/6
-  \jiNote 8/7
-  \jiNote 9/8
-  \jiNote 10/9
-  \jiNote 11/10
-  \jiNote 12/11
+  \ji c1 2/1
+  \ji c 3/2
+  \ji c 4/3
+  \ji c 5/4
+  \ji c 6/5
+  \ji c 7/6
+  \ji c 8/7
+  \ji c 9/8
+  \ji c 10/9
+  \ji c 11/10
+  \ji c 12/11
 }
+
 
 \markup { Achieve \italic nearly the same result with different fundamentals }
 
 {
-  \jiTonic d'
-  \jiNote 1 2/1
-  \jiTonic g
-  \jiNote 3/1
-  \jiTonic d
-  \jiNote 4/1
-  \jiTonic bes,
-  \jiNote 5/1
-  \jiTonic e,
-  \jiNote 7/1
+  \ji d'1 2/1
+  \ji g 3/1
+  \ji d 4/1
+  \ji bes, 5/1
+  \ji e, 7/1
+  \ji c, 9/1
+  \ji bes,, 10/1
+  \ji as,, 11/1
 }
-
