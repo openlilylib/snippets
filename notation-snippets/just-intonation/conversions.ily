@@ -14,12 +14,7 @@
     ((step-cent (ratio->cent ratio))
      ;; split that in the step and the cent part
      (step (inexact->exact (round step-cent)))
-     (cent (inexact->exact (round (* 100 (- step-cent (floor step-cent))))))
-     ;; if cent > 50 flip it around to be negative
-     (cent-deviation
-      (if (> cent 50)
-          (- cent 100)
-          cent)))
+     (cent-deviation (inexact->exact (round (* 100 (- step-cent step))))))
     (cons step cent-deviation)))
 
 % Return a pitch object
