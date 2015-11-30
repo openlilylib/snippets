@@ -39,17 +39,17 @@
 \markup { “Logarithmic” scale approaching the fundamental }
 
 {
-  \ji c1 2/1
-  \ji c 3/2
-  \ji c 4/3
-  \ji c 5/4
-  \ji c 6/5
-  \ji c 7/6
-  \ji c 8/7
-  \ji c 9/8
-  \ji c 10/9
-  \ji c 11/10
-  \ji c 12/11
+  \ji c'1 2/1
+  \ji c' 3/2
+  \ji c' 4/3
+  \ji c' 5/4
+  \ji c' 6/5
+  \ji c' 7/6
+  \ji c' 8/7
+  \ji c' 9/8
+  \ji c' 10/9
+  \ji c' 11/10
+  \ji c' 12/11
 }
 
 
