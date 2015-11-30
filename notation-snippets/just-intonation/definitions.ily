@@ -11,10 +11,6 @@
 #(ly:set-option 'relative-includes #t)
 \include "conversions.ily"
 
-% Maintain a current duration to be used when no duration is given
-% This is extremely hacky and will only work in monophonic context
-#(define ji-duration (ly:make-duration 2))
-
 % Iterate over a set of grobs and color them with the given color
 #(define (color-music color)
    (map 
