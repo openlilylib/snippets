@@ -19,6 +19,20 @@
        (inexact->exact (round (- pitch (* 100 (cent->semitone pitch)))))
        (inexact->exact (round (- (car pitch) (* 100 (cdr pitch)))))))
 
+% Create a "note" alist from a given fundamental and ratio.
+% The alist will contain the properties
+% - fundamental
+%   (the literal value of the 'fundamental' argument (expected to be a LilyPond pitch))
+% - cent
+%   (total cents in relation to fundamental)
+% - semitone
+%   (number of half-tone steps in relation to fundamental)
+% - pitch
+%   (a LilyPond Pitch object corresponding to the semitone,
+%    taking the fundamental into account)
+% - deviation
+%   (deviation in cent from the determined pitch)
+
 #(define (ratio->note fundamental ratio)
    (let*
     ((note '())

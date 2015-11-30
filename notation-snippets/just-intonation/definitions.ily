@@ -45,13 +45,18 @@
      'TextScript)))
 
 
-% Produce a note displaying Just Intonation
-% Provide a ratio, which is currently taken to be over c'
-% The duration will be taken from the currently active "ji-duration"
-% which can be changed with the optional argument.
-% The function will return a note with the tempered pitch that
-% matches the actual pitch most closely, and a markup with
-% the rounded cent deviation.
+% Produce a note in Just Intonation
+%
+% The function expects three arguments:
+% - fundamental note, over which the ratio is applied
+% - (optional) duration. 
+%   If this isn't present the previous duration is used.
+%   This results in a duration behaviour that is similar to LilyPond's own
+%   but it is limited to the \ji context.
+% - ratio
+%
+% The return value is a note with the specified duration and an 
+% attached markup with a string representation of the deviation in cent.
 ji =
 #(define-music-function (fundamental dur ratio)
    (ly:pitch? (ly:duration?) fraction?)
