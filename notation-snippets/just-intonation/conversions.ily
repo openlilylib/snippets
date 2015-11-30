@@ -55,13 +55,13 @@
 % Produce a color based on the cent detune.
 % Positive detunes color increasingly red
 % while negative colors produce shades of blue
-#(define (cent->color cent)
+#(define (deviation->color deviation)
    (let
-    ((r (if (> cent 0)
-            (sqrt (/ cent 50.0))
+    ((r (if (> deviation 0)
+            (sqrt (/ deviation 50.0))
             0.0))
-     (b (if (< cent 0)
-            (sqrt (* -1 (/ cent 50.0)))
+     (b (if (< deviation 0)
+            (sqrt (* -1 (/ deviation 50.0)))
             0.0)))
     (list r 0.0 b)))
 

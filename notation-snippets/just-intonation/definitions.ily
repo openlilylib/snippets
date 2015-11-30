@@ -61,7 +61,7 @@ ji =
      (pitch (assoc-ref note "pitch"))
      (deviation (assoc-ref note "deviation"))
      (pitch-transposed (ly:pitch-transpose pitch fundamental))
-     (col (cent->color deviation)))
+     (col (deviation->color deviation)))
     ;; Update current duration if given as argument
     (set! ji-duration (or dur ji-duration))
     ;; produce a note from the given data
