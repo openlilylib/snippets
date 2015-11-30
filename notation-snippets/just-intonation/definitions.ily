@@ -2,6 +2,12 @@
 
 % Proof-of-concept for a "just intonation" input syntax
 
+\include "openlilylib"
+
+\registerOption contemporary #'()
+\registerOption contemporary.ji #'()
+\registerOption contemporary.ji.duration #(ly:make-duration 2)
+
 #(ly:set-option 'relative-includes #t)
 \include "conversions.ily"
 
@@ -67,9 +73,9 @@ ji =
      (deviation (assoc-ref note "deviation"))
      (col (deviation->color deviation)))
     ;; Update current duration if given as argument
-    (set! ji-duration (or dur ji-duration))
+    (if dur (setOption '(contemporary ji duration) dur))
     ;; produce a note from the given data
     #{ #@(color-music col) 
        $pitch 
-       $ji-duration 
+       $(getOption '(contemporary ji duration))
        ^#(format "(~@d)" deviation) #}))
