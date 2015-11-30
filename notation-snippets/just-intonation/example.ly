@@ -9,7 +9,8 @@
 \layout {
   \context {
     \Voice
-    \override TextScript.font-size = #-2
+    \override TextScript.font-size = #-3
+    \override TextScript.self-alignment-X = #CENTER
   }
   \context {
     \Staff
