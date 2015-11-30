@@ -15,34 +15,11 @@
 % This is extremely hacky and will only work in monophonic context
 #(define ji-duration (ly:make-duration 2))
 
-% Produce the code for coloring one grob in a (make-music) expression
-#(define (color-element grob color)
-   (make-music
-    'ContextSpeccedMusic
-    'context-type
-    'Bottom
-    'element
-    (make-music
-     'OverrideProperty
-     'once
-     #t
-     'pop-first
-     #t
-     'grob-value
-     color
-     'grob-property-path
-     (list (quote color))
-     'symbol
-     grob)))
-
 % Iterate over a set of grobs and color them with the given color
-% Note that this returns a list that can't simply replace the consecutive
-% calls to color-element. Instead the actual (make-music) has to be appended
-% to the result of color-music.
 #(define (color-music color)
    (map 
     (lambda (g)
-      (color-element g color))
+       #{ \once \override #g . color = #color #})
     (list 
      'Accidental
      'NoteHead
