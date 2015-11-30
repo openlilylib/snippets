@@ -65,18 +65,7 @@ ji =
     ;; Update current duration if given as argument
     (set! ji-duration (or dur ji-duration))
     ;; produce a note from the given data
-    (make-music
-     'SequentialMusic
-     'elements
-     (append
-      (color-music col)
-      (list
-       (make-music
-        'NoteEvent
-        'articulations
-        (list (make-music
-               'TextScriptEvent
-               'direction UP
-               'text (format "(~@d)" deviation)))
-        'pitch pitch-transposed
-        'duration ji-duration))))))
+    #{ #@(color-music col) 
+       $pitch-transposed 
+       $ji-duration 
+       ^#(format "(~@d)" deviation) #}))
