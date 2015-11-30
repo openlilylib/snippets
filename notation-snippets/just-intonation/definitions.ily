@@ -56,13 +56,14 @@ ji =
 #(define-music-function (fundamental dur ratio)
    (ly:pitch? (ly:duration?) fraction?)
    (let*
-    ((note (ratio->step-deviation ratio))
+    ((cent (ratio->cent ratio))
+     (semitone (inexact->exact (round (/ cent 100.0))))
      (pitch 
       (ly:pitch-transpose
-       (semitones->pitch (car note))
+       (semitones->pitch semitone)
        fundamental))
-     (cent (cdr note))
-     (col (cent->color cent)))
+     (deviation (inexact->exact (round (- cent (* 100 semitone)))))
+     (col (cent->color deviation)))
     ;; Update current duration if given as argument
     (set! ji-duration (or dur ji-duration))
     ;; produce a note from the given data
@@ -77,6 +78,6 @@ ji =
         'articulations
         (list (make-music
                'TextScriptEvent
-               'text (format "~@f" cent)))
+               'text (format "~@f" deviation)))
         'pitch pitch
         'duration ji-duration))))))

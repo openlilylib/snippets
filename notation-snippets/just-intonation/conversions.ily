@@ -3,19 +3,7 @@
 % Take the ratio of a partial and return the corresponding cent value
 % relative to a fundamental
 #(define (ratio->cent ratio)
-   (* 12 (/ (log (/ (car ratio) (cdr ratio))) (log 2))))
-
-% Take a fraction and return a list with 
-% - the pitch in semitones
-% - the cent deviation above or below (rounded)
-#(define (ratio->step-deviation ratio)
-   (let*
-    ;; calculate cent value over the fundamental
-    ((step-cent (ratio->cent ratio))
-     ;; split that in the step and the cent part
-     (step (inexact->exact (round step-cent)))
-     (cent-deviation (inexact->exact (round (* 100 (- step-cent step))))))
-    (cons step cent-deviation)))
+   (* 1200 (/ (log (/ (car ratio) (cdr ratio))) (log 2))))
 
 % Return a pitch object
 % corresponding to the given semitone
