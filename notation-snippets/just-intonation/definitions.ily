@@ -56,16 +56,15 @@ ji =
 #(define-music-function (fundamental dur ratio)
    (ly:pitch? (ly:duration?) fraction?)
    (let*
-    ((note (ratio->note ratio))
+    ((note (ratio->note fundamental ratio))
      (cent (assoc-ref note "cent"))
      (pitch (assoc-ref note "pitch"))
      (deviation (assoc-ref note "deviation"))
-     (pitch-transposed (ly:pitch-transpose pitch fundamental))
      (col (deviation->color deviation)))
     ;; Update current duration if given as argument
     (set! ji-duration (or dur ji-duration))
     ;; produce a note from the given data
     #{ #@(color-music col) 
-       $pitch-transposed 
+       $pitch 
        $ji-duration 
        ^#(format "(~@d)" deviation) #}))
