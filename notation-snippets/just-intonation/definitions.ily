@@ -78,6 +78,6 @@ ji =
         'articulations
         (list (make-music
                'TextScriptEvent
-               'text (format "~@f" deviation)))
+               'text (format "~@d" deviation)))
         'pitch pitch
         'duration ji-duration))))))
