@@ -56,13 +56,11 @@ ji =
 #(define-music-function (fundamental dur ratio)
    (ly:pitch? (ly:duration?) fraction?)
    (let*
-    ((cent (ratio->cent ratio))
-     (semitone (inexact->exact (round (/ cent 100.0))))
-     (pitch 
-      (ly:pitch-transpose
-       (semitones->pitch semitone)
-       fundamental))
-     (deviation (inexact->exact (round (- cent (* 100 semitone)))))
+    ((note (ratio->note ratio))
+     (cent (assoc-ref note "cent"))
+     (pitch (assoc-ref note "pitch"))
+     (deviation (assoc-ref note "deviation"))
+     (pitch-transposed (ly:pitch-transpose pitch fundamental))
      (col (cent->color deviation)))
     ;; Update current duration if given as argument
     (set! ji-duration (or dur ji-duration))
@@ -80,5 +78,5 @@ ji =
                'TextScriptEvent
                'direction UP
                'text (format "(~@d)" deviation)))
-        'pitch pitch
+        'pitch pitch-transposed
         'duration ji-duration))))))

@@ -5,6 +5,29 @@
 #(define (ratio->cent ratio)
    (* 1200 (/ (log (/ (car ratio) (cdr ratio))) (log 2))))
 
+#(define (cent->semitone cent)
+   (inexact->exact (round (/ cent 100.0))))
+
+#(define (cent->deviation cent semitone)
+  (inexact->exact (round (- cent (* 100 semitone)))))
+
+#(define (ratio->note ratio)
+   (let*
+    ((note '())
+     (cent (ratio->cent ratio))
+     (semitone (cent->semitone cent))
+     (deviation (cent->deviation cent semitone)))
+    (set! note 
+          (assoc-set! note "cent" cent))
+    (set! note
+          (assoc-set! note "semitone" semitone))
+    (set! note
+          (assoc-set! note "pitch" (semitones->pitch semitone)))
+    (set! note
+          (assoc-set! note "deviation" deviation))
+    note))
+    
+
 % Return a pitch object
 % corresponding to the given semitone
 % (relative to c')
