@@ -1,3 +1,5 @@
+\version "2.18.2"
+
 \include "definitions.ily"
 
 \header {
@@ -63,6 +65,10 @@
 
 \markup "Parent commit (shortlog):"
 \markup \bold \gitParentCommit
+\markup \vspace #0.5
+
+\markup "Tag:"
+\markup \bold \gitTag
 \markup \vspace #0.5
 
 \markup "Current branch:"
