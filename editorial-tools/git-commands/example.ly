@@ -67,6 +67,10 @@
 \markup \bold \gitParentCommit
 \markup \vspace #0.5
 
+\markup "Tag:"
+\markup \bold \gitTag
+\markup \vspace #0.5
+
 \markup "Current branch:"
 \markup \bold \gitBranch
 \markup \vspace #0.5

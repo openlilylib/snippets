@@ -82,6 +82,8 @@ gitParentCommittish = \markup { \gitCommand "rev-parse --short HEAD^1" }
 % Print the oneline commit message of the latest commit
 gitParentCommit = \markup { \gitCommand "log --oneline HEAD~2..HEAD~1" }
 
+% Print the most reachable tag & number of commits since. Fall back to commitish
+gitTag = \markup { \gitCommand "describe --tags --dirty=-modified --always" }
 
 % Print the branch the repository is currently on
 gitBranch = \markup { \gitCommand "rev-parse --abbrev-ref HEAD" }
