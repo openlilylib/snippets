@@ -1,4 +1,4 @@
-\version "2.16.2"
+\version "2.18.2"
 
 \header {
   snippet-title = "Print Git repository information"
