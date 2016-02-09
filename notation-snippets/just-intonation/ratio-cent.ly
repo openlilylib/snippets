@@ -19,34 +19,25 @@ jiTonic =
      (/ (log (/ f1 f2)) (log 2))))
 
 % Take a fraction and return a list with 
-% - the pitch index (0 - 12)
-% the cent deviation above it
-#(define (ratio->cent-deviation f1 f2)
+% - the pitch in semitones
+% - the cent deviation above or below (rounded)
+#(define (ratio->step-deviation f1 f2)
    (let*
-    ((octave-cent (ratio->cent f1 f2))
-     (parts (string-split 
-             (format "~a" (/ octave-cent 100.0))
-             #\.))
-     (pitch-index (string->number (car parts)))
-     (cent-str (cadr parts))
-     (cent-positive (string->number 
-                     (if (> (string-length cent-str) 2)
-                         (string-append 
-                          (string-take cent-str 2)
-                          "."
-                          (substring cent-str 2))
-                         cent-str)))
-     (cent (if (< cent-positive 50) 
-               cent-positive
-               (- cent-positive 100)))
-     (semitone  (if (eq? cent cent-positive)
-                    pitch-index
-                    (+ pitch-index 1))
-       )
-     )
-    (cons semitone cent)))
+    (
+      ; calculate cent value over the fundamental
+      (step-cent (/ (ratio->cent f1 f2) 100.0))
+      
+      ; split that in the step and the cent part
+      (step (inexact->exact (round step-cent)))
+      (cent (inexact->exact (round (* 100 (- step-cent (floor step-cent))))))
+      ; if cent > 50 flip it around to be negative
+      (cent-deviation
+       (if (> cent 50)
+           (- cent 100)
+           cent)))
+    (cons step cent-deviation)))
 
-% Map the semitone returned by ratio->cent-deviation 
+% Map the semitone returned by ratio->step-deviation 
 % to a LilyPond pitch index
 #(define (semitones->pitch semitone)
    (let ((index (modulo semitone 12))
@@ -94,7 +85,7 @@ jiPitch =
    (let*
     ((f1 (car ratio))
      (f2 (cdr ratio))
-     (note (ratio->cent-deviation f1 f2))
+     (note (ratio->step-deviation f1 f2))
      (lily-pitch (semitones->pitch (car note)))
      (pitch-ratio 
       (ly:pitch-transpose
@@ -117,10 +108,10 @@ jiPitch =
      'SequentialMusic
      'elements
      (list 
-      (color-element 'Accidental cent-color)
-      (color-element 'NoteHead cent-color)
-      (color-element 'Stem cent-color)
-      (color-element 'TextScript cent-color)
+;      (color-element 'Accidental cent-color)
+;      (color-element 'NoteHead cent-color)
+;      (color-element 'Stem cent-color)
+;      (color-element 'TextScript cent-color)
       (make-music
        'NoteEvent
        'articulations
@@ -154,9 +145,9 @@ jiPitch =
 #(display (ratio->cent 9 8))#(newline)#(newline)
 
 #(display "Display semitone index (0-11) and Cent deviation")#(newline)
-#(display (ratio->cent-deviation 4 2))#(newline)
-#(display (ratio->cent-deviation 3 2))#(newline)
-#(display (ratio->cent-deviation 9 8))#(newline)#(newline)
+#(display (ratio->step-deviation 4 2))#(newline)
+#(display (ratio->step-deviation 3 2))#(newline)
+#(display (ratio->step-deviation 9 8))#(newline)#(newline)
 
 #(display "Display the corresponding LilyPond code for pitch")#(newline)
 #(display (semitones->pitch 1))#(newline)
@@ -172,7 +163,7 @@ jiPitch =
 \markup "A kind of scale over the middle C"
 
 {
-  \jiPitch 1/1  
+  \jiPitch 1 10/9  
   \jiPitch 9/8  
   \jiPitch 8/7  
   \jiPitch 7/6  
@@ -209,13 +200,14 @@ scale =
 #(define-music-function (pitch)(ly:pitch?)
    #{
      \jiTonic #pitch
-     \jiPitch 1/1
+     \jiPitch 1 1/1
      \jiPitch 2/1
      \jiPitch 3/1
      \jiPitch 4/1
      \jiPitch 5/1
      \jiPitch 6/1
      \jiPitch 7/1
+     \jiPitch 8/1
    #})
 
 {
@@ -226,3 +218,12 @@ scale =
   \scale a
 }
 
+\markup \vspace #5
+{
+  \scale c
+}
+
+{
+  \jiTonic d
+  \jiPitch 5/2
+}

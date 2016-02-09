@@ -1,0 +1,51 @@
+
+\version "2.19.32"
+
+\include "definitions.ily"
+
+#(define (fraction-or-integer? value)
+   (or (fraction? value) (integer? value)))
+
+% Produce a note displaying Just Intonation
+% Provide a ratio, which is currently taken to be over c'
+% The duration will be taken from the currently active "ji-duration"
+% which can be changed with the optional argument.
+% The function will return a note with the tempered pitch that
+% matches the actual pitch most closely, and a markup with
+% the rounded cent deviation.
+ji =
+#(define-music-function (fundamental dur ratio)
+   (ly:pitch? (ly:duration?) fraction-or-integer?)
+   (let*
+    ((ratio (if (fraction? ratio) 
+                ratio
+                ratio/1))
+      (note (ratio->step-deviation ratio))
+     (pitch 
+      (ly:pitch-transpose
+       (semitones->pitch (car note))
+       fundamental))
+     (cent (cdr note))
+     (col (cent->color cent)))
+    ;; Update current duration if given as argument
+    (set! ji-duration (or dur ji-duration))
+    ;; produce a note from the given data;
+    #{ $pitch $dur -#(format "~@f" cent) #}
+;    (make-music
+;     'SequentialMusic
+;     'elements
+;     (append
+;      (color-music col)
+;      (list
+;       (make-music
+;        'NoteEvent
+;        'articulations
+;        (list (make-music
+;               'TextScriptEvent
+;               'text (format "~@f" cent)))
+;        'pitch pitch
+;        'duration ji-duration))))))
+))
+{
+  \ji c1 7/1
+}

@@ -2,8 +2,9 @@
 
 % Take the ratio of a partial and return the corresponding cent value
 % relative to a fundamental
-#(define (ratio->cent ratio)
-   (* 1200 (/ (log (/ (car ratio) (cdr ratio))) (log 2))))
+#(define (ratio->cent ratio)%
+   (* 1200 (/ (log ratio) (log 2))))
+   %(* 1200 (/ (log (/ (car ratio) (cdr ratio))) (log 2))))
 
 % Extract the semitone part of a cent value
 #(define (cent->semitone cent)
