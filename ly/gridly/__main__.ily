@@ -311,7 +311,7 @@ gridSetRange =
 
 #(define (transpose-music music transpose-key)
    (if transpose-key
-       #{ \transpose $transpose-key c { $music } #}
+       #{ \transpose $transpose-key #(ly:make-pitch -1 0 0) { $music } #}
        music))
 
 gridGetMusic =
