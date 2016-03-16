@@ -93,6 +93,16 @@ gitBranch = \markup { \gitCommand "rev-parse --abbrev-ref HEAD" }
 % of the counting of merge commits
 gitRevisionNumber = \markup { \gitCommand "log --oneline | wc -l" }
 
+% Print the number of commits to the argument file path
+% that lead to the current commit. This may not be
+% reliable because of the counting of merge commits
+gitFileRevision = #(define-markup-command (gitFileRevision layout props file) (markup?)
+  (gitCommand-markup layout props
+    (string-append (string-append
+              "log --oneline -- \""
+              file)
+               "\" | wc -l")))
+
 % Return ##t if the repository is clean, i.e. if it
 % doesn't have any uncommitted changes
 #(define (gitIsClean)
@@ -107,4 +117,3 @@ gitFullCommit = \markup { \gitCommand "log --pretty=full HEAD^1..HEAD" }
 
 % Print a full diff between current HEAD and the working tree
 gitDiff = \markup { \gitCommand "diff" }
-
