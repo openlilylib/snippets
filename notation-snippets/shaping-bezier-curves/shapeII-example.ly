@@ -8,7 +8,7 @@
 \paper {
   ragged-right = ##t
   indent = 0
-  top-markup-spacing #'basic-distance = #5
+  top-markup-spacing.basic-distance = #5
 }
 
 \header {
