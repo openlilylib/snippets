@@ -224,7 +224,11 @@ thickness begin-x line-y end-x line-y))))
                             2)))
 
            (set! begin-x (+ begin-x x-offset))
-           (ly:grob-set-property! right-tab-note-head 'transparent #t)))
+           (for-each
+             (lambda (tab-note-head)
+               (if (grob::has-interface tab-note-head 'tab-note-head-interface)
+                   (ly:grob-set-property! tab-note-head 'transparent #t)))
+             (ly:grob-array->list (ly:grob-object right-bound 'note-heads)))))
 
      ;; draw resulting bend arrow
      (grob-interpret-markup grob
