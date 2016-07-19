@@ -14,15 +14,15 @@
 }
 
 slashBeam =
-#(define-music-function (slash-angle beam-fraction outer-proportion side)
-   (number? number? number? symbol?)
+#(define-music-function (side slash-angle beam-fraction outer-proportion)
+   ((symbol? 'left) number? number? number?)
    "Make a slash on a beamed group.
+   side             - 'left or 'right. If omitted, defaults to 'left.
    slash-angle      - angle of slash with respect to x axis.
    beam-fraction    - intersection point of slash with beam, as a fraction of beam length,
                       measured from the left hand side.
    outer-proportion - length of the outside projections as a proportion of the length of the
                       inner segment between beam and stem.
-   side             - 'left or 'right.
    "
    ;; helpers
    (define (square x)

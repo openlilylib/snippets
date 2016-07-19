@@ -68,7 +68,9 @@
   }
   \vspace #1
   \justified-lines {
-    \typewriter "\slashBeam <slash-angle> <beam-fraction> <outer-proportion> <side>"
+
+    \typewriter "\slashBeam [<side>] <slash-angle> <beam-fraction> <outer-proportion>"
+
   }
   \vspace #0.5
   \line {
@@ -85,7 +87,10 @@
   \fill-line {
     \center-column {
       \justify {
-        \typewriter "slash-angle" — angle of slash with respect to the horizontal, in degrees.
+
+        \typewriter "side" — the side of the beam to add the slash to. Either
+        the symbol \typewriter "#'left" or \typewriter "#'right".  Optional
+        argument. If omitted, defaults to \typewriter "#'left."
       }
     }
   }
@@ -101,8 +106,31 @@
   \fill-line {
     \center-column {
       \justify {
-        \typewriter "beam-fraction" — intersection point of slash with beam, as a fraction of beam length,
-        always measured from the left hand side. A number between 0 and 1.
+
+        \typewriter "slash-angle" — angle of slash with respect to the
+        horizontal, in degrees. Always refers to the acute angle made with the
+        x-axis.
+
+      }
+    }
+  }
+}
+
+\markup \vspace #0.5
+
+\markup {
+  \vspace #0.5
+  \hspace #5
+  \override #'(line-width . 70)
+
+  \fill-line {
+    \center-column {
+      \justify {
+
+        \typewriter "beam-fraction" — intersection point of slash with beam,
+        as a fraction of beam length, always measured from the left hand
+        side. A number between \typewriter "0" and \typewriter "1".
+
       }
     }
   }
@@ -125,21 +153,6 @@
   }
 }
 
-\markup \vspace #0.5
-
-\markup {
-  \vspace #0.5
-  \hspace #5
-  \override #'(line-width . 70)
-
-  \fill-line {
-    \center-column {
-      \justify {
-        \typewriter "side" — the side of the beam to add the slash to. Either the symbol "#'left" or "#'right".
-      }
-    }
-  }
-}
 
 \markup \vspace #2
 \markup \large \bold "Examples"
@@ -159,11 +172,6 @@
 
 \pageBreak
 
-\markup {
-  \typewriter "\slashBeam 50 0.15 0.4 #'left"
-}
-\markup \vspace #1
-
 setBeamPos =
 #(define-music-function (left right)
    (number? number?)
@@ -172,42 +180,60 @@ setBeamPos =
      \once \override Beam.positions = #(cons left right)
    #})
 
+\markup {
+  \typewriter "\slashBeam 50 0.15 0.4"
+}
+\markup \vspace #1
+
 {
   \stemUp
   \setBeamPos 6 4
-  \slashBeam 50 0.15 0.4 #'left
+  \slashBeam 50 0.15 0.4
   a''8 [ b' bes' cis' c'] s8
 }
 
 \markup {
-  \typewriter "\slashBeam 60 0.85 0.4 #'right"
+  \typewriter "\slashBeam #'left 25 0.15 1"
+}
+\markup \vspace #1
+
+{
+  \stemUp
+  \setBeamPos 6 4
+  \slashBeam #'left 25 0.15 1
+  a''8 [ b' bes' cis' c'] s8
+}
+
+\markup {
+  \typewriter "\slashBeam #'right 60 0.85 0.4"
 }
 \markup \vspace #1
 {
   \stemUp
   \setBeamPos 6 4
-  \slashBeam 60 0.85 0.4 #'right
+  \slashBeam #'right 60 0.85 0.4
   a''8 [ b' bes' cis' c'] s8
 }
 \markup {
-  \typewriter "\slashBeam 60 0.92 0.4 #'right"
+  \typewriter "\slashBeam #'right 60 0.92 0.4"
 }
+
 \markup \vspace #1
 {
   \stemDown
   \setBeamPos -6 -6
-  \slashBeam 60 0.92 0.4 #'right
+  \slashBeam #'right 60 0.92 0.4
   a''8 [ b' bes' cis' c'] s8
 }
 
 \markup {
-  \typewriter " \slashBeam 45 0.92 1 #'right"
+  \typewriter " \slashBeam #'right 45 0.92 1"
 }
 \markup \vspace #1
 {
   \stemDown
   \setBeamPos -4 -6
-  \slashBeam 45 0.92 1 #'right
+  \slashBeam #'right 45 0.92 1
   a''8 [ b' bes' cis' c'] s8
 }
 
@@ -223,15 +249,16 @@ setBeamPos =
 
 }
 
+\pageBreak
+
 \markup \vspace #1
 \markup\large\bold "TODO"
 \markup \vspace #1
 
 \markup {
   \column {
-    "• Add property to override thickness."
-    "• Add property to specify line style."
-    "• Consider adding means to store parameters as a set of defualts."
+    "• Add a way to override thickness."
+    "• Add a way to specify line style."
   }
 }
 
