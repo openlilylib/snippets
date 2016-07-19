@@ -3,6 +3,7 @@
 \header {
   snippet-title = "Example snippet"
   snippet-author = "John Doe"
+  snippet-author-email = "john.doe@somewhere.com"
   snippet-source = "link to the mailing list archives or a website, if applicable"
   snippet-description = \markup {
     Describe what the snippet does and how to use it.

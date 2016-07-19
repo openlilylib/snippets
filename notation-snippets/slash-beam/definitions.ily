@@ -3,6 +3,7 @@
 \header {
   snippet-title = "Slash Beams"
   snippet-author = "Andrew Bernard"
+  snippet-author-email = "andrew.bernard@gmail.com"
   snippet-source = ""
   snippet-description = \markup {
     Add slash to a beamed group, on the right or on the left. This code provides
