@@ -14,5 +14,12 @@
   status = "ready"
 }
 
+#(cond ((not (defined? 'edition-engraver-loaded))
+        (define edition-engraver-loaded #f)))
+
 % import the edition-engraver from the corresponding scheme-module
-#(use-modules (editorial-tools edition-engraver module))
+% but only if it hasn't already been loaded
+#(if (not edition-engraver-loaded)
+     (begin
+      (use-modules (editorial-tools edition-engraver module))
+      (set! edition-engraver-loaded #t)))
