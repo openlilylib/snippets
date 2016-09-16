@@ -85,6 +85,10 @@ http://fonts.openlilylib.org.\n")
 %   - style: load a style sheet for the font
 %            - omitted: load the "-default" stylesheet
 %                       (has to be provided by the library)
+%   - roman:
+%   - sans:
+%   - typewriter: define serif, sans-serif, and monospace font, respectively
+%            - omitted: use the lilypond default
 % - name: Font name
 %
 % All arguments are case insensitive, so "Emmentaler" is
