@@ -85,6 +85,10 @@ http://fonts.openlilylib.org.\n")
 %   - style: load a style sheet for the font
 %            - omitted: load the "-default" stylesheet
 %                       (has to be provided by the library)
+%   - roman:
+%   - sans:
+%   - typewriter: define serif, sans-serif, and monospace font, respectively
+%            - omitted: use the lilypond default
 % - name: Font name
 %
 % All arguments are case insensitive, so "Emmentaler" is
@@ -137,6 +141,21 @@ useNotationFont =
           (or (assoc-ref options 'brace)
               name))
          (use-brace (string-downcase brace))
+         ;; retrieve 'roman' name from options with "serif" default
+         (roman
+          (or (assoc-ref options 'roman)
+              "serif"))
+         (use-roman (string-downcase roman))
+         ;; retrieve 'sans' name from options with "sans-serif" default
+         (sans
+          (or (assoc-ref options 'sans)
+              "sans-serif"))
+         (use-sans (string-downcase sans))
+         ;; retrieve 'typewriter' name from options with "monospace" default
+         (typewriter
+          (or (assoc-ref options 'typewriter)
+              "monospace"))
+         (use-typewriter (string-downcase typewriter))
          ;; retrieve 'style' option with "default" default ...
          (style
           (or (assoc-ref options 'style)
@@ -194,6 +213,12 @@ useNotationFont =
        #{ \setOption stylesheets.font.use-name #use-name #}
        #{ \setOption stylesheets.font.brace #brace #}
        #{ \setOption stylesheets.font.use-brace #use-brace #}
+       #{ \setOption stylesheets.font.roman #roman #}
+       #{ \setOption stylesheets.font.use-roman #use-roman #}
+       #{ \setOption stylesheets.font.sans #sans #}
+       #{ \setOption stylesheets.font.use-sans #use-sans #}
+       #{ \setOption stylesheets.font.typewriter #typewriter #}
+       #{ \setOption stylesheets.font.use-typewriter #use-typewriter #}
 
        ;; load font through an included file.
        ;; this is necessary so that file can set its own
