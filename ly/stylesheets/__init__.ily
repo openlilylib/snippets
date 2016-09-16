@@ -49,6 +49,12 @@
 \registerOption stylesheets.font.use-name Emmentaler
 \registerOption stylesheets.font.brace Emmentaler
 \registerOption stylesheets.font.use-brace Emmentaler
+\registerOption stylesheets.font.roman serif
+\registerOption stylesheets.font.use-roman serif
+\registerOption stylesheets.font.sans sans-serif
+\registerOption stylesheets.font.use-sans sans-serif
+\registerOption stylesheets.font.typewriter monospace
+\registerOption stylesheets.font.use-typewriter monospace
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Determine installed notation fonts
