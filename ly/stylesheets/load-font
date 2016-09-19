@@ -45,6 +45,9 @@
     (set-global-fonts
      #:music #{ \getOption stylesheets.font.use-name #}
      #:brace #{ \getOption stylesheets.font.use-brace #}
+     #:roman #{ \getOption stylesheets.font.use-roman #}
+     #:sans #{ \getOption stylesheets.font.use-sans #}
+     #:typewriter #{ \getOption stylesheets.font.use-typewriter #}
      #:factor (/ staff-height pt 20)))
 }
 
