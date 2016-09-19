@@ -26,6 +26,8 @@ music = \relative c {
 \new Staff {
   \horizontalSpacingTight
   \music
+  \horizontalSpacingLoose
+  \music
 }
 
 \markup { \smaller \typewriter "\stretchHorizontalSpacing #-0.5" }
