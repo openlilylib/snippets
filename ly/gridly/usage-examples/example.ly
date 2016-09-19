@@ -245,7 +245,7 @@
 %%%
 %%% Uncomment one of the following lines to see the effect:
 %%%
-%\gridSetRange #'(1 . 2)
+%\gridSetRange #'(2 . 3)
 %\gridSetRange 2
 
 %%% And now, let's see the functions that are used inside a score definition
@@ -270,6 +270,22 @@
       \new Voice = "basso" { \gridGetMusic "basso" }
       \new Lyrics \lyricsto "basso" { \gridGetLyrics "basso" }
     >>
+    
+    \new Staff \new Voice {
+      \gridGetRange soprano 1
+      \transpose c c' {
+        $(gridGetRange "basso" 2)
+      }
+      $(gridGetRange "soprano" 4)
+      $(gridGetRange "soprano" 3)
+    }
+  
+  \new Staff \new Voice {
+    \gridGetRange "soprano" 1
+    \partcombine
+        $(gridGetRange "soprano" 2)
+        \transpose c c' $(gridGetRange "basso" 2)
+  }
   >>
 
   \layout{}

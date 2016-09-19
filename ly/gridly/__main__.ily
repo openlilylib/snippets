@@ -295,6 +295,11 @@ gridSetSegmentTemplate =
                   segments)))
        elems)))
 
+gridGetRange =
+#(define-music-function (part start-end)(string? segment-selector?)
+   (gridSetRange start-end)
+   (gridGetMusic part))
+
 gridSetRange =
 #(define-void-function
     (parser location start-end) (segment-selector?)

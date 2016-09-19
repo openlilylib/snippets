@@ -132,8 +132,8 @@
 
 
 \paper {
-  markup-system-spacing #'padding = #2
-  markup-system-spacing #'minimum-distance = #18
+  markup-system-spacing.padding = #2
+  markup-system-spacing.minimum-distance = #18
   system-system-spacing = #'((padding . 2.75) (minimum-distance . 8))
 }
 

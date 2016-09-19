@@ -56,9 +56,11 @@
    (let* ((result (string-split
                    (strsystem_internal (string-append "git " cmd))
                    #\newline)))
+     (ly:message "Result:~a" result)
        (interpret-markup layout props
-         #{ \markup \column #result #})))
-
+         (markup
+           (make-column-markup
+            (first result))))))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Actual commands

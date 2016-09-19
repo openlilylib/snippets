@@ -29,4 +29,6 @@
   currently only the annotate module is implemented
 %}
 
+#(ly:set-option 'relative-includes #t)
+
 \include "annotate/__main__.ily"

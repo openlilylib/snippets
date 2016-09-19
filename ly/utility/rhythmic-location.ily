@@ -106,8 +106,8 @@
 #(define (beat-string props)
    "Return a string representation of the measure position."
    (let*
-    ((our-beat (assoc-ref props "our-beat"))
-     (beat-fraction (assoc-ref props "beat-fraction"))
+    ((our-beat (assq-ref props 'our-beat))
+     (beat-fraction (assq-ref props 'beat-fraction))
      (beat-str (number->string our-beat))
      (beat-str
       (if (= 0 beat-fraction)
@@ -124,10 +124,11 @@
 #(define (grob-location-properties grob props)
    "Populate the alist 'props' with more details about the rhythmic location of 'grob'.
     It is assumed that a property 'meter' has already been set with a time sig pair."
+   (ly:message "~a" props)
    (let*
     ((loc (location grob))
      (measure-pos (cdr loc))
-     (meter (assoc-ref props "meter"))
+     (meter (cdar props))
      (beats-in-meter (car meter))
      (beat-len (ly:make-moment 1 (cdr meter)))
      (our-beat (moment-floor measure-pos beat-len))
@@ -140,13 +141,13 @@
                      (ly:moment-div beat-part beat-len)))
      (beat-fraction (/ (car beat-fraction) (cdr beat-fraction))))
 
-    (set! props (assoc-set! props "rhythmic-location" loc))
-    (set! props (assoc-set! props "measure-no" (car loc)))
-    (set! props (assoc-set! props "measure-pos" (cdr loc)))
-    (set! props (assoc-set! props "our-beat" our-beat))
-    (set! props (assoc-set! props "beat-part" beat-part))
-    (set! props (assoc-set! props "beat-fraction" beat-fraction))
-    (set! props (assoc-set! props "beat-string" (beat-string props)))
+    (set! props (assq-set! props 'rhythmic-location loc))
+    (set! props (assq-set! props 'measure-no (car loc)))
+    (set! props (assq-set! props 'measure-pos (cdr loc)))
+    (set! props (assq-set! props 'our-beat our-beat))
+    (set! props (assq-set! props 'beat-part beat-part))
+    (set! props (assq-set! props 'beat-fraction beat-fraction))
+    (set! props (assq-set! props 'beat-string (beat-string props)))
 
     ;; "return" modified props
     props))
