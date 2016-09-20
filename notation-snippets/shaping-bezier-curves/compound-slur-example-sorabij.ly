@@ -123,8 +123,9 @@ voiceIII = \relative fis,, {
     \voiceTwo
     r16 fis
     ^\compoundSlur \with {
-%      ann = ##t
-      offsets = 
+      show-control-points = ##t
+      show-original-slur = ##t
+      offsets =
       #'((0 . 3)
          (-6 . 5)
          (-20 . -75)
@@ -140,11 +141,11 @@ voiceIII = \relative fis,, {
     \oneVoice
     b, fis b, fis b fis'
     \voiceTwo
-    b fis' b \change Staff = "two" fis' 
+    b fis' b \change Staff = "two" fis'
     )
     \musicalIssue \with {
       author = "Urs Liska"
-      message = "This a seems strange but is printed as such in OE."
+      message = "sic[!] a'."
     } NoteHead
     a fis'
   }
@@ -166,7 +167,6 @@ voiceIII = \relative fis,, {
     fis [ b, fis ] \change Staff = "two" b, fis \change Staff = "three" b,
     \voiceTwo
     fis b, fis b, fis b
-    \oneVoice
     fis' b fis' b \change Staff = "two" fis' b
     \change Staff = "one"
     \voiceOne
