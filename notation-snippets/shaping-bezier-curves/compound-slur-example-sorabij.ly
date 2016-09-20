@@ -18,6 +18,21 @@
   opus = "(1930)"
 }
 
+exampleSlur = ^\compoundSlur \with {
+  show-control-points = ##t
+  show-original-slur = ##t
+  offsets =
+  #'((0 . 3)
+     (-6 . 5)
+     (-20 . -75)
+     (0 . 3))
+  inflection =
+  #'((point . (.435 . 1.4))
+     (angle . -107.5)
+     (ratio-left . 0.4)
+     (ratio-right . 0.75))
+}
+
 structure = {
   \omit Staff.TimeSignature
   \time 5/4
@@ -121,21 +136,7 @@ voiceII = \relative b' {
 voiceIII = \relative fis,, {
   \tuplet 6/4 4 {
     \voiceTwo
-    r16 fis
-    ^\compoundSlur \with {
-      show-control-points = ##t
-      show-original-slur = ##t
-      offsets =
-      #'((0 . 3)
-         (-6 . 5)
-         (-20 . -75)
-         (0 . 3))
-      inflection =
-      #'((point . (.435 . 1.4))
-         (angle . -107.5)
-         (ratio-left . 0.4)
-         (ratio-right . 0.75))
-    }
+    r16 fis \exampleSlur
     b fis' b fis'
     b \change Staff = "two" fis' b fis' \change Staff = "one" b fis'
     b, \change Staff = "two" fis b, fis \change Staff = "three" b, fis
