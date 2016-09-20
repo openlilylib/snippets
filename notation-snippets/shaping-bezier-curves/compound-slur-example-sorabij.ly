@@ -26,11 +26,11 @@ exampleSlur = ^\compoundSlur \with {
      (-6 . 5)
      (-20 . -75)
      (0 . 3))
-  inflection =
-  #'((point . (.435 . 1.4))
-     (angle . -107.5)
-     (ratio-left . 0.4)
-     (ratio-right . 0.75))
+  inflections =
+  #'(((point . (.435 . 1.4))
+      (angle . -126)
+      (ratio-left . 0.4)
+      (ratio-right . 0.75)))
 }
 
 structure = {
