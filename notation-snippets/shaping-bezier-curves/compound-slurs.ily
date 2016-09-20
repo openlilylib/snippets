@@ -3,7 +3,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%
 % Display Configuration
 
-#(define col-bg (rgb-color .9 .9 .8))
+#(define col-bg (rgb-color .8 .8 .7))
 #(define col-orig-slur cyan)
 #(define col-new-slur red)
 #(define conn-thickness 0.05)
