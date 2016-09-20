@@ -130,10 +130,11 @@ voiceIII = \relative fis,, {
          (-6 . 5)
          (-20 . -75)
          (0 . 3))
-      inflection-ratio = #'(.435 . 1.4)
-      inflection-angle = -107.5
-      inflection-ratio-left = 0.4
-      inflection-ratio-right = 0.75
+      inflection =
+      #'((point . (.435 . 1.4))
+         (angle . -107.5)
+         (ratio-left . 0.4)
+         (ratio-right . 0.75))
     }
     b fis' b fis'
     b \change Staff = "two" fis' b fis' \change Staff = "one" b fis'
