@@ -121,13 +121,7 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                      (if inflection-ratio-right
                          (* inflection-ratio-right (distance cp4 cpB))
                          (distance cpB cpB1)))))
-
-            ;                 (sloped-point
-            ;                  inflection-slope
-            ;                  (if inflection-ratio-right
-            ;                      (* inflection-ratio-right (distance cp4 cpB))
-            ;                      (distance cpB cpB1)))))
-
+            
             (first-spline-stil
              (begin
               (ly:grob-set-property! grob 'control-points (list cpA cpA1 cp3 cp4))
@@ -191,7 +185,6 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                    ))
                  empty-stencil))
             )
-           (ly:message "base angle: ~a" base-angle)
 
            (ly:stencil-add
             original-slur
