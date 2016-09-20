@@ -95,46 +95,46 @@ Expected ~a, using default \"~a\"." name (third rule) default)
             (inflection-ratio-right (assq-ref inflection 'ratio-right))
 
             ;; automatic control points of the non-compound slur
-            (cps (ly:slur::calc-control-points grob))
+            (orig-cps (ly:slur::calc-control-points grob))
 
             ;; add offsets to the four control points
-            (cp1 (add-points (first cps) (first offsets)))
-            (cp2 (add-points (second cps) (second offsets)))
-            (cp6 (add-points (third cps) (third offsets)))
-            (cp7 (add-points (fourth cps) (fourth offsets)))
+            (cpA (add-points (first orig-cps) (first offsets)))
+            (cpA1 (add-points (second orig-cps) (second offsets)))
+            (cpB1 (add-points (third orig-cps) (third offsets)))
+            (cpB (add-points (fourth orig-cps) (fourth offsets)))
 
-            (base-angle (ly:angle (sub-points cp7 cp1)))
+            (base-angle (ly:angle (sub-points cpB cpA)))
 
             ;; calculate inflection point and surrounding control points
-            (cp4 (inflection-point cp1 cp7 inflection-ratio))
+            (cp4 (inflection-point cpA cpB inflection-ratio))
             ;; left hand side length of the inflection
             ;; (if given it is the ratio to the left "baseline"
             ;; otherwise it is the same length as the leftmost control point distance)
             (cp3 (add-points cp4
                    (ly:directed (+ base-angle inflection-angle)
                      (if inflection-ratio-left
-                         (* -1 inflection-ratio-left (distance cp1 cp4))
-                         (* -1 (distance cp1 cp2))))))
+                         (* -1 inflection-ratio-left (distance cpA cp4))
+                         (* -1 (distance cpA cpA1))))))
             ;; right hand side length of the inflection
             (cp5 (add-points cp4
                    (ly:directed (+ base-angle inflection-angle)
                      (if inflection-ratio-right
-                         (* inflection-ratio-right (distance cp4 cp7))
-                         (distance cp7 cp6)))))
+                         (* inflection-ratio-right (distance cp4 cpB))
+                         (distance cpB cpB1)))))
 
             ;                 (sloped-point
             ;                  inflection-slope
             ;                  (if inflection-ratio-right
-            ;                      (* inflection-ratio-right (distance cp4 cp7))
-            ;                      (distance cp7 cp6)))))
+            ;                      (* inflection-ratio-right (distance cp4 cpB))
+            ;                      (distance cpB cpB1)))))
 
             (first-spline-stil
              (begin
-              (ly:grob-set-property! grob 'control-points (list cp1 cp2 cp3 cp4))
+              (ly:grob-set-property! grob 'control-points (list cpA cpA1 cp3 cp4))
               (ly:slur::print grob)))
             (second-spline-stil
              (begin
-              (ly:grob-set-property! grob 'control-points (list cp4 cp5 cp6 cp7))
+              (ly:grob-set-property! grob 'control-points (list cp4 cp5 cpB1 cpB))
               (ly:slur::print grob)))
             ;; display original slur and its control points
             (original-slur
@@ -147,22 +147,22 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                    (list
                     (stencil-with-color
                      (begin
-                      (ly:grob-set-property! grob 'control-points cps)
+                      (ly:grob-set-property! grob 'control-points orig-cps)
                       (ly:grob-set-property! grob 'layer -1)
                       (ly:slur::print grob))
                      col-bg))
                    (list
-                    (connect-dots cp1 cp7 col-bg))
+                    (connect-dots cpA cpB col-bg))
                    ;; display obsolete handles of the original slur
                    (map
                     (lambda (c1 c2)
                       (connect-dots c1 c2 col-bg))
-                    (list (first cps) (fourth cps))
-                    (list (second cps) (third cps)))
+                    (list (first orig-cps) (fourth orig-cps))
+                    (list (second orig-cps) (third orig-cps)))
                    (map
                     (lambda (c)
                       (make-cross-stencil c col-orig-slur))
-                    cps)
+                    orig-cps)
                    ))
                  empty-stencil))
             ;; display new control-points and connections
@@ -175,19 +175,19 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                    (map
                     (lambda (c)
                       (make-cross-stencil c col-new-slur))
-                    (list cp1 cp2 cp3 cp4 cp5 cp6 cp7))
+                    (list cpA cpA1 cp3 cp4 cp5 cpB1 cpB))
                    ;; display connections between original and offset control points
                    (map
                     (lambda (c1 c2)
                       (connect-dots c1 c2 col-orig-slur))
-                    cps
-                    (list cp1 cp2 cp6 cp7))
+                    orig-cps
+                    (list cpA cpA1 cpB1 cpB))
                    ;; display handles indicating the
                    (map
                     (lambda (c1 c2)
                       (connect-dots c1 c2 col-new-slur))
-                    (list cp1 cp3 cp4 cp7)
-                    (list cp2 cp4 cp5 cp6))
+                    (list cpA  cp3 cp4 cpB)
+                    (list cpA1 cp4 cp5 cpB1))
                    ))
                  empty-stencil))
             )
