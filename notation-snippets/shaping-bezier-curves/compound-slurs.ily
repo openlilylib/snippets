@@ -14,6 +14,7 @@
 #(define option-rules
    `((annotate ,boolean? "Boolean" #f)
      (show-original-slur ,boolean? "Boolean" #f)
+     (show-grid ,boolean? "Boolean" #f)
      (offsets ,list? "List of four number pairs" ((0 . 0)(0 . 0)(0 . 0)(0 . 0)))
      (start-point ,number-pair? "pair of numbers" (0 . 0))
      (start-angle ,number? "number?" 90)
@@ -237,11 +238,17 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                    cps))
                  empty-stencil))
 
+            (grid-stencil
+             (if (assq-ref options 'show-grid)
+                 (draw-grid cpA cpB)
+                 empty-stencil))
+
             ) ; end let binding block in "proc" lambda
 
           ;; Combine slur and optional annotations to final printable stencil
           (ly:stencil-add
            original-slur
+           grid-stencil
            slur-stencil
            spline-annotations
            )) ; end let block in "proc" lambda

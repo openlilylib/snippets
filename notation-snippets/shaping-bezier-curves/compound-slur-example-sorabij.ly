@@ -21,6 +21,7 @@
 exampleSlur = ^\compoundSlur \with {
   annotate = ##t
 %  show-original-slur = ##t
+  show-grid = ##t
 
   start-point = #'(0 . 3)
   start-angle = 65
@@ -61,7 +62,9 @@ exampleSlur = ^\compoundSlur \with {
 }
 
 fancySlur = _\compoundSlur \with {
-  annotate = ##t
+%  annotate = ##t
+%  show-grid = ##t
+
   start-point = #'(0 . 5)
   start-angle = -45
   end-angle = -125
