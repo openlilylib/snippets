@@ -143,48 +143,51 @@ Expected ~a, using default \"~a\"." name (third rule) default)
             ;; a list of lists with four points each,
             ;; the first one being equal to the last of the previous
             (cps
-             (let
-              ;; a cache for dragging information from one inflection to the next
-              ((previous-cps '()))
-              (map
-               (lambda (i)
-                 (let*
-                  ((current-inf (list-ref inflections i))
-                   (prev-inf
-                    (if (= i 0) #f (list-ref inflections (- i 1))))
-                   (prev-pt
-                    (if (= i 0) cpA (last previous-cps)))
-                   (prev-given-angle
-                    (if (= i 0)
-                        (assq-ref options 'start-angle)
-                        (assq-ref prev-inf 'angle)))
-                   (prev-ratio-right
-                    (if (= i 0)
-                        (assq-ref options 'start-ratio)
-                        (assq-ref prev-inf 'ratio-right)))
-                   (current-pt
-                    (inflection-point cpA cpB (assq-ref current-inf 'point)))
-                   ;; slope of the line connecting with the previous inflection point
-                   ;; reference for control-point polar coordinates
-                   (rel-to-prev (sub-points current-pt prev-pt))
-                   (prev-base-angle (ly:angle rel-to-prev))
-                   (prev-length (ly:length rel-to-prev))
-                   (current-cps
-                    (list
-                     prev-pt
-                     (add-points prev-pt
-                       (ly:directed
-                        (+ prev-base-angle prev-given-angle)
-                        (* prev-ratio-right prev-length)))
-                     (add-points current-pt
-                       (ly:directed
-                        (+ (+ prev-base-angle (assq-ref current-inf 'angle)) 180)
-                        (* (assq-ref current-inf 'ratio-left) prev-length)))
-                     current-pt)))
-                  (set! previous-cps current-cps)
-                  current-cps
-                  ))
-               (iota (length inflections)))))
+             (if (= (length inflections) 1)
+                 ;; If no actual inflections are given simply print the original slur
+                 (list orig-cps)
+                 (let
+                  ;; a cache for dragging information from one inflection to the next
+                  ((previous-cps '()))
+                  (map
+                   (lambda (i)
+                     (let*
+                      ((current-inf (list-ref inflections i))
+                       (prev-inf
+                        (if (= i 0) #f (list-ref inflections (- i 1))))
+                       (prev-pt
+                        (if (= i 0) cpA (last previous-cps)))
+                       (prev-given-angle
+                        (if (= i 0)
+                            (assq-ref options 'start-angle)
+                            (assq-ref prev-inf 'angle)))
+                       (prev-ratio-right
+                        (if (= i 0)
+                            (assq-ref options 'start-ratio)
+                            (assq-ref prev-inf 'ratio-right)))
+                       (current-pt
+                        (inflection-point cpA cpB (assq-ref current-inf 'point)))
+                       ;; slope of the line connecting with the previous inflection point
+                       ;; reference for control-point polar coordinates
+                       (rel-to-prev (sub-points current-pt prev-pt))
+                       (prev-base-angle (ly:angle rel-to-prev))
+                       (prev-length (ly:length rel-to-prev))
+                       (current-cps
+                        (list
+                         prev-pt
+                         (add-points prev-pt
+                           (ly:directed
+                            (+ prev-base-angle prev-given-angle)
+                            (* prev-ratio-right prev-length)))
+                         (add-points current-pt
+                           (ly:directed
+                            (+ (+ prev-base-angle (assq-ref current-inf 'angle)) 180)
+                            (* (assq-ref current-inf 'ratio-left) prev-length)))
+                         current-pt)))
+                      (set! previous-cps current-cps)
+                      current-cps
+                      ))
+                   (iota (length inflections))))))
             ) ; end let binding block in "proc" lambda
 
 
