@@ -200,7 +200,7 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                  (ly:grob-set-property! grob 'control-points spline)
                  (ly:slur::print grob)))
               cps))
-            
+
             ;; Combine slur stencil from all splines
             (slur-stencil
              (let
@@ -220,7 +220,7 @@ Expected ~a, using default \"~a\"." name (third rule) default)
           ) ; end let block in "proc" lambda
          ))
       ) ;; end toplevel let binding block
-    
+
     #{ \tweak stencil $proc ( #}))
 
 %{
@@ -231,192 +231,7 @@ Expected ~a, using default \"~a\"." name (third rule) default)
      (let
       ((proc
         (lambda (grob)
-
-            ;;
-            ;; Retrieve options and set defaults
-            ;;
-            ;; Configuration
-            (show-control-points (assq-ref options 'show-control-points))
-            (show-original-slur (assq-ref options 'show-original-slur))
-
-            ;; Define start and end of overall slur
-            ;
-            ; TODO: Check if we really need these bindings or if we can
-            ; rather retrieve the values ad-hoc (we know they're there)
-            (start-point (assq-ref options 'start-point))
-            (start-angle (assq-ref options 'start-angle))
-            (start-ratio (assq-ref options 'start-ratio))
-            (end-point (assq-ref options 'end-point))
-            (end-angle (assq-ref options 'end-angle))
-            (end-ratio (assq-ref options 'end-ratio))
-
-            ; deprecated, won't be needed anymore when points are
-            ; calculated in polar coordinates
-            (offsets (assq-ref options 'offsets))
-
-            ;; add offsets to the four control points
-            ; deprecated
-            (cpA (add-points (first orig-cps) start-point))
-            (cpA1 (add-points (second orig-cps) (second offsets)))
-            (cpB1 (add-points (third orig-cps) (third offsets)))
-            (cpB (add-points (fourth orig-cps) end-point))
-
-            (new-inflections (process-inflections opts))
-
-
-            ;; prepare data structure to handle inflection points
-            ;; chain beginning, all given inflections and end to one list
-            (basic-inflects
-             (append
-              (list
-              `((point . ,cpA)
-                (given-angle . ,(assq-ref opts 'start-angle))
-                (ratio-right . ,(assq-ref opts 'start-ratio))))
-              (map
-              (lambda (i)
-                `((point . ,(inflection-point cpA cpB (assq-ref i 'point)))
-                  (given-angle . ,(assq-ref i 'angle))
-                  (ratio-left . ,(assq-ref i 'ratio-left))
-                  (ratio-right . ,(assq-ref i 'ratio-right))))
-              (check-inflection-defaults (assq-ref opts 'inflections)))
-              (list `((point . ,cpB)
-                (given-angle . ,(* -1 (assq-ref opts 'end-angle)))
-                (ratio-left . ,(assq-ref opts 'end-ratio))))))
-
-            ;; now calculate remaining properties that depend on the other points
-            (inflects
-             (let
-              ((index 0)
-               (max-index (- (length basic-inflects) 1)))
-;              (ly:message "basic-inflects: ~a" basic-inflects)
-              (map
-               (lambda (i)
-;                 (ly:message "Index: ~a" index)
-;                 (ly:message "Point: ~a" (assq-ref i 'point))
-                 (if (and
-                      (<= index max-index)
-                      (> index 0))
-                     (let*
-                      ((previous-inf (list-ref basic-inflects (- index 1)))
-                       (pt (assq-ref i 'point))
-                       (previous-pt (assq-ref previous-inf 'point))
-                       (baseline-angle
-                        (ly:angle
-                         (sub-points pt previous-pt)))
-                       (baseline-length
-                        (ly:length (sub-points pt previous-pt)))
-                       (previous-absolute-angle
-                        (if (= index 1)
-                            (+ baseline-angle (assq-ref previous-inf 'given-angle))
-                            (assq-ref previous-inf 'absolute-angle)))
-;                       (previous-cp2
-;                        (add-points
-;                         previous-pt
-;                         (ly:directed previous-absolute-angle
-;                           (* baseline-length (assq-ref previous-inf 'ratio-right)))))
-;                       (previous-cp3
-;                        (add-points pt
-;                          (ly:directed previous-absolute-angle
-;                            (* baseline-length (assq-ref i 'ratio-left)))))
-                       )
-                      `((point . ,pt)
-                        (baseline-angle . ,baseline-angle)
-                        (baseline-length . ,baseline-length)
-;                        (previous-cp2 . ,previous-cp2)
-;                        (previous-cp3 . ,previous-cp3)
-                        )
-                     i)
-
-                     (let
-                      ((pt (assq-ref i 'point))
-                       (next-pt (assq-ref (list-ref basic-inflects (+ 1 index)) 'point)))
-                      (set!
-                       i (assq-set! i
-                           'length (distance pt next-pt)))
-                     (set!
-                      i (assq-set! i
-                          'baseline-angle
-                          (ly:angle (sub-points next-pt pt))))
-                     ))
-;                 (ly:message "inflect: ~a" i)
-                 (set! index (+ 1 index))
-                 i)
-               basic-inflects)
-              )
-             )
-
-            ;; in an initial run we only get the point and the options
-            (inflections
-             (map
-              (lambda (i)
-                `((opts . ,i)
-                  (point . ,(inflection-point cpA cpB (assq-ref i 'point)))))
-              (check-inflection-defaults (assq-ref opts 'inflections))))
-
-
-            (base-angle (ly:angle (sub-points cpB cpA)))
-            )
-
-
-           (define (previous-inflection-point index)
-             (cond
-              ((= index 1) cpA)
-              ((= (- (length inflections) 1)) cpB)))
-
-           (ly:message "New inflections: ~a" new-inflections)
-
-           (let*
-            ;; Determine the remaining properties of the inflections
-            ((inflections
-              (let ((index 0)
-                    (high-index (length inflections)))
-                (map
-                 (lambda (i)
-                   (set! index (+ 1 index))
-                   (let*
-                    ((pt (assq-ref i 'point))
-                     (previous-pt (previous-inflection-point index))
-                     (previous-base-angle (ly:angle (sub-points pt previous-pt)))
-                     )
-                    `((opts . ,(assq-ref i 'opts))
-                      (point . ,pt)
-                      (angle . ,(+ previous-base-angle (get-from-inflection i 'angle)))
-                      (previous-pt . ,previous-pt)
-                      (previous-length . ,(distance pt previous-pt))
-                      )
-                    )
-                   )
-                 inflections)))
-
-             ; TODO: This is only valid for a single inflection
-             (inflection (first inflections))
-
-             ;; calculate inflection point and surrounding control points
-             (cp4 (inflection-point cpA cpB (get-from-inflection inflection 'point)))
-             ;; left hand side length of the inflection
-             ;; (if given it is the ratio to the left "baseline"
-             ;; otherwise it is the same length as the leftmost control point distance)
-             (cp3 (add-points cp4
-                    (ly:directed  (assq-ref inflection 'angle)
-                      (if (get-from-inflection inflection 'ratio-left)
-                          (* -1 (get-from-inflection inflection 'ratio-left) (distance cpA cp4))
-                          (* -1 (distance cpA cpA1))))))
-             ;; right hand side length of the inflection
-             (cp5 (add-points cp4
-                    (ly:directed (assq-ref inflection 'angle)
-                      (if (get-from-inflection inflection 'ratio-right)
-                          (* (get-from-inflection inflection 'ratio-right) (distance cp4 cpB))
-                          (distance cpB cpB1)))))
-
-             (first-spline-stil
-              (begin
-               (ly:grob-set-property! grob 'control-points (list cpA cpA1 cp3 cp4))
-               (ly:slur::print grob)))
-             (second-spline-stil
-              (begin
-               (ly:grob-set-property! grob 'control-points (list cp4 cp5 cpB1 cpB))
-               (ly:slur::print grob)))
-             ;; display original slur and its control points
+            ;; display original slur and its control points
              (original-slur
               (if show-original-slur
                   (apply
