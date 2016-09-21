@@ -136,7 +136,7 @@ Expected ~a, using default \"~a\"." name (third rule) default)
               inflections
               (list
                `((point . (1 . 1))
-                 (angle . ,(assq-ref options 'end-angle))
+                 (angle . ,(* -1 (assq-ref options 'end-angle)))
                  (ratio-left . ,(assq-ref options 'end-ratio))))))
 
             ;; data structure holding the new control points,
@@ -153,39 +153,46 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                   (map
                    (lambda (i)
                      (let*
-                      ((current-inf (list-ref inflections i))
-                       (prev-inf
-                        (if (= i 0) #f (list-ref inflections (- i 1))))
-                       (prev-pt
-                        (if (= i 0) cpA (last previous-cps)))
-                       (prev-given-angle
-                        (if (= i 0)
-                            (assq-ref options 'start-angle)
-                            (assq-ref prev-inf 'angle)))
-                       (prev-ratio-right
-                        (if (= i 0)
-                            (assq-ref options 'start-ratio)
-                            (assq-ref prev-inf 'ratio-right)))
-                       (current-pt
-                        (inflection-point cpA cpB (assq-ref current-inf 'point)))
-                       ;; slope of the line connecting with the previous inflection point
-                       ;; reference for control-point polar coordinates
-                       (rel-to-prev (sub-points current-pt prev-pt))
-                       (prev-base-angle (ly:angle rel-to-prev))
-                       (prev-length (ly:length rel-to-prev))
-                       (absolute-angle (+ prev-base-angle prev-given-angle))
-                       (current-cps
-                        (list
-                         prev-pt
-                         (add-points prev-pt
-                           (ly:directed
-                            absolute-angle
-                            (* prev-ratio-right prev-length)))
-                         (add-points current-pt
-                           (ly:directed
-                            (+ (+ prev-base-angle (assq-ref current-inf 'angle)) 180)
-                            (* (assq-ref current-inf 'ratio-left) prev-length)))
-                         current-pt)))
+                      (;; inflection objects and points
+                        (current-inf (list-ref inflections i))
+                        (prev-inf
+                         (if (= i 0) #f (list-ref inflections (- i 1))))
+                        (prev-pt
+                         (if (= i 0) cpA (last previous-cps)))
+                        (current-pt
+                         (inflection-point cpA cpB (assq-ref current-inf 'point)))
+
+                        ;; zero-based vector between previous and current point
+                        (rel-to-prev (sub-points current-pt prev-pt))
+
+                        ;; slope of the line connecting with the previous inflection point
+                        (prev-base-angle (ly:angle rel-to-prev))
+                        (prev-length (ly:length rel-to-prev))
+                        (prev-abs-angle
+                         (if (= i 0)
+                             (+ prev-base-angle (assq-ref options 'start-angle))
+                             previous-angle))
+                        (prev-given-angle
+                         (if (= i 0)
+                             (assq-ref options 'start-angle)
+                             (assq-ref prev-inf 'angle)))
+                        (absolute-angle (+ prev-base-angle (assq-ref current-inf 'angle)))
+                        (prev-ratio-right
+                         (if (= i 0)
+                             (assq-ref options 'start-ratio)
+                             (assq-ref prev-inf 'ratio-right)))
+                        (current-cps
+                         (list
+                          prev-pt
+                          (add-points prev-pt
+                            (ly:directed
+                             prev-abs-angle
+                             (* prev-ratio-right prev-length)))
+                          (add-points current-pt
+                            (ly:directed
+                             (+ (+ prev-base-angle (assq-ref current-inf 'angle)) 180)
+                             (* (assq-ref current-inf 'ratio-left) prev-length)))
+                          current-pt)))
                       (set! previous-cps current-cps)
                       (set! previous-angle absolute-angle)
                       current-cps
@@ -251,35 +258,6 @@ Expected ~a, using default \"~a\"." name (third rule) default)
      (let
       ((proc
         (lambda (grob)
-            ;; display original slur and its control points
-             (original-slur
-              (if show-original-slur
-                  (apply
-                   ly:stencil-add
-                   ;; display control points of the original, non-compound slur
-                   (append
-                    ;; display original slur
-                    (list
-                     (stencil-with-color
-                      (begin
-                       (ly:grob-set-property! grob 'control-points orig-cps)
-                       (ly:grob-set-property! grob 'layer -1)
-                       (ly:slur::print grob))
-                      col-bg))
-                    (list
-                     (connect-dots cpA cpB col-bg))
-                    ;; display obsolete handles of the original slur
-                    (map
-                     (lambda (c1 c2)
-                       (connect-dots c1 c2 col-bg))
-                     (list (first orig-cps) (fourth orig-cps))
-                     (list (second orig-cps) (third orig-cps)))
-                    (map
-                     (lambda (c)
-                       (make-cross-stencil c col-orig-slur))
-                     orig-cps)
-                    ))
-                  empty-stencil))
              ;; display new control-points and connections
              (crosses
               (if show-control-points
