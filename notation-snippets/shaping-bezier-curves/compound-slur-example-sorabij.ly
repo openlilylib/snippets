@@ -27,19 +27,19 @@ exampleSlur = ^\compoundSlur \with {
   start-ratio = 0.6
   end-point = #'(2.5 . 4)
   end-angle = -70
-  
+
   inflection =
   #'((point . (.215 . 1.55))
      (angle . -55)
      (ratio-left . 0.4)
      (ratio-right . 0.22))
-  
+
   inflection =
   #'((point . (.26 . -0.2))
      (angle . 60)
      (ratio-left . .45)
      (ratio-right . .4))
-  
+
   inflection =
   #'((point . (.49 . 0.35))
      (angle . 33)
@@ -54,6 +54,31 @@ exampleSlur = ^\compoundSlur \with {
 
   inflection =
   #'((point . (.75 . -0.05))
+     (angle . 45)
+     (ratio-left . .45)
+     (ratio-right . .25))
+
+}
+
+fancySlur = _\compoundSlur \with {
+  annotate = ##t
+  start-point = #'(0 . 5)
+  start-angle = -45
+  end-angle = -125
+  end-ratio = 1
+
+  inflection =
+  #'((point . (0.1 . 1.5))
+     (angle . 125))
+
+  inflection =
+  #'((point . (-.3 . -6))
+     (angle . 65)
+     (ratio-left . .45)
+     (ratio-right . .25))
+
+  inflection =
+  #'((point . (0.2 . -12))
      (angle . 45)
      (ratio-left . .45)
      (ratio-right . .25))
@@ -111,7 +136,10 @@ or the dot removed. However, horizontal alignment suggest that the dot on the fi
   |
   f8 [ e d c ]
   \change Staff = "three"
-  b4 ~ b64 c
+  \once \override Slur.color = #red
+  b4 ~
+  \fancySlur
+  b64 c
   \change Staff = "two"
   d64 e b c es f
   fis128 [
@@ -122,7 +150,7 @@ or the dot removed. However, horizontal alignment suggest that the dot on the fi
 
   }
   Accidental
-  e fis16.. a8 cis ]
+  e fis16.. a8 ) cis ]
 
   |
   \tuplet 5/4 {
