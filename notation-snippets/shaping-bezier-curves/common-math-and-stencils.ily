@@ -7,7 +7,6 @@
 #(define col-orig-slur cyan)
 #(define col-new-slur red)
 #(define col-grid blue)
-#(define col-grid-front magenta)
 #(define conn-thickness 0.05)
 #(define cross-thickness 0.1)
 #(define cross-size 0.2)
@@ -105,15 +104,25 @@
                 (* 4 grid-thickness)
                 grid-thickness)
             x y-bottom x y-top))
-          (if (= 0 (modulo i 10))
-              col-grid-front
-              col-grid))))
+              col-grid)))
        (iota 15 -2))
       (list
        (stencil-with-color
         (ly:stencil-add
          (make-line-stencil
-          grid-thickness
+          (* 2 grid-thickness)
           (- (car pt1) x-protrude) y-center (+ (car pt2) x-protrude) y-center))
-        col-grid))))))
+        col-grid))
+      (map
+       (lambda (i)
+       (stencil-with-color
+        (ly:stencil-add
+         (make-line-stencil
+          grid-thickness
+          (- (car pt1) x-protrude)
+          (+ y-center (* i 10))
+          (+ (car pt2) x-protrude)
+          (+ y-center (* i 10))))
+        col-grid))
+       '(-2 -1 1 2))))))
 
