@@ -12,7 +12,7 @@
      (ratio-right ,number? .25 "number (0-1")))
 
 #(define option-rules
-   `((show-control-points ,boolean? "Boolean" #f)
+   `((annotate ,boolean? "Boolean" #f)
      (show-original-slur ,boolean? "Boolean" #f)
      (offsets ,list? "List of four number pairs" ((0 . 0)(0 . 0)(0 . 0)(0 . 0)))
      (start-point ,number-pair? "pair of numbers" (0 . 0))
@@ -192,6 +192,10 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                       ))
                    (iota (length inflections))))))
 
+            ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+            ;; Create actually printable material
+            ;;
+
             ;; Combine slur stencil from all splines
             (slur-stencil
              (apply ly:stencil-add
@@ -201,13 +205,39 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                    (ly:grob-set-property! grob 'control-points spline)
                    (ly:slur::print grob)))
                 cps)))
+
+            (original-slur
+             (if (assq-ref options 'show-original-slur)
+                 (apply
+                  ly:stencil-add
+                  (list
+                   (stencil-with-color
+                    (begin
+                     (ly:grob-set-property! grob 'control-points orig-cps)
+                     (ly:grob-set-property! grob 'layer -1)
+                     (ly:slur::print grob))
+                    col-bg)
+                   (annotate-spline grob orig-cps col-bg)))
+                 empty-stencil))
+
+            (spline-annotations
+             (if (assq-ref options 'annotate)
+                 (apply
+                  ly:stencil-add
+                  (map
+                   (lambda (spline)
+                     (annotate-spline grob spline col-new-slur))
+                   cps))
+                 empty-stencil))
+
             ) ; end let binding block in "proc" lambda
 
           ;; Combine slur and optional annotations to final printable stencil
           (ly:stencil-add
+           original-slur
            slur-stencil
-           )
-          ) ; end let block in "proc" lambda
+           spline-annotations
+           )) ; end let block in "proc" lambda
          ))
       ) ;; end toplevel let binding block
 
