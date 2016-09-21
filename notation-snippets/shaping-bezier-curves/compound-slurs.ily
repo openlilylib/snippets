@@ -2,6 +2,27 @@
 
 \include "common-math-and-stencils.ily"
 
+% Predicates and defaults for inflection properties
+% TODO:
+% Move to oll-core options
+#(define inflection-rules
+   `((point ,number-pair? (.5 . .5) "pair of numbers (ratio)")
+     (angle ,number? -90 "number (0-360)")
+     (ratio-left ,number? .25 "number (0-1)")
+     (ratio-right ,number? .25 "number (0-1")))
+
+#(define option-rules
+   `((show-control-points ,boolean? "Boolean" #f)
+     (show-original-slur ,boolean? "Boolean" #f)
+     (offsets ,list? "List of four number pairs" ((0 . 0)(0 . 0)(0 . 0)(0 . 0)))
+     (start-point ,number-pair? "pair of numbers" (0 . 0))
+     (start-angle ,number? "number?" 90)
+     (start-ratio ,number? "number?" 0.5)
+     (end-point ,number-pair? "pair of numbers" (0 . 0))
+     (end-angle ,number? "number?" 90)
+     (end-ratio ,number? "number?" 0.5)
+     ))
+
 compoundSlur =
 #(define-event-function (options)(ly:context-mod?)
    (let*
@@ -18,11 +39,11 @@ compoundSlur =
         ((result '())
          ;; known items for an inflection, with
          ;; predicate, fallback value and error message
-         (rules
-          `((point ,number-pair? (.5 . .5) "pair of numbers (ratio)")
-            (angle ,number? -90 "number (0-360)")
-            (ratio-left ,number? .25 "number (0-1)")
-            (ratio-right ,number? .25 "number (0-1")))
+         ;
+         ; TODO:
+         ; change to oll-core (getOption)
+         ;
+         (rules inflection-rules)
 
          ;; type check and defaulting for inflections
          ;; returns a valid inflection or an empty list
@@ -68,127 +89,61 @@ Ignore this inflection point")
            (if (eq? (car opt) 'inflection)
                (set! result (append result (check-inflection (cdr opt))))))
          options)
+
+        ;; remove inflections from option list
+        (set! options
+              (let ((no-inflection?
+                     (lambda (o)
+                       (if (eq? (car o) 'inflection)
+                           #f #t))))
+                (filter no-inflection? options)))
+
+        ;; return (potentially empty) list of inflections
         result)) ;; end inflections
+
+      ;; Clean up options, doing type checking and defaulting
+      (options
+       (map
+        (lambda (rule)
+          (let*
+           ((name (first rule))
+            (default (fourth rule))
+            (opt (assq name options)))
+           (if opt
+               (if ((second rule) (cdr opt))
+                   opt
+                   (begin
+                    (ly:input-warning location "
+\\compoundSlur: wrong type for option \"~a\".
+Expected ~a, using default \"~a\"." name (third rule) default)
+                    (cons name default)))
+               (cons name default))))
+        option-rules))
+
+      (proc
+       (lambda (grob)
+         (let*
+          (
+
+            ) ; end let binding block in "proc" lambda
+         red ; return value
+         ) ; end let block in "proc" lambda
+         ))
+
       ) ;; end toplevel let binding block
 
+    (pretty-print options)
     (pretty-print inflections)
 
-    #{ ( #}
+    #{ \tweak color $proc ( #}
 
     ) ; end outermost let block
    ) % end \compoundSlur
 
 %{
-   (let
-    ((inflection-rules
-      `((point ,number-pair? (.5 . .5))
-        (angle ,number? -90)
-        (ratio-left ,number? .25)
-        (ratio-right ,number? .25))))
-
-    (define (inflection? obj)
-      (let
-       ((rules
-         (map (lambda (r)
-                (cons (first r) (second r)))
-           inflection-rules)))
-       (and (list? obj)
-            (every
-             (lambda (o)
-               (and (pair? o)
-                    (member (car o) (map car inflection-rules))
-                    ((assq-ref rules (car o)) (cdr o))))
-             obj))))
-
-    (define (inflection-list? obj)
-      (and (list? obj)
-           (every inflection? obj)))
-
-    (define (get-options-from-context-mod args)
-      (map
-       (lambda (o)
-         (cons (second o) (third o)))
-       (ly:get-context-mods args)))
 
     (let*
-     ((location (*location*))
 
-      (required-options
-       `((show-control-points ,boolean? "Boolean" #f)
-         (show-original-slur ,boolean? "Boolean" #f)
-         (offsets ,list? "List of four number pairs" ((0 . 0)(0 . 0)(0 . 0)(0 . 0)))
-         (start-point ,number-pair? "pair of numbers" (0 . 0))
-         (start-angle ,number? "number?" 90)
-         (start-ratio ,number? "number?" 0.5)
-         (end-point ,number-pair? "pair of numbers" (0 . 0))
-         (end-angle ,number? "number?" 90)
-         (end-ratio ,number? "number?" 0.5)
-         (inflections ,inflection-list? "alist with allowed keys
-- point (number-list?)
-- angle (number?)
-- ratio-left (number?) and
-- ratio-right (number?)"
-           ,(map (lambda (r)
-                   (cons (first r) (third r)))
-              inflection-rules)
-           ))))
-
-     (define (check-options args)
-       (let
-        (;(options (get-options-from-context-mod args))
-          (asdfgadsf ""))
-         (for-each (lambda (a) (ly:message "arg: ~a" a)) args)
-         (filter pair?
-        (map
-         (lambda (rule)
-
-           (let*
-            ((name (first rule))
-             (pred (second rule))
-             (default (fourth rule))
-             (opt (assq name options))
-             )
-            (cond
-             (opt
-                 (if (pred (cdr opt))
-                     opt
-                     (begin
-                      (ly:input-warning location "
-\\compoundSlur: wrong type for option \"~a\".
-Expected ~a, using default \"~a\"." name (third rule) default)
-                      (cons name default)))
-                (cons name default))
-             ((eq? name 'inflection)
-              opt)
-             )))
-         required-options)))
-       )
-
-     (define (check-inflection-defaults inflections)
-       (ly:message "inflections raising error: ~a" inflections)
-       (map
-        (lambda (i)
-          (map
-           (lambda (r)
-             (let ((opt (assq (car r) i)))
-               (if opt opt
-                   (cons (first r)(third r)))))
-           inflection-rules))
-        inflections))
-
-     (define (get-from-inflection inflection name)
-       (let ((opts (assq-ref inflection 'opts)))
-         (assq-ref opts name)))
-
-     (define (process-inflections opts)
-       (define (key-is-inflection opt)
-         (eq? (car opt) 'inflection))
-       (ly:message "process options for inflection: ~a" opts)
-       (map
-        (lambda (opt)
-          (ly:message "inflection option: ~a" opt)
-          )
-        (filter key-is-inflection opts)))
 
      (let
       ((proc
