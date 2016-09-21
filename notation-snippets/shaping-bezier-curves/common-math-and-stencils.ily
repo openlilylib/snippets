@@ -25,14 +25,11 @@
    (cons (- (car pt1) (car pt2))
      (- (cdr pt1) (cdr pt2))))
 
-#(define (inflection-point pt1 pt2 ratio)
+#(define (inflection-point pt1 pt2 x-ratio y-offset)
    "Find a point between two points, giving the X and Y ratio independently"
-   (let*
-    ((xratio (car ratio))
-     (yratio (cdr ratio)))
-    (cons
-     (+ (* (- 1 xratio) (car pt1)) (* xratio (car pt2)))
-     (+ (* (- 1 yratio) (cdr pt1)) (* yratio (cdr pt2))))))
+   (cons
+    (+ (* (- 1 x-ratio) (car pt1)) (* x-ratio (car pt2)))
+    (+ (/ (+ (cdr pt1) (cdr pt2)) 2) y-offset)))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Control point visualization

@@ -30,31 +30,36 @@ exampleSlur = ^\compoundSlur \with {
   end-angle = -70
 
   inflection =
-  #'((point . (.215 . 1.55))
+  #'((X-ratio . .215)
+     (Y-offset . 22)
      (angle . -55)
      (ratio-left . 0.4)
      (ratio-right . 0.22))
 
   inflection =
-  #'((point . (.26 . -0.2))
+  #'((X-ratio . .26)
+     (Y-offset . -16)
      (angle . 60)
      (ratio-left . .45)
      (ratio-right . .4))
 
   inflection =
-  #'((point . (.49 . 0.35))
+  #'((X-ratio . .49)
+     (Y-offset . -3)
      (angle . 33)
      (ratio-left . .45)
      (ratio-right . .15))
 
   inflection =
-  #'((point . (.7 . 1.6))
+  #'((X-ratio . .7)
+     (Y-offset . 24)
      (angle . -45)
      (ratio-left . .8)
      (ratio-right . .57))
 
   inflection =
-  #'((point . (.75 . -0.05))
+  #'((X-ratio . .75)
+     (Y-offset . -12)
      (angle . 45)
      (ratio-left . .45)
      (ratio-right . .25))

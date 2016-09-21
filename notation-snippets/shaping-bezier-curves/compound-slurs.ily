@@ -6,7 +6,8 @@
 % TODO:
 % Move to oll-core options
 #(define inflection-rules
-   `((point ,number-pair? (.5 . .5) "pair of numbers (ratio)")
+   `((X-ratio ,number? .5 "number (ratio)")
+     (Y-offset ,number? 0 "number (staff spaces)")
      (angle ,number? -90 "number (0-360)")
      (ratio-left ,number? .25 "number (0-1)")
      (ratio-right ,number? .25 "number (0-1")))
@@ -136,8 +137,7 @@ Expected ~a, using default \"~a\"." name (third rule) default)
              (append
               inflections
               (list
-               `((point . (1 . 1))
-                 (angle . ,(* -1 (assq-ref options 'end-angle)))
+               `((angle . ,(* -1 (assq-ref options 'end-angle)))
                  (ratio-left . ,(assq-ref options 'end-ratio))))))
 
             ;; data structure holding the new control points,
@@ -161,7 +161,11 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                         (prev-pt
                          (if (= i 0) cpA (last previous-cps)))
                         (current-pt
-                         (inflection-point cpA cpB (assq-ref current-inf 'point)))
+                         (if (= i (- (length inflections) 1))
+                             cpB
+                             (inflection-point cpA cpB
+                               (assq-ref current-inf 'X-ratio)
+                               (assq-ref current-inf 'Y-offset))))
 
                         ;; zero-based vector between previous and current point
                         (rel-to-prev (sub-points current-pt prev-pt))
