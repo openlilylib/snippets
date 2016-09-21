@@ -124,16 +124,79 @@ Expected ~a, using default \"~a\"." name (third rule) default)
        (lambda (grob)
          (let*
           (
+            ;; automatic control points of the non-compound slur
+            (orig-cps (ly:slur::calc-control-points grob))
 
+            (cpA (add-points (first orig-cps) (assq-ref options 'start-point)))
+            (cpB (add-points (fourth orig-cps) (assq-ref options 'end-point)))
+
+            ;; append the final point as a "virtual inflection"
+            (inflections
+             (append
+              inflections
+              (list
+               `((point . (1 . 1))
+                 (angle . ,(assq-ref options 'end-angle))
+                 (ratio-left . ,(assq-ref options 'end-ratio))))))
+
+            ;; data structure holding the new control points,
+            ;; a list of lists with four points each,
+            ;; the first one being equal to the last of the previous
+            (cps
+             (let
+              ;; a cache for dragging information from one inflection to the next
+              ((previous-cps '()))
+              (map
+               (lambda (i)
+                 (let*
+                  ((current-inf (list-ref inflections i))
+                   (prev-inf
+                    (if (= i 0) #f (list-ref inflections (- i 1))))
+                   (prev-pt
+                    (if (= i 0) cpA (last previous-cps)))
+                   (prev-given-angle
+                    (if (= i 0)
+                        (assq-ref options 'start-angle)
+                        (assq-ref prev-inf 'angle)))
+                   (prev-ratio-right
+                    (if (= i 0)
+                        (assq-ref options 'start-ratio)
+                        (assq-ref prev-inf 'ratio-right)))
+                   (current-pt
+                    (inflection-point cpA cpB (assq-ref current-inf 'point)))
+                   ;; slope of the line connecting with the previous inflection point
+                   ;; reference for control-point polar coordinates
+                   (rel-to-prev (sub-points current-pt prev-pt))
+                   (prev-base-angle (ly:angle rel-to-prev))
+                   (prev-length (ly:length rel-to-prev))
+                   (current-cps
+                    (list
+                     prev-pt
+                     (add-points prev-pt
+                       (ly:directed
+                        (+ prev-base-angle prev-given-angle)
+                        (* prev-ratio-right prev-length)))
+                     (add-points current-pt
+                       (ly:directed
+                        (+ (+ prev-base-angle (assq-ref current-inf 'angle)) 180)
+                        (* (assq-ref current-inf 'ratio-left) prev-length)))
+                     current-pt)))
+                  (set! previous-cps current-cps)
+                  current-cps
+                  ))
+               (iota (length inflections)))))
             ) ; end let binding block in "proc" lambda
-         red ; return value
-         ) ; end let block in "proc" lambda
+
+
+          (pretty-print cps)
+          red ; return value
+          ) ; end let block in "proc" lambda
          ))
 
       ) ;; end toplevel let binding block
 
-    (pretty-print options)
-    (pretty-print inflections)
+;    (pretty-print options)
+;    (pretty-print inflections)
 
     #{ \tweak color $proc ( #}
 
@@ -148,34 +211,28 @@ Expected ~a, using default \"~a\"." name (third rule) default)
      (let
       ((proc
         (lambda (grob)
-          (let*
-           ((opts (check-options options))
+
             ;;
             ;; Retrieve options and set defaults
             ;;
             ;; Configuration
-            (show-control-points (assq-ref opts 'show-control-points))
-            (show-original-slur (assq-ref opts 'show-original-slur))
+            (show-control-points (assq-ref options 'show-control-points))
+            (show-original-slur (assq-ref options 'show-original-slur))
 
             ;; Define start and end of overall slur
-            (start-point (assq-ref opts 'start-point))
-            (start-angle (assq-ref opts 'start-angle))
-            (start-ratio (assq-ref opts 'start-ratio))
-            (end-point (assq-ref opts 'end-point))
-            (end-angle (assq-ref opts 'end-angle))
-            (end-ratio (assq-ref opts 'end-ratio))
+            ;
+            ; TODO: Check if we really need these bindings or if we can
+            ; rather retrieve the values ad-hoc (we know they're there)
+            (start-point (assq-ref options 'start-point))
+            (start-angle (assq-ref options 'start-angle))
+            (start-ratio (assq-ref options 'start-ratio))
+            (end-point (assq-ref options 'end-point))
+            (end-angle (assq-ref options 'end-angle))
+            (end-ratio (assq-ref options 'end-ratio))
 
             ; deprecated, won't be needed anymore when points are
             ; calculated in polar coordinates
-            (offsets (assq-ref opts 'offsets))
-
-            ;; automatic control points of the non-compound slur
-            (orig-cps (ly:slur::calc-control-points grob))
-
-            ;; data structure holding the new control points,
-            ;; a list of lists with four points each,
-            ;; the first one being equal to the last of the previous
-            (cps '())
+            (offsets (assq-ref options 'offsets))
 
             ;; add offsets to the four control points
             ; deprecated
