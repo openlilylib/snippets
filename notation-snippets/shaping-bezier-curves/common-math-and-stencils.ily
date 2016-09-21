@@ -90,39 +90,36 @@
      (y-center (/ (+ (cdr pt1) (cdr pt2)) 2))
      (y-top (+ (cdr pt2) y-protrude))
      (y-bottom (- (cdr pt1) y-protrude)))
-    (apply
-     ly:stencil-add
-     (append
-      ;; draw vertical lines
-      (map
-       (lambda (i)
-         (let ((x (+ (car pt1) (* i x-step))))
-         (stencil-with-color
-          (ly:stencil-add
-           (make-line-stencil
-            (if (= 0 (modulo i 5))
-                (* 4 grid-thickness)
-                grid-thickness)
-            x y-bottom x y-top))
-              col-grid)))
-       (iota 15 -2))
-      (list
-       (stencil-with-color
-        (ly:stencil-add
+    (stencil-with-color
+     (ly:stencil-add
+      (apply
+       ly:stencil-add
+       (append
+        ;; draw vertical lines every 1/10th
+        (map
+         (lambda (i)
+           (let ((x (+ (car pt1) (* i x-step))))
+             (make-line-stencil
+              (if (= 0 (modulo i 5))
+                  (* 4 grid-thickness)
+                  grid-thickness)
+              x y-bottom x y-top)))
+         (iota 15 -2))
+        ;; draw horizontal line through center
+        (list
          (make-line-stencil
           (* 2 grid-thickness)
           (- (car pt1) x-protrude) y-center (+ (car pt2) x-protrude) y-center))
-        col-grid))
-      (map
-       (lambda (i)
-       (stencil-with-color
-        (ly:stencil-add
-         (make-line-stencil
-          grid-thickness
-          (- (car pt1) x-protrude)
-          (+ y-center (* i 10))
-          (+ (car pt2) x-protrude)
-          (+ y-center (* i 10))))
-        col-grid))
-       '(-2 -1 1 2))))))
+        ;; draw horizontal guides every 10 staff spaces
+        (map
+         (lambda (i)
+           (make-line-stencil
+            grid-thickness
+            (- (car pt1) x-protrude)
+            (+ y-center (* i 10))
+            (+ (car pt2) x-protrude)
+            (+ y-center (* i 10))))
+         '(-2 -1 1 2)))))
+     col-grid)
+    ))
 
