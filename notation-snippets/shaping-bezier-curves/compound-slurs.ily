@@ -188,23 +188,37 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                       current-cps
                       ))
                    (iota (length inflections))))))
+
+            ;; Slur segments to be printed
+            (spline-stencils
+             (map
+              (lambda (spline)
+                (begin
+                 (ly:grob-set-property! grob 'control-points spline)
+                 (ly:slur::print grob)))
+              cps))
+            
+            ;; Combine slur stencil from all splines
+            (slur-stencil
+             (let
+              ((stil empty-stencil))
+              (for-each
+               (lambda (spline)
+                 (set! stil
+                       (ly:stencil-add stil spline)))
+               spline-stencils)
+              stil))
             ) ; end let binding block in "proc" lambda
 
-
-          (pretty-print cps)
-          red ; return value
+          ;; Combine slur and optional annotations to final printable stencil
+          (ly:stencil-add
+           slur-stencil
+           )
           ) ; end let block in "proc" lambda
          ))
-
       ) ;; end toplevel let binding block
-
-;    (pretty-print options)
-;    (pretty-print inflections)
-
-    #{ \tweak color $proc ( #}
-
-    ) ; end outermost let block
-   ) % end \compoundSlur
+    
+    #{ \tweak stencil $proc ( #}))
 
 %{
 
