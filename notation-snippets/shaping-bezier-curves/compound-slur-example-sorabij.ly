@@ -19,18 +19,45 @@
 }
 
 exampleSlur = ^\compoundSlur \with {
-  show-control-points = ##t
-  show-original-slur = ##t
-  offsets =
-  #'((0 . 3)
-     (-6 . 5)
-     (-20 . -75)
-     (0 . 3))
-  inflections =
-  #'(((point . (.435 . 1.4))
-      (angle . -126)
-      (ratio-left . 0.4)
-      (ratio-right . 0.75)))
+  annotate = ##t
+%  show-original-slur = ##t
+
+  start-point = #'(0 . 3)
+  start-angle = 65
+  start-ratio = 0.6
+  end-point = #'(2.5 . 4)
+  end-angle = -70
+  
+  inflection =
+  #'((point . (.215 . 1.55))
+     (angle . -55)
+     (ratio-left . 0.4)
+     (ratio-right . 0.22))
+  
+  inflection =
+  #'((point . (.26 . -0.2))
+     (angle . 60)
+     (ratio-left . .45)
+     (ratio-right . .4))
+  
+  inflection =
+  #'((point . (.49 . 0.35))
+     (angle . 33)
+     (ratio-left . .45)
+     (ratio-right . .15))
+
+  inflection =
+  #'((point . (.7 . 1.6))
+     (angle . -45)
+     (ratio-left . .8)
+     (ratio-right . .57))
+
+  inflection =
+  #'((point . (.75 . -0.05))
+     (angle . 45)
+     (ratio-left . .45)
+     (ratio-right . .25))
+
 }
 
 structure = {
@@ -144,7 +171,6 @@ voiceIII = \relative fis,, {
     b, fis b, fis b fis'
     \voiceTwo
     b fis' b \change Staff = "two" fis'
-    )
     \musicalIssue \with {
       author = "Urs Liska"
       message = "sic[!] a'."
@@ -162,6 +188,9 @@ voiceIII = \relative fis,, {
     fis' b, fis b, fis \change Staff = "two" b,
     fis \change Staff = "three" b, fis b, fis b,
     fis' b fis' b \change Staff = "two" fis' b
+    % End of multi-segment slur
+    % TODO: Make it work with broken slurs
+    )
 
     |
     \change Staff = "one"

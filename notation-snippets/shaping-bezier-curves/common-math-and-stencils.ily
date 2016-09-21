@@ -84,3 +84,19 @@
     col))
 
 
+#(define (annotate-spline grob cps col)
+   "Print crosses and a boundary trapezoid for a spline.
+    Returns a stencil"
+   (apply
+    ly:stencil-add
+     (list
+      (connect-dots (first cps) (second cps) col)
+      (connect-dots (third cps) (fourth cps) col)
+      (connect-dots (fourth cps) (first cps) col)
+      (connect-dots (second cps) (third cps) 
+        (map (lambda (c)
+               (/ (+ c 1) 2))
+          col))
+      (make-cross-stencil (second cps) col)
+      (make-cross-stencil (third cps) col))))
+
