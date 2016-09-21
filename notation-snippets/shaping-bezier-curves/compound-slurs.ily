@@ -192,25 +192,15 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                       ))
                    (iota (length inflections))))))
 
-            ;; Slur segments to be printed
-            (spline-stencils
-             (map
-              (lambda (spline)
-                (begin
-                 (ly:grob-set-property! grob 'control-points spline)
-                 (ly:slur::print grob)))
-              cps))
-
             ;; Combine slur stencil from all splines
             (slur-stencil
-             (let
-              ((stil empty-stencil))
-              (for-each
-               (lambda (spline)
-                 (set! stil
-                       (ly:stencil-add stil spline)))
-               spline-stencils)
-              stil))
+             (apply ly:stencil-add
+               (map
+                (lambda (spline)
+                  (begin
+                   (ly:grob-set-property! grob 'control-points spline)
+                   (ly:slur::print grob)))
+                cps)))
             ) ; end let binding block in "proc" lambda
 
           ;; Combine slur and optional annotations to final printable stencil
