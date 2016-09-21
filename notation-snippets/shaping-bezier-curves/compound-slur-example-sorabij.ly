@@ -24,72 +24,60 @@ exampleSlur = ^\compoundSlur \with {
   show-grid = ##t
 
   start-point = #'(0 . 3)
-  start-angle = 65
-  start-ratio = 0.6
+  start-angle = 55
+  start-ratio = 0.5
   end-point = #'(2.5 . 4)
-  end-angle = -70
+  end-angle = -75
+  end-ratio = 0.5
 
   inflection =
   #'((X-ratio . .215)
      (Y-offset . 22)
-     (angle . -55)
-     (ratio-left . 0.4)
+     (angle . -35)
+     (ratio-left . 0.7)
      (ratio-right . 0.22))
 
   inflection =
-  #'((X-ratio . .26)
+  #'((X-ratio . .25)
+     (Y-offset . -9)
+     (angle . 35)
+     (ratio-left . .55)
+     (ratio-right . .4))
+
+  inflection =
+  #'((X-ratio . .33)
      (Y-offset . -16)
-     (angle . 60)
+     (angle . 20)
      (ratio-left . .45)
      (ratio-right . .4))
 
   inflection =
   #'((X-ratio . .49)
      (Y-offset . -3)
-     (angle . 33)
+     (angle . 25)
      (ratio-left . .45)
      (ratio-right . .15))
 
   inflection =
-  #'((X-ratio . .7)
-     (Y-offset . 24)
-     (angle . -45)
-     (ratio-left . .8)
-     (ratio-right . .57))
+  #'((X-ratio . .65)
+     (Y-offset . 26)
+     (angle . -38)
+     (ratio-left . .6)
+     (ratio-right . .4))
 
   inflection =
-  #'((X-ratio . .75)
-     (Y-offset . -12)
-     (angle . 45)
-     (ratio-left . .45)
-     (ratio-right . .25))
-
-}
-
-fancySlur = _\compoundSlur \with {
-%  annotate = ##t
-%  show-grid = ##t
-
-  start-point = #'(0 . 5)
-  start-angle = -45
-  end-angle = -125
-  end-ratio = 1
+  #'((X-ratio . .72)
+     (Y-offset . 21)
+     (angle . -15)
+     (ratio-left . .3)
+     (ratio-right . .4))
 
   inflection =
-  #'((point . (0.1 . 1.5))
-     (angle . 125))
-
-  inflection =
-  #'((point . (-.3 . -6))
-     (angle . 65)
-     (ratio-left . .45)
-     (ratio-right . .25))
-
-  inflection =
-  #'((point . (0.2 . -12))
-     (angle . 45)
-     (ratio-left . .45)
-     (ratio-right . .25))
+  #'((X-ratio . .735)
+     (Y-offset . -10)
+     (angle . 30)
+     (ratio-left . .35)
+     (ratio-right . .2))
 
 }
 
@@ -145,9 +133,7 @@ or the dot removed. However, horizontal alignment suggest that the dot on the fi
   f8 [ e d c ]
   \change Staff = "three"
   \once \override Slur.color = #red
-  b4 ~
-  \fancySlur
-  b64 c
+  b4 ~ b64 c
   \change Staff = "two"
   d64 e b c es f
   fis128 [
