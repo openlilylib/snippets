@@ -148,7 +148,8 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                  (list orig-cps)
                  (let
                   ;; a cache for dragging information from one inflection to the next
-                  ((previous-cps '()))
+                  ((previous-cps '())
+                   (previous-angle 0))
                   (map
                    (lambda (i)
                      (let*
@@ -172,12 +173,13 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                        (rel-to-prev (sub-points current-pt prev-pt))
                        (prev-base-angle (ly:angle rel-to-prev))
                        (prev-length (ly:length rel-to-prev))
+                       (absolute-angle (+ prev-base-angle prev-given-angle))
                        (current-cps
                         (list
                          prev-pt
                          (add-points prev-pt
                            (ly:directed
-                            (+ prev-base-angle prev-given-angle)
+                            absolute-angle
                             (* prev-ratio-right prev-length)))
                          (add-points current-pt
                            (ly:directed
@@ -185,6 +187,7 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                             (* (assq-ref current-inf 'ratio-left) prev-length)))
                          current-pt)))
                       (set! previous-cps current-cps)
+                      (set! previous-angle absolute-angle)
                       current-cps
                       ))
                    (iota (length inflections))))))
