@@ -264,7 +264,8 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                               (first (list-ref cps i)))
                              empty-stencil)))
                      (iota (- (length inflections) 1) 1))))
-                  col-slur1)))
+                  col-slur1)
+                 empty-stencil))
 
             (grid-stencil
              (if (assq-ref options 'show-grid)
