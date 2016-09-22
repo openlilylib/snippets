@@ -108,7 +108,7 @@
       (make-cross-stencil (second cps) col)
       (make-cross-stencil (third cps) col)))))
 
-#(define (draw-grid pt1 pt2)
+#(define (draw-grid grob pt1 pt2)
    "Draws a reference grid around two corner points.
     Returns a stencil"
    (let*
@@ -127,12 +127,22 @@
         (map
          (lambda (i)
            (let ((x (+ (car pt1) (* i x-step))))
-             (make-line-stencil
-              (if (= 0 (modulo i 5))
-                  (* 4 grid-thickness)
-                  grid-thickness)
-              x y-bottom x y-top)))
+             (ly:stencil-add
+              (make-line-stencil
+               (if (= 0 (modulo i 5))
+                   (* 4 grid-thickness)
+                   grid-thickness)
+               x y-bottom x y-top)
+              (ly:stencil-translate
+               (ly:stencil-scale
+                (ly:stencil-add
+                 (grob-interpret-markup grob
+                   (number->string (exact->inexact (/ i 10)))))
+                0.8 0.8)
+               (cons (- x 1) (+ y-top 0.7)))
+              )))
          (iota 15 -2))
+
         ;; draw horizontal line through center
         (list
          (make-line-stencil

@@ -268,7 +268,7 @@ Expected ~a, using default \"~a\"." name (third rule) default)
 
             (grid-stencil
              (if (assq-ref options 'show-grid)
-                 (draw-grid cpA cpB)
+                 (draw-grid grob cpA cpB)
                  empty-stencil))
 
             ) ; end let binding block in "proc" lambda
