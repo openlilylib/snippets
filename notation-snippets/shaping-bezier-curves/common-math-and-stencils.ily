@@ -68,10 +68,37 @@
 #(define (annotate-spline grob cps col)
    "Print crosses and a boundary trapezoid for a spline.
     Returns a stencil"
+   (let*
+    ((baseline-length (ly:length (sub-points (fourth cps) (first cps))))
+     (cp2a
+      (add-points (first cps)
+        (ly:directed
+         (ly:angle (sub-points (second cps) (first cps)))
+         baseline-length)))
+     (cp3a
+      (add-points (fourth cps)
+        (ly:directed
+         (ly:angle (sub-points (third cps) (fourth cps)))
+         baseline-length)))
+     )
    (apply
     ly:stencil-add
      (list
       (connect-dots (first cps) (second cps) col)
+      (stencil-with-color
+       (ly:stencil-add
+      (ly:line-interface::line grob
+        (car (second cps))
+        (cdr (second cps))
+        (car cp2a) (cdr cp2a))
+            (ly:line-interface::line grob
+        (car (third cps))
+        (cdr (third cps))
+        (car cp3a) (cdr cp3a)))
+       col-bg)
+      (make-cross-stencil cp2a col-bg)
+      (make-cross-stencil cp3a col-bg)
+
       (connect-dots (third cps) (fourth cps) col)
       (connect-dots (fourth cps) (first cps) col)
       (connect-dots (second cps) (third cps)
@@ -79,7 +106,7 @@
                (/ (+ c 1) 2))
           col))
       (make-cross-stencil (second cps) col)
-      (make-cross-stencil (third cps) col))))
+      (make-cross-stencil (third cps) col)))))
 
 #(define (draw-grid pt1 pt2)
    "Draws a reference grid around two corner points.
@@ -121,6 +148,5 @@
             (+ (car pt2) x-protrude)
             (+ y-center (* i 10))))
          '(-2 -1 1 2)))))
-     col-grid)
-    ))
+     col-grid)))
 

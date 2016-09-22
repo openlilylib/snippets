@@ -264,4 +264,7 @@ Expected ~a, using default \"~a\"." name (third rule) default)
          ))
       ) ;; end toplevel let binding block
 
-    #{ \tweak stencil $proc ( #}))
+    #{
+      \tweak style #'dashed-line
+      \tweak stencil $proc (
+    #}))
