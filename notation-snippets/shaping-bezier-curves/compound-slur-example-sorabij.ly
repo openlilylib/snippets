@@ -8,7 +8,10 @@
 #(set-default-paper-size "a3" 'landscape)
 
 \paper {
+  system-count = 2
   indent = 0
+  system-system-spacing.minimum-distance = 40
+  markup-system-spacing.minimum-distance = 24
 }
 
 \header {
