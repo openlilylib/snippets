@@ -52,7 +52,8 @@ exampleSlur = ^\compoundSlur \with {
      (Y-offset . -16)
      (angle . 20)
      (ratio-left . .45)
-     (ratio-right . .4))
+     (ratio-right . .4)
+     (label . "A"))
 
   inflection =
   #'((X-ratio . .49)
@@ -66,7 +67,8 @@ exampleSlur = ^\compoundSlur \with {
      (Y-offset . 26)
      (angle . -38)
      (ratio-left . .6)
-     (ratio-right . .4))
+     (ratio-right . .4)
+     (label . "B"))
 
   inflection =
   #'((X-ratio . .72)

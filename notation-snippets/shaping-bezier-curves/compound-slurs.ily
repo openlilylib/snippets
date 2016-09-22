@@ -10,7 +10,8 @@
      (Y-offset ,number? 0 "number (staff spaces)")
      (angle ,number? -90 "number (0-360)")
      (ratio-left ,number? .25 "number (0-1)")
-     (ratio-right ,number? .25 "number (0-1")))
+     (ratio-right ,number? .25 "number (0-1")
+     (label ,string? #f "short string")))
 
 #(define option-rules
    `((annotate ,boolean? "Boolean" #f)
@@ -251,15 +252,18 @@ Expected ~a, using default \"~a\"." name (third rule) default)
              (if (assq-ref options 'annotate)
                  (stencil-with-color
                   (ly:stencil-add
-                 (apply
-                  ly:stencil-add
-                  (map
-                   (lambda (i)
-                     (ly:stencil-translate
-                      (grob-interpret-markup grob
-                        (markup (number->string i)))
-                        (first (list-ref cps i))))
-                   (iota (- (length inflections) 1) 1))))
+                   (apply
+                    ly:stencil-add
+                    (map
+                     (lambda (i)
+                       (let ((label (assq-ref (list-ref inflections (- i 1)) 'label)))
+                         (if label
+                             (ly:stencil-translate
+                              (grob-interpret-markup grob
+                                (markup label))
+                              (first (list-ref cps i)))
+                             empty-stencil)))
+                     (iota (- (length inflections) 1) 1))))
                   col-slur1)))
 
             (grid-stencil
