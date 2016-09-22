@@ -113,8 +113,8 @@
     Returns a stencil"
    (let*
     ((x-step (/ (- (car pt2) (car pt1)) 10))
-     (x-protrude (/ (- (car pt2) (car pt1)) 4.5))
-     (y-protrude (* 1.2 (- (cdr pt2) (cdr pt1))))
+     (x-protrude 2.5)
+     (y-protrude (max (* 1.2 (- (cdr pt2) (cdr pt1))) 3))
      (y-center (/ (+ (cdr pt1) (cdr pt2)) 2))
      (y-top (+ (cdr pt2) y-protrude))
      (y-bottom (- (cdr pt1) y-protrude)))
@@ -141,22 +141,34 @@
                 0.8 0.8)
                (cons (- x 1) (+ y-top 0.7)))
               )))
-         (iota 15 -2))
+         (iota 11))
 
         ;; draw horizontal line through center
         (list
          (make-line-stencil
           (* 2 grid-thickness)
           (- (car pt1) x-protrude) y-center (+ (car pt2) x-protrude) y-center))
-        ;; draw horizontal guides every 10 staff spaces
+        ;; draw horizontal guides every 10 staff spaces,
+        ;; add staff space indicators
         (map
          (lambda (i)
-           (make-line-stencil
-            grid-thickness
-            (- (car pt1) x-protrude)
-            (+ y-center (* i 10))
-            (+ (car pt2) x-protrude)
-            (+ y-center (* i 10))))
+           (ly:stencil-add
+            (make-line-stencil
+             grid-thickness
+             (- (car pt1) x-protrude)
+             (+ y-center (* i 10))
+             (+ (car pt2) x-protrude)
+             (+ y-center (* i 10)))
+            (apply ly:stencil-add
+              (map (lambda (x)
+                     (ly:stencil-translate
+                      (ly:stencil-scale
+                       (ly:stencil-add
+                        (grob-interpret-markup grob
+                          (number->string (* i 10))))
+                       0.8 0.8)
+                      (cons x (+ -0.5 y-center (* i 10)))))
+                (list -5 (+ (car pt2) 3))))))
          '(-2 -1 1 2)))))
      col-grid)))
 
