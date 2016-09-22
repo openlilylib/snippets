@@ -5,10 +5,14 @@
 % Predicates and defaults for inflection properties
 % TODO:
 % Move to oll-core options
+#(define (angle-prop? obj)
+   (if (or (number? obj)
+           (member obj '(straight)))
+       #t #f))
 #(define inflection-rules
    `((X-ratio ,number? .5 "number (ratio)")
      (Y-offset ,number? 0 "number (staff spaces)")
-     (angle ,number? -90 "number (0-360)")
+     (angle ,angle-prop? straight "number (0-360)")
      (ratio-left ,number? .25 "number (0-1)")
      (ratio-right ,number? .25 "number (0-1")
      (label ,string? #f "short string")))
@@ -133,6 +137,18 @@ Expected ~a, using default \"~a\"." name (third rule) default)
             (cpA (add-points (first orig-cps) (assq-ref options 'start-point)))
             (cpB (add-points (fourth orig-cps) (assq-ref options 'end-point)))
 
+            ;; list of all inflection points including start and end point
+            (inflection-points
+             (append
+              (list cpA)
+              (map
+               (lambda (i)
+                 (inflection-point cpA cpB
+                   (assq-ref i 'X-ratio)
+                   (assq-ref i 'Y-offset)))
+               inflections)
+              (list cpB)))
+
             ;; append the final point as a "virtual inflection"
             (inflections
              (append
@@ -160,13 +176,9 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                         (prev-inf
                          (if (= i 0) #f (list-ref inflections (- i 1))))
                         (prev-pt
-                         (if (= i 0) cpA (last previous-cps)))
+                         (list-ref inflection-points i))
                         (current-pt
-                         (if (= i (- (length inflections) 1))
-                             cpB
-                             (inflection-point cpA cpB
-                               (assq-ref current-inf 'X-ratio)
-                               (assq-ref current-inf 'Y-offset))))
+                         (list-ref inflection-points (+ i 1)))
 
                         ;; zero-based vector between previous and current point
                         (rel-to-prev (sub-points current-pt prev-pt))
@@ -182,7 +194,15 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                          (if (= i 0)
                              (assq-ref options 'start-angle)
                              (assq-ref prev-inf 'angle)))
-                        (absolute-angle (+ prev-base-angle (assq-ref current-inf 'angle)))
+                        (current-angle (assq-ref current-inf 'angle))
+                        (absolute-angle
+                         ;(let ((current-angle (assq-ref current-inf 'angle)))
+                         (if (eq? current-angle 'straight)
+                             (ly:angle
+                              (sub-points
+                               (list-ref inflection-points (+ i 2))
+                               current-pt))
+                             (+ prev-base-angle (assq-ref current-inf 'angle))))
                         (prev-ratio-right
                          (if (= i 0)
                              (assq-ref options 'start-ratio)
@@ -196,13 +216,14 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                              (* prev-ratio-right prev-length)))
                           (add-points current-pt
                             (ly:directed
-                             (+ (+ prev-base-angle (assq-ref current-inf 'angle)) 180)
+                             (if (eq? current-angle 'straight)
+                                 (+ 180 absolute-angle)
+                                 (+ (+ prev-base-angle (assq-ref current-inf 'angle)) 180))
                              (* (assq-ref current-inf 'ratio-left) prev-length)))
                           current-pt)))
                       (set! previous-cps current-cps)
                       (set! previous-angle absolute-angle)
-                      current-cps
-                      ))
+                      current-cps))
                    (iota (length inflections))))))
 
             ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
