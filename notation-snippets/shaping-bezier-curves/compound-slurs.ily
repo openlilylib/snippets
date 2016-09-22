@@ -247,6 +247,21 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                      cps)))
                  empty-stencil))
 
+            (labels
+             (if (assq-ref options 'annotate)
+                 (stencil-with-color
+                  (ly:stencil-add
+                 (apply
+                  ly:stencil-add
+                  (map
+                   (lambda (i)
+                     (ly:stencil-translate
+                      (grob-interpret-markup grob
+                        (markup (number->string i)))
+                        (first (list-ref cps i))))
+                   (iota (- (length inflections) 1) 1))))
+                  col-slur1)))
+
             (grid-stencil
              (if (assq-ref options 'show-grid)
                  (draw-grid cpA cpB)
@@ -260,6 +275,7 @@ Expected ~a, using default \"~a\"." name (third rule) default)
            grid-stencil
            slur-stencil
            spline-annotations
+           labels
            )) ; end let block in "proc" lambda
          ))
       ) ;; end toplevel let binding block
