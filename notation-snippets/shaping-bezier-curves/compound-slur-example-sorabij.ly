@@ -30,7 +30,7 @@ exampleSlur = ^\compoundSlur \with {
   start-angle = 55
   start-ratio = 0.5
   end-point = #'(2.5 . 4)
-  end-angle = -75
+  end-angle = 75
   end-ratio = 0.5
 
   inflection =

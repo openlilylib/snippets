@@ -22,7 +22,7 @@
      (start-angle ,number? "number?" 90)
      (start-ratio ,number? "number?" 0.5)
      (end-point ,number-pair? "pair of numbers" (0 . 0))
-     (end-angle ,number? "number?" 90)
+     (end-angle ,number? "number?" 75)
      (end-ratio ,number? "number?" 0.5)
      ))
 
@@ -138,7 +138,7 @@ Expected ~a, using default \"~a\"." name (third rule) default)
              (append
               inflections
               (list
-               `((angle . ,(* -1 (assq-ref options 'end-angle)))
+               `((angle . ,(assq-ref options 'end-angle))
                  (ratio-left . ,(assq-ref options 'end-ratio))))))
 
             ;; data structure holding the new control points,
