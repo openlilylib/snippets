@@ -5,7 +5,8 @@
 
 #(define col-bg (rgb-color .8 .8 .7))
 #(define col-orig-slur cyan)
-#(define col-new-slur red)
+#(define col-slur1 '(1 .3 0))
+#(define col-slur2 '(1 0 .3))
 #(define col-grid blue)
 #(define conn-thickness 0.05)
 #(define cross-thickness 0.1)

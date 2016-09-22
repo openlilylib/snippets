@@ -236,10 +236,15 @@ Expected ~a, using default \"~a\"." name (third rule) default)
              (if (assq-ref options 'annotate)
                  (apply
                   ly:stencil-add
-                  (map
-                   (lambda (spline)
-                     (annotate-spline grob spline col-new-slur))
-                   cps))
+                  (let ((i 0))
+                    (map
+                     (lambda (spline)
+                       (set! i (+ i 1))
+                       (annotate-spline grob spline
+                         (if (odd? i)
+                             col-slur1
+                             col-slur2)))
+                     cps)))
                  empty-stencil))
 
             (grid-stencil
