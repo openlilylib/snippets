@@ -249,7 +249,7 @@ shapeII =
 
        ;; if there are more siblings than specifications,
        ;; reuse last specification for remaining siblings.
-       (if (> (- total-found (length all-specs)) 0)
+       (if (> total-found (length all-specs))
            (append! all-specs
              (list (last all-specs))))
 
