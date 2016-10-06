@@ -99,7 +99,7 @@ gitRevisionNumber = \markup { \gitCommand "log --oneline | wc -l" }
 gitFileRevision = #(define-markup-command (gitFileRevision layout props file) (markup?)
   (gitCommand-markup layout props
     (string-append (string-append
-              "log --oneline -- \""
+              "log --follow --oneline -- \""
               file)
                "\" | wc -l")))
 
