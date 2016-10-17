@@ -23,8 +23,8 @@
 hairpinWithText =
 #(define-music-function (parser location text horiz-align vert-align)
    (markup? number-or-string? number?)
+   (if (> 1 (abs vert-align)) #{ \once \override Hairpin.height = 1.1 #})
    #{
-     \once \override Hairpin.height = #(if (> 1 (abs vert-align)) 1.1 0.6666)
      \once \override Voice.Hairpin.after-line-breaking =
      #(lambda (grob)
         (let* ((stencil (ly:hairpin::print grob))
