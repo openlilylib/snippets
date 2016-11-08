@@ -80,9 +80,8 @@
 \markup\bold \gitRevisionNumber
 \markup \vspace #0.5
 
-\markup "Number of commits involving this file:"
-file = \thisFile
-\markup\bold \gitFileRevision \file
+\markup "Number of commits involving this file (i.e. this file has been changed N times)"
+\markup\bold \gitFileRevision \thisFile
 \markup \vspace #0.5
 
 % gitIsClean determines whether the current repository is clean,
