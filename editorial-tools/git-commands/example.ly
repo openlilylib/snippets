@@ -1,6 +1,7 @@
 \version "2.18.2"
 
 \include "definitions.ily"
+\include "openlilylib"
 
 \header {
   title = "Git repository information"
@@ -77,6 +78,10 @@
 
 \markup "Number of commits on this branch:"
 \markup\bold \gitRevisionNumber
+\markup \vspace #0.5
+
+\markup "Number of commits involving this file (i.e. this file has been changed N times)"
+\markup\bold \gitFileRevision \thisFile
 \markup \vspace #0.5
 
 % gitIsClean determines whether the current repository is clean,
