@@ -80,6 +80,8 @@ pedalWithArrowsAndTextCallback =
                       (#:sans
                        (#:upright
                         (#:whiteout (#:box (#:pad-markup 0.3 lhs-text)))))))))
+                 (text-stil-x-extent (ly:stencil-extent text-stil X))
+                 (text-stil-x-length (interval-length text-stil-x-extent))
 
                  ;; get a list of spanners bounded by PianoPedalBrackets
                  ;; left-bound, which is PaperColumn or NonMusicalPaperColumn
@@ -102,13 +104,17 @@ pedalWithArrowsAndTextCallback =
                  (bounded-piano-brackets-per-column
                   (delete-duplicates piano-pedal-brackets))
 
+                 ;; add text
                  ;; only add text-stil, if current Column does not have two
                  ;; PianoPedalBrackets
-                 ;; TODO is this condition really sufficient?
+                 ;; TODO is this condition re columns really sufficient?
+                 ;; also, do not add text-stil if the segment is too short.
                  (new-stil
-                  (if (= (length bounded-piano-brackets-per-column) 2)
+                  (if (or
+                       (= (length bounded-piano-brackets-per-column) 2)
+                       (< stil-x-length text-stil-x-length))
                       new-stil
-                      (ly:stencil-stack new-stil X LEFT text-stil -6))))
+                      (ly:stencil-stack new-stil X LEFT text-stil -8))))
 
            (ly:grob-set-property! grobber 'stencil new-stil))))
 
