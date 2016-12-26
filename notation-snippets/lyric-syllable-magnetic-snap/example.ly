@@ -12,7 +12,8 @@
     \override Lyrics.LyricWord.after-line-breaking = #(lyric-word-compressor 0)
     \override Lyrics.LyricHyphen.minimum-distance = #0
     \override Lyrics.LyricSpace.minimum-distance = #1
-    \repeat unfold 10 { foo }
+    \repeat unfold 3 { foof -- ifi }
+    \repeat unfold 2 { AMA -- VIS }
     \repeat unfold 10 { foo -- \markup \caps bar }
     \repeat unfold 10 { \markup \bold syl -- la -- ble }
     a \markup \with-color #red ran -- \markup \box dom string of mo -- no -- syl -- la -- bic
@@ -32,7 +33,8 @@
     \override Lyrics.LyricWord.after-line-breaking = #(lyric-word-compressor 0.4)
     \override Lyrics.LyricHyphen.minimum-distance = #0
     \override Lyrics.LyricSpace.minimum-distance = #1
-    \repeat unfold 10 { foo }
+    \repeat unfold 3 { foof -- ifi }
+    \repeat unfold 2 { AMA -- VIS }
     \repeat unfold 10 { foo -- \markup \caps bar }
     \repeat unfold 10 { \markup \bold syl -- la -- ble }
     a ran -- \markup \box dom string of
