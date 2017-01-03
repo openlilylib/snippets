@@ -80,6 +80,7 @@ sixtytwoVoiceII = \relative dis {
     eis64 [ ~ bis ~
     \once \override Score.NoteColumn.X-offset = #0.8
     \once \override Tie.minimum-length = 2
+    \once \override Tie.Y-offset = #0.25
     gis ~ ]
   }
   \set tieWaitForNote = ##f
