@@ -125,6 +125,8 @@ sixtytwoDynamics = {
 }
 
 
+\markup { \vspace #3 }
+
 \score {
   \new PianoStaff <<
     \new Staff = "one" <<
@@ -149,6 +151,11 @@ sixtytwoDynamics = {
       \Staff
       \remove "Time_signature_engraver"
 
+    }
+    \context {
+      \Score
+      \override VerticalAxisGroup #'staff-staff-spacing =
+      #'((basic-distance . 16))
     }
   }
 }
