@@ -14,6 +14,28 @@
   composer = "Maurice Ravel"
 }
 
+sixtytwoCompoundSlur = ^\compoundSlur \with {
+  annotate = ##t
+  %  show-original-slur = ##t
+  show-grid = ##t
+
+  start-point = #'(0.5 . -15.5)
+  %  start-angle = 55
+  %  start-ratio = 0.5
+  end-point = #'(0 . 0)
+  %  end-angle = 75
+  %  end-ratio = 0.5
+
+  inflection =
+  #'((X-ratio . .12)
+     (Y-offset . 0)
+     ;(angle . -35)
+     ;(ratio-left . 0.7)
+     ;(ratio-right . 0.22)
+     )
+
+}
+
 sixtytwoCommons = {
   \key fis \major
   \time 3/4
@@ -45,11 +67,17 @@ sixtytwoVoiceI = \relative dis'' {
 sixtytwoVoiceII = \relative dis {
   \change Staff = "two"
   \voiceOne
+  \once \override Slur.color = #magenta
+  \once \override Script.color = #blue
   dis8 ->
+%  _(
+  %\sixtytwoCompoundSlur
   \change Staff = "one"
   \oneVoice
   \set tieWaitForNote = ##t
   \grace {
+    % Source: http://lists.gnu.org/archive/html/lilypond-user/2017-01/msg00036.html
+    \once \override Score.NoteColumn.X-offset = #3
     eis64 [ ~ bis ~ gis ~ ]
   }
   \set tieWaitForNote = ##f
@@ -63,7 +91,7 @@ sixtytwoVoiceII = \relative dis {
   <eis a cis eis> ~
   <fis a cis fis>
   <gis cis ~ fis _~ gis>
-  <a! cis fis a>
+  <a! cis fis a> )
   \clef treble
 }
 
@@ -73,7 +101,10 @@ sixtytwoVoiceIII = \relative dis {
   \omit TupletBracket
   \voiceTwo
   \tuplet 3/2 8 {
-    dis16 ( gis, dis gis, dis' gis
+    dis16 ( gis,
+    dis
+    gis,
+    dis' gis
     \oneVoice
     \omit TupletNumber
     dis'16 gis, dis gis, dis' gis
@@ -114,7 +145,7 @@ sixtytwoDynamics = {
   \layout {
     \context {
       \Staff
-        \remove "Time_signature_engraver"
+      \remove "Time_signature_engraver"
 
     }
   }
