@@ -78,7 +78,11 @@ sixtytwoVoiceII = \relative dis {
   \grace {
     % Source: http://lists.gnu.org/archive/html/lilypond-user/2017-01/msg00036.html
     \once \override Score.NoteColumn.X-offset = #3
-    eis64 [ ~ bis ~ gis ~ ]
+    \once \override Beam.positions = #'(4.25 . 4.25)
+    eis64 [ ~ bis ~
+    \once \override Score.NoteColumn.X-offset = #0.8
+    \once \override Tie.minimum-length = 2
+    gis ~ ]
   }
   \set tieWaitForNote = ##f
   <eis gis bis eis>8 [
