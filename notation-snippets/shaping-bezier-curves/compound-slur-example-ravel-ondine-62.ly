@@ -17,20 +17,20 @@
 sixtytwoCompoundSlur = ^\compoundSlur \with {
   %annotate = ##t
   %  show-original-slur = ##t
- % show-grid = ##t
+  % show-grid = ##t
 
-  start-point = #'(0.5 . -15.5)
-    start-angle = -20
-    start-ratio = 0.3
+  start-point = #'(0.5 . -17)
+  start-angle = -15
+  start-ratio = 0.4
   end-point = #'(0 . 0)
-    end-angle = -50
-    end-ratio = 0.07
+  end-angle = -90
+  end-ratio = 0.06
 
   inflection =
   #'((X-ratio . .11)
-     (Y-offset . 4)
-     (angle . 30)
-     (ratio-left . 0.85)
+     (Y-offset . 5)
+     (angle . 35)
+     (ratio-left . 0.9)
      (ratio-right . 0.16)
      )
 
@@ -68,7 +68,7 @@ sixtytwoVoiceII = \relative dis {
   \change Staff = "two"
   \voiceOne
   dis8 ->
-%  _(
+  %  _(
   \sixtytwoCompoundSlur
   \change Staff = "one"
   \oneVoice
