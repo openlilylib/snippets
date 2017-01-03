@@ -104,6 +104,7 @@ sixtytwoVoiceIII = \relative dis {
   \omit TupletBracket
   \voiceTwo
   \tuplet 3/2 8 {
+    \shape #'((0 . 1.25)(-1 . -2)(1 . -4)(0 . 4)) Slur
     dis16 ( gis,
     dis
     gis,
@@ -113,6 +114,7 @@ sixtytwoVoiceIII = \relative dis {
     dis'16 gis, dis gis, dis' gis
     dis'16 gis, dis gis, dis' gis )
     |
+    \shape #'((0 . 0)(0 . -2)(0 . -2)(0 . 0.5)) Slur
     fis,16 ( cis' fis cis' fis, cis
     fis,16 cis' fis cis' fis, cis
     fis,16 cis' fis cis' fis, cis )
