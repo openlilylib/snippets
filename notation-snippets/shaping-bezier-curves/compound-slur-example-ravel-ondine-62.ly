@@ -67,8 +67,6 @@ sixtytwoVoiceI = \relative dis'' {
 sixtytwoVoiceII = \relative dis {
   \change Staff = "two"
   \voiceOne
-  \once \override Slur.color = #magenta
-  \once \override Script.color = #blue
   dis8 ->
 %  _(
   %\sixtytwoCompoundSlur
