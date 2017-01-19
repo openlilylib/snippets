@@ -1,5 +1,7 @@
 \version "2.19.48"
 
+#(ly:set-option 'relative-includes #t)
+
 \include "common-math-and-stencils.ily"
 
 % Predicates and defaults for inflection properties
