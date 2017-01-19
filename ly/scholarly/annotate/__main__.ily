@@ -47,7 +47,7 @@
 
 % Include factored out functionality
 \include "config.ily"
-\useLibrary utility
+\useLibrary utility #(display "")
 \useModule utility.rhythmic-location
 \include "sort.ily"
 \include "format.ily"

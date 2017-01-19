@@ -97,6 +97,7 @@
    (svg-list (font-list svg-path "svg"))
    (woff-list (font-list svg-path "woff"))
    )
+  (display otf-path)
   #{ \registerOption global.installed-fonts.otf #(car otf-list) #}
   #{ \registerOption global.installed-fonts.otf-brace #(cdr otf-list) #}
   #{ \registerOption global.installed-fonts.svg #(car svg-list) #}
