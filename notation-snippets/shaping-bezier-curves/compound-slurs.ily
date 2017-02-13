@@ -234,13 +234,38 @@ Expected ~a, using default \"~a\"." name (third rule) default)
 
             ;; Combine slur stencil from all splines
             (slur-stencil
-             (apply ly:stencil-add
-               (map
-                (lambda (spline)
-                  (begin
-                   (ly:grob-set-property! grob 'control-points spline)
-                   (ly:slur::print grob)))
-                cps)))
+             ; TODO: Properly calculate staffline-thickness
+             (let*
+              ((staffline-thickness (ly:staff-symbol-line-thickness grob))
+               (thickness
+                (* (ly:grob-property grob 'thickness) staffline-thickness))
+               (line-thickness
+                (* (ly:grob-property grob 'line-thickness) staffline-thickness)))
+              (apply ly:stencil-add
+                (append
+                 (list
+                  (if (= (length cps) 1)
+                      ;; print regular slur if no inflections are defined
+                      (begin
+                       (ly:grob-set-property! grob 'control-points spline)
+                       (ly:slur::print grob))
+                      empty-stencil))
+                 (list
+                  (if (> (length cps) 1)
+                      ;; create sandwich opening
+                      (make-sandwich-opening (first cps) line-thickness thickness)
+                      empty-stencil))
+                 (if (> (length cps) 2)
+                     ;; create inner segments as straight lines
+                     (make-compound-line-bezier
+                      (list-head (list-tail cps 1) (- (length cps) 2))
+                      thickness line-thickness)
+                     (list empty-stencil))
+                 (list
+                  (if (> (length cps) 1)
+                      (make-sandwich-closing (last cps) line-thickness thickness)
+                      empty-stencil))
+                 ))))
 
             (original-slur
              (if (assq-ref options 'show-original-slur)

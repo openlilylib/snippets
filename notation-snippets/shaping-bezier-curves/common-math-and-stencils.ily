@@ -81,20 +81,20 @@
          (ly:angle (sub-points (third cps) (fourth cps)))
          baseline-length)))
      )
-   (apply
-    ly:stencil-add
+    (apply
+     ly:stencil-add
      (list
       (connect-dots (first cps) (second cps) col)
       (stencil-with-color
        (ly:stencil-add
-      (ly:line-interface::line grob
-        (car (second cps))
-        (cdr (second cps))
-        (car cp2a) (cdr cp2a))
-            (ly:line-interface::line grob
-        (car (third cps))
-        (cdr (third cps))
-        (car cp3a) (cdr cp3a)))
+        (ly:line-interface::line grob
+          (car (second cps))
+          (cdr (second cps))
+          (car cp2a) (cdr cp2a))
+        (ly:line-interface::line grob
+          (car (third cps))
+          (cdr (third cps))
+          (car cp3a) (cdr cp3a)))
        col-bg)
       (make-cross-stencil cp2a col-bg)
       (make-cross-stencil cp3a col-bg)
@@ -172,3 +172,153 @@
          '(-2 -1 1 2)))))
      col-grid)))
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Bezier helper functions taken from scm/bezier-tools.scm
+
+#(define (make-coord x-value y-value)
+   "Make a coordinate pair from @var{x-valye} and @var{y-value}."
+   (cons x-value y-value))
+
+#(define (coord+ coord1 coord2)
+   "Add @var{coord1} to @var{coord2}, returning a coordinate."
+   (cons (+ (car coord1) (car coord2))
+     (+ (cdr coord1) (cdr coord2))))
+
+#(define (coord- coord1 coord2)
+   "Subtract @var{coord2} from @var{coord1}."
+   (cons (- (car coord1) (car coord2))
+     (- (cdr coord1) (cdr coord2))))
+
+#(define (coord* scalar coord)
+   "Multiply each component of @var{coord} by @var{scalar}."
+   (cons (* (car coord) scalar)
+     (* (cdr coord) scalar)))
+
+#(define (make-bezier point-0 point-1 point-2 point-3)
+   "Create a cubic bezier from the four control points."
+   (list point-0 point-1 point-2 point-3))
+
+#(define (interpolated-control-points control-points split-value)
+   "Interpolate @var{control-points} at @var{split-value}.  Return a
+set of control points that is one degree less than @var{control-points}."
+   (if (null? (cdr control-points))
+       '()
+       (let ((first (car control-points))
+             (second (cadr control-points)))
+         (cons* (coord+ first (coord* split-value (coord- second first)))
+           (interpolated-control-points
+            (cdr control-points)
+            split-value)))))
+
+#(define (split-bezier bezier split-value)
+   "Split a cubic bezier defined by @var{bezier} at the value
+@var{split-value}.  @var{bezier} is a list of pairs; each pair is
+is the coordinates of a control point.  Returns a list of beziers.
+The first element is the LHS spline; the second
+element is the RHS spline."
+   (let* ((quad-points (interpolated-control-points
+                        bezier
+                        split-value))
+          (lin-points (interpolated-control-points
+                       quad-points
+                       split-value))
+          (const-point (interpolated-control-points
+                        lin-points
+                        split-value))
+          (left-side (list (car bezier)
+                       (car quad-points)
+                       (car lin-points)
+                       (car const-point)))
+          (right-side (list (car const-point)
+                        (list-ref lin-points 1)
+                        (list-ref quad-points 2)
+                        (list-ref bezier 3))))
+     (cons left-side right-side)))
+
+% Bezier helpers
+%%%%%%%%%%%%%%%%
+
+#(define (make-line-bezier spline thickness line-thickness)
+   "Create a bezier curve drawing a straight line,
+    using the thickness and line-thickness from the original slur."
+   (let
+    ((a (first spline))
+     (b (second spline))
+     (c (third spline))
+     (d (fourth spline)))
+    (make-path-stencil
+     `(moveto ,(car a) ,(cdr a)
+        curveto
+        ,(car b) ,(cdr b)
+        ,(car c) ,(cdr c)
+        ,(car d) ,(cdr d))
+     (+ thickness line-thickness)
+     1
+     1
+     #f)))
+
+#(define (make-compound-line-bezier splines thickness line-thickness)
+   "Create a list of line bezier segments."
+   (map make-line-bezier splines
+     (make-list (length splines) thickness)
+     (make-list (length splines) line-thickness)))
+
+#(define (make-half-sandwich spline line-thickness thickness dir)
+   "Create a half bezier sandwich. The other half is to be added
+    as a straight line."
+   (let*
+    ((cp1 (first spline))
+     (cp2 (second spline))
+     (cp3 (third spline))
+     (cp4 (fourth spline))
+     (end-angle (+ 90 (ly:angle (sub-points cp4 cp3))))
+     (y (* dir (/ thickness 2)))
+     (cp4a (add-points cp4 (ly:directed end-angle y)))
+     (cp4b (add-points cp4 (ly:directed end-angle (* -1 y))))
+     )
+     (make-path-stencil
+      `(moveto
+        ,(car cp1) ,(cdr cp1)
+        curveto
+        ; TODO: Is there a better way to create the sandwich
+        ; by offsetting the control points (to/from)?
+        ,(car cp2) ,(+ (cdr cp2) 0)
+        ,(car cp3) ,(+ (cdr cp3) 0)
+        ,(car cp4a) ,(cdr cp4a)
+        lineto
+        ,(car cp4b) ,(cdr cp4b)
+        curveto
+        ,(car cp3) ,(- (cdr cp3) 0)
+        ,(car cp2) ,(- (cdr cp2) 0)
+        ,(car cp1) ,(cdr cp1)
+        closepath)
+      line-thickness
+      1
+      1
+      #t)
+    ))
+
+#(define (make-sandwich-opening orig-spline line-thickness thickness)
+   "Create an opening sandwich from a half sandwich and a line"
+   (let*
+    ((split-spline (split-bezier orig-spline 0.5))
+     (spline (car split-spline))
+     (line-spline (cdr split-spline))
+     )
+    (ly:stencil-add
+     (make-half-sandwich spline line-thickness thickness 1)
+     (make-line-bezier line-spline thickness line-thickness)
+     )))
+
+#(define (make-sandwich-closing orig-spline line-thickness thickness)
+   "Create a closing sandwich from a line and a half sandwich"
+   (let*
+    ((split-spline (split-bezier orig-spline 0.5))
+     (spline (reverse (cdr split-spline)))
+     (line-spline (car split-spline))
+     )
+    (ly:stencil-add
+     (make-half-sandwich spline line-thickness thickness -1)
+     (make-line-bezier line-spline thickness line-thickness)
+     )))
