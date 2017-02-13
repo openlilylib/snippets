@@ -24,14 +24,14 @@ sixtytwoCompoundSlur = ^\compoundSlur \with {
   start-ratio = 0.4
   end-point = #'(0 . 0)
   end-angle = -90
-  end-ratio = 0.06
+  end-ratio = 0.04
 
   inflection =
   #'((X-ratio . .11)
      (Y-offset . 5)
      (angle . 35)
      (ratio-left . 0.9)
-     (ratio-right . 0.16)
+     (ratio-right . 0.2)
      )
 
 }
