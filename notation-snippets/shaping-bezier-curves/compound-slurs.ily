@@ -247,7 +247,7 @@ Expected ~a, using default \"~a\"." name (third rule) default)
                   (if (= (length cps) 1)
                       ;; print regular slur if no inflections are defined
                       (begin
-                       (ly:grob-set-property! grob 'control-points spline)
+                       (ly:grob-set-property! grob 'control-points (car cps))
                        (ly:slur::print grob))
                       empty-stencil))
                  (list
