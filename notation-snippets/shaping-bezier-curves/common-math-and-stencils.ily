@@ -272,10 +272,17 @@ element is the RHS spline."
      (cp2 (second spline))
      (cp3 (third spline))
      (cp4 (fourth spline))
-     (end-angle (+ 90 (ly:angle (sub-points cp4 cp3))))
      (y (* dir (/ thickness 2)))
-     (cp4a (add-points cp4 (ly:directed end-angle y)))
-     (cp4b (add-points cp4 (ly:directed end-angle (* -1 y))))
+     (start-angle (+ 90 (ly:angle (sub-points cp2 cp1))))
+     (first-offset (ly:directed start-angle y))
+     (cp2a (add-points cp2 first-offset))
+     (cp2b (sub-points cp2 first-offset))
+     (end-angle (+ 90 (ly:angle (sub-points cp4 cp3))))
+     (end-offset (ly:directed end-angle y))
+     (cp3a (add-points cp3 end-offset))
+     (cp3b (sub-points cp3 end-offset))
+     (cp4a (add-points cp4 end-offset))
+     (cp4b (sub-points cp4 end-offset))
      )
      (make-path-stencil
       `(moveto
@@ -283,14 +290,14 @@ element is the RHS spline."
         curveto
         ; TODO: Is there a better way to create the sandwich
         ; by offsetting the control points (to/from)?
-        ,(car cp2) ,(+ (cdr cp2) 0)
-        ,(car cp3) ,(+ (cdr cp3) 0)
+        ,(car cp2a) ,(cdr cp2a)
+        ,(car cp3a) ,(cdr cp3a)
         ,(car cp4a) ,(cdr cp4a)
         lineto
         ,(car cp4b) ,(cdr cp4b)
         curveto
-        ,(car cp3) ,(- (cdr cp3) 0)
-        ,(car cp2) ,(- (cdr cp2) 0)
+        ,(car cp3b) ,(cdr cp3b)
+        ,(car cp2b) ,(cdr cp2b)
         ,(car cp1) ,(cdr cp1)
         closepath)
       line-thickness
