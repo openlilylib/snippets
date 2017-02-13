@@ -81,20 +81,20 @@
          (ly:angle (sub-points (third cps) (fourth cps)))
          baseline-length)))
      )
-   (apply
-    ly:stencil-add
+    (apply
+     ly:stencil-add
      (list
       (connect-dots (first cps) (second cps) col)
       (stencil-with-color
        (ly:stencil-add
-      (ly:line-interface::line grob
-        (car (second cps))
-        (cdr (second cps))
-        (car cp2a) (cdr cp2a))
-            (ly:line-interface::line grob
-        (car (third cps))
-        (cdr (third cps))
-        (car cp3a) (cdr cp3a)))
+        (ly:line-interface::line grob
+          (car (second cps))
+          (cdr (second cps))
+          (car cp2a) (cdr cp2a))
+        (ly:line-interface::line grob
+          (car (third cps))
+          (cdr (third cps))
+          (car cp3a) (cdr cp3a)))
        col-bg)
       (make-cross-stencil cp2a col-bg)
       (make-cross-stencil cp3a col-bg)
