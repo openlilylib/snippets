@@ -5,7 +5,7 @@ What's this?
 ============
 
 A place to store and collaborate on LilyPond tools - snippets, templates, extensions.
-Why we don't just put this stuff in [Lilypond Snippet Repository]http://lsr.di.unimi.it/LSR/Search)?
+Why we don't just put this stuff in [Lilypond Snippet Repository](http://lsr.di.unimi.it/LSR/Search)?
 There are two reasons:
 * Some things cannot be placed in LSR (multi-file extensions, special scripts).
 * LSR doesn't have tools for collaboration and version control.
