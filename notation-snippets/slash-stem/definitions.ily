@@ -173,8 +173,8 @@ slashStem =
                       (stem-length (interval-length stem-Y-ext))
                       (stem-dir (ly:grob-property grob 'direction))
                       (angle (degrees->radians angle))
-                      (start-x (- (/ length 2)))
-                      (end-x (/ length 2))
+                      ;;(start-x (- (/ length 2)))
+                      ;;(end-x (/ length 2))
                       ;; where to cut the stem with slash
                       (slash-point (* stem-length fraction))
                       ;; compute offset based on fractional position
@@ -185,6 +185,57 @@ slashStem =
                       (end-y (+ start-y-offset (/ (* length (sin angle)) 2)))
                       (start-x (- (/ (* length (cos angle)) 2)))
                       (end-x (/ (* length (cos angle)) 2)))
+
+                (ly:stencil-add
+                 stil
+                 (make-path-stencil-with-line-styles
+                  (list
+                   'moveto start-x start-y
+                   'lineto end-x end-y)
+                  thickness
+                  1
+                  1
+                  #t
+                  ''butt
+                  ''miter
+                  ))))))
+   #})
+
+slashStemLeftRight =
+#(define-music-function (left-len right-len fraction thickness angle)
+   (number? number? number? number? number?)
+   "Create a slash on a stem, specifying explicit length for left and right sides.
+  left-len   - length of slash on left, in staff space units.
+  right-len  - length of slash on right, in staff space units.
+  fraction   - proportional point on the stem to place the slash, from 0 to 1.0.
+  thickness  - line thickness of the slash.
+  angle      - angle of slash with respect to horizontal axis, in degrees.
+  "
+   #{
+     \override Stem.stencil =
+     #(lambda (grob)
+        (let* (
+                (x-parent (ly:grob-parent grob X))
+                (is-rest? (ly:grob? (ly:grob-object x-parent 'rest))))
+          (if is-rest?
+              empty-stencil
+              (let* (
+                      ;; must get length from stencil, not from grob
+                      (stil (ly:stem::print grob))
+                      (stem-Y-ext (ly:stencil-extent stil Y))
+                      (stem-length (interval-length stem-Y-ext))
+                      (stem-dir (ly:grob-property grob 'direction))
+                      (angle (degrees->radians angle))
+                      ;; where to cut the stem with slash
+                      (slash-point (* stem-length fraction))
+                      ;; compute offset based on fractional position
+                      (start-y-offset (if (= 1 stem-dir)
+                                          (- (cdr stem-Y-ext) slash-point)
+                                          (+ (car stem-Y-ext) slash-point)))
+                      (start-y (- start-y-offset (* left-len (sin angle))))
+                      (end-y (+ start-y-offset (* right-len (sin angle))))
+                      (start-x (- (* left-len (cos angle))))
+                      (end-x (* right-len (cos angle))))
 
                 (ly:stencil-add
                  stil
