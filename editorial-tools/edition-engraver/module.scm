@@ -31,11 +31,22 @@
 
 ; class to store for example \set stanza = "1."
 (define-class <propset> ()
-  (once #:init-value #t #:accessor is-once #:setter set-once! #:init-keyword #:once)
-  (symbol #:accessor get-symbol #:setter set-symbol! #:init-keyword #:symbol)
-  (value #:accessor get-value #:setter set-value! #:init-keyword #:value)
-  (previous #:accessor get-previous #:setter set-previous! #:init-value #f)
-  (context #:accessor get-context #:setter set-context! #:init-keyword #:context)
+  (once #:init-value #t
+        #:accessor is-once
+        #:setter set-once!
+        #:init-keyword #:once)
+  (symbol #:accessor get-symbol
+          #:setter set-symbol!
+          #:init-keyword #:symbol)
+  (value #:accessor get-value
+         #:setter set-value!
+         #:init-keyword #:value)
+  (previous #:accessor get-previous
+            #:setter set-previous!
+            #:init-value #f)
+  (context #:accessor get-context
+           #:setter set-context!
+           #:init-keyword #:context)
   )
 ; apply set to context
 (define-method (do-propset context (prop <propset>))
@@ -59,7 +70,12 @@
 (define-public (propset? p)(is-a? p <propset>))
 ; serialize to string
 (define-method (propset->string (ps <propset>))
-  (format "~A\\set ~A = ~A" (if (is-once ps) "once " "") (string-append (if (get-context ps) (format "~A." (get-context ps)) "") (format "~A" (get-symbol ps))) (get-value ps)))
+  (format "~A\\set ~A = ~A" (if (is-once ps) "once " "")
+                            (string-append (if (get-context ps)
+                                               (format "~A." (get-context ps))
+                                               "")
+                                           (format "~A" (get-symbol ps)))
+                            (get-value ps)))
 (export propset->string)
 ; implement display
 (define-method (display (o <propset>) port) (display (propset->string o) port))
@@ -68,7 +84,9 @@
 
 ; store applyContext
 (define-class <apply-context> ()
-  (proc #:accessor procedure #:setter set-procedure! #:init-keyword #:proc)
+  (proc #:accessor procedure
+        #:setter set-procedure!
+        #:init-keyword #:proc)
   )
 ; apply stored function to context
 (define-method (do-apply ctx (a <apply-context>))
@@ -82,24 +100,48 @@
 
 ; store overrides
 (define-class <override> ()
-  (once #:init-value #t #:accessor is-once #:setter set-once! #:init-keyword #:once)
-  (revert #:init-value #f #:accessor is-revert #:setter set-revert! #:init-keyword #:revert)
-  (grob #:accessor get-grob #:setter set-grob! #:init-keyword #:grob)
-  (prop #:accessor get-prop #:setter set-prop! #:init-keyword #:prop)
-  (value #:accessor get-value #:setter set-value! #:init-keyword #:value)
-  (context #:accessor get-context #:setter set-context! #:init-keyword #:context)
+  (once #:init-value #t
+        #:accessor is-once
+        #:setter set-once!
+        #:init-keyword #:once)
+  (revert #:init-value #f
+          #:accessor is-revert
+          #:setter set-revert!
+          #:init-keyword #:revert)
+  (grob #:accessor get-grob
+        #:setter set-grob!
+        #:init-keyword #:grob)
+  (prop #:accessor get-prop
+        #:setter set-prop!
+        #:init-keyword #:prop)
+  (value #:accessor get-value
+         #:setter set-value!
+         #:init-keyword #:value)
+  (context #:accessor get-context
+           #:setter set-context!
+           #:init-keyword #:context)
   )
 ; serialize to string
 (define-method (oop->string (o <override>))
   (let* ((ctxn (get-context o))
          (ctxp (if ctxn (format "~A." ctxn) "")))
     (if (is-revert o)
-        (string-append "\\revert " ctxp (format "~A " (get-grob o)) (format "#'~A" (get-prop o)))
-        (string-append (if (is-once o) "\\once " "") "\\override " ctxp (format "~A " (get-grob o)) (format "#'~A" (get-prop o)) " = " (format "~A" (get-value o)))
+        (string-append "\\revert "
+                       ctxp
+                       (format "~A " (get-grob o))
+                       (format "#'~A" (get-prop o)))
+        (string-append (if (is-once o) "\\once " "")
+                       "\\override "
+                       ctxp
+                       (format "~A " (get-grob o))
+                       (format "#'~A" (get-prop o))
+                       " = "
+                       (format "~A" (get-value o)))
         )))
 (export oop->string)
 ; implement display
-(define-method (display (o <override>) port) (display (oop->string o) port))
+(define-method (display (o <override>) port)
+               (display (oop->string o) port))
 ; predicate
 (define-public (override? o)(is-a? o <override>))
 ; apply stored override to context
@@ -107,7 +149,10 @@
   (if (get-context mod)
       (let ((parctx (ly:context-find ctx (get-context mod))))
         (if (ly:context? parctx) (set! ctx parctx))))
-  (ly:context-pushpop-property ctx (get-grob mod) (get-prop mod) (get-value mod)))
+  (ly:context-pushpop-property ctx
+                               (get-grob mod)
+                               (get-prop mod)
+                               (get-value mod)))
 (export do-override)
 ; apply revert to context
 (define-method (do-revert ctx (mod <override>))
@@ -141,12 +186,19 @@
        (edition-list '())
        (edition-tree (tree-create 'edition)) ; a tree with all edition-engravers
        (context-count (tree-create 'context))) ; a tree to count all edition-engravers by tag-path
-  (define (o->sym o) (cond ((symbol? o) o) ((string? o) (string->symbol o)) (else (string->symbol (format "~A" o)))))
+  (define (o->sym o)
+          (cond ((symbol? o) o)
+                ((string? o) (string->symbol o))
+                (else (string->symbol (format "~A" o)))))
   (set! editions (lambda () (if (list? edition-list) edition-list '())))
-  (set! set-editions! (lambda (eds) (if (list? eds) (set! edition-list eds) (ly:error "list expected: ~A" eds))))
+  (set! set-editions! (lambda (eds) (if (list? eds)
+                                        (set! edition-list eds)
+                                        (ly:error "list expected: ~A" eds))))
   (set! add-edmod
         (lambda (edition takt pos path modm)
-          (let* ((edition (if (string? edition) (string->symbol edition) edition))
+          (let* ((edition (if (string? edition)
+                              (string->symbol edition)
+                              edition))
                  (path `(,edition ,takt ,pos ,@path))
                  (mods (tree-get mod-tree path)))
             (if (not (list? mods)) (set! mods '()))
@@ -175,7 +227,11 @@
                                         prop
                                         (car (ly:music-property m 'grob-property-path))))
                               (value (ly:music-property m 'grob-value))
-                              (mod (make <override> #:once once #:grob grob #:prop prop #:value value #:context ctx)))
+                              (mod (make <override> #:once once
+                                                    #:grob grob
+                                                    #:prop prop
+                                                    #:value value
+                                                    #:context ctx)))
                          (set! mods `(,@mods ,mod))
                          #t
                          ))
@@ -185,7 +241,12 @@
                               (prop (if (symbol? prop)
                                         prop
                                         (car (ly:music-property m 'grob-property-path))))
-                              (mod (make <override> #:once #f #:revert #t #:grob grob #:prop prop #:value #f #:context ctx)))
+                              (mod (make <override> #:once #f
+                                                    #:revert #t
+                                                    #:grob grob
+                                                    #:prop prop
+                                                    #:value #f
+                                                    #:context ctx)))
                          (set! mods `(,@mods ,mod))
                          #t
                          ))
@@ -193,7 +254,10 @@
                        (let* ((once (ly:music-property m 'once #f))
                               (symbol (ly:music-property m 'symbol))
                               (value (ly:music-property m 'value))
-                              (mod (make <propset> #:once once #:symbol symbol #:value value #:context ctx)))
+                              (mod (make <propset> #:once once
+                                                   #:symbol symbol
+                                                   #:value value
+                                                   #:context ctx)))
                          (set! mods `(,@mods ,mod))
                          #t
                          ))
@@ -205,7 +269,8 @@
                       ((or
                         (eq? 'OttavaMusic (ly:music-property m 'name))
                         )
-                       ; TODO which music types can be made available this way? (car of \once!)
+                       ; TODO which music types can be made available this way?
+                       ; (car of \once!)
                        (set! mods `(,@mods ,(context-mod-from-music parser m)))
                        #t
                        )
@@ -237,27 +302,37 @@
   (set! edition-engraver
         (lambda (tag-path . props)
           (let ((eng #f)
-                (cmf (if (eq? #t tag-path) (get-music-folder)))) ; current music folder
+                ; current music folder
+                (cmf (if (eq? #t tag-path) (get-music-folder))))
             (define (get-sym c)(string->symbol (base26 c)))
             (set! eng (lambda (context)
                         (let* ((tag-path tag-path)
                                (tag '())
                                (barnum 0)
                                (measurepos (ly:make-moment 0 1))
-                               (get-path (lambda (edition takt pos) `(,edition ,takt ,pos ,@tag)))
+                               (get-path (lambda (edition takt pos)
+                                                 `(,edition ,takt ,pos ,@tag)))
                                (initialize
                                 (lambda (trans)
-                                  (if (procedure? tag-path) (set! tag-path (tag-path)))
+                                  (if (procedure? tag-path)
+                                      (set! tag-path (tag-path)))
                                   (if (not (list? tag-path))
                                       (let ((parent (ly:context-parent context))
                                             (peng #f))
                                         (define (search-peng path eng)
-                                          (if (eqv? (object-property eng 'context) parent)
+                                          (if (eqv? (object-property eng 'context)
+                                              parent)
                                               (set! peng eng)))
-                                        (if (ly:context? parent) (walk-edition-engravers search-peng))
-                                        (if peng (set! tag-path (object-property peng 'tag-path)))
+                                        (if (ly:context? parent)
+                                            (walk-edition-engravers search-peng))
+                                        (if peng
+                                            (set! tag-path
+                                                  (object-property peng
+                                                                   'tag-path)))
                                         (if (not (list? tag-path))
-                                            (set! tag-path (if (list? cmf) cmf (get-music-folder))))
+                                            (set! tag-path (if (list? cmf)
+                                                               cmf
+                                                               (get-music-folder))))
                                         ))
                                   (let* ((cn (ly:context-name context))
                                          (path `(,@tag-path ,(o->sym cn)))
@@ -281,7 +356,9 @@
                                     (set-object-property! eng 'tag-path tag-path)
                                     (set-object-property! eng 'path path)
 
-                                    ; (if (lalily:verbose) (ly:message "looking for editions in ~A" (glue-list path "/")))
+                                    ; (if (lalily:verbose)
+                                    ;     (ly:message "looking for editions in ~A"
+                                    ;                 (glue-list path "/")))
                                     )))
                                ; paper column interface
                                (paper-column-interface
@@ -297,13 +374,24 @@
                                                  (for-each
                                                   (lambda (mod)
                                                     (cond
-                                                     ((and (ly:music? mod) (eq? 'LineBreakEvent (ly:music-property mod 'name)))
-                                                      (set! (ly:grob-property grob 'line-break-permission) (ly:music-property mod 'break-permission)))
-                                                     ((and (ly:music? mod) (eq? 'PageBreakEvent (ly:music-property mod 'name)))
-                                                      (set! (ly:grob-property grob 'page-break-permission) (ly:music-property mod 'break-permission)))
-                                                     ((and (ly:music? mod) (eq? 'PageTurnEvent (ly:music-property mod 'name)))
-                                                      (set! (ly:grob-property grob 'page-turn-permission) (ly:music-property mod 'break-permission)))
-                                                     ((and (ly:music? mod) (eq? 'ApplyOutputEvent (ly:music-property mod 'name)))
+                                                     ((and (ly:music? mod)
+                                                           (eq? 'LineBreakEvent
+                                                                (ly:music-property mod 'name)))
+                                                      (set! (ly:grob-property grob 'line-break-permission)
+                                                            (ly:music-property mod 'break-permission)))
+                                                     ((and (ly:music? mod)
+                                                           (eq? 'PageBreakEvent
+                                                                (ly:music-property mod 'name)))
+                                                      (set! (ly:grob-property grob 'page-break-permission)
+                                                            (ly:music-property mod 'break-permission)))
+                                                     ((and (ly:music? mod)
+                                                           (eq? 'PageTurnEvent
+                                                                (ly:music-property mod 'name)))
+                                                      (set! (ly:grob-property grob 'page-turn-permission)
+                                                            (ly:music-property mod 'break-permission)))
+                                                     ((and (ly:music? mod)
+                                                           (eq? 'ApplyOutputEvent
+                                                                (ly:music-property mod 'name)))
                                                       (let ((proc (ly:music-property mod 'procedure)))
                                                         (proc grob context context)
                                                         ))
@@ -370,7 +458,8 @@
                                   (let ((takt (ly:context-property context 'currentBarNumber))
                                         (pos (ly:context-property context 'measurePosition)))
                                     ; recall start-translation-timestep, if it is not called already
-                                    (if (or (not (equal? takt barnum))(not (equal? measurepos pos)))
+                                    (if (or (not (equal? takt barnum))
+                                            (not (equal? measurepos pos)))
                                         (start-translation-timestep trans #t))
                                     (for-each (lambda (edition)
                                                 (let* ((path (get-path edition takt pos))
@@ -378,21 +467,26 @@
                                                   (if (list? mods)
                                                       (for-each (lambda (mod)
                                                                   (cond
-                                                                   ((and (ly:music? mod) (eq? 'TextScriptEvent (ly:music-property mod 'name)))
+                                                                   ((and (ly:music? mod)
+                                                                         (eq? 'TextScriptEvent
+                                                                              (ly:music-property mod 'name)))
                                                                     (let ((grob (ly:engraver-make-grob trans 'TextScript '()))
                                                                           (text (ly:music-property mod 'text))
                                                                           (direction (ly:music-property mod 'direction #f)))
                                                                       (ly:grob-set-property! grob 'text text)
                                                                       (if direction (ly:grob-set-property! grob 'direction direction))
                                                                       ))
-                                                                   ((and (ly:music? mod) (eq? 'MarkEvent (ly:music-property mod 'name)))
+                                                                   ((and (ly:music? mod)
+                                                                         (eq? 'MarkEvent
+                                                                              (ly:music-property mod 'name)))
                                                                     (let ((grob (ly:engraver-make-grob trans 'RehearsalMark '()))
                                                                           (text (ly:music-property mod 'label)))
                                                                       (if (not (markup? text))
                                                                           (let ((rmi (ly:context-property context 'rehearsalMark))
                                                                                 (rmf (ly:context-property context 'markFormatter)))
                                                                             (if (and (integer? rmi)(procedure? rmf))
-                                                                                (let ((rmc (ly:context-property-where-defined context 'rehearsalMark)))
+                                                                                (let ((rmc (ly:context-property-where-defined context
+                                                                                                                              'rehearsalMark)))
                                                                                   (set! text (rmf rmi rmc))
                                                                                   (ly:context-set-property! rmc 'rehearsalMark (+ 1 rmi))
                                                                                   ))))
@@ -455,15 +549,21 @@
             peng
             )))
 
-  (set! display-edition (lambda () (tree-display edition-tree
-                                     '(pathsep . ".")
-                                     '(valuesep . " ")
-                                     `(vformat . ,(lambda (p) (let ((m (if (pair? p) (cdr p) p)))
-                                                                (if (and (pair? m)(ly:moment? (cdr m)))
-                                                                    (format "(~A . ~A)" (car m)(moment->string (cdr m)))
-                                                                    (format "~A" m))
-                                                                )))
-                                     )))
+  (set! display-edition
+        (lambda ()
+          (tree-display edition-tree
+                        '(pathsep . ".")
+                        '(valuesep . " ")
+                        `(vformat . ,(lambda (p)
+                                       (let ((m (if (pair? p) (cdr p) p)))
+                                            (if (and (pair? m)
+                                                     (ly:moment? (cdr m)))
+                                                (format "(~A . ~A)"
+                                                        (car m)
+                                                        (moment->string (cdr m)))
+                                                (format "~A" m))
+                                        )))
+          )))
   (set! display-mods
         (lambda ()
           (tree-display mod-tree
@@ -477,9 +577,11 @@
                                (glue-list (map (lambda (e)
                                                  (cond
                                                   ((ly:music? e)
-                                                   (format "[M] ~A" (ly:music-property e 'name))
-                                                   )
-                                                  (else (format "~A" e)))) v) "\n") (format "~A" v)))))))
+                                                   (format "[M] ~A" (ly:music-property e 'name)))
+                                                  (else (format "~A" e))))
+                                               v)
+                                          "\n")
+                               (format "~A" v)))))))
   )
 
 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -555,14 +657,15 @@
     (edition-engraver tag `(parser . ,parser))))
 
 
-;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ;%%% the key function "addEdition"
 
 ; activate edition
 (define-public addEdition
   (define-void-function (parser location edition)(string-or-symbol?)
     "Add edition to edition-list.
-Every edition from the global edition-list will be listened for by the edition-engraver."
+Every edition from the global edition-list
+will be listened for by the edition-engraver."
     (if (string? edition) (set! edition (string->symbol edition)))
     (if (not (memq edition (editions))) (set-editions! `(,@(editions) ,edition)))
     ))
@@ -573,7 +676,8 @@ Every edition from the global edition-list will be listened for by the edition-e
 (define-public removeEdition
   (define-void-function (parser location edition)(string-or-symbol?)
     "Remove edition from edition-list.
-Every edition from the global edition-list will be listened for by the edition-engraver."
+Every edition from the global edition-list
+will be listened for by the edition-engraver."
     (if (string? edition) (set! edition (string->symbol edition)))
     (set-editions! (delete edition (editions)))
     ))
@@ -584,7 +688,8 @@ Every edition from the global edition-list will be listened for by the edition-e
 (define-public setEditions
   (define-void-function (parser location editions)(list?)
     "Set edition-list to editions.
-Every edition from the global edition-list will be listened for by the edition-engraver.
+Every edition from the global edition-list
+will be listened for by the edition-engraver.
 This will override the previously set list."
     (set-editions! (map (lambda (edition)
                           (cond
