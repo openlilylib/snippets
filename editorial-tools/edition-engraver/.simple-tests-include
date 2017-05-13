@@ -1,0 +1,3 @@
+# temporarily include the edition engraver in the test suite
+# even before it is migrated to the new structure
+example.ly
