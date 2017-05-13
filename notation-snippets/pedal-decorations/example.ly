@@ -1,22 +1,22 @@
-\version "2.19.50"
+\version "2.19.59"
 
 \include "./definitions.ily"
 
 % example usage
 pedalWithArrowsAndTextPed =
-\override Score.PianoPedalBracket.after-line-breaking = #(pedalWithArrowsAndTextCallback "(ped)" #t)
+\override Score.PianoPedalBracket.before-line-breaking = #(pedal-with-arrows-and-text "(ped)" #t)
 
 pedalWithArrowsAndTextHalfPed =
-\override Score.PianoPedalBracket.after-line-breaking = #(pedalWithArrowsAndTextCallback "½ ped" #t)
+\override Score.PianoPedalBracket.before-line-breaking = #(pedal-with-arrows-and-text "½ ped" #t)
 
 pedalWithArrowsAndTextThreeP =
-\override Score.PianoPedalBracket.after-line-breaking = #(pedalWithArrowsAndTextCallback "3P" #t)
+\override Score.PianoPedalBracket.before-line-breaking = #(pedal-with-arrows-and-text "3P" #t)
 
 pedalWithArrowsAndTextUC =
-\override Score.PianoPedalBracket.after-line-breaking = #(pedalWithArrowsAndTextCallback "UC" #t)
+\override Score.PianoPedalBracket.before-line-breaking = #(pedal-with-arrows-and-text "UC" #t)
 
 pedalWithTextPed =
-\override Score.PianoPedalBracket.after-line-breaking = #(pedalWithArrowsAndTextCallback "(ped)" #f)
+\override Score.PianoPedalBracket.before-line-breaking = #(pedal-with-arrows-and-text "(ped)" #f)
 
 % example music
 
@@ -50,7 +50,7 @@ bass = {
   c c c c
   \break
   % turn off decorations
-  \revert Score.PianoPedalBracket.after-line-breaking
+  \revert Score.PianoPedalBracket.before-line-breaking
   c c\sustainOn c c
   c c c c
   \break
