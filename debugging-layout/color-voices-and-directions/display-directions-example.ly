@@ -1,6 +1,8 @@
 \version "2.16.2"
 
-\include "./display-directions.ily"
+\include "oll-core/package.ily"
+\loadModule snippets.debugging-layout.color-voices-and-directions.display-directions
+%\include "./display-directions.ily"
 
 %%%%%%%%%%%%%%%%%%%%%
 % USAGE EXAMPLE(S): %
