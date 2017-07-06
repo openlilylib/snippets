@@ -1,6 +1,8 @@
 \version "2.17.29"
 % with earlier versions, \attach ... Slur will probably affect only the first slur
-\include "slur-attachments.ily"
+\include "oll-core/package.ily"
+\loadModule snippets.notation-snippets.shaping-bezier-curves.slur-attachments
+%\include "slur-attachments.ily"
 
 \paper {
   ragged-right = ##t
