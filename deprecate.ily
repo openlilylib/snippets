@@ -9,9 +9,6 @@
     - redirect the include to the new location (if possible)
 %}
 
-\include "openlilylib"
-
-
 % Use this function when the whole file has moved to a new location inside /ly
 % and if it can be used the same way there.
 % #1: old name
@@ -40,5 +37,22 @@ ollRedirect =
    include path settings if you haven't done so already. The given path is
    relative to the \"/ly\" directory inside openLilyLib's root directory.
 "
-    old-name
-    new-location)))
+      old-name
+      new-location)))
+
+% Print a deprecation warning for those files that have been
+% turned into openLilyLib package modules
+ollSnippetsIncludeHint =
+#(define-void-function (parser location loc)(ly:input-location?)
+   (let
+    ((file (car (ly:input-file-line-char-column (*location*)))))
+    (ly:message "\n\nYou are directly invoking a file within openLilyLib/snippets.")
+    (ly:message "This is deprecated.")
+    (ly:message "Please change the include from 'definitions.ily' to 'module.ily'")
+    (ly:message "or better invoke the file as a proper openLilyLib package module with")
+    (ly:message "  \\include \"oll-core/package.ily\"")
+    (ly:message "  \\loadModule snippets.path.to.module\n")
+    (ly:message "For determining the proper module path please refer to the")
+    (ly:message "filename of the loaded file, which is")
+    (ly:message "  ~a\n\n" file)))
+
