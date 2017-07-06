@@ -1,6 +1,8 @@
 \version "2.16.2" % absolutely necessary!
 
-\include "definitions.ily"
+\include "oll-core/package.ily"
+\loadModule snippets.notation-snippets.manual-partcombine-for-vocal-parts
+%\include "definitions.ily"
 
 \markup \justify {
   WARNING! in 2.17.26 a special NullVoice context was added to LilyPond.
