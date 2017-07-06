@@ -1,6 +1,8 @@
 \version "2.17.10"
 
-\include "definitions.ily"
+\include "oll-core/package.ily"
+\loadModule snippets.editorial-tools.line-break-marks
+%\include "definitions.ily"
 
 \header {
   title = "Line Break Marks"
