@@ -2,7 +2,9 @@
 \version "2.19.47"
 \language "deutsch"
 
-\include "compound-slurs.ily"
+\include "oll-core/package.ily"
+\loadModule snippets.notation-snippets.shaping-bezier-curves.compound-slurs
+%\include "compound-slurs.ily"
 
 upper = \relative {
   \key d \major
