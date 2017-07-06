@@ -1,6 +1,8 @@
 \version "2.16.2"
 
-\include "./definitions.ily"
+\include "oll-core/package.ily"
+\loadModule snippets.notation-snippets.overriding-stencils
+%\include "./definitions.ily"
 
 {
   \customStencilFromMarkup "Staff.TimeSignature" \markup \vcenter {
