@@ -1,5 +1,12 @@
 \version "2.16.2"
 
+#(ly:message "\n\nYou are including debugging-layout/original-breaks/definitions.ily
+from the openLilyLib/snippets repository. This file is deprecated.
+
+Please consider using oll-core with the page-layout (and breaks) package instead.
+
+")
+
 \header {
   snippet-title = "Keep Original Breaks"
   snippet-author = "Urs Liska"
@@ -9,7 +16,7 @@
     a score is copied from. This is useful when entering or
     when proof-reading the score because the page layout of
     model and new score is the same.
-    
+
     Available commands are:
     % generic
     - originalBreak
@@ -32,7 +39,7 @@
     "#(define layout-keep-original-breaks #t)" activates original breaks,
     with "#(define layout-keep-original-breaks #f)" it is possible
     to deactivate original breaks, even during a score.
-    
+
     %TODO: The following doesn't work yet.
     % It seems that redefining commands like \break
     % results in a crash ("parsing... Exited with exit status 1")
