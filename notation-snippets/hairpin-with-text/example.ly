@@ -1,6 +1,8 @@
 \version "2.17.29"
 
-\include "./definitions.ily"
+\include "oll-core/package.ily"
+\loadModule snippets.notation-snippets.hairpin-with-text
+%\include "./definitions.ily"
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This example shows how <snippet-name> can be used.
