@@ -1,5 +1,8 @@
 \version "2.18.2"
-\include "definition.ily"
+
+\include "oll-core/package.ily"
+\loadModule snippets.editorial-tools.merge-rests-engraver
+%\include "definition.ily"
 
 \score
 {
