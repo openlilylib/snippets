@@ -1,6 +1,8 @@
 \version "2.19.3"
 
-\include "definitions.ily"
+\include "oll-core/package.ily"
+\loadModule snippets.templates.adjustable-centered-stanzas
+%\include "definitions.ily"
 
 stanzaII = \markup \column {
   Supercalifragilisticexpialidocious!
