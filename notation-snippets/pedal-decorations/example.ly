@@ -1,6 +1,8 @@
 \version "2.19.50"
 
-\include "./definitions.ily"
+\include "oll-core/package.ily"
+\loadModule snippets.notation-snippets.pedal-decorations
+%\include "./definitions.ily"
 
 % example usage
 pedalWithArrowsAndTextPed =
