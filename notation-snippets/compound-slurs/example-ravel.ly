@@ -1,9 +1,9 @@
 \version "2.19.48"
 
 \include "oll-core/package.ily"
-\loadModule snippets.notation-snippets.shaping-bezier-curves.compound-slurs
+\loadModule snippets.notation-snippets.compound-slurs
 %\include "compound-slurs.ily"
-s
+
 \paper {
   system-count = 1
   indent = 0
