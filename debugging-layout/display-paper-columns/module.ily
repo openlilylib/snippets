@@ -20,6 +20,3 @@
   \override Score.NonMusicalPaperColumn #'stencil = #ly:paper-column::print
 }
 
-{
-  c'4 d' e'2
-}
