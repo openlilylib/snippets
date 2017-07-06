@@ -1,6 +1,8 @@
 \version "2.17.25"
 
-\include "./definitions.ily"
+\include "oll-core/package.ily"
+\loadModule snippets.input-shorthands.articulations-not-aligned-with-notes
+%\include "./definitions.ily"
 
 % examples:
 
