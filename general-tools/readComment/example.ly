@@ -1,5 +1,8 @@
 \version "2.18.0"
-\include "general-tools/readComment/definitions.ily"
+
+\include "oll-core/package.ily"
+\loadModule snippets.general-tools.readComment
+%\include "general-tools/readComment/definitions.ily"
 
 text = \readComment
 %{
