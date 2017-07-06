@@ -6,7 +6,7 @@
 \loadModules snippets
 #'((notation-snippets shaping-bezier-curves shapeII)
    (notation-snippets shaping-bezier-curves special-cpts-display))
-%\include "shapeII.ily"
+%\include "../shapeII.ily"
 %\include "special-cpts-display.ily"
 
 \paper {
