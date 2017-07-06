@@ -1,5 +1,8 @@
 \version "2.17.97"
-\include "definitions.ily"
+
+\include "oll-core/package.ily"
+\loadModule snippets.specific-solutions.ismn
+%\include "definitions.ily"
 
 %%%%%%%%%
 % Example
@@ -12,6 +15,6 @@ myismn = \createISMN "700337" "00"
 \markup \column {
   "Bärenreiter, J.S.B., \"Mass in B Minor\""
   \ismn #"006" #"46415"
-  "Musikverlag Jan-Peter voigt, Thomas Dittmann, \"Geistliche Chormusik\""
+  "Musikverlag Jan-Peter Voigt, Thomas Dittmann, \"Geistliche Chormusik\""
   \ismn #"700337" #"00"
 }
