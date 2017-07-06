@@ -17,7 +17,7 @@
 % is this snippet ready?  See meta/status-values.md
 status = "unknown"
 % Thoughts about status and improvements:
-% Are the unicode symbols a problem? 
+% Are the unicode symbols a problem?
 % Maybe the arrows need a little padding!?
 }
 
