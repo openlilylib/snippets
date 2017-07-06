@@ -1,5 +1,7 @@
 \version "2.18.0"
-\include "definitions.ily"
+\include "oll-core/package.ily"
+\loadModule snippets.specific-solutions.xelatex-markup-list
+%\include "definitions.ily"
 
 text = \readComment
 %{
