@@ -1,6 +1,8 @@
 \version "2.18.0"
 
-\include "definitions.ily"
+\include "oll-core/package.ily"
+\loadModule snippets.notation-snippets.guitar-string-bending
+%\include "definitions.ily"
 
 \paper {
   indent = 0
