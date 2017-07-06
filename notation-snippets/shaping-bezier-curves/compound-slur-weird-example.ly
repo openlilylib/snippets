@@ -1,7 +1,9 @@
 \version "2.19.48"
 
-% This has to be available
-\include "notation-snippets/shaping-bezier-curves/compound-slurs.ily"
+\include "oll-core/package.ily"
+\loadModule snippets.notation-snippets.shaping-bezier-curves.compound-slurs
+%\include "compound-slurs.ily"
+
 
 \paper {
   indent = 0
