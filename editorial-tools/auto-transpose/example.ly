@@ -1,6 +1,10 @@
 \version "2.19.15"
-\include "editorial-tools/auto-transpose/definitions.ily"
+
 \include "deutsch.ly"
+
+\include "oll-core/package.ily"
+\loadModule snippets.editorial-tools.auto-transpose
+%\include "editorial-tools/auto-transpose/definitions.ily"
 
 % some music to insert into example
 bach = \relative c'' { b a c h }
