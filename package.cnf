@@ -1,0 +1,19 @@
+#
+# openLilyLib/snippets package metadata
+#
+
+name: snippets
+display-name: openLilyLib Snippets
+short-description: Includable extension functionality for GNU LilyPond
+description: <
+  The `snippets` package is a loosely organized collection of code fragments
+  for use with the GNU LilyPond score writer.
+  >
+oll-core: 0.5.0
+maintainers: [
+  Urs Liska <ul@openlilylib.org>
+  ]
+version: 0.5.0
+license: GPL3
+website: https://github.com/openlilylib/snippets
+repository: https://github.com/openlilylib/snippets.git

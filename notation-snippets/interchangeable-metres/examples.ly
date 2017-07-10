@@ -1,6 +1,8 @@
 \version "2.18.2"
 
-\include "definitions.ily"
+\include "oll-core/package.ily"
+\loadModule snippets.notation-snippets.interchangeable-metres
+%\include "definitions.ily"
 
 \paper {
   bookTitleMarkup = \markup {

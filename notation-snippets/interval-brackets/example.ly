@@ -1,5 +1,8 @@
 \version "2.16.2"
-\include "definitions.ily"
+
+\include "oll-core/package.ily"
+\loadModule snippets.notation-snippets.interval-brackets
+%\include "definitions.ily"
 
 \markup \bold \huge "Interval Brackets"
 

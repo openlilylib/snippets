@@ -1,6 +1,8 @@
 \version "2.16.2"
 
-\include "definitions.ily"
+\include "oll-core/package.ily"
+\loadModule snippets.input-shorthands.easy-custom-dynamics
+%\include "definitions.ily"
 
 {
   c'1 \dynamic sfffzppppp

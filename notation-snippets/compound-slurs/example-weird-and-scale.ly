@@ -1,7 +1,9 @@
 \version "2.19.48"
 
-% This has to be available
-\include "notation-snippets/shaping-bezier-curves/compound-slurs.ily"
+\include "oll-core/package.ily"
+\loadModule snippets.notation-snippets.compound-slurs
+%\include "compound-slurs.ily"
+
 
 \paper {
   indent = 0
@@ -24,45 +26,45 @@ weird=
        show-grid = #ann?
      start-ratio = 0.6
        end-point = #`(,end-x . ,end-y)
-       
-       inflection = 
+
+       inflection =
        #'((X-ratio . .25)
           (Y-offset . 8)
           )
-       
+
        inflection =
        #'((X-ratio . .15)
           (label . "A")
           )
 
-       inflection = 
+       inflection =
        #'((X-ratio . .5)
           (Y-offset . 11)
           )
-       
-       inflection = 
+
+       inflection =
        #'((X-ratio . .65)
           (Y-offset . 8)
           (angle . -30)
           (ratio-left . .6)
           (label . "B")
           )
-       
-       inflection = 
+
+       inflection =
        #'((X-ratio . .25)
           (Y-offset . -5)
           (angle . 45)
           )
-       
-       
+
+
      }
    #})
-   
-example = 
+
+example =
 #(define-scheme-function (ann? end-x end-y)((boolean?) number? number?)
    #{
      \score {
-       \new Staff 
+       \new Staff
 
        \relative c''' {
          c -\weird #ann? #end-x #end-y

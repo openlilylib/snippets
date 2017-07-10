@@ -1,7 +1,8 @@
 \version "2.19.48"
 
-\include "compound-slurs.ily"
-
+\include "oll-core/package.ily"
+\loadModule snippets.notation-snippets.compound-slurs
+%\include "compound-slurs.ily"
 
 \paper {
   system-count = 1

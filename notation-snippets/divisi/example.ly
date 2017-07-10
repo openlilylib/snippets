@@ -1,6 +1,8 @@
 \version "2.19.13"
 
-\include "definitions.ily"
+\include "oll-core/package.ily"
+\loadModule snippets.notation-snippets.divisi
+%\include "definitions.ily"
 
 \layout {
   short-indent = 2\cm

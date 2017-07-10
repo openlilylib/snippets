@@ -2,8 +2,12 @@
 % Prior to 2.17.29, \shapeII ... Slur (i.e. the non-tweak syntax)
 % will probably affect only the first slur in each example.
 
-\include "shapeII.ily"
-\include "special-cpts-display.ily"
+\include "oll-core/package.ily"
+\loadModules snippets
+#'((notation-snippets shaping-bezier-curves shapeII)
+   (notation-snippets shaping-bezier-curves special-cpts-display))
+%\include "../shapeII.ily"
+%\include "special-cpts-display.ily"
 
 \paper {
   ragged-right = ##t

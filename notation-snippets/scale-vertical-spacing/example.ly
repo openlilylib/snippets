@@ -1,6 +1,9 @@
 \version "2.19.13"
 
-\include "./definitions.ily"
+\include "oll-core/package.ily"
+\loadModule snippets.notation-snippets.scale-vertical-spacing
+% Necessary to prevent read-ahead issue
+#(display "")
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This example shows how "Scale vertical spacing" can be used.
@@ -8,6 +11,7 @@
 % The documentation is in the file `README.md`.
 
 % scale all page layout variables by the same amount
+
 
 \scaleVerticalSpacingPageLayout #1.5
 

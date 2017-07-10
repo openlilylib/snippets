@@ -1,6 +1,7 @@
 \version "2.18.2"
 
-\include "definitions.ily"
+\include "oll-core/package.ily"
+\loadModule snippets.notation-snippets.alternating-time-signatures
 
 \header {
   title = "Alternating Time Signatures"
@@ -127,9 +128,24 @@ indicated time signatures."
 
 \markup "Malformed time signature lists produce errors (see console output)"
 
+#(ly:message "
+
+
+Here comes the warning for malformed signature lists:
+=====================================================
+
+")
+
 \relative c' {
   \alternatingTimeSignatures #'((6 5 4)(4 4))
   c1
   \alternatingTimeSignatures #'((5 4)(1))
   c1
 }
+
+#(ly:message "
+
+=====================================================
+
+
+")
