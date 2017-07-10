@@ -1,5 +1,7 @@
 \version "2.19.13"
 
+\include "../../general-tools/lilypond-version-predicates/definitions.ily"
+
 \header {
   snippet-title = "Scale vertical spacing"
   snippet-author = "Paul Morris"
@@ -87,7 +89,7 @@ scaleVerticalSpacingPageLayout =
       (if (number? input)
           (list (list 'all input))
           input))
-     (paper (if (lilypond-less-than? "2.19.22")
+     (paper (if (ly:version? < '(2 19 22))
                 (ly:parser-lookup parser '$defaultpaper)
                 (ly:parser-lookup '$defaultpaper)))
      (props-list
