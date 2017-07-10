@@ -7,7 +7,7 @@
   snippet-description = \markup {
     Function that creates a markup for metric modulation.
     The user inputs:
-    Note-value (uses \note, string)
+    Note-value (uses "\\note", string)
     Tuplet value (0 for no tuplet, 3 for triplet, number)
     for each side of the metric equation
   }
