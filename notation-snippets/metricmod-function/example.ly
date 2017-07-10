@@ -1,6 +1,7 @@
 \version "2.17.26"
 
-\include "definitions.ily"
+\include "oll-core/package.ily"
+\loadModule snippets.notation-snippets.metricmod-function
 
 %%%%%%%%%%%%%%%%%%%%%
 % USAGE EXAMPLE(S): %
