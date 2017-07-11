@@ -2,23 +2,23 @@
 
 ## What's this?
 
-What is `openLilyLib/snippets`? There are two answers to this: it's a repository of LilyPond snippets, 
+What is `openLilyLib/snippets`? There are two answers to this: it's a repository of LilyPond snippets,
 and it's part of the [https://github.com/openlilylib](openLilyLib) family of extension packages.
 
 #### The Snippets Repository
 
 Originally this repository began as an extended version of the
-[Lilypond Snippet Repository](http://lsr.di.unimi.it/LSR/Search), a place to store LilyPond tools - 
+[Lilypond Snippet Repository](http://lsr.di.unimi.it/LSR/Search), a place to store LilyPond tools -
 snippets, templates, extensions. The main differences to the LSR are:
 
 * Some things cannot be placed in LSR (multi-file extensions, special scripts).
 * LSR doesn't have tools for collaboration and version control.
-* There is not *one* LilyPond engine behind the system, so snippets do not necessarily all 
+* There is not *one* LilyPond engine behind the system, so snippets do not necessarily all
   have to work with the same (sometimes outdated) version.
 
 But maybe the most important difference is that the snippets in this repository are *includable*.
 The snippets in the LSR have to be copied over into a user's personal library or documents,
-while the snippets in openLilyLib/snippets are *used* by having the library available and referencing 
+while the snippets in openLilyLib/snippets are *used* by having the library available and referencing
 the code directly in LilyPond input files.
 
 <!---
@@ -30,12 +30,12 @@ how stuff from LSR is imported into official documentation.
 #### The openLilyLib Package
 
 But the `snippets` repository is also a member of the family of `openLilyLib` packages.
-In this family it is sort of an exception as different from the other packages the 
+In this family it is sort of an exception as different from the other packages the
 snippets may also be used directly, without making use of the central
 [oll-core](https://github.com/openlilylib/oll-core) package.
 
 **[EDIT:** *Currently `openLilyLib` is undergoing a fundamental reorganization.  
-The below README contents is about the* current *implementation as a 
+The below README contents is about the* current *implementation as a
 collection of arbitrary snippets.  
 The new structure as a collection of targeted libraries can be found inside
 the `ly` directory.]*
@@ -49,43 +49,69 @@ browse the structure
 
 However, the following directories do *not* contain modules:
 
-* fonts  
+* `fonts`  
   is a deprecated Python script to install additional notation fonts (probably defunct)
-* fried-library-to-be-sorted  
+* `fried-library-to-be-sorted`  
   as the name suggests this is a heap of unsorted stuff, enter at your own risk
-* ly  
+* `ly`  
   contains a number of “old-new-style” packages (see below)
-* meta
-* test
+* `meta`
+* `test`
 
 
 
 
-Using this repository
-=====================
+## Using this repository
 
-You can view the files in your browser by clicking on their names,
-and simply copy & paste the code into your editor. You can also
-[download](https://github.com/openlilylib/snippets/archive/master.zip)
-the whole repository in a ZIP archive.  This is recommended for casual use.
-For regular users, we recommend using [Git](http://git-scm.com/)
-to clone the whole repository to your computer.  If you need help with Git,
-[contact us](README.md#contact).
+You can view the files in your browser by clicking on their names, and simply
+copy & paste the code into your editor. Each snippet should contain both an
+includable `.ily` file (usually `module.ily`) and a compilable `.ly` file
+(usually `example.ly`). But the preferred way of using `snippets` is to
+“install” it.
+
+### Installation
+
+“Installing” openLilyLib/snippets consists of two separate steps: obtaining the
+repository and making it available to LilyPond.
+
+The current state of the repository can always be downloaded from Github using
+the green download button on the repository page or the [direct
+link](https://github.com/openlilylib/snippets/archive/master.zip). This is
+appropriate for occasional use but we strongly recommend using
+[Git](http://git-scm.com/) to clone the whole repository to your computer.
+Learning a version control system like Git is one of the most rewarding
+investments you may consider doing anyway. (You may read more on this browsing
+the [version control tag](http://lilypondblog.org/tag/version-control/) on
+*Scores of Beauty*, our blog).
+
+The repository may be saved anywhere on your disk, but we recommend creating a
+“root” directory for openLilyLib, e.g. `~/openlilylib` or `C:\openlilylib` and
+placing the repository within that (`~/openlilylib/snippets`,
+`C.\openlilylib\snippets`).
+
+This “root” directory should then be added to LilyPond's search path, which is
+done by using the `-I` or `--include=` command line argument in LilyPond's
+invocation (`lilypond -I "~/openlilylib" my-file.ly`). However, editing tools
+may provide a convenient interface for this, like
+[Frescobaldi](http://frescobaldi) where you can add this path in the LilyPond
+page of the Preference dialog.
+
+**Note** (for users who already use openLilyLib): This recommendation is
+different from the previous recommendation to add the `snippets` directory
+itself to the search path. This change is done to make the snippets repository
+consistent with the other openLilyLib packages. Of course this will require
+existing documents to be updated!
 
 Most snippets are divided into an `.ily` file with function definitions and a `.ly`
 file showing a usage example.  To use the functions provided by the snippet,
 simply `\include` the `.ily` file into your score.
 
-You can make the root directory of the repository available to LilyPond,
-e.g. by using the `-I` or `--include=` command line option (or, if you use
-Frescobaldi, add the path in _LilyPond preferences_).  
-Then you will be able to `\include` the snippets with a path relative to
-the repository root directory - for example, 
-`\include "debugging-layout/display-grob-anchors/definitions.ily"`
-will allow you to use `\printAnchors` function defined in the snippet.
-Frescobaldi also supports autocompletion if you have added the repository
-in the preferences. So typing `\include "debu` will already give you the
-appropriate completion suggestion.
+### Usage
+
+#### Direct (Standalone) Use
+
+#### Usage As openLilyLib Package
+
 
 
 Contributing
