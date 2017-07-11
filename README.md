@@ -1,22 +1,38 @@
-Build Status of `openLilyLib` on Travis:  
-[![Build Status](https://travis-ci.org/openlilylib/openlilylib.svg?branch=master)](https://travis-ci.org/openlilylib/openlilylib)
+# openLilyLib/snippets
 
-What's this?
-============
+## What's this?
 
-A place to store and collaborate on LilyPond tools - snippets, templates, extensions.
-Why we don't just put this stuff in [Lilypond Snippet Repository](http://lsr.di.unimi.it/LSR/Search)?
-There are two reasons:
+What is `openLilyLib/snippets`? There are two answers to this: it's a repository of LilyPond snippets, 
+and it's part of the [https://github.com/openlilylib](openLilyLib) family of extension packages.
+
+#### The Snippets Repository
+
+Originally this repository began as an extended version of the
+[Lilypond Snippet Repository](http://lsr.di.unimi.it/LSR/Search), a place to store LilyPond tools - 
+snippets, templates, extensions. The main differences to the LSR are:
+
 * Some things cannot be placed in LSR (multi-file extensions, special scripts).
 * LSR doesn't have tools for collaboration and version control.
+* There is not *one* LilyPond engine behind the system, so snippets do not necessarily all 
+  have to work with the same (sometimes outdated) version.
+
+But maybe the most important difference is that the snippets in this repository are *includable*.
+The snippets in the LSR have to be copied over into a user's personal library or documents,
+while the snippets in openLilyLib/snippets are *used* by having the library available and referencing 
+the code directly in LilyPond input files.
 
 <!---
 At some point in the future we may develop a nice web frontend for this repository;
 we would also like to integrate it with the core LilyPond project similarly to
 how stuff from LSR is imported into official documentation.
-We may also move this repository somewhere else, because we dislike the proprietary
-nature of GitHub.
 -->
+
+#### The openLilyLib Package
+
+But the `snippets` repository is also a member of the family of `openLilyLib` packages.
+In this family it is sort of an exception as different from the other packages the 
+snippets may also be used directly, without making use of the central
+[oll-core](https://github.com/openlilylib/oll-core) package.
 
 **[EDIT:** *Currently `openLilyLib` is undergoing a fundamental reorganization.  
 The below README contents is about the* current *implementation as a 
@@ -24,46 +40,25 @@ collection of arbitrary snippets.
 The new structure as a collection of targeted libraries can be found inside
 the `ly` directory.]*
 
-Contents
-========
+## Contents and Structure
 
-* [__custom-music-fonts__](custom-music-fonts) -
-    alternative fonts for LilyPond, that can be used instead of default Feta.
-* [__debugging-layout__](debugging-layout) -
-    tools that visualize LilyPond's layout decisions (e.g. directions),
-* [__general-tools__](general-tools) -
-    stuff for working on and with LilyPond itself,
-* [__input-shorthands__](input-shorthands) -
-    music functions and other tools that make writing LilyPond code easier,
-* [__notation-snippets__](notation-snippets) -
-    LilyPond code that produces some particular notation,
-* [__simple-examples__](simple-examples) -
-    snippets that are just explaining or demonstrating things from the documentation,
-* [__specific-solutions__](specific-solutions) -
-    hacks that aren't generic, just solve a very specific problem,
-* [__stylesheets__](stylesheets) -
-    a place for collections of user-designed layout settings ("house styles"),
-* [__templates__](templates) -
-    examples showing how to structure LilyPond code.
+In general all directories and subdirectories contain snippets or *modules*.
+We don't keep a table of contents here (as we are waiting for a documentation
+system that will do that properly), so in order to find your way around please
+browse the structure
 
-Every category has a `README.md` file inside with more details,
-but if you're not sure which category to choose, don't worry!
-*It's not that important.*
+However, the following directories do *not* contain modules:
 
-<!---
-Later on, we may divide the snippets into 2 (or more)
-"quality levels":
-- official ones, showing Recommended LilyPond Practice,
-- drafts, hacks etc. that were just written by someone
-  and may be useful, but may also not be.
+* fonts  
+  is a deprecated Python script to install additional notation fonts (probably defunct)
+* fried-library-to-be-sorted  
+  as the name suggests this is a heap of unsorted stuff, enter at your own risk
+* ly  
+  contains a number of “old-new-style” packages (see below)
+* meta
+* test
 
-The policy would be to allow anyone to add anything to the "hacks",
-but adding/changing official ones (or moving a draft to official ones)
-would require some confirmation from someone else (not necessarily
-a full review, but at least a quick look).
 
-Update: actually, the status field probably already does this.
--->
 
 
 Using this repository
