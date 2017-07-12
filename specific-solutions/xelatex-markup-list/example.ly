@@ -21,6 +21,7 @@ No one knows, if it is evil or just some kind of short intermission.
 
 \markuplist {
   \override-lines #'(tex-height . 55) % 55mm for tex output
+  % Make sure the font selected in the next line is available
   \override-lines #'(font-name . "Century Schoolbook L")
   \xelatexInclude #text
   \score { \relative c'' { c4 b gis g } \addlyrics { where is your mind? } \layout {} }
