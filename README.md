@@ -67,107 +67,62 @@ You can view the files in your browser by clicking on their names, and simply
 copy & paste the code into your editor. Each snippet should contain both an
 includable `.ily` file (usually `module.ily`) and a compilable `.ly` file
 (usually `example.ly`). But the preferred way of using `snippets` is to
-“install” it.
+“install” it as explained on this [Wiki
+page](https://github.com/openlilylib/oll-core/wiki#installation). The direct
+link to the ZIP file is
+[here](https://github.com/openlilylib/snippets/archive/master.zip).
 
-### Installation
-
-“Installing” openLilyLib/snippets consists of two separate steps: obtaining the
-repository and making it available to LilyPond.
-
-The current state of the repository can always be downloaded from Github using
-the green download button on the repository page or the [direct
-link](https://github.com/openlilylib/snippets/archive/master.zip). This is
-appropriate for occasional use but we strongly recommend using
-[Git](http://git-scm.com/) to clone the whole repository to your computer.
-Learning a version control system like Git is one of the most rewarding
-investments you may consider doing anyway. (You may read more on this browsing
-the [version control tag](http://lilypondblog.org/tag/version-control/) on
-*Scores of Beauty*, our blog).
-
-The repository may be saved anywhere on your disk, but we recommend creating a
-“root” directory for openLilyLib, e.g. `~/openlilylib` or `C:\openlilylib` and
-placing the repository within that (`~/openlilylib/snippets`,
-`C.\openlilylib\snippets`).
-
-This “root” directory should then be added to LilyPond's search path, which is
-done by using the `-I` or `--include=` command line argument in LilyPond's
-invocation (`lilypond -I "~/openlilylib" my-file.ly`). However, editing tools
-may provide a convenient interface for this, like
-[Frescobaldi](http://frescobaldi) where you can add this path in the LilyPond
-page of the Preference dialog.
-
-**Note** (for users who already use openLilyLib): This recommendation is
-different from the previous recommendation to add the `snippets` directory
-itself to the search path. This change is done to make the snippets repository
-consistent with the other openLilyLib packages. Of course this will require
-existing documents to be updated!
-
-Most snippets are divided into an `.ily` file with function definitions and a `.ly`
-file showing a usage example.  To use the functions provided by the snippet,
-simply `\include` the `.ily` file into your score.
-
-### Usage
-
-#### Direct (Standalone) Use
-
-#### Usage As openLilyLib Package
+**For those who don't read manuals** (or who are already using openLilyLib):  
+The referenced installation instruction *differs* from earlier recommendations
+how to set up `openLilyLib/snippets`: the repository may still be saved anywhere
+on your disk, but we recommend creating a “root” directory for openLilyLib, e.g.
+`~/openlilylib` or `C:\openlilylib` and placing the repository within that
+(`~/openlilylib/snippets`, `C.\openlilylib\snippets`). It is now *this root
+directory* (and not the `snippets` subdirectory) that should be added to
+LilyPond's include path. This is to make the snippets repostory consistent with
+the other openLilyLib packages. Of course this means that the include links for
+existing documents have to be updated accordingly.
 
 
+### Direct (Standalone) Use
 
-Contributing
-============
+The `snippets` repository is an exception in the family of openLilyLib packages,
+as it can be used standalone or as a package. We are heading towards the package
+approach in general, but for now the standalone use may be the most convenient
+and quick application for some users.
 
-What's eligible?
-----------------
+Basically each snippet contained in this repository is represented by one
+subdirectory, using a nested structure. For example, everything in the
+`editorial-tools/line-break-marks` directory constitutes the
+`snippets.editorial-tools.line-break-marks` snippet.
 
-Everything that's useful and isn't totally obvious (rule of thumb:
-anything over 20 lines of code is probably worth including).
-**You can even contribute work in progress** and update it later.
+Most snippets are maintained in an includable `.ily` file with function
+definitions, which should generally be named `module.ily` (e.g.
+`editorial-tools/line-break-marks/module.ily`). Assuming the recommended set-up
+of having the openLilyLib root directory in LilyPond's include path this can
+then be used with:
 
+```lilypond
+\include "snippets/editorial-tools/line-break-marks/module.ily"
 
-How to contribute
------------------
+{
+  % use commands defined in the snippet
+  R1 \lineBreakMark R1
+}
+```
 
-The easiest way to contribute is using GitHub's web interface.
+Most snippets also have at least one compilable example file demonstrating its
+use. This is usually named `example.ly`. Note that (generally) the example files
+use the snippet with the package syntax described below but they mostly contain
+a commented include statement for standalone use.
 
-1. Create an account on [GitHub](http://github.com/), log into it.
-2. Go to this repository's
-[GitHub page](http://github.com/openlilylib/snippets).
-3. To add a new file, click on [this button]
-(http://raw.github.com/openlilylib/snippets/master/meta/adding-new-file-github-interface.png).
-To modify a file, click its name and then click _Edit_.
-5. Write what you have changed (form at the bottom)
-and click _Commit_.
-6. **Don't forget to click** _Send pull request_.
-([more info...](meta/contributing.md#pull-requests))
+### Usage as openLilyLib Package
 
-Using more powerful tools for contributing is described
-[here](meta/contributing.md#contributing-using-advanced-tools).
+While it's perfectly possible to directly include snippets as described above we
+encourage all users to load them as *modules* as described on the [general
+Wiki](https://github.com/openlilylib/oll-core/wiki/Basic-Usage) page, using the
+`\loadModule` and `\loadModules` commands.
 
-
-Guidelines
-----------
-
-_Note: detailed guidelines are in [`meta/contributing.md`]
-(meta/contributing.md)(optional reading)._
-
-* Your snippet must compile (even if it's work-in-progress)
-and it must contain a `\version` statement.
-* Please use a template from [`meta/snippet-templates`]
-(meta/snippet-templates) as your starting point:
-  - simple snippets that just demonstrate built-in LilyPond features
-    should use the one-file template.
-  - snippets defining custom commands, functions, engravers etc.
-    that can be useful on their own should use the "includable" template.
-* If possible, please format your code using Frescobaldi's
-_Format_ tool.
-* When you make changes in your snippets, please contribute
-updates to the repository! :-)
-
-
-Contact
-=======
-
-Have trouble contributing?  Let us know!  
-[info@openlilylib.org](mailto:info@openlilylib.org)  
-[janek.lilypond@gmail.com](mailto:janek.lilypond@gmail.com)  
+Note that `snippets` does not provide any package or module options (yet), and
+as it doesn't contain top-level modules there is no practical use for the
+`\loadPackage \with { modules = ... }` syntax.
