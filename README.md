@@ -5,6 +5,11 @@
 What is `openLilyLib/snippets`? There are two answers to this: it's a repository of LilyPond snippets,
 and it's part of the [https://github.com/openlilylib](openLilyLib) family of extension packages.
 
+`openLilyLib/snippets` is maintained by Urs Liska (`ul <at> openlilylib <dot> org`) and a number of
+contributors. If not specified otherwise any content in this repository is licensed under the GPL version 3 or later. For any information about usage feel free to post to the [lilypond-user](https://lists.gnu.org/mailman/listinfo/lilypond-user) mailing list.
+
+https://lists.gnu.org/mailman/listinfo/lilypond-user
+
 #### The Snippets Repository
 
 Originally this repository began as an extended version of the
