@@ -108,7 +108,11 @@ gitFileRevision = #(define-markup-command (gitFileRevision layout props file) (m
 % Return ##t if the repository is clean, i.e. if it
 % doesn't have any uncommitted changes
 #(define (gitIsClean)
-   (eq? "" (strsystem_internal  "git status --porcelain")))
+    (and
+        (eq? 0 (system* "git" "diff-index" "--quiet" "HEAD" "--"))
+        (eq? "" (strsystem_internal  "git ls-files --exclude-standard --others"))
+    )
+)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
