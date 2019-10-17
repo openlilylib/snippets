@@ -56,3 +56,15 @@ ollSnippetsIncludeHint =
     (ly:message "filename of the loaded file, which is")
     (ly:message "  ~a\n\n" file)))
 
+ollModuleDeprecation =
+#(define-void-function (parser location old-module new-module)
+   (string? string?)
+    (ly:message "\n\nDEPRECATION!\n\n")
+    (ly:message "You have loaded the openLilyLib module\n\n")
+    (ly:message "  ~a\n\n" old-module)
+    (ly:message "The functionality of this module has been moved")
+    (ly:message "or reimplemented in the module\n\n")
+    (ly:message "  ~a\n\n" new-module)
+    (ly:message "Please consider switching to the new module.")
+    (ly:message "Consult the documentation to check whether the new module")
+    (ly:message "can be used in the same way as the old one.\n\n"))

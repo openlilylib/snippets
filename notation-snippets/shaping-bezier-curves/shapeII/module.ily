@@ -1,5 +1,9 @@
 \version "2.17.26"
-\include "ly/_internal/utilities/lilypond-version-predicates.ily"
+\include "../../../ly/_internal/utilities/lilypond-version-predicates.ily"
+\include "../../../deprecate.ily"
+\ollModuleDeprecation
+"snippets.notation-snippets.shaping-bezier-curves.shapeII"
+"bezier.shapeII"
 
 \header {
   snippet-title = "Improved \shape"
