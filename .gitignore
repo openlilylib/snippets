@@ -8,6 +8,7 @@
 *.zip
 
 *.pyc
+.DS_Store
 
 # We don't generally want to track HTML files
 # as they can still be added manually
