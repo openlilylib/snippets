@@ -183,7 +183,8 @@ collectlyricwordEngraver =
            (syl-a-text (if (markup? syl-a-text) syl-a-text (markup syl-a-text)))
            (syl-b-text (ly:grob-property syl-b 'text))
            (syl-b-text (if (markup? syl-b-text) syl-b-text (markup syl-b-text)))
-           (full-text (make-concat-markup (list syl-a-text syl-b-text))))
+           ; add zero width non-joiner between syllables
+           (full-text (make-concat-markup (list syl-a-text "‌" syl-b-text))))
 
           (set! (ly:grob-property syl-a 'text) full-text)
           (set! (ly:grob-property syl-b 'text) empty-markup)
