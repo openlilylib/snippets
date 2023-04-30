@@ -30,10 +30,15 @@
          (stop-translation-timestep . ,(lambda (trans)
                                          (if (and (has-at-least-two
                                                    rests) (all-equal rests rest-same-length))
-                                             (for-each
-                                              (lambda (rest)
-                                                (ly:grob-set-property! rest 'Y-offset 0))
-                                              rests))))
+                                             (begin
+                                              (for-each
+                                               (lambda (rest)
+                                                 (ly:grob-set-property! rest 'Y-offset 0))
+                                               rests)
+                                              (for-each
+                                               (lambda (rest)
+                                                 (ly:grob-set-property! (ly:grob-object rest 'dot) 'dot-count 0))
+                                               (cdr rests))))))
          (acknowledgers
           (rest-interface . ,(lambda (engraver grob source-engraver)
                                (if (eq? 'Rest (assoc-ref
