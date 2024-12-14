@@ -1,5 +1,7 @@
 \version "2.18.0" % absolutely necessary!
 
+\include "ly/_internal/utilities/lilypond-version-predicates.ily"
+
 \header {
   snippet-title = "Magnetic snapping lyric syllables"
   snippet-author = "David Nalesnik and Mike Solomon,"
@@ -52,7 +54,8 @@
    (let* ((meta-entry   (assoc-get 'meta grob-entry))
           (class        (assoc-get 'class meta-entry))
           (ifaces-entry (assoc-get 'interfaces meta-entry)))
-     (set-object-property! grob-name 'translation-type? list?)
+     (set-object-property! grob-name 'translation-type?
+      (if (lilypond-less-than? "2.19.11") list? ly:grob-properties?))
      (set-object-property! grob-name 'is-grob? #t)
      (set! ifaces-entry (append (case class
                                   ((Item) '(item-interface))
